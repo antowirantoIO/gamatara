@@ -1,3 +1,6 @@
+<?php
+    require_once app_path('Helper/Helper.php');
+?>
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Light Logo-->
@@ -21,27 +24,27 @@
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('dashboard') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                    <a class="nav-link menu-link {{ set_active(['dashboard']) }}" href="{{ route('dashboard') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/dashboard.svg')}}"></i> <span data-key="t-layouts">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link {{ set_active(['customer']) }}" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i><img src="{{asset('assets/images/document-text.svg')}}"></i> <span data-key="t-layouts">Master Data</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('customer') }}" class="nav-link" data-key="t-analytics"> Customer </a>
+                                <a href="{{ route('customer') }}" class="nav-link {{ set_active(['customer']) }}" data-key="t-analytics"> Customer </a>
                             </li>
                             <li class="nav-item">
-                                <a href="dashboard-crm.html" class="nav-link" data-key="t-crm"> User </a>
+                                <a href="{{ route('user') }}" class="nav-link {{ set_active(['user']) }}"> User </a>
                             </li>
                             <li class="nav-item">
-                                <a href="index.html" class="nav-link" data-key="t-ecommerce"> Role </a>
+                                <a href="{{ route('role') }}" class="nav-link" data-key="t-ecommerce"> Role </a>
                             </li>
                             <li class="nav-item">
-                                <a href="dashboard-crypto.html" class="nav-link" data-key="t-crypto"> Vendor </a>
+                                <a href="{{ route('vendor') }}" class="nav-link" data-key="t-crypto"> Vendor </a>
                             </li>
                         </ul>
                     </div>

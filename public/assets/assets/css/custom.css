@@ -1,0 +1,11 @@
+/*
+Template Name: Velzon - Admin & Dashboard Template
+Author: Themesbrand
+Website: https://themesbrand.com/
+Contact: support@themesbrand.com
+File: Custom Css File
+*/
+
+.navbar-menu .navbar-nav .nav-link:hover {
+    color: black !important;
+}

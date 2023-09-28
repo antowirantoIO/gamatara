@@ -41,7 +41,7 @@ Route::prefix('customer')->group(function () {
 
 //user
 Route::prefix('user')->group(function () {
-    Route::get('/user', [UserController::class, 'index'])->name('user');
+    Route::get('/', [UserController::class, 'index'])->name('user');
     Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     Route::get('/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');

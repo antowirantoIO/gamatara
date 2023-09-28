@@ -9,10 +9,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; User</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('user.create') }}" class="btn btn-secondary">
+                            <a href="{{ route('vendor.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
                             <button class="btn btn-secondary">
@@ -45,10 +45,12 @@
                                 <table class="table" id="example1">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Nama</th>
-                                            <th style="color:#929EAE">Jabatan</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
+                                            <th style="color:#929EAE">Nama vendor</th>
+                                            <th style="color:#929EAE">Alamat</th>
+                                            <th style="color:#929EAE">Contact Person</th>
+                                            <th style="color:#929EAE">Nomor Contact Person</th>
                                             <th style="color:#929EAE">Email</th>
+                                            <th style="color:#929EAE">NPWP</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -56,22 +58,24 @@
                                         @foreach($data as $v)
                                         <tr>
                                             <td>{{$v->name}}</td>
-                                            <td>{{$v->jabatan}}</td>
-                                            <td>{{$v->nomor_telpon}}</td>
+                                            <td>{{$v->alamat}}</td>
+                                            <td>{{$v->contact_person}}</td>
+                                            <td>{{$v->nomor_contact_person}}</td>
                                             <td>{{$v->email}}</td>
+                                            <td>{{$v->npwp}}</td>
                                             <td>
-                                                <a href="{{ route('user.edit',$v->id) }}" class="btn btn-success btn-sm">
+                                                <a href="{{ route('vendor.edit',$v->id) }}" class="btn btn-success btn-sm">
                                                     <span>
                                                         <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
                                                     </span>
                                                 </a>
                                                 &nbsp;
-                                                <a data-id="{{ $v->id }}" data-name="user {{ $v->name ?? null }}" data-form="form-user" class="btn btn-danger btn-sm deleteData">
+                                                <a data-id="{{ $v->id }}" data-name="vendor {{ $v->name ?? null }}" data-form="form-vendor" class="btn btn-danger btn-sm deleteData">
                                                     <span>
                                                         <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
                                                     </span>
                                                 </a>
-                                                <form method="get" id="form-user{{ $v->id }}" action="{{ route('user.delete', $v->id) }}">
+                                                <form method="get" id="form-vendor{{ $v->id }}" action="{{ route('vendor.delete', $v->id) }}">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>

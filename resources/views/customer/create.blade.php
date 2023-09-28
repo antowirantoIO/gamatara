@@ -34,7 +34,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="contact_person" class="form-label">Contact Person</label>
-                                                <input type="number" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">

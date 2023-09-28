@@ -9,10 +9,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('customer')}}">
+                            <a href="{{route('vendor')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Customer</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor</h4>
                         </div>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('customer.updated',$data->id)}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('vendor.updated',$data->id)}}" id="npwpForm" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">

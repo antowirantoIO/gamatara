@@ -30,7 +30,6 @@ class CustomerController extends Controller
         $data->alamat                   = $request->input('alamat');
         $data->contact_person           = $request->input('contact_person');
         $data->nomor_contact_person     = $request->input('nomor_contact_person');
-        $data->alamat                   = $request->input('alamat');
         $data->email                    = $request->input('email');
         $data->npwp                     = $request->input('npwp');
         $data->save();
@@ -57,7 +56,6 @@ class CustomerController extends Controller
         $data->alamat                   = $request->input('alamat');
         $data->contact_person           = $request->input('contact_person');
         $data->nomor_contact_person     = $request->input('nomor_contact_person');
-        $data->alamat                   = $request->input('alamat');
         $data->email                    = $request->input('email');
         $data->npwp                     = $request->input('npwp');
         $data->save();

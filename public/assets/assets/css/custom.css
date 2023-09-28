@@ -5,6 +5,20 @@ Website: https://themesbrand.com/
 Contact: support@themesbrand.com
 File: Custom Css File
 */
+.navbar-menu .navbar-nav .nav-sm{
+    background-color: #F4F6F9!important;
+    padding-top: 12px;
+    padding-bottom: 16px;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 5px;
+    border-radius: 10px;
+}
+
+.navbar-menu .navbar-nav .nav-link[data-bs-toggle=collapse][aria-expanded=true] {
+    background-color: #1089E20D;
+    color: #194BFB !important;
+}
 
 .navbar-menu .navbar-nav .nav-link:hover {
     background-color: #1089E20D;
@@ -12,8 +26,9 @@ File: Custom Css File
 }
 
 .navbar-menu .navbar-nav .nav-link.active{
-    background-color: #1089E20D;
+    background-color: #FFFFFF;
     color: #194BFB !important;
+    margin-right: 25px;
 }
 
 .auth-one-bgs {
@@ -38,3 +53,4 @@ body{
 .welcome{
     color: #3a3a3a!important;;
 }
+

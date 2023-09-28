@@ -38,13 +38,13 @@
                                 <a href="{{ route('customer') }}" class="nav-link {{ set_active(['customer']) }}" data-key="t-analytics"> Customer </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('user') }}" class="nav-link {{ set_active(['user']) }}"> User </a>
+                                <a href="{{ route('user') }}" class="nav-link {{ set_active(['user']) }}" data-key="t-analytics"> User </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('role') }}" class="nav-link" data-key="t-ecommerce"> Role </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('vendor') }}" class="nav-link" data-key="t-crypto"> Vendor </a>
+                                <a href="{{ route('vendor') }}" class="nav-link {{ set_active(['vendor']) }}" data-key="t-crypto"> Vendor </a>
                             </li>
                         </ul>
                     </div>
@@ -79,3 +79,4 @@
     </div>
 
     <div class="sidebar-background"></div>
+    

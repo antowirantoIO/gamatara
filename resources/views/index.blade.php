@@ -9,7 +9,7 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{asset('assets/assets/images/favicon.ico')}}">
+    <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
 
     <!-- jsvectormap css -->
     <link href="{{asset('assets/assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
@@ -170,6 +170,19 @@
           );
         </script>
     @endif
+
+    <script>
+        $(document).ready(function () {
+            // Get the active submenu item
+            var activeSubmenuItem = $(".nav-link.active");
+
+            // Check if it's inside the Master Data dropdown
+            if (activeSubmenuItem.closest(".menu-dropdown").length) {
+                // Expand the Master Data dropdown
+                activeSubmenuItem.closest(".menu-dropdown").addClass("show");
+            }
+        });
+    </script>
     
 </body>
 </html>

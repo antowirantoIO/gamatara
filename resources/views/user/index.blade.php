@@ -66,6 +66,7 @@
                                                     </span>
                                                 </a>
                                                 &nbsp;
+                                                @if($v->id != 1)
                                                 <a data-id="{{ $v->id }}" data-name="user {{ $v->name ?? null }}" data-form="form-user" class="btn btn-danger btn-sm deleteData">
                                                     <span>
                                                         <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
@@ -75,6 +76,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach

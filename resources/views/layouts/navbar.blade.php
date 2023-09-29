@@ -48,7 +48,7 @@
                             @endcan
                             @can('role')
                             <li class="nav-item">
-                                <a href="{{ route('role') }}" class="nav-link" data-key="t-ecommerce"> Role </a>
+                                <a href="{{ route('role') }}" class="nav-link {{ set_active(['role']) }}" data-key="t-ecommerce"> Role </a>
                             </li>
                             @endcan
                             @can('vendor')
@@ -58,7 +58,7 @@
                             @endcan
                             @can('pekerjaan')
                             <li class="nav-item">
-                                <a href="{{ route('pekerjaan') }}" class="nav-link {{ set_active(['pekerjaan']) }}" data-key="t-crypto"> Vendor </a>
+                                <a href="{{ route('pekerjaan') }}" class="nav-link {{ set_active(['pekerjaan']) }}" data-key="t-crypto"> Pekerjaan</a>
                             </li>
                             @endcan
                         </ul>

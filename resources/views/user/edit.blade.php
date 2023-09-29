@@ -11,7 +11,7 @@
                             <a href="{{route('user')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; edit User</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; User</h4>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,12 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="jabatan" class="form-label">Jabatan</label>
-                                                <input type="text" name="jabatan" value="{{$data->jabatan}}" class="form-control" id="jabatan" placeholder="Jabatan">
+                                                <select name="jabatan" id="jabatan" class="form-control">
+                                                    <option value="">Pilih Jabatan</option>
+                                                    @foreach($role as $r)
+                                                        <option value="{{$r->id}}" {{ $r->id == $data->id ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">

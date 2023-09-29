@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $data = Users::where('status',0)->get();
+        $data = User::where('status',0)->get();
 
         return view('user.index', Compact('data'));
     }
 
     public function create()
     {
-        return view('user.create');
+        $role = Role::orderBy('id','DESC')->get();
+
+        return view('user.create',compact('role'));
     }
 
     public function store(Request $request)
@@ -25,7 +28,7 @@ class UserController extends Controller
             'name'                  => 'required',
             'email'                 => 'required|email|unique:users',
             'password'              => 'required|min:6',
-            'konfirmasi_password' => 'required|same:password',
+            'konfirmasi_password'   => 'required|same:password',
         ]);
 
         $data                   = New Users();
@@ -36,15 +39,18 @@ class UserController extends Controller
         $data->password         = bcrypt($request->input('password'));
         $data->save();
 
+        $data->assignRole($request->input('jabatan'),'web');
+
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');
     }
 
     public function edit(Request $request)
     {
-        $data = Users::find($request->id);
+        $data = User::find($request->id);
+        $role = Role::orderBy('id','DESC')->get();
 
-        return view('user.edit', Compact('data'));
+        return view('user.edit', Compact('data','role'));
     }
 
     public function updated(Request $request,$id)
@@ -60,7 +66,7 @@ class UserController extends Controller
                 'konfirmasi_password'   => 'required|same:password',
             ]);
             
-        $data = Users::find($request->id);
+        $data = User::find($request->id);
  
         if($request->password)
             $password = bcrypt($request->input('password'));
@@ -74,13 +80,15 @@ class UserController extends Controller
         $data->password     = $password;
         $data->save();
 
+        $data->assignRole($request->input('jabatan'));
+
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');
     }
 
     public function delete($id)
     {
-        $data           = Users::findOrFail($id);
+        $data           = User::findOrFail($id);
         $data->status   = 1;
         $data->save();
 

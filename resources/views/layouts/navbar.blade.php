@@ -23,29 +23,44 @@
         <div class="container-fluid">
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
+                @can('dashboard')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ set_active(['dashboard']) }}" href="{{ route('dashboard') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/dashboard.svg')}}"></i> <span data-key="t-layouts">Dashboard</span>
                     </a>
                 </li>
+                @endcan
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ set_active(['customer']) }}" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i><img src="{{asset('assets/images/document-text.svg')}}"></i> <span data-key="t-layouts">Master Data</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
+                            @can('customer')
                             <li class="nav-item">
                                 <a href="{{ route('customer') }}" class="nav-link {{ set_active(['customer']) }}" data-key="t-analytics"> Customer </a>
                             </li>
+                            @endcan
+                            @can('user')
                             <li class="nav-item">
                                 <a href="{{ route('user') }}" class="nav-link {{ set_active(['user']) }}" data-key="t-analytics"> User </a>
                             </li>
+                            @endcan
+                            @can('role')
                             <li class="nav-item">
                                 <a href="{{ route('role') }}" class="nav-link" data-key="t-ecommerce"> Role </a>
                             </li>
+                            @endcan
+                            @can('vendor')
                             <li class="nav-item">
                                 <a href="{{ route('vendor') }}" class="nav-link {{ set_active(['vendor']) }}" data-key="t-crypto"> Vendor </a>
                             </li>
+                            @endcan
+                            @can('pekerjaan')
+                            <li class="nav-item">
+                                <a href="{{ route('pekerjaan') }}" class="nav-link {{ set_active(['pekerjaan']) }}" data-key="t-crypto"> Vendor </a>
+                            </li>
+                            @endcan
                         </ul>
                     </div>
                 </li> 

@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\PekerjaanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,6 @@ Route::prefix('customer')->group(function () {
     Route::get('/delete/{id}', [CustomerController::class, 'delete'])->name('customer.delete');
 });
 
-
 //user
 Route::prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user');
@@ -67,5 +67,15 @@ Route::prefix('vendor')->group(function () {
     Route::post('/store', [VendorController::class, 'store'])->name('vendor.store');
     Route::post('/updated/{id}', [VendorController::class, 'updated'])->name('vendor.updated');
     Route::get('/delete/{id}', [VendorController::class, 'delete'])->name('vendor.delete');
+});
+
+//pekerjaan
+Route::prefix('pekerjaan')->group(function () {
+    Route::get('/', [PekerjaanController::class, 'index'])->name('pekerjaan');
+    Route::get('/edit/{id}', [PekerjaanController::class, 'edit'])->name('pekerjaan.edit');
+    Route::get('/create', [PekerjaanController::class, 'create'])->name('pekerjaan.create');
+    Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
+    Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
+    Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
 });
 

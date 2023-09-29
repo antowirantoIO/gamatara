@@ -5,6 +5,24 @@ Website: https://themesbrand.com/
 Contact: support@themesbrand.com
 File: Custom Css File
 */
+.form-control {
+    background-color: #F4F6F9;
+}
+.cust-checkbox {
+    width: 15px;
+    height: 12px;
+}
+.label-color{
+    color: #696969;
+}
+
+.bg-checkbox {
+    background-color: #F4F6F9!important;
+    padding: 10px; /* Ubah ukuran padding sesuai kebutuhan */
+    border-radius: 30px; /* Tambahkan border-radius sesuai kebutuhan */
+    margin-bottom: 15px;
+}
+
 .navbar-menu .navbar-nav .nav-sm{
     background-color: #F4F6F9!important;
     padding-top: 12px;

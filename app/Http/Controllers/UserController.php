@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $data = User::where('status',0)->get();
+        $data = User::with(['role'])->where('status',0)->get();
 
         return view('user.index', Compact('data'));
     }

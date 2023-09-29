@@ -56,7 +56,7 @@
                                         @foreach($data as $v)
                                         <tr>
                                             <td>{{$v->name}}</td>
-                                            <td>{{$v->jabatan}}</td>
+                                            <td>{{$v->role->name ?? ''}}</td>
                                             <td>{{$v->nomor_telpon}}</td>
                                             <td>{{$v->email}}</td>
                                             <td>

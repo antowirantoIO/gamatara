@@ -39,13 +39,12 @@ class RoleController extends Controller
 
     public function edit(Request $request)
     {
-        $data = User::find($request->id);
+        $data = Role::find($request->id);
         $permission = Permission::orderBy('name','asc')->get();
         $selectedPermissions = DB::table('role_has_permissions')
-        ->where('role_id', $data->jabatan)
-        ->select('permission_id')
-        ->get();
-        $selectedPermissions = $selectedPermissions->pluck('permission_id')->toArray();
+                                ->where('role_id', $data->id)
+                                ->select('permission_id')
+                                ->pluck('permission_id')->toArray();
 
         return view('role.edit', Compact('data','permission','selectedPermissions'));
     }

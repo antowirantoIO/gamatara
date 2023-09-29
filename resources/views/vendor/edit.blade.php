@@ -67,7 +67,7 @@
                                         
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button class="btn btn-primary" style="margin-right: 10px;">Save</button>
-                                            <a href="{{route('customer')}}" class="btn btn-danger">Cancel</a>
+                                            <a href="{{route('vendor')}}" class="btn btn-danger">Cancel</a>
                                         </div>
                                     </form>
                                 </div>

@@ -11,14 +11,14 @@ use DB;
 class RoleController extends Controller
 {
     public function index() {
-        $data = Role::orderBy('id','DESC')->get();
+        $data = Role::orderBy('name','asc')->get();
         
         return view('role.index',compact('data'));
     }
 
     public function create()
     {
-        $permission = Permission::get();
+        $permission = Permission::orderBy('name','asc')->get();
 
         return view('role.create',compact('permission'));
     }
@@ -40,7 +40,7 @@ class RoleController extends Controller
     public function edit(Request $request)
     {
         $data = User::find($request->id);
-        $permission = Permission::get();
+        $permission = Permission::orderBy('name','asc')->get();
         $selectedPermissions = DB::table('role_has_permissions')
         ->where('role_id', $data->jabatan)
         ->select('permission_id')

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use App\Models\Roles;
 use DB;
 
 class RoleController extends Controller
@@ -65,4 +66,23 @@ class RoleController extends Controller
         return redirect(route('role'))
                         ->with('success', 'Data berhasil disimpan');
     }
+
+    public function delete($id)
+    {
+        $data = Roles::findOrFail($id);
+
+        if ($data->users()->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak dapat menghapus data karena role masih digunakan di user'
+            ]);
+        }
+    
+        $data->delete();
+
+        return redirect(route('role'))
+                    ->with('success', 'Data berhasil dihapus');
+    }
+
+    
 }

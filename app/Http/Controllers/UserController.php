@@ -31,7 +31,7 @@ class UserController extends Controller
             'konfirmasi_password'   => 'required|same:password',
         ]);
 
-        $data                   = New Users();
+        $data                   = New User();
         $data->name             = $request->input('name');
         $data->email            = $request->input('email');
         $data->nomor_telpon     = $request->input('nomor_telpon');
@@ -39,7 +39,7 @@ class UserController extends Controller
         $data->password         = bcrypt($request->input('password'));
         $data->save();
 
-        $data->assignRole($request->input('jabatan'),'web');
+        $data->assignRole($request->input('jabatan'));
 
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');

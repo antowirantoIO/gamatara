@@ -14,6 +14,12 @@
     <!-- jsvectormap css -->
     <link href="{{asset('assets/assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
 
+    <!-- autocomplete css -->
+    <link rel="stylesheet" href="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/css/autoComplete.css')}}">
+    
+    <!-- select2 css -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!--Swiper slider css-->
     <link href="{{asset('assets/assets/libs/swiper/swiper-bundle.min.css')}}" rel="stylesheet" type="text/css" />
 
@@ -160,6 +166,16 @@
     <!-- Sweet alert init js-->
     <script src="{{asset('assets/assets/js/pages/sweetalerts.init.js')}}"></script>
     <script src="{{ asset('assets/js/global.js') }}"></script>
+
+    <!-- select 2 js-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{asset('assets/assets/js/pages/select2.init.js')}}"></script>
+
+    <!-- autocomplete js -->
+    <script src="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js')}}"></script>
+
+    <!-- init js -->
+    <script src="{{asset('assets/assets/js/pages/form-advanced.init.js')}}"></script>
 
     @if (session('success'))
         <script>

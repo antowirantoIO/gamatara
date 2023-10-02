@@ -7,11 +7,17 @@ use App\Models\Customer;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = Customer::where('status',0)->get();
+        if($request->get('query')){
+            $query = $request->get('query');
+            $data = Customer::where('name', 'LIKE', '%'. $query. '%')->get();
+            return response()->json($data);
+        }else{
+            $data = Customer::where('status',0)->get();
 
-        return view('customer.index', Compact('data'));
+            return view('customer.index', Compact('data'));
+        }
     }
     
     public function create()

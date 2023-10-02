@@ -65,7 +65,7 @@
                     </div>
                 </li> 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                    <a class="nav-link menu-link {{ set_active(['on_request']) }}" href="{{ route('on_request') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/task-squares.svg')}}"></i> <span data-key="t-layouts">On Request</span>
                     </a>
                 </li>

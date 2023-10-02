@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PekerjaanController;
+use App\Http\Controllers\OnRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,5 +78,15 @@ Route::prefix('pekerjaan')->group(function () {
     Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
     Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
     Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
+});
+
+//On Request
+Route::prefix('on_request')->group(function () {
+    Route::get('/', [OnRequestController::class, 'index'])->name('on_request');
+    Route::get('/edit/{id}', [OnRequestController::class, 'edit'])->name('on_request.edit');
+    Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
+    Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
+    Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
+    Route::get('/delete/{id}', [OnRequestController::class, 'delete'])->name('on_request.delete');
 });
 

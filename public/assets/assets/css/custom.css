@@ -72,3 +72,6 @@ body{
     color: #3a3a3a!important;;
 }
 
+.navbar-menu .navbar-nav .nav-sm .nav-link:before {
+    display: none !important;
+}

@@ -59,10 +59,10 @@
                                         <tr>
                                             <td>{{$v->code}}</td>
                                             <td>{{$v->nama_project}}</td>
-                                            <td>{{$v->id_customer}}</td>
-                                            <td>{{$v->tanggal_request}}</td>
+                                            <td>{{$v->customer->name ?? ''}}</td>
+                                            <td>{{$v->created_at}}</td>
                                             <td>{{$v->displacement}}</td>
-                                            <td>{{$v->jenis_kapal}}</td>
+                                            <td>{{$v->kapal->name ?? ''}}</td>
                                             <td>
                                                 <a href="{{ route('on_request.detail',$v->id) }}" class="btn btn-warning btn-sm">
                                                     <span>

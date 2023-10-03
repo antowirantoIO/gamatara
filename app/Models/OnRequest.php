@@ -10,4 +10,14 @@ class OnRequest extends Model
     protected $table = 'on_request';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
+    
+    public function kapal()
+    {
+        return $this->hasOne(JenisKapal::class, 'id','id_jenis_kapal');
+    }
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'id','id_customer');
+    }
 }

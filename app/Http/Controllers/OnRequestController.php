@@ -13,7 +13,7 @@ class OnRequestController extends Controller
 {
     public function index()
     {
-        $data = OnRequest::get();
+        $data = OnRequest::with(['kapal','customer'])->get();
 
         return view('on_request.index',compact('data'));
     }
@@ -46,7 +46,7 @@ class OnRequestController extends Controller
 
         $data                       = New OnRequest();
         $data->code                 = $code.$randInt;
-        $data->nama_project         = $request->input('name');
+        $data->nama_project         = $request->input('nama_project');
         $data->id_customer          = $getCustomer->id;
         $data->id_lokasi_project    = $request->input('lokasi_project');
         $data->contact_person       = $request->input('contact_person');

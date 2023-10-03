@@ -70,4 +70,37 @@ class OnRequestController extends Controller
         return redirect(route('on_request'))
                     ->with('success', 'Data berhasil disimpan');
     }
+
+    public function detail(Request $request)
+    {
+        $data           = OnRequest::find($request->id);
+        $getCustomer    = Customer::find($data->id_customer);
+        $customer       = Customer::get();
+        $lokasi         = LokasiProject::get();
+        $jenis_kapal    = JenisKapal::get();
+        $keluhan        = Keluhan::where('on_request_id',$data->id)->get();
+
+        return view('on_request.detail', Compact('data','customer','lokasi','jenis_kapal','getCustomer','keluhan'));
+    }
+
+    public function updated(Request $request)
+    {
+        $request->validate([
+            'nama_project'   => 'required',
+        ]);
+
+        $getCustomer = Customer::where('name',$request->input('id_customer'))->first();
+
+        $data                       = OnRequest::find($request->id);
+        $data->nama_project         = $request->input('nama_project');
+        $data->id_customer          = $getCustomer->id;
+        $data->id_lokasi_project    = $request->input('lokasi_project');
+        $data->contact_person       = $request->input('contact_person');
+        $data->nomor_contact_person = $request->input('nomor_contact_person');
+        $data->displacement         = $request->input('displacement');
+        $data->id_jenis_kapal       = $request->input('jenis_kapal');
+        $data->save();
+
+        return response()->json(['message' => 'success','status' => 200]);
+    }
 }

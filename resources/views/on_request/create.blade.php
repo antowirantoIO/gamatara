@@ -25,11 +25,6 @@
                                 <form action="{{route('on_request.store')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row gy-4">
-                                        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                            <button class="btn btn-primary" style="margin-right: 10px;" onclick="simpanData()">Save</button>
-                                            <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
-                                        </div>
-
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nama_project" class="form-label">Nama Project</label>
@@ -110,7 +105,7 @@
                                                 <button type="button" id="tambahKeluhan" class="btn btn-primary">Tambah</button>
                                             </div>
                                         </div> 
-                                        <div>
+                                        <div id="tabelKeluhanWrapper">
                                             <table id="tabelKeluhan" class="table table-bordered">
                                                 <thead style="background-color:#194BFB;color:#FFFFFF">
                                                     <tr>
@@ -123,6 +118,12 @@
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                            <button class="btn btn-primary" style="margin-right: 10px;" onclick="simpanData()">Save</button>
+                                            <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
+                                        </div>
+
                                     </div>
                                 </form>
                             </div>
@@ -139,7 +140,7 @@
 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+            <form action="{{route('customer.store')}}" id="formOnRequest" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalgridLabel">Tambah Customer</h5>
@@ -202,13 +203,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
 <script>
+    //save data utama
     $(document).ready(function () {
         $("#saveCustomerButton").click(function (e) {
             e.preventDefault();
 
-            var form = $("#npwpForm");
+            var form = $("#formOnRequest");
             var formData = form.serialize();
 
             $.ajax({
@@ -237,34 +238,32 @@
         });
     });
 
+    //show data customer
     var route = "{{ url('customer') }}";
-$('#customer_name').typeahead({
-    source: function (query, process) {
-        return $.get(route, { query: query }, function (data) {
-            return process(data.map(function(customer) {
-                return customer.name; // Assuming 'name' is the property with customer names
-            }));
-        });
-    },
-    updater: function (item) {
-        // Retrieve customer data from the server based on the selected item
-        $.get(route, { query: item }, function (customerData) {
-            if (customerData.length > 0) {
-                var selectedCustomer = customerData[0]; // Assuming only one result is returned
-                $('#contact_person').val(selectedCustomer.contact_person);
-                $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
-                $('#alamat').val(selectedCustomer.alamat);
-                $('#npwp').val(selectedCustomer.npwp);
-            }
-        });
+    $('#customer_name').typeahead({
+        source: function (query, process) {
+            return $.get(route, { query: query }, function (data) {
+                return process(data.map(function(customer) {
+                    return customer.name;
+                }));
+            });
+        },
+        updater: function (item) {
+            $.get(route, { query: item }, function (customerData) {
+                if (customerData.length > 0) {
+                    var selectedCustomer = customerData[0];
+                    $('#contact_person').val(selectedCustomer.contact_person);
+                    $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
+                    $('#alamat').val(selectedCustomer.alamat);
+                    $('#npwp').val(selectedCustomer.npwp);
+                }
+            });
 
-        return item;
-    }
-});
+            return item;
+        }
+    });
 
-
-
-
+    //simpan keluhan
     var addButton = document.getElementById("tambahKeluhan");
     addButton.addEventListener("click", tambahKeluhan);
 
@@ -277,6 +276,7 @@ $('#customer_name').typeahead({
         }
     }
 
+    document.getElementById("tambahKeluhan").addEventListener("click", tambahKeluhan);
     function tambahKeluhan() {
         var keluhanInput = document.getElementById("keluhan").value;
         
@@ -310,10 +310,8 @@ $('#customer_name').typeahead({
             })
         }
     }
-    document.getElementById("tambahKeluhan").addEventListener("click", tambahKeluhan);
 
     function simpanData() {
-        // Mengumpulkan data keluhan dari tabel
         var keluhanRows = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0].rows;
         var keluhanData = [];
 
@@ -322,14 +320,13 @@ $('#customer_name').typeahead({
             keluhanData.push(keluhan);
         }
 
-        // Menyimpan data keluhan ke dalam hidden input field
         var keluhanInput = document.getElementById("keluhanInput");
         keluhanInput.value = JSON.stringify(keluhanData);
     }
 
+    //untuk semua select menggunakan select2
     $(function () {
         $("select").select2();
     });
-
     </script>
 @endsection

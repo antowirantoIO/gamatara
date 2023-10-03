@@ -75,3 +75,35 @@ body{
 .navbar-menu .navbar-nav .nav-sm .nav-link:before {
     display: none !important;
 }
+
+
+#tabelKeluhanWrapper {
+    height: 200px; 
+    overflow-y: auto; 
+}
+
+#tabelKeluhan {
+    width: 100%; 
+    height: 50px!important; 
+    overflow-y: auto; 
+    background-color: transparent !important;
+}
+
+#tabelKeluhanWrapper::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent; 
+}
+
+#tabelKeluhanWrapper::-webkit-scrollbar-thumb {
+    background-color: transparent; 
+}
+
+#tabelKeluhan thead {
+    position: sticky;
+    top: 0;
+    z-index :2;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    background-color: #F4F6F9; /* Ganti warna sesuai keinginan Anda */
+}

@@ -10,6 +10,7 @@ use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\OnRequestController;
 use App\Http\Controllers\OnProgressController;
 use App\Http\Controllers\CompleteController;
+use App\Http\Controllers\KeluhanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +90,6 @@ Route::prefix('on_request')->group(function () {
     Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
     Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
     Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
-    Route::get('/delete/{id}', [OnRequestController::class, 'delete'])->name('on_request.delete');
 });
 
 //On Progress
@@ -110,5 +110,11 @@ Route::prefix('complete')->group(function () {
     Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
     Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
     Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
+});
+
+//keluhan
+Route::prefix('keluhan')->group(function () {
+    Route::get('/{id}', [KeluhanController::class, 'delete'])->name('keluhan.delete');
+    Route::post('/store/{id}', [KeluhanController::class, 'store'])->name('keluhan.store');
 });
 

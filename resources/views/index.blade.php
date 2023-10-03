@@ -3,7 +3,7 @@
 
 <head>
 
-    <meta charset="utf-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
@@ -172,10 +172,10 @@
     <script src="{{asset('assets/assets/js/pages/select2.init.js')}}"></script>
 
     <!-- autocomplete js -->
-    <script src="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js')}}"></script>
+    <!-- <script src="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js')}}"></script> -->
 
     <!-- init js -->
-    <script src="{{asset('assets/assets/js/pages/form-advanced.init.js')}}"></script>
+    <!-- <script src="{{asset('assets/assets/js/pages/form-advanced.init.js')}}"></script> -->
 
     @if (session('success'))
         <script>

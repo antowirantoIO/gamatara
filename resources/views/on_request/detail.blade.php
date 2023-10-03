@@ -11,7 +11,7 @@
                             <a href="{{route('on_request')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; On Request</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Detail Request</h4>
                         </div>
                     </div>
                 </div>
@@ -22,25 +22,21 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('on_request.store')}}" method="POST" enctype="multipart/form-data">
+
+                                <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nama_project" class="form-label">Nama Project</label>
-                                                <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project">
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="code" class="form-label">Kode Project</label>
-                                                <input type="text" name="code" class="form-control" id="code" placeholder="Masukkan Kode Project">
+                                                <input type="hidden" name="on_request_id" value="{{$data->id}}" id="on_request_id">
+                                                <input type="text" name="nama_project" value="{{$data->nama_project}}" class="form-control" id="nama_project" placeholder="Masukkan Nama Project">
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <label for="nama_customer" class="form-label">Nama Customer</label>
-                                                <div class="input-group">
-                                                    <input id="customer_name" type="text" spellcheck=false autocomplete="off" autocapitalize="off" class="form-control">
+                                            <div class="input-group">
+                                                <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
                                                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
                                             </div>
                                         </div>
@@ -50,7 +46,7 @@
                                                 <select name="lokasi_project" id="lokasi_project" class="form-control">
                                                     <option value="">Pilih Lokasi Project</option>
                                                     @foreach($lokasi as $l)
-                                                    <option value="{{$l->id}}">{{$l->name}}</option>
+                                                    <option value="{{$l->id}}" {{ $l->id == $data->id_lokasi_project ? 'selected' : '' }}>{{$l->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -58,31 +54,31 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="contact_person" class="form-label">Contact Person</label>
-                                                <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" value="{{$data->contact_person}}" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
                                             </div>
                                         </div>         
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
                                             </div>
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="alamat" class="form-label">Alamat Customer</label>
-                                                <input type="text" class="form-control" id="width" readonly>
+                                                <input type="text" class="form-control" value="{{$getCustomer->alamat}}" id="alamat" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" class="form-control" id="npwp" readonly>
+                                                <input type="text" class="form-control" value="{{$getCustomer->npwp}}" id="npwp" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="displacement" class="form-label">Displacement Kapal</label>
-                                                <input type="text" name="displacement" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
+                                                <input type="text" name="displacement"  value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -91,19 +87,55 @@
                                                     <select name="jenis_kapal" id="jenis_kapal" class="form-control">
                                                         <option value="">Pilih Jenis Kapal</option>
                                                         @foreach($jenis_kapal as $l)
-                                                        <option value="{{$l->id}}">{{$l->name}}</option>
+                                                        <option value="{{$l->id}}" {{ $l->id == $data->id_jenis_kapal ? 'selected' : '' }}>{{$l->name}}</option>
                                                         @endforeach
                                                     </select>
                                             </div>
-                                        </div>  
-                                        
-                                        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                            <button class="btn btn-primary" style="margin-right: 10px;">Save</button>
-                                            <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
+                                        </div> 
+
+                                        <div class="col-xxl-6 col-md-12">
                                         </div>
 
+                                        <div class="col-xxl-6 col-md-6">
+                                            <label for="keluhan">Request</label>
+                                            <input type="hidden" name="keluhan" id="keluhanInput" value="">
+                                            <textarea id="keluhan" rows="4" cols="50" class="form-control"></textarea>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label style="color:white;"><br><br><br></label>
+                                                <button type="button" id="tambahKeluhan" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </div>
+                                        <div id="tabelKeluhanWrapper">
+                                            <table id="tabelKeluhan" class="table table-bordered">
+                                                <thead style="background-color:#194BFB;color:#FFFFFF">
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Keluhan</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                        @foreach($keluhan as $key => $complaint)
+                                                        <tr>
+                                                            <td><?php echo $key + 1; ?></td>
+                                                            <td><?php echo $complaint->keluhan; ?></td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="{{ $complaint->id }}">
+                                                                    <span>
+                                                                        <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
+                                                                    </span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -114,97 +146,339 @@
     </div>
 </div>
 
-    <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
+<!--modal -->
+<div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalgridLabel">Grid Modals</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="exampleModalgridLabel">Tambah Customer</h5>
+                        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                            <button class="btn btn-primary" style="margin-right: 10px;" id="saveCustomerButton">Save</button>
+                            <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                        </div>
                 </div>
                 <div class="modal-body">
-                    <form action="javascript:void(0);">
-                        <div class="row g-3">
-                            <div class="col-xxl-6">
+                    <div class="row g-3">
+                        <div class="row gy-4">
+                            <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="firstName" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="firstName" placeholder="Enter firstname">
+                                    <label for="customer" class="form-label">Nama Customer</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Customer">
                                 </div>
                             </div>
-                            <!--end col-->
-                            <div class="col-xxl-6">
+                            <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="lastName" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName" placeholder="Enter lastname">
+                                    <label for="contact_person" class="form-label">Contact Person</label>
+                                    <input type="text" name="contact_person" class="form-control" placeholder="Masukkan Contact Person">
                                 </div>
                             </div>
-                            <!--end col-->
-                            <div class="col-lg-12">
-                                <label class="form-label">Gender</label>
+                            <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                        <label class="form-check-label" for="inlineRadio1">Male</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">Female</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-                                        <label class="form-check-label" for="inlineRadio3">Others</label>
+                                    <label for="alamat" class="form-label">Alamat</label>
+                                    <input type="text" name="alamat" class="form-control" placeholder="Masukkan Nomor Contact Person">
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Masukkan Nomor Contact Person">
+                                </div>
+                            </div>                    
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <div>
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control form-control-icon" placeholder="Masukkan Email">
                                     </div>
                                 </div>
                             </div>
-                            <!--end col-->
-                            <div class="col-xxl-6">
-                                <label for="emailInput" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="emailInput" placeholder="Enter your email">
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-6">
-                                <label for="passwordInput" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="passwordInput" value="451326546" placeholder="Enter password">
-                            </div>
-                            <!--end col-->
-                            <div class="col-lg-12">
-                                <div class="hstack gap-2 justify-content-end">
-                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="npwp" class="form-label">NPWP</label>
+                                    <input type="text" name="npwp" class="form-control" placeholder="Masukkan NPWP">
                                 </div>
-                            </div>
-                            <!--end col-->
+                            </div> 
                         </div>
-                        <!--end row-->
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-
-
-
-
+</div>
 @endsection
 
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script async src="//code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
-    <script>
-        $(function () {
-            $("select").select2();
-        });
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+<script>
+    // Fungsi untuk menyimpan data formulir utama
+    function simpanDataFormUtama() {
+        var dataForm = {
+            nama_project: document.getElementById('nama_project').value,
+            id_customer: document.getElementById('customer_name').value,
+            lokasi_project: document.getElementById('lokasi_project').value,
+            contact_person: document.getElementById('contact_person').value,
+            nomor_contact_person: document.getElementById('nomor_contact_person').value,
+            displacement: document.getElementById('displacement').value,
+            jenis_kapal: document.getElementById('jenis_kapal').value,
+        };
 
-        $(function () {
-        // Data customer dari controller
-       
-        
-        $(document).ready(function() {
-            var customerData = <?php echo json_encode($customer); ?>;
-    $("#customer_name").autocomplete({
-        source: customerData,
-        minLength: 1
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        fetch('{{ route('on_request.updated', $data->id) }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify(dataForm),
+        })
+        .then(function (response) {
+            // Handle respons Anda di sini
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    }
+
+    // Simpan data formulir utama secara otomatis saat ada perubahan
+    document.querySelectorAll('.form-control').forEach(function (input) {
+        input.addEventListener('input', function () {
+            simpanDataFormUtama();
+        });
     });
-});
+
+    document.querySelectorAll('.form-control').forEach(function (input) {
+        input.addEventListener('input', function () {
+            simpanDataFormUtama();
+        });
+    });
+
+    //hapus keluhan
+    document.querySelectorAll('.btnHapus').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var keluhanId = this.getAttribute('data-keluhan-id');
+
+            fetch('{{ url('keluhan') }}/' + keluhanId, {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(function (response) {
+                if (response.status === 200) {
+                    var row = button.closest('tr');
+                    row.remove();
+                    refreshNomorUrut();
+                    Swal.fire(
+                        '',
+                        'Keluhan Berhasil Dihapus',
+                        'success'
+                    )
+                } else {
+                    console.error('Gagal menghapus keluhan');
+                }
+            })
+            .catch(function (error) {
+                console.error('Terjadi kesalahan:', error);
+            });
+        });
+    });
+
+    // Fungsi untuk menghapus keluhan sehabis taambah data
+    function hapusKeluhan(keluhanId) {
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch('{{ url('keluhan') }}/' + keluhanId, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+        })
+        .then(function (response) {
+            if (response.status === 200) {
+                var row = document.querySelector('[data-keluhan-id="' + keluhanId + '"]').closest('tr');
+                row.remove();
+                refreshNomorUrut();
+                Swal.fire(
+                    '',
+                    'Keluhan Berhasil Dihapus',
+                    'success'
+                )
+            } else {
+                console.error('Gagal menghapus keluhan');
+            }
+        })
+        .catch(function (error) {
+            console.error('Terjadi kesalahan:', error);
+        });
+    }
+
+    //tambah customer
+    $(document).ready(function () {
+        $("#saveCustomerButton").click(function (e) {
+            e.preventDefault();
+
+            var form = $("#npwpForm");
+            var formData = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: form.attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response) {
+                        $("#exampleModalgrid").modal("hide");
+                    
+                        form[0].reset();
+               
+                        Swal.fire(
+                            '',
+                            'Customer Telah Berhasil Ditambahkan',
+                            'success'
+                        )
+                    } else {
+                        alert("Validation error: " + response.message);
+                    }
+                },
+                error: function (error) {
+                    alert("An error occurred while saving the customer.");
+                }
+            });
+        });
+    });
+
+    //get nama customer dan set ke inputan masing2
+    var route = "{{ url('customer') }}";
+    $('#customer_name').typeahead({
+        source: function (query, process) {
+            return $.get(route, { query: query }, function (data) {
+                return process(data.map(function(customer) {
+                    return customer.name;
+                }));
+            });
+        },
+        updater: function (item) {
+            $.get(route, { query: item }, function (customerData) {
+                if (customerData.length > 0) {
+                    var selectedCustomer = customerData[0];
+                    $('#contact_person').val(selectedCustomer.contact_person);
+                    $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
+                    $('#alamat').val(selectedCustomer.alamat);
+                    $('#npwp').val(selectedCustomer.npwp);
+                }
+            });
+            return item;
+        }
+    });
+
+    //button tambah request keluhan
+    var addButton = document.getElementById("tambahKeluhan");
+    addButton.addEventListener("click", tambahKeluhan);
+
+    function refreshNomorUrut() {
+        var tabel = document.getElementById("tabelKeluhan");
+        var rows = tabel.getElementsByTagName("tr");
+
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].getElementsByTagName("td")[0].textContent = i;
+        }
+    }
+
+    function tambahKeluhan() {
+        var keluhanInput = document.getElementById("keluhan").value;
+        var id = document.getElementById("on_request_id").value;
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        if (keluhanInput.trim() !== "") {
+            fetch('{{ route('keluhan.store', '') }}/' + {{ $data->id }}, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({ keluhan: keluhanInput }),
+            })
+
+            .then(function (response) {
+                if (response.status === 200) {
+                    Swal.fire(
+                        '',
+                        'Keluhan Berhasil Ditambahkan',
+                        'success'
+                    )
+                    return response.json();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Gagal menambahkan keluhan!',
+                    });
+                    throw new Error('Gagal menambahkan keluhan');
+                }
+            })
+            .then(function (data) {
+                var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
+                var newRow = tabel.insertRow(tabel.rows.length);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = tabel.rows.length;
+                cell2.innerHTML = keluhanInput;
+                cell3.innerHTML = '<button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="' + data.id + '"><span><i><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></i></span></button>';
+
+                document.getElementById("keluhan").value = "";
+
+                var btnHapus = newRow.querySelector(".btnHapus");
+                btnHapus.addEventListener("click", function () {
+                    hapusKeluhan(data.id);
+                });
+
+                refreshNomorUrut();
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Keluhan Tidak Boleh Kosong!',
+            });
+        }
+    }
+
+    //hapus data yg sudah ada sebelumnya 
+    var btnHapus = document.querySelectorAll(".btnHapus");
+    btnHapus.forEach(function (button) {
+        button.addEventListener("click", function () {
+            var complaintId = this.getAttribute("data-complaint-id");
+            var row = this.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        });
+    });
+
+    //simpan data keluhan ke $keluhan
+    function simpanData() {
+        var keluhanRows = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0].rows;
+        var keluhanData = [];
+
+        for (var i = 0; i < keluhanRows.length; i++) {
+            var keluhan = keluhanRows[i].cells[1].innerText;
+            keluhanData.push(keluhan);
+        }
+        var keluhanInput = document.getElementById("keluhanInput");
+        keluhanInput.value = JSON.stringify(keluhanData);
+    }
+
+    //untuk semua select menggunakan select2
+    $(function () {
+        $("select").select2();
     });
     </script>
 @endsection

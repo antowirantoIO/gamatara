@@ -64,21 +64,11 @@
                                             <td>{{$v->displacement}}</td>
                                             <td>{{$v->jenis_kapal}}</td>
                                             <td>
-                                                <a href="{{ route('on_request.edit',$v->id) }}" class="btn btn-success btn-sm">
+                                                <a href="{{ route('on_request.detail',$v->id) }}" class="btn btn-warning btn-sm">
                                                     <span>
-                                                        <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                                        <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                     </span>
                                                 </a>
-                                                &nbsp;
-                                                <a data-id="{{ $v->id }}" data-name="on_request" data-form="form-on_request" class="btn btn-danger btn-sm deleteData">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                <form method="get" id="form-on_request{{ $v->id }}" action="{{ route('on_request.delete', $v->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
                                             </td>
                                         </tr>
                                         @endforeach

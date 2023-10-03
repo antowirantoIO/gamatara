@@ -8,6 +8,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\OnRequestController;
+use App\Http\Controllers\OnProgressController;
+use App\Http\Controllers\CompleteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,10 +85,30 @@ Route::prefix('pekerjaan')->group(function () {
 //On Request
 Route::prefix('on_request')->group(function () {
     Route::get('/', [OnRequestController::class, 'index'])->name('on_request');
-    Route::get('/edit/{id}', [OnRequestController::class, 'edit'])->name('on_request.edit');
+    Route::get('/detail/{id}', [OnRequestController::class, 'detail'])->name('on_request.detail');
     Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
     Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
     Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
     Route::get('/delete/{id}', [OnRequestController::class, 'delete'])->name('on_request.delete');
+});
+
+//On Progress
+Route::prefix('on_progress')->group(function () {
+    Route::get('/', [OnProgressController::class, 'index'])->name('on_progress');
+    Route::get('/edit/{id}', [OnProgressController::class, 'edit'])->name('on_progress.edit');
+    Route::get('/create', [OnProgressController::class, 'create'])->name('on_progress.create');
+    Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
+    Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
+    Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
+});
+
+//complete
+Route::prefix('complete')->group(function () {
+    Route::get('/', [CompleteController::class, 'index'])->name('complete');
+    Route::get('/edit/{id}', [CompleteController::class, 'edit'])->name('complete.edit');
+    Route::get('/create', [CompleteController::class, 'create'])->name('complete.create');
+    Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
+    Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
+    Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
 });
 

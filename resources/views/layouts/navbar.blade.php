@@ -69,25 +69,46 @@
                         <i><img src="{{asset('assets/images/task-squares.svg')}}"></i> <span data-key="t-layouts">On Request</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link menu-link" href="" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/notification-statuss.svg')}}"></i><span data-key="t-layouts">On Survey</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                    <a class="nav-link menu-link {{ set_active(['on_progress']) }}" href="{{ route('on_progress') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/activitys.svg')}}"></i> <span data-key="t-layouts">On Progress</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                    <a class="nav-link menu-link {{ set_active(['complete']) }}" href="{{ route('complete') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/chart-successs.svg')}}"></i> <span data-key="t-layouts">Complete</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                    <a class="nav-link menu-link {{ set_active(['laporan']) }}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
                         <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Laporan</span>
                     </a>
+                    <div class="collapse menu-dropdown" id="laporandashboard">
+                        <ul class="nav nav-sm flex-column">
+                            
+                            <li class="nav-item">
+                                <a href="" class="nav-link {{ set_active(['laporan_customer']) }}" data-key="t-analytics"> Laporan Customer </a>
+                            </li>
+                       
+                            <li class="nav-item">
+                                <a href="" class="nav-link {{ set_active(['laporan_vendor']) }}" data-key="t-analytics"> Laporan Vendor </a>
+                            </li>
+                         
+                            <li class="nav-item">
+                                <a href="" class="nav-link {{ set_active(['laporan_pm']) }}" data-key="t-ecommerce"> Laporan PM </a>
+                            </li>
+                           
+                            <li class="nav-item">
+                                <a href="" class="nav-link {{ set_active(['satisfaction_note']) }}" data-key="t-crypto"> Satisfaction Note</a>
+                            </li>
+                   
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </div>

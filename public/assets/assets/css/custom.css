@@ -16,6 +16,10 @@ File: Custom Css File
     color: #696969;
 }
 
+.navbar-menu .navbar-nav .nav-link i{
+    min-width: 2.75rem;
+}
+
 .bg-checkbox {
     background-color: #F4F6F9!important;
     padding: 10px; /* Ubah ukuran padding sesuai kebutuhan */

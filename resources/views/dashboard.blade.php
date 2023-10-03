@@ -44,7 +44,7 @@
             <div class="row">
                 
                 <div class="col-md-3" style="flex:1;">
-                    <div class="card card-animate">
+                    <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm flex-shrink-0">
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="col-md-3" style="flex:1;">
-                    <div class="card card-animate">
+                    <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm flex-shrink-0">
@@ -76,7 +76,7 @@
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
                                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Request</p>
-                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="3"></span></h4>
+                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$request}}"></span></h4>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                 </div>
     
                 <div class="col-md-3" style="flex:1;">
-                    <div class="card card-animate">
+                    <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm flex-shrink-0">
@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="col-md-3" style="flex:1;">
-                    <div class="card card-animate">
+                    <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm flex-shrink-0">
@@ -125,7 +125,7 @@
 
                 
                 <div class="col-md-3" style="flex:1;">
-                    <div class="card card-animate">
+                    <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm flex-shrink-0">
@@ -145,7 +145,7 @@
                 </div>
 
                 <!-- <div class="col-md-3" style="flex:1;">
-                    <div class="card card-animate">
+                    <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="flex-grow-1 overflow-hidden">
@@ -183,33 +183,31 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="container">
-                                <div class="table-responsive table-card">
-                                    <table class="table">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th style="color:#929EAE">Kode Project</th>
-                                                <th style="color:#929EAE">Nama Project</th>
-                                                <th style="color:#929EAE">Nama Customer</th>
-                                                <th style="color:#929EAE">Project Manajer</th>
-                                                <th style="color:#929EAE">Tanggal Mulai</th>
-                                                <th style="color:#929EAE">Tanggal Selesai</th>
-                                                <th style="color:#929EAE">Progress</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>P210823-001</td>
-                                                <td>Nama Project</td>
-                                                <td>PT Bomas Tiga</td>
-                                                <td>Bagus Ampito</td>
-                                                <td>28 Ags 2023</td>
-                                                <td>28 Sept 2023</td>
-                                                <td>133/436</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table" id="example1">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="color:#929EAE">Kode Project</th>
+                                            <th style="color:#929EAE">Nama Project</th>
+                                            <th style="color:#929EAE">Nama Customer</th>
+                                            <th style="color:#929EAE">Project Manajer</th>
+                                            <th style="color:#929EAE">Tanggal Mulai</th>
+                                            <th style="color:#929EAE">Tanggal Selesai</th>
+                                            <th style="color:#929EAE">Progress</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>P210823-001</td>
+                                            <td>Nama Project</td>
+                                            <td>PT Bomas Tiga</td>
+                                            <td>Bagus Ampito</td>
+                                            <td>28 Ags 2023</td>
+                                            <td>28 Sept 2023</td>
+                                            <td>133/436</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -232,35 +230,34 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="container">
-                                <div class="table-responsive table-card">
-                                    <table class="table">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th style="color:#929EAE"><center>Project Manager</center></th>
-                                                <th style="color:#929EAE"><center>On Progress</center></th>
-                                                <th style="color:#929EAE"><center>Complete</center></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><center>Bagus Ampito</center></td>
-                                                <td><Center>2</Center></td>
-                                                <td><center>25</center></td>
-                                            </tr>
-                                            <tr>
-                                                <td><center>Fina G Bastian</center></td>
-                                                <td><center>1</center></td>
-                                                <td><center>25</center></td>
-                                            </tr>
-                                            <tr>
-                                                <td><center>Adam Makmur</center></td>
-                                                <td><center>3</center></td>
-                                                <td><center>25</center></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table" id="example2">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="color:#929EAE"><center>Project Manager</center></th>
+                                            <th style="color:#929EAE"><center>On Progress</center></th>
+                                            <th style="color:#929EAE"><center>Complete</center></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><center>Bagus Ampito</center></td>
+                                            <td><Center>2</Center></td>
+                                            <td><center>25</center></td>
+                                        </tr>
+                                        <tr>
+                                            <td><center>Fina G Bastian</center></td>
+                                            <td><center>1</center></td>
+                                            <td><center>25</center></td>
+                                        </tr>
+                                        <tr>
+                                            <td><center>Adam Makmur</center></td>
+                                            <td><center>3</center></td>
+                                            <td><center>25</center></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                              
                             </div>
                         </div>
                     </div>
@@ -281,35 +278,33 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="container">
-                                <div class="table-responsive table-card">
-                                    <table class="table">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th style="color:#929EAE"><center>Project Manager</center></th>
-                                                <th style="color:#929EAE"><center>On Progress</center></th>
-                                                <th style="color:#929EAE"><center>Complete</center></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><center>Bagus Ampito</center></td>
-                                                <td><Center>2</Center></td>
-                                                <td><center>25</center></td>
-                                            </tr>
-                                            <tr>
-                                                <td><center>Fina G Bastian</center></td>
-                                                <td><center>1</center></td>
-                                                <td><center>25</center></td>
-                                            </tr>
-                                            <tr>
-                                                <td><center>Adam Makmur</center></td>
-                                                <td><center>3</center></td>
-                                                <td><center>25</center></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table" id="example3">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="color:#929EAE"><center>Project Manager</center></th>
+                                            <th style="color:#929EAE"><center>On Progress</center></th>
+                                            <th style="color:#929EAE"><center>Complete</center></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><center>Bagus Ampito</center></td>
+                                            <td><Center>2</Center></td>
+                                            <td><center>25</center></td>
+                                        </tr>
+                                        <tr>
+                                            <td><center>Fina G Bastian</center></td>
+                                            <td><center>1</center></td>
+                                            <td><center>25</center></td>
+                                        </tr>
+                                        <tr>
+                                            <td><center>Adam Makmur</center></td>
+                                            <td><center>3</center></td>
+                                            <td><center>25</center></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -319,4 +314,23 @@
         </div> 
     </div>
 </div>
+@endsection
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(function() {
+            $("#example1").DataTable({
+                fixedHeader:true,
+            });
+
+            $("#example2").DataTable({
+                fixedHeader:true,
+            });
+
+            $("#example3").DataTable({
+                fixedHeader:true,
+            });
+        })
+</script>
 @endsection

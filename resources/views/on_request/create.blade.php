@@ -102,7 +102,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label style="color:white;"><br><br><br></label>
-                                                <button type="button" id="tambahKeluhan" class="btn btn-primary">Tambah</button>
+                                                <button type="button" id="tambahKeluhan" class="btn btn-primary">Save</button>
                                             </div>
                                         </div> 
                                         <div id="tabelKeluhanWrapper">

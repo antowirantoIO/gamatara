@@ -188,16 +188,24 @@
     @endif
 
     <script>
-        $(document).ready(function () {
-            // Get the active submenu item
-            var activeSubmenuItem = $(".nav-link.active");
+$(document).ready(function () {
+    // Cari submenu yang aktif
+    var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
 
-            // Check if it's inside the Master Data dropdown
-            if (activeSubmenuItem.closest(".menu-dropdown").length) {
-                // Expand the Master Data dropdown
-                activeSubmenuItem.closest(".menu-dropdown").addClass("show");
-            }
-        });
+    // Periksa jika submenu aktif adalah submenu yang dapat diperluas
+    if (activeSubmenuItem.closest(".menu-dropdown").length) {
+        // Tambahkan kelas "show" ke submenu yang sesuai
+        activeSubmenuItem.closest(".menu-dropdown").addClass("show");
+
+        // Temukan menu head yang sesuai
+        var parentMenu = activeSubmenuItem.closest(".nav-item");
+
+        // Tambahkan kelas "show" ke menu head yang sesuai
+        parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
+    }
+});
+
+
     </script>
     
 </body>

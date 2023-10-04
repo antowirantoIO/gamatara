@@ -188,24 +188,22 @@
     @endif
 
     <script>
-$(document).ready(function () {
-    // Cari submenu yang aktif
-    var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
+        $(document).ready(function () {
+            // Cari submenu yang aktif
+            var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
 
-    // Periksa jika submenu aktif adalah submenu yang dapat diperluas
-    if (activeSubmenuItem.closest(".menu-dropdown").length) {
-        // Tambahkan kelas "show" ke submenu yang sesuai
-        activeSubmenuItem.closest(".menu-dropdown").addClass("show");
+            // Periksa jika submenu aktif adalah submenu yang dapat diperluas
+            if (activeSubmenuItem.closest(".menu-dropdown").length) {
+                // Tambahkan kelas "show" ke submenu yang sesuai
+                activeSubmenuItem.closest(".menu-dropdown").addClass("show");
 
-        // Temukan menu head yang sesuai
-        var parentMenu = activeSubmenuItem.closest(".nav-item");
+                // Temukan menu head yang sesuai
+                var parentMenu = activeSubmenuItem.closest(".nav-item");
 
-        // Tambahkan kelas "show" ke menu head yang sesuai
-        parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
-    }
-});
-
-
+                // Tambahkan kelas "show" ke menu head yang sesuai
+                parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
+            }
+        });
     </script>
     
 </body>

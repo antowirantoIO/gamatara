@@ -1,7 +1,12 @@
 @extends('index')
 
 @section('content')
+<style>
+    .table-container {
+    width: 100%;
+}
 
+</style>
 <div class="row">
     <div class="col">
         <div class="h-100">
@@ -15,12 +20,12 @@
                             <a href="{{ route('customer.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -41,7 +46,7 @@
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
+                            <div class="table-container">
                                 <table class="table" id="example1">
                                     <thead class="table-light">
                                         <tr>
@@ -55,33 +60,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data as $v)
-                                        <tr>
-                                            <td>{{$v->name}}</td>
-                                            <td>{{$v->alamat}}</td>
-                                            <td>{{$v->contact_person}}</td>
-                                            <td>{{$v->nomor_contact_person}}</td>
-                                            <td>{{$v->email}}</td>
-                                            <td>{{$v->npwp}}</td>
-                                            <td>
-                                                <a href="{{ route('customer.edit',$v->id) }}" class="btn btn-success btn-sm">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                &nbsp;
-                                                <a data-id="{{ $v->id }}" data-name="Customer {{ $v->name ?? null }}" data-form="form-customer" class="btn btn-danger btn-sm deleteData">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                <form method="get" id="form-customer{{ $v->id }}" action="{{ route('customer.delete', $v->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -93,15 +72,181 @@
         </div> 
     </div>
 </div>
+
+<!--modal-->
+<div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+            @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-4">
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="customer" class="form-label">Nama Customer</label>
+                                <input type="text" name="nama_customer" class="form-control" id="nama_customer">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="contact_person" class="form-label">Contact Person</label>
+                                <input type="text" name="contact_person" id="contact_person" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="alamat" class="form-label">Alamat</label>
+                                <input type="text" name="alamat" id="alamat" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                <input type="number" name="nomor_contact_person" id="nomor_contact_person" class="form-control" >
+                            </div>
+                        </div>                    
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <div>
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control form-control-icon">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="npwp" class="form-label">NPWP</label>
+                                <input type="text" name="npwp" id="npwp" class="form-control">
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                    <button class="btn btn-primary">Search</button>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</div>
+<!--end modal-->
 @endsection
+
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(function() {
-            $("#example1").DataTable({
-                fixedHeader:true,
+        var table = $('#example1').DataTable({
+            fixedHeader:true,
+            scrollX: false,
+            processing: true,
+            serverSide: true,
+            searching: false,
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    previous: "<i class='fas fa-angle-left'></i>",
+                    next: "<i class='fas fa-angle-right'></i>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
+                },
+            },
+            ajax: {
+                url: "{{ route('customer') }}",
+                data: function (d) {
+                    d.nama_customer         = $('#nama_customer').val();
+                    d.alamat                = $('#alamat').val();
+                    d.contact_person        = $('#contact_person').val();
+                    d.nomor_contact_person  = $('#nomor_contact_person').val();
+                    d.email                 = $('#email').val();
+                    d.npwp                  = $('#npwp').val();
+                }
+            },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'alamat', name: 'alamat'},
+                {data: 'contact_person', name: 'contact_person'},
+                {data: 'nomor_contact_person', name: 'nomor_contact_person'},
+                {data: 'email', name: 'email'},
+                {data: 'npwp', name: 'npwp'},
+                {data: 'action', name: 'action'}
+            ]
+        });
+
+        $('#nama_customer').on('change', function() {
+            table.draw();
+        });
+
+        $('#alamat').on('change', function() {
+            table.draw();
+        });
+
+        $('#contact_person').on('change', function() {
+            table.draw();
+        });
+
+        $('#nomor_contact_person').on('change', function() {
+            table.draw();
+        });
+
+        $('#email').on('change', function() {
+            table.draw();
+        });
+
+        $('#npwp').on('change', function() {
+            table.draw();
+        });
+
+        $('#clear-filter').on('click', function() {
+            event.preventDefault();
+            $('#search-form')[0].reset();
+            table.search('').draw();
+        });
+
+        function hideOverlay() {
+            $('.loading-overlay').fadeOut('slow', function() {
+                $(this).remove();
             });
-        })
+        }
+
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var nama_customer           = $('#nama_customer').val();
+            var alamat                  = $('#alamat').val();
+            var contact_person          = $('#contact_person').val();
+            var nomor_contact_person    = $('#nomor_contact_person').val();
+            var email                   = $('#email').val();
+            var npwp                    = $('#npwp').val();
+
+            var url = '{{ route("customer.export") }}?' + $.param({
+                nama_customer: nama_customer,
+                alamat: alamat,
+                contact_person: contact_person,
+                nomor_contact_person: nomor_contact_person,
+                email: email,
+                npwp: npwp
+            });
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
+
+        $(document).ready(function() {
+            $('.loading-overlay').hide();
+        });
+    });
 </script>
 @endsection

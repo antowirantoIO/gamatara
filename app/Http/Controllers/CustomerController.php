@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Exports\ExportCustomer;
 use App\Models\Customer;
+
 
 class CustomerController extends Controller
 {
@@ -14,9 +18,33 @@ class CustomerController extends Controller
             $data = Customer::where('name', 'LIKE', '%'. $query. '%')->get();
             return response()->json($data);
         }else{
-            $data = Customer::where('status',0)->get();
-
-            return view('customer.index', Compact('data'));
+            if ($request->ajax()) {
+                $data = Customer::orderBy('name','desc')
+                        ->filter($request);
+    
+                return Datatables::of($data)->addIndexColumn()
+                ->addColumn('action', function($data){
+                    return '<a href="'.route('customer.edit', $data->id).'" class="btn btn-success btn-sm">
+                        <span>
+                            <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                        </span>
+                    </a>
+                    &nbsp;
+                    <a data-id="'.$data->id.'" data-name="Customer '.$data->name.'" data-form="form-customer" class="btn btn-danger btn-sm deleteData">
+                        <span>
+                            <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                        </span>
+                    </a>
+                    <form method="POST" id="form-customer'.$data->id.'" action="'.route('customer.delete', $data->id).'">
+                        '.csrf_field().'
+                        '.method_field('DELETE').'
+                    </form>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);                    
+            }
+    
+            return view('customer.index');
         }
     }
     
@@ -28,8 +56,19 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'              => 'required',
+            'name'                  => 'required',
+            'alamat'                => 'required',
+            'contact_person'        => 'required',
+            'nomor_contact_person'  => 'required',
+            'email'                 => 'required',
+            'npwp'                  => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         $data = New Customer();
         $data->name                     = $request->input('name');
@@ -72,11 +111,19 @@ class CustomerController extends Controller
 
     public function delete($id)
     {
-        $data           = Customer::findOrFail($id);
-        $data->status   = 1;
-        $data->save();
+        $data = Customer::findOrFail($id);
+        $data->delete();
 
         return redirect(route('customer'))
                     ->with('success', 'Data berhasil dihapus');
+    }
+
+    public function export(Request $request)
+    {
+        $data = Customer::orderBy('name','desc')
+        ->filter($request)
+        ->get();
+
+        return Excel::download(new ExportCustomer($data), 'List Customer.xlsx');
     }
 }

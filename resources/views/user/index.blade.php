@@ -15,12 +15,12 @@
                             <a href="{{ route('user.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -53,33 +53,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data as $v)
-                                        <tr>
-                                            <td>{{$v->name}}</td>
-                                            <td>{{$v->role->name ?? ''}}</td>
-                                            <td>{{$v->nomor_telpon}}</td>
-                                            <td>{{$v->email}}</td>
-                                            <td>
-                                                <a href="{{ route('user.edit',$v->id) }}" class="btn btn-success btn-sm">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                &nbsp;
-                                                @if($v->id != 1)
-                                                <a data-id="{{ $v->id }}" data-name="user {{ $v->name ?? null }}" data-form="form-user" class="btn btn-danger btn-sm deleteData">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                <form method="get" id="form-user{{ $v->id }}" action="{{ route('user.delete', $v->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -91,15 +65,164 @@
         </div> 
     </div>
 </div>
+
+<!--modal-->
+<div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+            @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-4">
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="customer" class="form-label">Nama</label>
+                                <input type="text" name="name" class="form-control" id="name">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <select name="jabatan" id="jabatan" class="form-control">
+                                    <option value="">Pilih Jabatan</option>
+                                    @foreach($role as $r)
+                                        <option value="{{$r->id}}">{{ $r->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="nomor_telpom" class="form-label">Nomor Telpon</label>
+                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
+                            </div>
+                        </div>                
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <div>
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control form-control-icon">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                    <button class="btn btn-primary">Search</button>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</div>
+<!--end modal-->
 @endsection
+
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(function() {
-            $("#example1").DataTable({
-                fixedHeader:true,
+        var table = $('#example1').DataTable({
+            fixedHeader:true,
+            scrollX: false,
+            processing: true,
+            serverSide: true,
+            searching: false,
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
+                },
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+            ajax: {
+                url: "{{ route('user') }}",
+                data: function (d) {
+                    d.name          = $('#name').val();
+                    d.jabatan       = $('#jabatan').val();
+                    d.nomor_telpon  = $('#nomor_telpon').val();
+                    d.email         = $('#email').val();
+                }
+            },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'jabatan', name: 'jabatan'},
+                {data: 'nomor_telpon', name: 'nomor_telpon'},
+                {data: 'email', name: 'email'},
+                {data: 'action', name: 'action'}
+            ]
+        });
+
+        $('.form-control').on('change', function() {
+            table.draw();
+        });
+
+        function hideOverlay() {
+            $('.loading-overlay').fadeOut('slow', function() {
+                $(this).remove();
+            });
+        }
+
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var name            = $('#name').val();
+            var jabatan         = $('#jabatan').val();
+            var nomor_telpon    = $('#nomor_telpon').val();
+            var email           = $('#email').val();
+
+            var url = '{{ route("user.export") }}?' + $.param({
+                name: name,
+                jabatan: jabatan,
+                nomor_telpon: nomor_telpon,
+                email: email
+            });
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
+
+        $(document).ready(function() {
+            $('.loading-overlay').hide();
+        });
+
+        table.on('click', '.deleteData', function() {
+            let name = $(this).data('name');
+            let id = $(this).data('id');
+            let form = $(this).data('form');
+
+            Swal.fire({
+                title: "Apakah yakin?",
+                text: `Data ${name} akan Dihapus`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6492b8da",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Hapus",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(`#${form}${id}`).submit();
+                }
             });
         })
+    });
 </script>
 @endsection

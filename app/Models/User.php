@@ -47,4 +47,17 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Roles::class, 'jabatan', 'id');
     }
+
+    public function scopeFilter($query, $filter)
+    {
+        return $query->when($filter->name ?? false, function($query) use ($filter) {
+            return $query->where('name', 'like', "%$filter->name%");
+        })->when($filter->jabatan ?? false, function($query) use ($filter) {
+            return $query->where('jabatan', 'like', "%$filter->jabatan%");
+        })->when($filter->nomor_telpon ?? false, function($query) use ($filter) {
+            return $query->where('nomor_telpon', 'like', "%$filter->nomor_telpon%");
+        })->when($filter->email ?? false, function($query) use ($filter) {
+            return $query->where('email', 'like', "%$filter->email%");
+        });
+    }
 }

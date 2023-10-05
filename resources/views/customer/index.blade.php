@@ -42,7 +42,7 @@
 
                         <div class="card-body">
                             <div class="table-container">
-                                <table class="table" id="example1">
+                                <table class="table" id="tableDataLight">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Nama Customer</th>
@@ -135,7 +135,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(function() {
-        var table = $('#example1').DataTable({
+        var table = $('#tableDataLight').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
@@ -180,27 +180,7 @@
             ]
         });
 
-        $('#nama_customer').on('change', function() {
-            table.draw();
-        });
-
-        $('#alamat').on('change', function() {
-            table.draw();
-        });
-
-        $('#contact_person').on('change', function() {
-            table.draw();
-        });
-
-        $('#nomor_contact_person').on('change', function() {
-            table.draw();
-        });
-
-        $('#email').on('change', function() {
-            table.draw();
-        });
-
-        $('#npwp').on('change', function() {
+        $('.form-control').on('change', function() {
             table.draw();
         });
 
@@ -245,6 +225,27 @@
         $(document).ready(function() {
             $('.loading-overlay').hide();
         });
+
+        table.on('click', '.deleteData', function() {
+            let name = $(this).data('name');
+            let id = $(this).data('id');
+            let form = $(this).data('form');
+
+            Swal.fire({
+                title: "Apakah yakin?",
+                text: `Data ${name} akan Dihapus`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6492b8da",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Hapus",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(`#${form}${id}`).submit();
+                }
+            });
+        })
     });
 </script>
 @endsection

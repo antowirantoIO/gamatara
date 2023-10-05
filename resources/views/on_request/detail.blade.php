@@ -78,13 +78,13 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="displacement" class="form-label">Displacement Kapal</label>
-                                                <input type="text" name="displacement"  value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
+                                                <input type="text" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="Jenis Kapal" class="form-label">Jenis Kapal</label>
-                                                    <select name="jenis_kapal" id="jenis_kapal" class="form-control">
+                                                    <select name="jenis_kapal" name="jenis_kapal" id="jenis_kapal" class="form-control">
                                                         <option value="">Pilih Jenis Kapal</option>
                                                         @foreach($jenis_kapal as $l)
                                                         <option value="{{$l->id}}" {{ $l->id == $data->id_jenis_kapal ? 'selected' : '' }}>{{$l->name}}</option>

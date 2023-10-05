@@ -7,8 +7,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Exports\ExportCustomer;
 use App\Models\Customer;
-use validator;
-
 
 class CustomerController extends Controller
 {
@@ -36,7 +34,7 @@ class CustomerController extends Controller
                             <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                         </span>
                     </a>
-                    <form method="POST" id="form-customer'.$data->id.'" action="'.route('customer.delete', $data->id).'">
+                    <form method="GET" id="form-customer'.$data->id.'" action="'.route('customer.delete', $data->id).'">
                         '.csrf_field().'
                         '.method_field('DELETE').'
                     </form>';
@@ -121,8 +119,8 @@ class CustomerController extends Controller
     public function export(Request $request)
     {
         $data = Customer::orderBy('name','desc')
-        ->filter($request)
-        ->get();
+                ->filter($request)
+                ->get();
 
         return Excel::download(new ExportCustomer($data), 'List Customer.xlsx');
     }

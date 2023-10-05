@@ -28,20 +28,20 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="User" class="form-label">Nama</label>
-                                                <input type="text" name="name" value="{{$data->name}}" class="form-control" id="name" placeholder="Masukkan Nama User">
+                                                <input type="text" name="name" value="{{$data->name}}" id="name" class="form-control" placeholder="Masukkan Nama User">
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
-                                                <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" class="form-control" id="nomor_telpon" placeholder="Masukkan Nomor Telpon">
+                                                <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" id="nomor_telpon" class="form-control" placeholder="Masukkan Nomor Telpon">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <div>
                                                     <label for="email" class="form-label">Email</label>
-                                                    <input type="email" name="email" value="{{$data->email}}" class="form-control form-control-icon" id="email" placeholder="Masukkan Email">
+                                                    <input type="email" name="email" value="{{$data->email}}" id="email" class="form-control form-control-icon" placeholder="Masukkan Email">
                                                 </div>
                                             </div>
                                         </div>
@@ -59,14 +59,22 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="password" class="form-label">Password <span style='font-size:10px'>(Only For Change)</span></label>
-                                                <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password">
+                                                <input type="password" name="password" id="password" autocomplete="new-password" class="form-control" placeholder="Masukkan Password">
+                                                <span id="passwordLengthError" class="text-danger" style="display:none;">Password harus memiliki setidaknya 6 karakter.</span>
                                             </div>
+                                            @if ($errors->has('password'))
+                                                <span class="text-danger">{{ $errors->first('password') }}</span>
+                                            @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="konfirmasi_password" class="form-label">Konfirmasi Password</label>
-                                                <input type="password" name="konfirmasi_password" class="form-control" id="konfirmasi_password" placeholder="Masukkan Konfirmasi Password">
+                                            <label for="konfirmasi_password" class="form-label">Konfirmasi Password</label>
+                                            <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control" placeholder="Masukkan Konfirmasi Password">
+                                            <div class="col-12">
+                                                <span id="passwordMismatchError" class="text-danger" style="display:none;">Password tidak sesuai.</span>
                                             </div>
+                                            @if ($errors->has('konfirmasi_password'))
+                                                <span class="text-danger">{{ $errors->first('konfirmasi_password') }}</span>
+                                            @endif
                                         </div>
                                         
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
@@ -85,6 +93,41 @@
         </div> 
     </div>
 </div>
+@endsection
 
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+//konfirmasi password
+function checkPasswordMatch() {
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('konfirmasi_password').value;
+    var konfirmasiPasswordInput = document.getElementById('konfirmasi_password');
+
+    if (password === confirmPassword) {
+        document.getElementById('passwordMismatchError').style.display = 'none';
+        konfirmasiPasswordInput.classList.remove('is-invalid');
+    } else {
+        document.getElementById('passwordMismatchError').style.display = 'block';
+        konfirmasiPasswordInput.classList.add('is-invalid');
+    }
+}
+document.getElementById('konfirmasi_password').addEventListener('input', checkPasswordMatch);
+
+//password tidak boleh kurang dari 6
+function checkPasswordLength() {
+    var passwordInput = document.getElementById('password');
+    var passwordLengthError = document.getElementById('passwordLengthError');
+    
+    if (passwordInput.value.length < 6) {
+        passwordLengthError.style.display = 'block';
+        passwordInput.classList.add('is-invalid');
+    } else {
+        passwordLengthError.style.display = 'none';
+        passwordInput.classList.remove('is-invalid');
+    }
+}
+document.getElementById('password').addEventListener('input', checkPasswordLength);
+</script>
 @endsection
 

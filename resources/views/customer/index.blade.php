@@ -1,11 +1,6 @@
 @extends('index')
 
 @section('content')
-<style>
-    .table-container {
-    width: 100%;
-}
-
 </style>
 <div class="row">
     <div class="col">
@@ -138,7 +133,6 @@
 
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(function() {
         var table = $('#example1').DataTable({
@@ -155,10 +149,14 @@
                 paginate: {
                     Search: '<i class="icon-search"></i>',
                     first: "<i class='fas fa-angle-double-left'></i>",
-                    previous: "<i class='fas fa-angle-left'></i>",
-                    next: "<i class='fas fa-angle-right'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
                     last: "<i class='fas fa-angle-double-right'></i>",
                 },
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
             },
             ajax: {
                 url: "{{ route('customer') }}",

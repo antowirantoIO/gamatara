@@ -144,7 +144,6 @@
     <!-- Dashboard init -->
     <script src="{{asset('assets/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
 
-
     @yield('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
@@ -189,18 +188,11 @@
 
     <script>
         $(document).ready(function () {
-            // Cari submenu yang aktif
             var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
 
-            // Periksa jika submenu aktif adalah submenu yang dapat diperluas
             if (activeSubmenuItem.closest(".menu-dropdown").length) {
-                // Tambahkan kelas "show" ke submenu yang sesuai
                 activeSubmenuItem.closest(".menu-dropdown").addClass("show");
-
-                // Temukan menu head yang sesuai
                 var parentMenu = activeSubmenuItem.closest(".nav-item");
-
-                // Tambahkan kelas "show" ke menu head yang sesuai
                 parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
             }
         });

@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('customer.store')}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
@@ -75,7 +75,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" name="npwp" id="npwp" value="{{ old('npwp') }}" maxlength="15" class="form-control" placeholder="Masukkan NPWP">
+                                                <input type="text" name="npwp" id="npwp" value="{{ old('npwp') }}" maxlength="16" class="form-control" placeholder="Masukkan NPWP">
                                                 @if ($errors->has('npwp'))
                                                     <span class="text-danger">{{ $errors->first('npwp') }}</span>
                                                 @endif
@@ -98,29 +98,36 @@
         </div> 
     </div>
 </div>
-
 @endsection
+
 @section('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    // Menambahkan event listener saat nilai input berubah
-    $('#npwp').on('input', function() {
-        var value = $('#npwp').val();
-        var formattedNpwp = formatNpwp(value); // Memanggil fungsi formatNpwp dengan nilai input
-        $('#npwp').val(formattedNpwp); // Mengatur nilai input dengan format NPWP
-    });
-
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            // Hanya berlaku format jika ada minimal 12 karakter
-            if (value.length >= 12) {
-                return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-            }
-        }
-        // Jika tidak memenuhi kondisi, kembalikan nilai input tanpa mengubah format
-        return value;
+const NPWP = document.getElementById("npwp")
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
     }
-});
+
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [      
+                    match[1], 
+                    match[2] ? ".": "",
+                    match[2], 
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+            
+        } catch(err) {
+            return "";
+        }
+ }
 </script>
 @endsection

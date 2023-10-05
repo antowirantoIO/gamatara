@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Exports\ExportCustomer;
 use App\Models\Customer;
+use validator;
 
 
 class CustomerController extends Controller
@@ -19,7 +20,7 @@ class CustomerController extends Controller
             return response()->json($data);
         }else{
             if ($request->ajax()) {
-                $data = Customer::orderBy('name','desc')
+                $data = Customer::orderBy('name','asc')
                         ->filter($request);
     
                 return Datatables::of($data)->addIndexColumn()
@@ -61,14 +62,8 @@ class CustomerController extends Controller
             'contact_person'        => 'required',
             'nomor_contact_person'  => 'required',
             'email'                 => 'required',
-            'npwp'                  => 'required'
+            'npwp'                  => 'required|min:15',
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
 
         $data = New Customer();
         $data->name                     = $request->input('name');
@@ -93,7 +88,12 @@ class CustomerController extends Controller
     public function updated(Request $request)
     {
         $request->validate([
-            'name'              => 'required',
+            'name'                  => 'required',
+            'alamat'                => 'required',
+            'contact_person'        => 'required',
+            'nomor_contact_person'  => 'required',
+            'email'                 => 'required',
+            'npwp'                  => 'required|min:15',
         ]);
 
         $data                           = Customer::find($request->id);

@@ -78,6 +78,11 @@
                                 <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Setting Pekerjaan</a>
                             </li>
                             @endcan
+                            @can('project_manager')
+                            <li class="nav-item">
+                                <a href="{{ route('project_manager') }}" class="nav-link {{ request()->is('project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager</a>
+                            </li>
+                            @endcan
                             @can('vendor')
                             <li class="nav-item">
                                 <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>

@@ -1,5 +1,5 @@
 <?php
-    require_once app_path('Helper/Helper.php');
+   require_once app_path('Helper/helper.php');
 ?>
     <!-- LOGO -->
     <div class="navbar-brand-box">
@@ -31,7 +31,7 @@
                 </li>
                 @endcan
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->is('customer*') || request()->is('user*') || request()->is('role*') || 
+                    <a class="nav-link menu-link {{ request()->is('customer*') || request()->is('user*') || request()->is('role*') ||
                         request()->is('vendor*') || request()->is('pekerjaan*')? 'active' : '' || request()->is('karyawan*')? 'active' : '' ||
                         request()->is('kategori*') || request()->is('sub_kategori*')? 'active' : '' || request()->is('setting_pekerjaan*')? 'active' : ''}}" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i><img src="{{asset('assets/images/document-text.svg')}}"></i> <span data-key="t-layouts">Master Data</span>
@@ -83,10 +83,10 @@
                                 <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>
                             </li>
                             @endcan
-                           
+
                         </ul>
                     </div>
-                </li> 
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('on_request*') ? 'active' : ''}}" href="{{ route('on_request') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/task-squares.svg')}}"></i> <span data-key="t-layouts">On Request</span>
@@ -113,23 +113,23 @@
                     </a>
                     <div class="collapse menu-dropdown" id="laporandashboard">
                         <ul class="nav nav-sm flex-column">
-                            
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ request()->is('laporan_customer*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Customer </a>
                             </li>
-                       
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ request()->is('laporan_vendor*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Vendor </a>
                             </li>
-                         
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ request()->is('laporan_pd*') ? 'active' : ''}}" data-key="t-ecommerce"> Laporan PM </a>
                             </li>
-                           
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ set_active(['satisfaction_note']) }}" data-key="t-crypto"> Satisfaction Note</a>
                             </li>
-                   
+
                         </ul>
                     </div>
                 </li>
@@ -138,4 +138,3 @@
     </div>
 
     <div class="sidebar-background"></div>
-    

@@ -100,6 +100,10 @@ Route::prefix('on_progress')->group(function () {
     Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
     Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
     Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
+    Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
+    Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
+    Route::get('detail-worker',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
+
 });
 
 //complete

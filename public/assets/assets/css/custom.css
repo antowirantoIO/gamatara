@@ -7,6 +7,11 @@ File: Custom Css File
 */
 .form-control {
     background-color: #F4F6F9;
+    border:none;
+}
+.form-control:focus{
+    border-width: 1px;
+    border-style: solid;
 }
 .cust-checkbox {
     width: 15px;
@@ -75,3 +80,32 @@ body{
 .navbar-menu .navbar-nav .nav-sm .nav-link:before {
     display: none !important;
 }
+
+.select2-container--bootstrap-5 .select2-selection {
+    background-color:#f4f6f9 !important;
+    border: none !important;
+    border-radius: 9px !important;
+    font-style: italic;
+    --vz-form-select-bg-img: url('/assets/images/arrow-down.svg')
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered{
+    color: #696969 !important;
+}
+
+.nav-tabs {
+    border: none;
+}
+
+.nav-tabs .nav-link {
+    background: #C0DBF34D;
+    color: #194BFB;
+    font-size: 10px;
+}
+
+.nav-tabs .nav-link.active {
+    background: #194BFB;
+    color: white;
+    font-size: 10px;
+}
+

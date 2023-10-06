@@ -1,5 +1,5 @@
 <?php
-    require_once app_path('Helper/Helper.php');
+   require_once app_path('Helper/helper.php');
 ?>
     <!-- LOGO -->
     <div class="navbar-brand-box">
@@ -63,7 +63,7 @@
                             @endcan
                         </ul>
                     </div>
-                </li> 
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ set_active(['on_request']) }}" href="{{ route('on_request') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/task-squares.svg')}}"></i> <span data-key="t-layouts">On Request</span>
@@ -75,7 +75,7 @@
                     </a>
                 </li> -->
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ set_active(['on_progress']) }}" href="{{ route('on_progress') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                    <a class="nav-link menu-link {{ request()->is(['on_progress','on_progress/*']) ? 'active' : '' }}" href="{{ route('on_progress') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
                         <i><img src="{{asset('assets/images/activitys.svg')}}"></i> <span data-key="t-layouts">On Progress</span>
                     </a>
                 </li>
@@ -90,23 +90,23 @@
                     </a>
                     <div class="collapse menu-dropdown" id="laporandashboard">
                         <ul class="nav nav-sm flex-column">
-                            
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ set_active(['laporan_customer']) }}" data-key="t-analytics"> Laporan Customer </a>
                             </li>
-                       
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ set_active(['laporan_vendor']) }}" data-key="t-analytics"> Laporan Vendor </a>
                             </li>
-                         
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ set_active(['laporan_pm']) }}" data-key="t-ecommerce"> Laporan PM </a>
                             </li>
-                           
+
                             <li class="nav-item">
                                 <a href="" class="nav-link {{ set_active(['satisfaction_note']) }}" data-key="t-crypto"> Satisfaction Note</a>
                             </li>
-                   
+
                         </ul>
                     </div>
                 </li>
@@ -115,4 +115,3 @@
     </div>
 
     <div class="sidebar-background"></div>
-    

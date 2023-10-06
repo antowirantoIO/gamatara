@@ -3,7 +3,7 @@
 
 <head>
 
-    <meta charset="utf-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
@@ -146,6 +146,7 @@
     <!-- Dashboard init -->
     <script src="{{asset('assets/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
 
+    @yield('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!-- Scripts -->
@@ -178,10 +179,10 @@
     <script src="{{asset('assets/assets/js/pages/select2.init.js')}}"></script>
 
     <!-- autocomplete js -->
-    <script src="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js')}}"></script>
+    <!-- <script src="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js')}}"></script> -->
 
     <!-- init js -->
-    <script src="{{asset('assets/assets/js/pages/form-advanced.init.js')}}"></script>
+    <!-- <script src="{{asset('assets/assets/js/pages/form-advanced.init.js')}}"></script> -->
 
     @if (session('success'))
         <script>
@@ -195,13 +196,12 @@
 
     <script>
         $(document).ready(function () {
-            // Get the active submenu item
-            var activeSubmenuItem = $(".nav-link.active");
+            var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
 
-            // Check if it's inside the Master Data dropdown
             if (activeSubmenuItem.closest(".menu-dropdown").length) {
-                // Expand the Master Data dropdown
                 activeSubmenuItem.closest(".menu-dropdown").addClass("show");
+                var parentMenu = activeSubmenuItem.closest(".nav-item");
+                parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
             }
         });
     </script>

@@ -41,36 +41,28 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="container">
+                            <div class=" table-responsive">
                                 <table class="table" id="example1">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Kategori Pekerjaan</th>
-                                            <th style="color:#929EAE">Sub Kategori Pekerjaan</th>
-                                            <th style="color:#929EAE">Jenis Pekerjaan</th>
-                                            <th style="color:#929EAE">Detail / Other</th>
+                                            <th style="color:#929EAE">Nama Pekerjaan</th>
                                             <th style="color:#929EAE">Length (mm)</th>
                                             <th style="color:#929EAE">Width (mm)</th>
                                             <th style="color:#929EAE">Thick (mm)</th>
                                             <th style="color:#929EAE">Unit</th>
-                                            <th style="color:#929EAE">Harga Vendor</th>
-                                            <th style="color:#929EAE">Harga Customer</th>
+                                            <th style="color:#929EAE">Conversion</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($data as $v)
                                         <tr>
-                                            <td>{{$v->kategori_pekerjaan}}</td>
-                                            <td>{{$v->sub_kategori_pekerjaan}}</td>
-                                            <td>{{$v->jenis_pekerjaan}}</td>
-                                            <td>{{$v->detailother}}</td>
+                                            <td>{{$v->name}}</td>
                                             <td>{{$v->length}}</td>
                                             <td>{{$v->width}}</td>
                                             <td>{{$v->thick}}</td>
                                             <td>{{$v->unit}}</td>
-                                            <td>{{$v->harga_vendor}}</td>
-                                            <td>{{$v->harga_customer}}</td>
+                                            <td>{{$v->conversion}}</td>
                                             <td>
                                                 <a href="{{ route('pekerjaan.edit',$v->id) }}" class="btn btn-success btn-sm">
                                                     <span>
@@ -108,8 +100,7 @@
 <script>
     $(function() {
             $("#example1").DataTable({
-                fixedHeader:true,
-                scrollX:true
+                fixedHeader:true
             });
         })
 </script>

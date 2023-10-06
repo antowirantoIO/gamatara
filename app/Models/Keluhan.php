@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Keluhan extends Model
 {
-    protected $table = 'keluhan';
+    protected $table = 'project_request';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 }

@@ -22,21 +22,16 @@ class PekerjaanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori_pekerjaan'   => 'required',
+            'name'   => 'required',
         ]);
 
         $data                           = New Pekerjaan();
-        $data->kategori_pekerjaan       = $request->input('kategori_pekerjaan');
-        $data->sub_kategori_pekerjaan   = $request->input('sub_kategori_pekerjaan');
-        $data->jenis_pekerjaan          = $request->input('jenis_pekerjaan');
-        $data->detailother              = $request->input('detailother');
+        $data->name                     = $request->input('name');
         $data->length                   = $request->input('length');
         $data->width                    = $request->input('width');
         $data->thick                    = $request->input('thick');
         $data->unit                     = $request->input('unit');
-        $data->harga_vendor             = $request->input('harga_vendor');
-        $data->harga_customer           = $request->input('harga_customer');
-        $data->convert                  = $request->input('convert');
+        $data->conversion               = $request->input('conversion');
         $data->save();
 
         return redirect(route('pekerjaan'))
@@ -53,21 +48,16 @@ class PekerjaanController extends Controller
     public function updated(Request $request)
     {
         $request->validate([
-            'kategori_pekerjaan'   => 'required',
+            'name'   => 'required',
         ]);
 
         $data                           = Pekerjaan::find($request->id);
-        $data->kategori_pekerjaan       = $request->input('kategori_pekerjaan');
-        $data->sub_kategori_pekerjaan   = $request->input('sub_kategori_pekerjaan');
-        $data->jenis_pekerjaan          = $request->input('jenis_pekerjaan');
-        $data->detailother              = $request->input('detailother');
+        $data->name                     = $request->input('name');
         $data->length                   = $request->input('length');
         $data->width                    = $request->input('width');
         $data->thick                    = $request->input('thick');
         $data->unit                     = $request->input('unit');
-        $data->harga_vendor             = $request->input('harga_vendor');
-        $data->harga_customer           = $request->input('harga_customer');
-        $data->convert                  = $request->input('convert');
+        $data->conversion               = $request->input('conversion');
         $data->save();
 
         return redirect(route('pekerjaan'))

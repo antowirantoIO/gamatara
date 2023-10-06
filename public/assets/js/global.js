@@ -19,25 +19,25 @@ $(".logout").click(function () {
     });
 });
 
-$('.deleteData').on('click', function() {
-    let name = $(this).data('name');
-    let id = $(this).data('id');
-    let form = $(this).data('form');
-    Swal.fire({
-        title: "Apakah yakin?",
-        text: `Data ${name} akan Dihapus`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#6492b8da",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Hapus",
-        cancelButtonText: "Batal",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $(`#${form}${id}`).submit();
-        }
-    });
-})
+// $('#tableDataLight').on('click', function() {
+//     let name = $(this).data('name');
+//     let id = $(this).data('id');
+//     let form = $(this).data('form');
+//     // Swal.fire({
+//     //     title: "Apakah yakin?",
+//     //     text: `Data ${name} akan Dihapus`,
+//     //     icon: "warning",
+//     //     showCancelButton: true,
+//     //     confirmButtonColor: "#6492b8da",
+//     //     cancelButtonColor: "#d33",
+//     //     confirmButtonText: "Hapus",
+//     //     cancelButtonText: "Batal",
+//     // }).then((result) => {
+//     //     if (result.isConfirmed) {
+//     //         $(`#${form}${id}`).submit();
+//     //     }
+//     // });
+// })
 
 $('.changeTA').on('change', function() {
     $('#formChangeTH').trigger('submit');

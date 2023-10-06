@@ -23,45 +23,61 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('customer.updated',$data->id)}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('customer.updated',$data->id)}}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="customer" class="form-label">Nama Customer</label>
-                                                <input type="text" name="name" value="{{$data->name}}" class="form-control" id="name" placeholder="Masukkan Nama Customer">
+                                                <input type="text" name="name" value="{{$data->name}}" id="name" class="form-control" placeholder="Masukkan Nama Customer">
+                                                @if ($errors->has('name'))
+                                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="contact_person" class="form-label">Contact Person</label>
-                                                <input type="text" name="contact_person" value="{{$data->contact_person}}" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" id="contact_person" value="{{$data->contact_person}}" class="form-control" placeholder="Masukkan Contact Person">
+                                                @if ($errors->has('contact_person'))
+                                                    <span class="text-danger">{{ $errors->first('contact_person') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="alamat" class="form-label">Alamat</label>
-                                                <input type="text" name="alamat"  value="{{$data->alamat}}" class="form-control" id="alamat" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="text" name="alamat"id="alamat" value="{{$data->alamat}}" class="form-control" placeholder="Masukkan Alamat">
+                                                @if ($errors->has('alamat'))
+                                                    <span class="text-danger">{{ $errors->first('alamat') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="number" class="form-control" name="nomor_contact_person" value="{{$data->nomor_contact_person}}" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="number" class="form-control" name="nomor_contact_person"  id="nomor_contact_person" value="{{$data->nomor_contact_person}}"placeholder="Masukkan Nomor Contact Person">
+                                                @if ($errors->has('nomor_contact_person'))
+                                                    <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
+                                                @endif
                                             </div>
                                         </div>                    
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <div>
-                                                    <label for="email" class="form-label">Email</label>
-                                                    <input type="email" name="email"  value="{{$data->email}}" class="form-control" id="email" placeholder="Masukkan Email">
-                                                </div>
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="email" name="email" id="email" value="{{$data->email}}" class="form-control" placeholder="Masukkan Email">
+                                                @if ($errors->has('email'))
+                                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" name="npwp" value="{{$data->npwp}}" class="form-control" id="npwp" placeholder="Masukkan NPWP">
+                                                <input type="text" name="npwp" id="npwp" value="{{$data->npwp}}" maxlength="15" class="form-control" placeholder="Masukkan NPWP">
+                                                @if ($errors->has('npwp'))
+                                                    <span class="text-danger">{{ $errors->first('npwp') }}</span>
+                                                @endif
                                             </div>
                                         </div> 
                                         
@@ -80,4 +96,36 @@
         </div> 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+const NPWP = document.getElementById("npwp")
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
+    }
+
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [      
+                    match[1], 
+                    match[2] ? ".": "",
+                    match[2], 
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+            
+        } catch(err) {
+            return "";
+        }
+ }
+</script>
 @endsection

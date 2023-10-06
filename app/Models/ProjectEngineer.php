@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Keluhan extends Model
+class ProjectEngineer extends Model
 {
-    protected $table = 'project_request';
+    protected $table = 'pe';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 }

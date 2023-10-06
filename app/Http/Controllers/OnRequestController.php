@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\LokasiProject;
 use App\Models\JenisKapal;
 use App\Models\Keluhan;
+use App\Models\ProjectManager;
 
 class OnRequestController extends Controller
 {
@@ -78,9 +79,10 @@ class OnRequestController extends Controller
         $customer       = Customer::get();
         $lokasi         = LokasiProject::get();
         $jenis_kapal    = JenisKapal::get();
+        $pm             = ProjectManager::with(['karyawan'])->get();
         $keluhan        = Keluhan::where('on_request_id',$data->id)->get();
 
-        return view('on_request.detail', Compact('data','customer','lokasi','jenis_kapal','getCustomer','keluhan'));
+        return view('on_request.detail', Compact('data','customer','lokasi','jenis_kapal','getCustomer','keluhan','pm'));
     }
 
     public function updated(Request $request)
@@ -99,6 +101,10 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
+        $data->pm_id                = $request->input('pm_id');
+        if($request->input('pm_id')){
+            $data->status = 1;
+        }
         $data->save();
 
         return response()->json(['message' => 'success','status' => 200]);

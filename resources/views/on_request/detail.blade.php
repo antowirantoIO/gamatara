@@ -34,6 +34,17 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="nama_project" class="form-label">Nama Project Manajer</label>
+                                                <select name="pm_id" id="pm_id" class="form-control">
+                                                    <option value="">Pilih Project Manager</option>
+                                                    @foreach($pm as $p)
+                                                    <option value="{{$p->id}}" {{ $p->id == $data->pm_id ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
                                             <label for="nama_customer" class="form-label">Nama Customer</label>
                                             <div class="input-group">
                                                 <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
@@ -92,9 +103,6 @@
                                                     </select>
                                             </div>
                                         </div> 
-
-                                        <div class="col-xxl-6 col-md-12">
-                                        </div>
 
                                         <div class="col-xxl-6 col-md-6">
                                             <label for="keluhan">Request</label>
@@ -225,6 +233,7 @@
             nomor_contact_person: document.getElementById('nomor_contact_person').value,
             displacement: document.getElementById('displacement').value,
             jenis_kapal: document.getElementById('jenis_kapal').value,
+            pm_id: document.getElementById('pm_id').value,
         };
 
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -244,15 +253,16 @@
         });
     }
 
-    // Simpan data formulir utama secara otomatis saat ada perubahan
+    // Simpan data formulir utama secara otomatis saat ada perubahan pada input
     document.querySelectorAll('.form-control').forEach(function (input) {
         input.addEventListener('input', function () {
             simpanDataFormUtama();
         });
     });
 
-    document.querySelectorAll('.form-control').forEach(function (input) {
-        input.addEventListener('input', function () {
+    // Simpan data formulir utama secara otomatis saat ada perubahan pada elemen select
+    document.querySelectorAll('select').forEach(function (select) {
+        select.addEventListener('change', function () {
             simpanDataFormUtama();
         });
     });

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OnRequest extends Model
 {
-    protected $table = 'on_request';
+    protected $table = 'project';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
     

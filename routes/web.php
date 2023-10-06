@@ -11,6 +11,11 @@ use App\Http\Controllers\OnRequestController;
 use App\Http\Controllers\OnProgressController;
 use App\Http\Controllers\CompleteController;
 use App\Http\Controllers\KeluhanController;
+use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\SubkategoriController;
+use App\Http\Controllers\SettingPekerjaanController;
+use App\Http\Controllers\ProjectManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,5 +123,60 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('keluhan')->group(function () {
         Route::get('/{id}', [KeluhanController::class, 'delete'])->name('keluhan.delete');
         Route::post('/store/{id}', [KeluhanController::class, 'store'])->name('keluhan.store');
+    });
+
+    //karyawan
+    Route::prefix('karyawan')->group(function () {
+        Route::get('/', [KaryawanController::class, 'index'])->name('karyawan');
+        Route::get('/edit/{id}', [KaryawanController::class, 'edit'])->name('karyawan.edit');
+        Route::get('/create', [KaryawanController::class, 'create'])->name('karyawan.create');
+        Route::post('/store', [KaryawanController::class, 'store'])->name('karyawan.store');
+        Route::post('/updated/{id}', [KaryawanController::class, 'updated'])->name('karyawan.updated');
+        Route::get('/delete/{id}', [KaryawanController::class, 'delete'])->name('karyawan.delete');
+        Route::get('/export', [KaryawanController::class, 'export'])->name('karyawan.export');
+    });
+
+    //kategori
+    Route::prefix('kategori')->group(function () {
+        Route::get('/', [KategoriController::class, 'index'])->name('kategori');
+        Route::get('/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
+        Route::get('/create', [KategoriController::class, 'create'])->name('kategori.create');
+        Route::post('/store', [KategoriController::class, 'store'])->name('kategori.store');
+        Route::post('/updated/{id}', [KategoriController::class, 'updated'])->name('kategori.updated');
+        Route::get('/delete/{id}', [KategoriController::class, 'delete'])->name('kategori.delete');
+        Route::get('/export', [KategoriController::class, 'export'])->name('kategori.export');
+    });
+
+    //sub_kategori
+    Route::prefix('sub_kategori')->group(function () {
+        Route::get('/', [SubkategoriController::class, 'index'])->name('sub_kategori');
+        Route::get('/edit/{id}', [SubkategoriController::class, 'edit'])->name('sub_kategori.edit');
+        Route::get('/create', [SubkategoriController::class, 'create'])->name('sub_kategori.create');
+        Route::post('/store', [SubkategoriController::class, 'store'])->name('sub_kategori.store');
+        Route::post('/updated/{id}', [SubkategoriController::class, 'updated'])->name('sub_kategori.updated');
+        Route::get('/delete/{id}', [SubkategoriController::class, 'delete'])->name('sub_kategori.delete');
+        Route::get('/export', [SubkategoriController::class, 'export'])->name('sub_kategori.export');
+    });
+
+    //settingpekerjaan
+    Route::prefix('setting_pekerjaan')->group(function () {
+        Route::get('/', [SettingPekerjaanController::class, 'index'])->name('setting_pekerjaan');
+        Route::get('/edit/{id}', [SettingPekerjaanController::class, 'edit'])->name('setting_pekerjaan.edit');
+        Route::get('/create', [SettingPekerjaanController::class, 'create'])->name('setting_pekerjaan.create');
+        Route::post('/store', [SettingPekerjaanController::class, 'store'])->name('setting_pekerjaan.store');
+        Route::post('/updated/{id}', [SettingPekerjaanController::class, 'updated'])->name('setting_pekerjaan.updated');
+        Route::get('/delete/{id}', [SettingPekerjaanController::class, 'delete'])->name('setting_pekerjaan.delete');
+        Route::get('/export', [SettingPekerjaanController::class, 'export'])->name('setting_pekerjaan.export');
+    });
+
+    //ProjectManager
+    Route::prefix('project_manager')->group(function () {
+        Route::get('/', [ProjectManagerController::class, 'index'])->name('project_manager');
+        Route::get('/edit/{id}', [ProjectManagerController::class, 'edit'])->name('project_manager.edit');
+        Route::get('/create', [ProjectManagerController::class, 'create'])->name('project_manager.create');
+        Route::post('/store', [ProjectManagerController::class, 'store'])->name('project_manager.store');
+        Route::post('/updated/{id}', [ProjectManagerController::class, 'updated'])->name('project_manager.updated');
+        Route::get('/delete/{id}', [ProjectManagerController::class, 'delete'])->name('project_manager.delete');
+        Route::get('/export', [ProjectManagerController::class, 'export'])->name('project_manager.export');
     });
 });

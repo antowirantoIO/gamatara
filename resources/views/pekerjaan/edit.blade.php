@@ -27,28 +27,10 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="kategori_perkerjaan" class="form-label">Kategori Pekerjaan</label>
-                                                <input type="text" name="kategori_pekerjaan" value="{{$data->kategori_pekerjaan}}" class="form-control" id="kategori_pekerjaan" placeholder="Masukkan Kategori Pekerjaan">
+                                                <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
+                                                <input type="text" name="name" value="{{$data->name}}" class="form-control" id="name" placeholder="Masukkan Nama Pekerjaan">
                                             </div>
-                                        </div>
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="sub_kategori_pekerjaan" class="form-label">Sub Kategori Pekerjaan</label>
-                                                <input type="text" name="sub_kategori_pekerjaan" value="{{$data->sub_kategori_pekerjaan}}" class="form-control" id="sub_kategori_pekerjaan" placeholder="Masukkan Sub Kategori Pekerjaan">
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="jenis_pekerjaan" class="form-label">Jenis Pekerjaan</label>
-                                                <input type="text" name="jenis_pekerjaan" value="{{$data->jenis_pekerjaan}}" class="form-control" id="jenis_pekerjaan" placeholder="Masukkan Jenis Pekerjaan">
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="detailother" class="form-label">Detail / Other</label>
-                                                <input type="text" name="detailother" value="{{$data->detailother}}" class="form-control" id="detailother" placeholder="Masukkan Detail / Other">
-                                            </div>
-                                        </div>      
+                                        </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="length" class="form-label">Length (mm)</label>
@@ -72,23 +54,11 @@
                                                 <label for="unit" class="form-label">Unit</label>
                                                 <input type="text" name="unit" value="{{$data->unit}}" class="form-control" id="unit" placeholder="m2">
                                             </div>
-                                        </div>   
+                                        </div>    
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="harga_vendor" class="form-label">Harga Vendor</label>
-                                                <input type="text" name="harga_vendor" value="{{$data->harga_vendor}}" class="form-control" id="harga_vendor" placeholder="Rp.000.000">
-                                            </div>
-                                        </div>  
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="harga_customer" class="form-label">Harga Customer</label>
-                                                <input type="text" name="harga_customer" value="{{$data->harga_customer}}" class="form-control" id="harga_customer" placeholder="Rp.000.000">
-                                            </div>
-                                        </div>  
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="convert" class="form-label">Convert</label>
-                                                <input type="text" name="convert" value="{{$data->convert}}" class="form-control" id="convert" placeholder="100/100">
+                                                <label for="conversion" class="form-label">Conversion</label>
+                                                <input type="text" name="conversion" value="{{$data->conversion}}" class="form-control" id="conversion" placeholder="100/100">
                                             </div>
                                         </div>  
                                         

@@ -31,16 +31,13 @@
                 </li>
                 @endcan
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->is('customer*') || request()->is('user*') || request()->is('role*') || request()->is('vendor*') || request()->is('pekerjaan*')? 'active' : '' }}" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link {{ request()->is('customer*') || request()->is('user*') || request()->is('role*') || 
+                        request()->is('vendor*') || request()->is('pekerjaan*')? 'active' : '' || request()->is('karyawan*')? 'active' : '' ||
+                        request()->is('kategori*') || request()->is('sub_kategori*')? 'active' : '' || request()->is('setting_pekerjaan*')? 'active' : ''}}" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i><img src="{{asset('assets/images/document-text.svg')}}"></i> <span data-key="t-layouts">Master Data</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
-                            @can('customer')
-                            <li class="nav-item">
-                                <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
-                            </li>
-                            @endcan
                             @can('user')
                             <li class="nav-item">
                                 <a href="{{ route('user') }}" class="nav-link {{ request()->is('user*') ? 'active' : ''}}" data-key="t-analytics"> User </a>
@@ -51,9 +48,14 @@
                                 <a href="{{ route('role') }}" class="nav-link {{ request()->is('role*') ? 'active' : ''}}" data-key="t-ecommerce"> Role </a>
                             </li>
                             @endcan
-                            @can('vendor')
+                            @can('customer')
                             <li class="nav-item">
-                                <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>
+                                <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
+                            </li>
+                            @endcan
+                            @can('karyawan')
+                            <li class="nav-item">
+                                <a href="{{ route('karyawan') }}" class="nav-link {{ request()->is('karyawan*') ? 'active' : ''}}" data-key="t-analytics"> Karyawan</a>
                             </li>
                             @endcan
                             @can('pekerjaan')
@@ -61,6 +63,27 @@
                                 <a href="{{ route('pekerjaan') }}" class="nav-link {{ request()->is('pekerjaan*') ? 'active' : ''}}" data-key="t-crypto"> Pekerjaan</a>
                             </li>
                             @endcan
+                            @can('kategori')
+                            <li class="nav-item">
+                                <a href="{{ route('kategori') }}" class="nav-link {{ request()->is('kategori*') ? 'active' : ''}}" data-key="t-analytics"> Kategori</a>
+                            </li>
+                            @endcan
+                            @can('sub_kategori')
+                            <li class="nav-item">
+                                <a href="{{ route('sub_kategori') }}" class="nav-link {{ request()->is('sub_kategori*') ? 'active' : ''}}" data-key="t-analytics"> Sub Kategori</a>
+                            </li>
+                            @endcan
+                            @can('setting_pekerjaan')
+                            <li class="nav-item">
+                                <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Setting Pekerjaan</a>
+                            </li>
+                            @endcan
+                            @can('vendor')
+                            <li class="nav-item">
+                                <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>
+                            </li>
+                            @endcan
+                           
                         </ul>
                     </div>
                 </li> 

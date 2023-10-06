@@ -103,10 +103,10 @@ class SubkategoriController extends Controller
     
     public function export(Request $request)
     {
-        $data = Kategori::orderBy('name','desc')
+        $data = SubKategori::orderBy('name','desc')
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+        return Excel::download(new ExportSubKategori($data), 'List Sub Kategori.xlsx');
     }
 }

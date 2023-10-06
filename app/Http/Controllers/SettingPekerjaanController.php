@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
-use App\Exports\ExportSubKategori;
+use App\Exports\ExportSettingPekerjaan;
 use App\Models\SubKategori;
 use App\Models\Kategori;
 use App\Models\SettingPekerjaan;
@@ -114,10 +114,10 @@ class SettingPekerjaanController extends Controller
     
     public function export(Request $request)
     {
-        $data = Kategori::orderBy('name','desc')
+        $data = SettingPekerjaan::orderBy('id','desc')
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+        return Excel::download(new ExportSettingPekerjaan($data), 'List Setting Pekerjaan.xlsx');
     }
 }

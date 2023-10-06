@@ -18,8 +18,8 @@ class ProjectManager extends Model
 
     public function scopeFilter($query, $filter)
     {
-        return $query->when($filter->karyawan ?? false, function($query) use ($filter) {
-            return $query->where('id_karyawan', 'like', "%$filter->karyawan%");
+        return $query->when($filter->name ?? false, function($query) use ($filter) {
+            return $query->where('id_karyawan',$filter->name);
         });
     }
 }

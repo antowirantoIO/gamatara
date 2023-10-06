@@ -9,15 +9,20 @@ class OnRequest extends Model
 {
     protected $table = 'project';
     protected $guarded = [];
-    protected $primaryKey = 'id'; 
-    
+    protected $primaryKey = 'id';
+
     public function kapal()
     {
         return $this->hasOne(JenisKapal::class, 'id','id_jenis_kapal');
     }
 
-    public function customer()
+    public function customer ()
     {
-        return $this->hasOne(Customer::class, 'id','id_customer');
+        return $this->hasOne(Customer::class,'id','id_customer');
+    }
+
+    public function complaint()
+    {
+        return $this->hasMany(Keluhan::class,'on_request_id','id');
     }
 }

@@ -9,6 +9,7 @@ use App\Exports\ExportProjectManager;
 use App\Models\ProjectManager;
 use App\Models\ProjectEngineer;
 use App\Models\ProjectAdmin;
+use App\Models\Karyawan;
 
 class ProjectManagerController extends Controller
 {
@@ -42,11 +43,56 @@ class ProjectManagerController extends Controller
             ->make(true);                    
         }
 
-        return view('project_manager.index');
+        $karyawan = Karyawan::get();
+
+        return view('project_manager.index',compact('karyawan'));
     }
 
     public function create()
     {
-        return view('project_manager.create');
+        $karyawan = Karyawan::get();
+
+        return view('project_manager.create',compact('karyawan'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'pm'  => 'required'
+        ]);
+
+        $data               = New ProjectManager();
+        $data->id_karyawan  = $request->input('pm');
+        $data->save();
+
+        $datas               = New ProjectEngineer();
+        $datas->id_pm        = $data->id;
+        $datas->id_karyawan  = $request->input('pe');
+        $datas->save();
+
+        $dataa               = New ProjectAdmin();
+        $dataa->id_pm        = $data->id;
+        $data->id_karyawan  = $request->input('pa');
+        $data->save();
+
+        return redirect(route('project_manager'))
+                    ->with('success', 'Data berhasil disimpan');
+    }
+    
+    public function delete($id)
+    {
+        $data           = ProjectManager::findOrFail($id);
+        $data->delete();
+
+        return redirect(route('project_manager'))
+                    ->with('success', 'Data berhasil dihapus');
+    }
+
+    public function export(Request $request)
+    {
+        $data = ProjectManager::filter($request)
+                ->get();
+
+        return Excel::download(new ExportProjectManager($data), 'List ProjectManager.xlsx');
     }
 }

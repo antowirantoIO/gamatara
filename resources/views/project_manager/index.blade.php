@@ -46,8 +46,6 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Nama Project Manager</th>
-                                            <th style="color:#929EAE">Nama Project Engineer</th>
-                                            <th style="color:#929EAE">Nama Project Admin</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -79,8 +77,13 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Kategori</label>
-                                <input type="text" name="name" class="form-control" id="name">
+                                <label for="nama" class="form-label">Nama Project Manager</label>
+                                <select name="name" id="name" class="form-control">
+                                    <option>Pilih Project Manager</option>
+                                    @foreach($karyawan as $k)
+                                    <option value="{{$k->id}}">{{$k->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -126,14 +129,10 @@
                 url: "{{ route('project_manager') }}",
                 data: function (d) {
                     d.pm          = $('#pm').val();
-                    d.pm          = $('#pm').val();
-                    d.pm          = $('#pm').val();
                 }
             },
             columns: [
-                {data: 'pm', pm: 'pm'},
-                {data: 'pm', pm: 'pm'},
-                {data: 'pm', pm: 'pm'},
+                {data: 'pm', name: 'pm'},
                 {data: 'action', name: 'action'},
             ]
         });
@@ -151,7 +150,7 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name            = $('#name').val();
+            var name  = $('#name').val();
 
             var url = '{{ route("project_manager.export") }}?' + $.param({
                 name: name,

@@ -41,7 +41,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-check bg-checkbox">
                                                     <input type="checkbox" name="permission[]" value="{{$p->id}}" class="cust-checkbox">
-                                                    <label class="form-check-label label-color">&nbsp;{{ ucfirst($p->name) }}</label>
+                                                    <label class="form-check-label label-color">&nbsp;{{ ucfirst($p->menu_name) }}</label>
                                                 </div>
                                             </div>
                                             @if($loop->iteration % 2 == 0 || $loop->last)

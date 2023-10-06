@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Keluhan extends Model
+class ProjectManager extends Model
 {
-    protected $table = 'project_request';
+    protected $table = 'pm';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
+    
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class, 'id','id_karyawan');
+    }
 }

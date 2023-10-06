@@ -242,6 +242,7 @@ Route::prefix('on_progress')->group(function () {
     Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
     Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
     Route::get('detail-worker',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
+    Route::get('sub-detail',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
 
 });
 

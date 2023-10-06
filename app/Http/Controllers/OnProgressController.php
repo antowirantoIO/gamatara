@@ -37,4 +37,9 @@ class OnProgressController extends Controller
     {
         return view('on_progres.detail');
     }
+
+    public function subDetailWorker()
+    {
+        return view('on_progres.detail-work');
+    }
 }

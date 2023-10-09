@@ -25,4 +25,25 @@ class OnRequest extends Model
     {
         return $this->hasMany(Keluhan::class,'on_request_id','id');
     }
+
+    public function scopeFilter($query, $filter)
+    {
+        return $query->when($filter->code ?? false, function($query) use ($filter) {
+            return $query->where('code', 'like', "%$filter->code%");
+        })->when($filter->nama_project ?? false, function($query) use ($filter) {
+            return $query->where('nama_project', 'like', "%$filter->nama_project%");
+        })->when($filter->nama_customer ?? false, function($query) use ($filter) {
+            return $query->where('id_customer', 'like', "%$filter->nama_customer%");
+        })->when(($filter->start_date ?? false) || ($filter->to_date ?? false), function ($query) use ($filter) {
+            $query->when($filter->start_date ?? false, function ($query) use ($filter) {
+                return $query->whereDate('created_at', '>=', $filter->start_date);
+            })->when($filter->to_date ?? false, function ($query) use ($filter) {
+                return $query->whereDate('created_at', '<=', $filter->to_date);
+            });
+        })->when($filter->displacement ?? false, function($query) use ($filter) {
+            return $query->where('displacement', 'like', "%$filter->displacement%");
+        })->when($filter->jenis_kapal ?? false, function($query) use ($filter) {
+            return $query->where('id_jenis_kapal', 'like', "%$filter->jenis_kapal%");
+        });
+    }
 }

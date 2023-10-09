@@ -42,7 +42,9 @@ class SubkategoriController extends Controller
             ->make(true);                    
         }
 
-        return view('sub_kategori.index');
+        $kategori = Kategori::get();
+
+        return view('sub_kategori.index',compact('kategori'));
     }
 
     public function create()

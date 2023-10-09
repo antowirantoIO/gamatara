@@ -25,42 +25,60 @@
                                 <form action="{{route('vendor.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row gy-4">
-                                        <div class="col-xxl-6 col-md-6">
+                                    <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="customer" class="form-label">Nama Customer</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Masukkan Nama Customer">
+                                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Customer">
+                                                @if ($errors->has('name'))
+                                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="contact_person" class="form-label">Contact Person</label>
-                                                <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" class="form-control" id="contact_person" value="{{ old('contact_person') }}" placeholder="Masukkan Contact Person">
+                                                @if ($errors->has('contact_person'))
+                                                    <span class="text-danger">{{ $errors->first('contact_person') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="alamat" class="form-label">Alamat</label>
-                                                <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Masukkan Alamat">
+                                                @if ($errors->has('alamat'))
+                                                    <span class="text-danger">{{ $errors->first('alamat') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" placeholder="Masukkan Nomor Contact Person">
+                                                @if ($errors->has('nomor_contact_person'))
+                                                    <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
+                                                @endif
                                             </div>
                                         </div>                    
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <div>
                                                     <label for="email" class="form-label">Email</label>
-                                                    <input type="email" name="email" class="form-control form-control-icon" id="email" placeholder="Masukkan Email">
+                                                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control form-control-icon" placeholder="Masukkan Email">
+                                                    @if ($errors->has('email'))
+                                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" name="npwp" class="form-control" placeholder="Masukkan NPWP">
+                                                <input type="text" name="npwp" id="npwp" value="{{ old('npwp') }}" maxlength="16" class="form-control" placeholder="Masukkan NPWP">
+                                                @if ($errors->has('npwp'))
+                                                    <span class="text-danger">{{ $errors->first('npwp') }}</span>
+                                                @endif
                                             </div>
                                         </div> 
                                         
@@ -80,44 +98,36 @@
         </div> 
     </div>
 </div>
-
 @endsection
+
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+const NPWP = document.getElementById("npwp")
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
+    }
 
-        function formatNPWP() {
-            var input = document.getElementById('npwp');
-            var value = input.value.replace(/\D/g, ''); // Hanya mengambil digit angka
-            var formattedValue = '';
-
-            if (value.length >= 2) {
-                formattedValue += value.substr(0, 2) + '.';
-            }
-
-            if (value.length >= 5) {
-                formattedValue += value.substr(2, 3) + '.';
-            }
-
-            if (value.length >= 8) {
-                formattedValue += value.substr(5, 3) + '.';
-            }
-
-            if (value.length >= 12) {
-                formattedValue += value.substr(8, 1) + '-';
-                formattedValue += value.substr(9, 3) + '.';
-            }
-
-            if (value.length >= 15) {
-                formattedValue += value.substr(12, 3);
-            }
-
-            input.value = formattedValue;
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [      
+                    match[1], 
+                    match[2] ? ".": "",
+                    match[2], 
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+            
+        } catch(err) {
+            return "";
         }
-
-        var npwpInput = document.getElementById('npwp');
-        npwpInput.addEventListener('input', formatNPWP);
-    </script>
-
+ }
 </script>
 @endsection
+

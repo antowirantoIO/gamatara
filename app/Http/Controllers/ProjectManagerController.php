@@ -20,7 +20,7 @@ class ProjectManagerController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('pm', function($data){
-                return $data->karyawan->name ?? '';
+                return $data->karyawan->name;
             })
             ->addColumn('action', function($data){
                 return '<a href="'.route('project_manager.edit', $data->id).'" class="btn btn-success btn-sm">
@@ -39,7 +39,7 @@ class ProjectManagerController extends Controller
                     '.method_field('DELETE').'
                 </form>';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','pm'])
             ->make(true);                    
         }
 
@@ -58,7 +58,9 @@ class ProjectManagerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pm'  => 'required'
+            'pm'  => 'required',
+            'pe'  => 'required',
+            'pa'  => 'required'
         ]);
 
         $data               = New ProjectManager();
@@ -93,6 +95,6 @@ class ProjectManagerController extends Controller
         $data = ProjectManager::filter($request)
                 ->get();
 
-        return Excel::download(new ExportProjectManager($data), 'List ProjectManager.xlsx');
+        return Excel::download(new ExportProjectManager($data), 'List Project Manager.xlsx');
     }
 }

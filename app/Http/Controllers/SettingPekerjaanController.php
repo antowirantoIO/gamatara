@@ -50,7 +50,11 @@ class SettingPekerjaanController extends Controller
             ->make(true);                    
         }
 
-        return view('setting_pekerjaan.index');
+        $kategori = Kategori::get();
+        $subkategori = SubKategori::get();
+        $pekerjaan  = Pekerjaan::get();
+
+        return view('setting_pekerjaan.index',compact('kategori','subkategori','pekerjaan'));
     }
 
     public function create()

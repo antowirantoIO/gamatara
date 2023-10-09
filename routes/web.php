@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [VendorController::class, 'store'])->name('vendor.store');
         Route::post('/updated/{id}', [VendorController::class, 'updated'])->name('vendor.updated');
         Route::get('/delete/{id}', [VendorController::class, 'delete'])->name('vendor.delete');
+        Route::get('/export', [VendorController::class, 'export'])->name('vendor.export');
     });
 
     //pekerjaan
@@ -99,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
         Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
         Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
+        Route::get('/export', [OnRequestController::class, 'export'])->name('on_request.export');
     });
 
     //On Progress

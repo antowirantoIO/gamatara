@@ -35,14 +35,14 @@
 <table border="1">
     <thead>
         <tr>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">No.</th>
+            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="50px">No.</th>
             <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Keluhan</th>
         </tr>
     </thead>
     <tbody>
         @foreach($data->keluhan as $key => $item)
             <tr>
-                <td style="border: 1px solid black;">{{ $key+1 }}</td>
+                <td style="border: 1px solid black;">{{ $key+1 }}.</td>
                 <td style="border: 1px solid black;">{{ $item->keluhan }}</td>
             </tr>
         @endforeach

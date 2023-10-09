@@ -151,9 +151,9 @@ class OnRequestController extends Controller
 
     public function exportDetail(Request $request)
     {
-        $data = OnRequest::orderBy('nama_project','asc')
-                ->filter($request)
-                ->get();
+        $data = OnRequest::with(['keluhan'])->orderBy('nama_project','asc')
+                ->where('id',$request->id)
+                ->first();
 
         return Excel::download(new ExportDetailOnRequest($data), 'List Detail On Request.xlsx');
     }

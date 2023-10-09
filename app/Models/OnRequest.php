@@ -16,14 +16,24 @@ class OnRequest extends Model
         return $this->hasOne(JenisKapal::class, 'id','id_jenis_kapal');
     }
 
-    public function customer ()
+    public function customer()
     {
         return $this->hasOne(Customer::class,'id','id_customer');
     }
 
-    public function complaint()
+    public function keluhan()
     {
         return $this->hasMany(Keluhan::class,'on_request_id','id');
+    }
+
+    public function lokasi()
+    {
+        return $this->hasOne(LokasiProject::class,'id','id_lokasi_project');
+    }
+
+    public function pm()
+    {
+        return $this->hasOne(Karyawan::class,'id','pm_id');
     }
 
     public function scopeFilter($query, $filter)

@@ -493,6 +493,19 @@
         keluhanInput.value = JSON.stringify(keluhanData);
     }
 
+    //export detail
+    $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var url = '{{ route("on_request.exportDetail", $data->id) }}?';
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
+
     //untuk semua select menggunakan select2
     $(function () {
         $("select").select2();

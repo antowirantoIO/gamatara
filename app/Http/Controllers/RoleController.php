@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 use App\Exports\ExportRole;
 use App\Models\User;
 use App\Models\Roles;
@@ -14,7 +14,8 @@ use DB;
 
 class RoleController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request) 
+    {
         if ($request->ajax()) {
             $data = Roles::orderBy('name','asc')
                     ->filter($request);

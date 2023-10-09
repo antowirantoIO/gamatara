@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
         Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
         Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
+        Route::get('/export', [PekerjaanController::class, 'export'])->name('pekerjaan.export');
     });
 
     //On Request

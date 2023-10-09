@@ -63,7 +63,6 @@
     </div>
 </div>
 
-
 <!--modal-->
 <div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">

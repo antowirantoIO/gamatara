@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [RoleController::class, 'store'])->name('role.store');
         Route::post('/updated/{id}', [RoleController::class, 'updated'])->name('role.updated');
         Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
+        Route::get('/export', [RoleController::class, 'export'])->name('role.export');
     });
 
     //vendor

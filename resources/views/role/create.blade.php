@@ -28,7 +28,10 @@
                                         <div class="col-xxl-12">
                                             <div>
                                                 <label for="role" class="form-label">Nama Peran</label>
-                                                <input type="text" name="name" class="form-control" id="name" placeholder="Masukkan Nama Customer">
+                                                <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}" placeholder="Masukkan Nama Customer">
+                                                @if ($errors->has('name'))
+                                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -40,7 +43,8 @@
                                             @endif
                                             <div class="col-md-3">
                                                 <div class="form-check bg-checkbox">
-                                                    <input type="checkbox" name="permission[]" value="{{$p->id}}" class="cust-checkbox">
+                                                    <input type="checkbox" name="permission[]" value="{{ $p->id }}" {{ $p->id != null && in_array($p->id, old('permission', [])) ? 'checked' : '' }} class="cust-checkbox">
+                                                    <!-- <input type="checkbox" name="permission[]" value="{{$p->id}}" class="cust-checkbox"> -->
                                                     <label class="form-check-label label-color">&nbsp;{{ ucfirst($p->menu_name) }}</label>
                                                 </div>
                                             </div>
@@ -48,6 +52,9 @@
                                             </div>
                                             @endif
                                             @endforeach
+                                            @if ($errors->has('permission'))
+                                                <span class="text-danger">{{ $errors->first('permission') }}</span>
+                                            @endif
                                         </div>
                                     
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">

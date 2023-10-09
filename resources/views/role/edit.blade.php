@@ -29,6 +29,9 @@
                                             <div>
                                                 <label for="role" class="form-label">Nama Peran</label>
                                                 <input type="text" name="name" value="{{ $data->name }}" class="form-control" id="name" placeholder="Masukkan Nama Customer">
+                                                @if ($errors->has('name'))
+                                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -49,6 +52,9 @@
                                             </div>
                                             @endif
                                             @endforeach
+                                            @if ($errors->has('permission'))
+                                                <span class="text-danger">{{ $errors->first('permission') }}</span>
+                                            @endif
                                         </div>
                                     
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">

@@ -101,7 +101,6 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 const NPWP = document.getElementById("npwp")
     NPWP.oninput = (e) => {

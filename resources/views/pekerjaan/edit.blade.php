@@ -29,6 +29,9 @@
                                             <div>
                                                 <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
                                                 <input type="text" name="name" value="{{$data->name}}" class="form-control" id="name" placeholder="Masukkan Nama Pekerjaan">
+                                                @if ($errors->has('name'))
+                                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                                @endif
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">

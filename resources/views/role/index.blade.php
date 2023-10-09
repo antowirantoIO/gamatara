@@ -15,12 +15,12 @@
                             <a href="{{ route('role.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -42,36 +42,15 @@
 
                         <div class="card-body">
                             <div class=" table-responsive">
-                                <table class="table" id="example1">
+                                <table class="table" id="tableData">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Jabatan</th>
+                                            <th style="color:#929EAE">Role</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data as $v)
-                                        <tr>
-                                            <td>{{$v->name}}</td>
-                                            <td>
-                                                <a href="{{ route('role.edit',$v->id) }}" class="btn btn-success btn-sm">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                &nbsp;
-                                                <a data-id="{{ $v->id }}" data-name="role {{ $v->name ?? null }}" data-form="form-role" class="btn btn-danger btn-sm deleteData">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                                <form method="get" id="form-role{{ $v->id }}" action="{{ route('role.delete', $v->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -83,15 +62,126 @@
         </div> 
     </div>
 </div>
-@endsection
-@section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!--modal-->
+<div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+            @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-4">
+                        <div class="col-xxl-12">
+                            <div>
+                                <label for="nama" class="form-label">Nama Role</label>
+                                <input type="text" name="name" class="form-control" id="name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                    <button class="btn btn-primary">Search</button>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</div>
+<!--end modal-->
+@endsection
+
+@section('scripts')
 <script>
     $(function() {
-            $("#example1").DataTable({
-                fixedHeader:true,
+        var table = $('#tableData').DataTable({
+            fixedHeader:true,
+            scrollX: false,
+            processing: true,
+            serverSide: true,
+            searching: false,
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
+                },
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+            ajax: {
+                url: "{{ route('role') }}",
+                data: function (d) {
+                    d.name          = $('#name').val();
+                }
+            },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'action', name: 'action'},
+            ]
+        });
+
+        $('.form-control').on('change', function() {
+            table.draw();
+        });
+
+        function hideOverlay() {
+            $('.loading-overlay').fadeOut('slow', function() {
+                $(this).remove();
+            });
+        }
+
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var name    = $('#name').val();
+
+            var url = '{{ route("role.export") }}?' + $.param({
+                name: name,
+            });
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
+
+        $(document).ready(function() {
+            $('.loading-overlay').hide();
+        });
+
+        table.on('click', '.deleteData', function() {
+            let name = $(this).data('name');
+            let id = $(this).data('id');
+            let form = $(this).data('form');
+
+            Swal.fire({
+                title: "Apakah yakin?",
+                text: `Data ${name} akan Dihapus`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6492b8da",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Hapus",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(`#${form}${id}`).submit();
+                }
             });
         })
+    });
 </script>
 @endsection

@@ -11,17 +11,6 @@ class SettingPekerjaan extends Model
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 
-    public function scopeFilter($query, $filter)
-    {
-        return $query->when($filter->id_sub_kategori ?? false, function($query) use ($filter) {
-            return $query->where('id_sub_kategori', 'like', "%$filter->id_sub_kategori%");
-        })->when($filter->id_kategori ?? false, function($query) use ($filter) {
-            return $query->where('id_kategori', 'like', "%$filter->id_kategori%");
-        })->when($filter->id_pekerjaan ?? false, function($query) use ($filter) {
-            return $query->where('id_pekerjaan', 'like', "%$filter->id_pekerjaan%");
-        });
-    }
-
     public function pekerjaan()
     {
         return $this->hasOne(Pekerjaan::class, 'id','id_pekerjaan');
@@ -30,5 +19,18 @@ class SettingPekerjaan extends Model
     public function subkategori()
     {
         return $this->hasOne(SubKategori::class, 'id','id_sub_kategori');
+    }
+
+    public function scopeFilter($query, $filter)
+    {
+        return $query->when($filter->subkategori ?? false, function($query) use ($filter) {
+            return $query->where('id_sub_kategori', 'like', "%$filter->subkategori%");
+        })->when($filter->kategori ?? false, function($query) use ($filter) {
+            $query->whereHas('subkategori', function($query) use($filter){
+                return $query->where('id_kategori', $filter->kategori);
+            });
+        })->when($filter->pekerjaan ?? false, function($query) use ($filter) {
+            return $query->where('id_pekerjaan', 'like', "%$filter->pekerjaan%");
+        });
     }
 }

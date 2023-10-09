@@ -77,19 +77,36 @@
                 </div>
                 <div class="modal-body">
                     <div class="row gy-4">
-                        <div class="col-xxl-12">
+                        <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="nama" class="form-label">Nama Kategori</label>
-                                <input type="text" name="kategori" class="form-control" id="kategori">
+                                <select name="kategori" id="kategori" class="form-control">
+                                    <option value="">Pilih Kategori</option>
+                                    @foreach($kategori as $k)
+                                    <option value="{{ $k->id }}">{{ $k->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="nama" class="form-label">Nama Sub Kategori</label>
-                                <input type="text" name="sub_kategori" class="form-control" id="sub_kategori">
+                                <select name="subkategori" id="subkategori" class="form-control">
+                                    <option value="">Pilih Sub Kategori</option>
+                                    @foreach($subkategori as $k)
+                                    <option value="{{ $k->id }}">{{ $k->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div>
-                                <label for="nama" class="form-label">Nama Pekerjaan</label>
-                                <input type="text" name="pekerjaan" class="form-control" id="pekerjaan">
-                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <label for="nama" class="form-label">Nama Pekerjaan</label>
+                            <select name="pekerjaan" id="pekerjaan" class="form-control">
+                                <option value="">Pilih Sub Kategori</option>
+                                @foreach($pekerjaan as $k)
+                                <option value="{{ $k->id }}">{{ $k->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -134,9 +151,9 @@
             ajax: {
                 url: "{{ route('setting_pekerjaan') }}",
                 data: function (d) {
-                    d.kategori          = $('#kategori').val();
-                    d.sub_kategori          = $('#sub_kategori').val();
-                    d.pekerjaan          = $('#pekerjaan').val();
+                    d.kategori      = $('#kategori').val();
+                    d.subkategori   = $('#subkategori').val();
+                    d.pekerjaan     = $('#pekerjaan').val();
                 }
             },
             columns: [
@@ -160,12 +177,12 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name        = $('#name').val();
-            var kategori    = $('#kategori').val();
+            var subkategori     = $('#subkategori').val();
+            var pekerjaan       = $('#pekerjaan').val();
 
             var url = '{{ route("setting_pekerjaan.export") }}?' + $.param({
-                name: name,
-                kategori: kategori,
+                subkategori: subkategori,
+                pekerjaan: pekerjaan,
             });
 
             $('.loading-overlay').show();

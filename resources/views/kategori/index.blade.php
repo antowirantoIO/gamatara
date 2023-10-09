@@ -63,7 +63,6 @@
     </div>
 </div>
 
-
 <!--modal-->
 <div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
@@ -96,7 +95,6 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(function() {
         var table = $('#tableDataLight').DataTable({

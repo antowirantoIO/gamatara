@@ -67,7 +67,7 @@
 <div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+            <form id="formOnRequest" method="get" enctype="multipart/form-data">
             @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
@@ -78,8 +78,8 @@
                         <div class="col-xxl-12">
                             <div>
                                 <label for="nama" class="form-label">Nama Project Manager</label>
-                                <select name="name" id="name" class="form-control">
-                                    <option>Pilih Project Manager</option>
+                                <select name="pm" id="pm" class="form-control">
+                                    <option value="">Pilih Project Manager</option>
                                     @foreach($karyawan as $k)
                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                     @endforeach
@@ -150,10 +150,10 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name  = $('#name').val();
+            var pm  = $('#pm').val();
 
             var url = '{{ route("project_manager.export") }}?' + $.param({
-                name: name,
+                pm: pm,
             });
 
             $('.loading-overlay').show();

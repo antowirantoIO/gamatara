@@ -30,11 +30,14 @@
                                             <div>
                                                 <label for="name" class="form-label">Nama Project Manager</label>
                                                 <select name="pm" id="pm" class="form-control">
-                                                    <option>Pilih Project Manager</option>
+                                                    <option value="">Pilih Project Manager</option>
                                                     @foreach($karyawan as $k)
                                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                                     @endforeach
                                                 </select>
+                                                @if ($errors->has('pm'))
+                                                    <span class="text-danger">{{ $errors->first('pm') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -43,11 +46,14 @@
                                             <div>
                                                 <label for="name" class="form-label">Nama Project Engineer</label>
                                                 <select name="pe" id="pe" class="form-control">
-                                                    <option>Pilih Project Engineer</option>
+                                                    <option value="">Pilih Project Engineer</option>
                                                     @foreach($karyawan as $k)
                                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                                     @endforeach
                                                 </select>
+                                                @if ($errors->has('pe'))
+                                                    <span class="text-danger">{{ $errors->first('pe') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -56,16 +62,19 @@
                                             <div>
                                                 <label for="name" class="form-label">Nama Project Admin</label>
                                                 <select name="pa" id="pa" class="form-control">
-                                                    <option>Pilih Project Admin</option>
+                                                    <option value="">Pilih Project Admin</option>
                                                     @foreach($karyawan as $k)
                                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                                     @endforeach
                                                 </select>
+                                                @if ($errors->has('pa'))
+                                                    <span class="text-danger">{{ $errors->first('pa') }}</span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button class="btn btn-primary" style="margin-right: 10px;">Save</button>
-                                            <a href="{{route('kategori')}}" class="btn btn-danger">Cancel</a>
+                                            <a href="{{route('project_manager')}}" class="btn btn-danger">Cancel</a>
                                         </div>
 
                                     </div>

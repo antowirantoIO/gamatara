@@ -8,10 +8,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('on_request')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Estimasi Pekerjaan</h4>
                         </div>
                     </div>
                 </div>
@@ -24,13 +24,13 @@
                     <div class="d-flex justify-content-between">
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active rounded-pill" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Umum</button>
+                            <button class="nav-link active rounded-pill" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Umum</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link rounded-pill" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Perawatan Badan Kapal</button>
+                            <button class="nav-link rounded-pill" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Perawatan Badan Kapal</button>
                             </li>
-                            {{-- <li class="nav-item" role="presentation">
-                                <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Kontruksi Kapal</button>
+                            <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Kontruksi Kapal</button>
                             </li>
                             <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pipa - Pipa</button>
@@ -43,7 +43,7 @@
                             </li>
                             <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Lain - Lain</button>
-                            </li> --}}
+                            </li>
                         </ul>
                         <div>
                             <button class="btn btn-secondary">
@@ -80,7 +80,7 @@
                                                         <td>1 / 1</td>
                                                         <td>CV DUA PUTRA</td>
                                                         <td>
-                                                            <a href="{{ route('on_progres.sub-detail') }}" class="btn btn-warning btn-sm">
+                                                            <a href="{{ route('setting.estimasi.detail') }}" class="btn btn-warning btn-sm">
                                                                 <span>
                                                                     <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                                 </span>
@@ -91,11 +91,11 @@
                                             </table>
                                         </div>
                                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                                        {{-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> --}}
+                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                     </div>
                                 </div>
                             </div>

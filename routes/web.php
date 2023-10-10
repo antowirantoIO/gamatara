@@ -241,9 +241,20 @@ Route::prefix('on_progress')->group(function () {
     Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
     Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
     Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
-    Route::get('detail-worker',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
+    Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
     Route::get('sub-detail',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
+    Route::get('tagihan-vendor/{id}',[OnProgressController::class,'tagihanVendor'])->name('on_progres.tagihan-vendor');
+    Route::get('tagihan-customer/{id}',[OnProgressController::class,'tagihanCustomer'])->name('on_progres.tagihan-customer');
+    Route::get('vendor-worker/{id}/{idProject}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
+    Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
 
+    Route::prefix('setting')->group(function(){
+        Route::get('index/{id}',[OnProgressController::class,'setting'])->name('on_progres.setting');
+        Route::get('estimasi',[OnProgressController::class,'settingEstimasi'])->name('setting.estimasi');
+        Route::get('detail-estimasi',[OnProgressController::class,'detailEstimasi'])->name('setting.estimasi.detail');
+    });
+
+    Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');
 });
 
 //complete

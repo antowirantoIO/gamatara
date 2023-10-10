@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Tagihan Vendor</h4>
                         </div>
                     </div>
                 </div>
@@ -24,13 +24,13 @@
                     <div class="d-flex justify-content-between">
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active rounded-pill" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Umum</button>
+                            <button class="nav-link active rounded-pill" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Umum</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link rounded-pill" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Perawatan Badan Kapal</button>
+                            <button class="nav-link rounded-pill" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Perawatan Badan Kapal</button>
                             </li>
-                            {{-- <li class="nav-item" role="presentation">
-                                <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Kontruksi Kapal</button>
+                            <li class="nav-item" role="presentation">
+                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Kontruksi Kapal</button>
                             </li>
                             <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pipa - Pipa</button>
@@ -43,7 +43,7 @@
                             </li>
                             <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Lain - Lain</button>
-                            </li> --}}
+                            </li>
                         </ul>
                         <div>
                             <button class="btn btn-secondary">
@@ -68,34 +68,59 @@
                                             <table class="table" id="example1">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;width:600px;">Pekerjaan</th>
-                                                        <th style="color:#929EAE">Progres</th>
-                                                        <th style="color:#929EAE">Vendor</th>
-                                                        <th style="color:#929EAE">Action</th>
+                                                        <th style="color:#929EAE;">Pekerjaan</th>
+                                                        <th style="color:#929EAE">Lokasi</th>
+                                                        <th style="color:#929EAE">Detail / Other</th>
+                                                        <th style="color:#929EAE">Length (mm)</th>
+                                                        <th style="color:#929EAE">Width (mm)</th>
+                                                        <th style="color:#929EAE">Thick (mm)</th>
+                                                        <th style="color:#929EAE">Qty</th>
+                                                        <th style="color:#929EAE">Amount</th>
+                                                        <th style="color:#929EAE">Unit</th>
+                                                        <th style="color:#929EAE">Total Harga</th>
+                                                        <th style="color:#929EAE">Total Tagihan</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Diver service naik / turun</td>
-                                                        <td>1 / 1</td>
-                                                        <td>CV DUA PUTRA</td>
-                                                        <td>
-                                                            <a href="{{ route('on_progres.sub-detail') }}" class="btn btn-warning btn-sm">
-                                                                <span>
-                                                                    <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                                </span>
-                                                            </a>
-                                                        </td>
+                                                        <td>Bottom Area</td>
+                                                        <td>Ruang Mesin</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>Rp. 5.000.000</td>
+                                                        <td>Rp. 15.000.000</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bottom Area</td>
+                                                        <td>Ruang Mesin</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>-</td>
+                                                        <td>Rp. 5.000.000</td>
+                                                        <td>Rp. 15.000.000</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
+                                                <strong>Total Tagihan</strong> :
+                                                <strong>Rp. 30.000.000</strong>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                                        {{-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> --}}
+                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                     </div>
                                 </div>
                             </div>

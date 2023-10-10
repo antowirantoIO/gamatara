@@ -8,10 +8,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_request')}}">
+                            <a href="{{route('setting.estimasi')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Detail Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Estimasi Pekerjaan</h4>
                         </div>
                     </div>
                 </div>
@@ -37,14 +37,14 @@
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
                                             <th style="color:#929EAE">Vendor</th>
-                                            <th style="color:#929EAE">Status</th>
-                                            <th style="color:#929EAE">Action</th>
+                                            <th style="color:#929EAE">Harga Vendor</th>
+                                            <th style="color:#929EAE">Harga Customer</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>Diver service naik / turun</td>
-                                            <td>1 / 1</td>
+                                            <td>Ruang Mesin</td>
                                             <td>-</td>
                                             <td>-</td>
                                             <td>-</td>
@@ -53,16 +53,8 @@
                                             <td>-</td>
                                             <td>-</td>
                                             <td>CV DUA PUTRA</td>
-                                            <td>
-                                                <span class="text-success">Complete</span>
-                                            </td>
-                                            <td>
-                                                <div class="btn btn-warning btn-sm btn-modal">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </div>
-                                            </td>
+                                            <td>Rp. 10.000.000</td>
+                                            <td>Rp. 10.000.000</td>
                                         </tr>
                                     </tbody>
                                 </table>

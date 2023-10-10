@@ -12,6 +12,9 @@
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
+                            <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
+                                <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -19,47 +22,43 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
+                    <div class="card rounded-4 p-3">
                         <div class="card-body">
                             <div class="live-preview">
                                 <div class="row gy-4">
-                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
-                                        <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Request Form</a>
-                                        <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
-                                    </div>
 
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nama_project" class="form-label">Nama Project</label>
-                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->nama_project }}">
+                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->nama_project }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nama_project" class="form-label">Kode Project</label>
-                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->code }}">
+                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->code }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <label for="nama_customer" class="form-label">Nama Customer</label>
-                                        <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->customer->name }}" />
+                                        <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->customer->name }}" disabled/>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="contact_person" class="form-label">Contact Person</label>
-                                            <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person" value="{{ $data->contact_person }}">
+                                            <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person" value="{{ $data->contact_person }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                            <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" value="{{ $data->nomor_contact_person }}">
+                                            <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" value="{{ $data->nomor_contact_person }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="alamat" class="form-label">Project Manager</label>
-                                            <input type="text" class="form-control" id="alamat" value="Dodi Setiawan">
+                                            <input type="text" class="form-control" id="alamat" value="{{ $data->pm->karyawan->name }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -81,17 +80,15 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            @foreach ($projects as $project)
-                                                <td>{{ $project->vendors->name }}</td>
-                                                <td>{{ $project->total_status_2 }} / {{ $project->total_status_1 }}</td>
-                                                <td>
-                                                    <a href="{{ route('on_progres.vendor-worker',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </a>
-                                                </td>
-                                            @endforeach
+                                            <td>CV Muara Fajar Utama</td>
+                                            <td>57 / 100</td>
+                                            <td>
+                                                <a href="{{ route('on_progres.vendor-worker',$data->id) }}" class="btn btn-warning btn-sm">
+                                                    <span>
+                                                        <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                    </span>
+                                                </a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

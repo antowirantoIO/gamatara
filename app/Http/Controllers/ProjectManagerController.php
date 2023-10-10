@@ -58,24 +58,31 @@ class ProjectManagerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pm'  => 'required',
-            'pe'  => 'required',
-            'pa'  => 'required'
+            'pm'            => 'required',
+            'selectedPE'    => 'required',
+            'selectedPA'    => 'required'
         ]);
 
         $data               = New ProjectManager();
         $data->id_karyawan  = $request->input('pm');
         $data->save();
 
-        $datas               = New ProjectEngineer();
-        $datas->id_pm        = $data->id;
-        $datas->id_karyawan  = $request->input('pe');
-        $datas->save();
+        $selectedPEArray = explode(",", $request->input('selectedPE'));
+        $selectedPAArray = explode(",", $request->input('selectedPA'));
 
-        $dataa               = New ProjectAdmin();
-        $dataa->id_pm        = $data->id;
-        $data->id_karyawan  = $request->input('pa');
-        $data->save();
+        foreach($selectedPEArray as $selectedPEId) {
+            $dataPE = new ProjectEngineer();
+            $dataPE->id_pm = $data->id;
+            $dataPE->id_karyawan = $selectedPEId;
+            $dataPE->save();
+        }
+        
+        foreach($selectedPAArray as $selectedPAId) {
+            $dataPA = new ProjectAdmin();
+            $dataPA->id_pm = $data->id;
+            $dataPA->id_karyawan = $selectedPAId;
+            $dataPA->save();
+        }
 
         return redirect(route('project_manager'))
                     ->with('success', 'Data berhasil disimpan');

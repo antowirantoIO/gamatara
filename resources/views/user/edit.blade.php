@@ -34,7 +34,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
-                                                <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" id="nomor_telpon" class="form-control" placeholder="Masukkan Nomor Telpon">
+                                                <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" id="nomor_telpon" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -47,14 +47,33 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="jabatan" class="form-label">Jabatan</label>
-                                                <select name="jabatan" id="jabatan" class="form-control">
-                                                    <option value="">Pilih Jabatan</option>
+                                                <label for="role" class="form-label">Role</label>
+                                                <select name="role" id="role" class="form-control">
+                                                    <option value="">Pilih role</option>
                                                     @foreach($role as $r)
-                                                        <option value="{{$r->id}}" {{ $r->id == $data->id ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                        <option value="{{$r->id}}" {{ $r->id == $data->id_role ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('role'))
+                                                    <span class="text-danger">{{ $errors->first('role') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="karyawan" class="form-label">Karyawan</label>
+                                                <select name="karyawan" id="karyawan" class="form-control">
+                                                    <option value="">Pilih Karyawan</option>
+                                                    @foreach($karyawan as $r)
+                                                        <option value="{{$r->id}}" {{ $r->id == $data->id_karyawan ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            @if ($errors->has('jabatan'))
+                                                <span class="text-danger">{{ $errors->first('jabatan') }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>

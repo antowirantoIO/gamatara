@@ -42,7 +42,9 @@ class SubkategoriController extends Controller
             ->make(true);                    
         }
 
-        return view('sub_kategori.index');
+        $kategori = Kategori::get();
+
+        return view('sub_kategori.index',compact('kategori'));
     }
 
     public function create()
@@ -103,10 +105,10 @@ class SubkategoriController extends Controller
     
     public function export(Request $request)
     {
-        $data = Kategori::orderBy('name','desc')
+        $data = SubKategori::orderBy('name','desc')
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+        return Excel::download(new ExportSubKategori($data), 'List Sub Kategori.xlsx');
     }
 }

@@ -45,8 +45,8 @@
                                 <table class="table" id="tableDataLight">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Sub Kategori</th>
                                             <th style="color:#929EAE">Kategori</th>
+                                            <th style="color:#929EAE">Sub Kategori</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -76,10 +76,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="row gy-4">
-                        <div class="col-xxl-12">
+                        <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="nama" class="form-label">Nama Kategori</label>
-                                <input type="text" name="name" class="form-control" id="name">
+                                <select name="kategori" id="kategori" class="form-control">
+                                    <option value="">Pilih Kategori</option>
+                                    @foreach($kategori as $k)
+                                    <option value="{{ $k->id }}">{{ $k->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="nama" class="form-label">Nama Sub Kategori</label>
+                                <input type="text" name="name" id="name" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -125,13 +136,13 @@
             ajax: {
                 url: "{{ route('sub_kategori') }}",
                 data: function (d) {
-                    d.name          = $('#name').val();
-                    d.kategori          = $('#kategori').val();
+                    d.name      = $('#name').val();
+                    d.kategori  = $('#kategori').val();
                 }
             },
             columns: [
-                {data: 'name', name: 'name'},
                 {data: 'kategori', name: 'kategori'},
+                {data: 'name', name: 'name'},
                 {data: 'action', name: 'action'},
             ]
         });

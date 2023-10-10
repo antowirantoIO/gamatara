@@ -43,7 +43,7 @@ class KategoriController extends Controller
 
     public function create()
     {
-        return view('sub_kategori.create');
+        return view('kategori.create');
     }
 
     public function store(Request $request)

@@ -2,19 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
+use App\Exports\ExportRole;
 use App\Models\User;
 use App\Models\Roles;
 use DB;
 
 class RoleController extends Controller
 {
-    public function index() {
-        $data = Role::orderBy('name','asc')->get();
+    public function index(Request $request) 
+    {
+        if ($request->ajax()) {
+            $data = Roles::orderBy('name','asc')
+                    ->filter($request);
+
+            return Datatables::of($data)->addIndexColumn()
+            ->addColumn('action', function($data){
+                return '<a href="'.route('role.edit', $data->id).'" class="btn btn-success btn-sm">
+                    <span>
+                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                    </span>
+                </a>
+                &nbsp;
+                <a data-id="'.$data->id.'" data-name="role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
+                    <span>
+                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                    </span>
+                </a>
+                <form method="GET" id="form-role'.$data->id.'" action="'.route('role.delete', $data->id).'">
+                    '.csrf_field().'
+                    '.method_field('DELETE').'
+                </form>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);                    
+        }
         
-        return view('role.index',compact('data'));
+        return view('role.index');
     }
 
     public function create()
@@ -84,5 +112,12 @@ class RoleController extends Controller
                     ->with('success', 'Data berhasil dihapus');
     }
 
-    
+    public function export(Request $request)
+    {
+        $data = Roles::orderBy('name','desc')
+                ->filter($request)
+                ->get();
+
+        return Excel::download(new ExportRole($data), 'List Role.xlsx');
+    }
 }

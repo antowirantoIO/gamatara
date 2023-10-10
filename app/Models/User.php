@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo(Roles::class, 'jabatan', 'id');
+        return $this->belongsTo(Roles::class, 'id_role', 'id');
     }
 
     public function scopeFilter($query, $filter)

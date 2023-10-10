@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Yajra\DataTables\Facades\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Exports\ExportListOnRequest;
+use App\Exports\ExportDetailOnRequest;
 use App\Models\OnRequest;
 use App\Models\Customer;
 use App\Models\LokasiProject;
@@ -12,11 +16,37 @@ use App\Models\ProjectManager;
 
 class OnRequestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = OnRequest::with(['kapal','customer'])->get();
+        if ($request->ajax()) {
+            $data = OnRequest::with(['kapal','customer'])
+                    ->filter($request);
 
-        return view('on_request.index',compact('data'));
+            return Datatables::of($data)->addIndexColumn()
+            ->addColumn('nama_customer', function($data){
+                return $data->customer->name ?? '';
+            })
+            ->addColumn('jenis_kapal', function($data){
+                return $data->kapal->name ?? '';
+            })
+            ->addColumn('tanggal_request', function($data){
+                return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
+            })
+            ->addColumn('action', function($data){
+                return '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
+                    <span>
+                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
+                    </span>
+                </a>';
+            })
+            ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
+            ->make(true);                    
+        }
+
+        $customer   = Customer::get();
+        $jenis_kapal= JenisKapal::get();
+
+        return view('on_request.index',compact('customer','jenis_kapal'));
     }
 
     public function create()
@@ -108,5 +138,23 @@ class OnRequestController extends Controller
         $data->save();
 
         return response()->json(['message' => 'success','status' => 200]);
+    }
+
+    public function export(Request $request)
+    {
+        $data = OnRequest::orderBy('nama_project','asc')
+                ->filter($request)
+                ->get();
+
+        return Excel::download(new ExportListOnRequest($data), 'List On Request.xlsx');
+    }
+
+    public function exportDetail(Request $request)
+    {
+        $data = OnRequest::with(['keluhan'])->orderBy('nama_project','asc')
+                ->where('id',$request->id)
+                ->first();
+
+        return Excel::download(new ExportDetailOnRequest($data), 'List Detail On Request.xlsx');
     }
 }

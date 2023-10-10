@@ -46,7 +46,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Nama</th>
-                                            <th style="color:#929EAE">Jabatan</th>
+                                            <th style="color:#929EAE">Role</th>
                                             <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Email</th>
                                             <th style="color:#929EAE">Action</th>

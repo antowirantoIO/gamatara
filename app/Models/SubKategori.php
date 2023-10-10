@@ -15,8 +15,8 @@ class SubKategori extends Model
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {
             return $query->where('name', 'like', "%$filter->name%");
-        })->when($filter->id_kategori ?? false, function($query) use ($filter) {
-            return $query->where('id_kategori', 'like', "%$filter->id_kategori%");
+        })->when($filter->kategori ?? false, function($query) use ($filter) {
+            return $query->where('id_kategori', 'like', "%$filter->kategori%");
         });
     }
 

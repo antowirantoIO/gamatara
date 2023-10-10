@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [RoleController::class, 'store'])->name('role.store');
         Route::post('/updated/{id}', [RoleController::class, 'updated'])->name('role.updated');
         Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
+        Route::get('/export', [RoleController::class, 'export'])->name('role.export');
     });
 
     //vendor
@@ -78,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [VendorController::class, 'store'])->name('vendor.store');
         Route::post('/updated/{id}', [VendorController::class, 'updated'])->name('vendor.updated');
         Route::get('/delete/{id}', [VendorController::class, 'delete'])->name('vendor.delete');
+        Route::get('/export', [VendorController::class, 'export'])->name('vendor.export');
     });
 
     //pekerjaan
@@ -88,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
         Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
         Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
+        Route::get('/export', [PekerjaanController::class, 'export'])->name('pekerjaan.export');
     });
 
     //On Request
@@ -97,6 +100,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
         Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
         Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
+        Route::get('/export', [OnRequestController::class, 'export'])->name('on_request.export');
+        Route::get('/export-detail/{id}', [OnRequestController::class, 'exportDetail'])->name('on_request.exportDetail');
     });
 
     //On Progress

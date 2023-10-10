@@ -15,4 +15,11 @@ class Roles extends Model
     {
         return $this->hasOne(Roles::class, 'jabatan','id');
     }
+
+    public function scopeFilter($query, $filter)
+    {
+        return $query->when($filter->name ?? false, function($query) use ($filter) {
+            return $query->where('name', 'like', "%$filter->name%");
+        });
+    }
 }

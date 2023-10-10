@@ -42,7 +42,7 @@
 
                         <div class="card-body">
                             <div class="table-container">
-                                <table class="table" id="tableDataLight">
+                                <table class="table" id="tableData">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Nama Customer</th>
@@ -132,10 +132,9 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(function() {
-        var table = $('#tableDataLight').DataTable({
+     $(document).ready(function () {
+        var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
@@ -225,27 +224,6 @@
         $(document).ready(function() {
             $('.loading-overlay').hide();
         });
-
-        table.on('click', '.deleteData', function() {
-            let name = $(this).data('name');
-            let id = $(this).data('id');
-            let form = $(this).data('form');
-
-            Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#6492b8da",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(`#${form}${id}`).submit();
-                }
-            });
-        })
     });
 </script>
 @endsection

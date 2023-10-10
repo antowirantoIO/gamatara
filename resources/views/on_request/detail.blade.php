@@ -13,6 +13,13 @@
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Detail Request</h4>
                         </div>
+                        <div class="mt-3 mt-lg-0 ml-lg-auto">
+                            <button class="btn btn-danger" id="export-button">
+                                <span>
+                                    <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                </span> &nbsp; Export
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -485,6 +492,19 @@
         var keluhanInput = document.getElementById("keluhanInput");
         keluhanInput.value = JSON.stringify(keluhanData);
     }
+
+    //export detail
+    $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var url = '{{ route("on_request.exportDetail", $data->id) }}?';
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
 
     //untuk semua select menggunakan select2
     $(function () {

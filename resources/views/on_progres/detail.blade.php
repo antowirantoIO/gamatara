@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_request')}}">
+                            <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
@@ -23,27 +23,11 @@
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-between">
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link active rounded-pill" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Umum</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Perawatan Badan Kapal</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Kontruksi Kapal</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pipa - Pipa</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Permesinan</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Interior Kapal</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Lain - Lain</button>
-                            </li>
+                            @foreach ($kategori as $key => $item)
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ $key === 0 ? 'active' : '' }} rounded-pill" id="{{ $item->id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $item->id }}" type="button" role="tab" aria-controls="{{ $item->id }}" aria-selected="true">{{ $item->name }}</button>
+                                </li>
+                            @endforeach
                         </ul>
                         <div>
                             <button class="btn btn-secondary">
@@ -62,41 +46,42 @@
                         <div class="card-body">
                             <div class="live-preview">
                                 <div class="col-md-12">
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                            <span class="fs-5"><strong>Pekerjaan Umum</strong></span>
-                                            <table class="table" id="example1">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th style="color:#929EAE;width:600px;">Pekerjaan</th>
-                                                        <th style="color:#929EAE">Progres</th>
-                                                        <th style="color:#929EAE">Vendor</th>
-                                                        <th style="color:#929EAE">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Diver service naik / turun</td>
-                                                        <td>1 / 1</td>
-                                                        <td>CV DUA PUTRA</td>
-                                                        <td>
-                                                            <a href="{{ route('on_progres.sub-detail') }}" class="btn btn-warning btn-sm">
-                                                                <span>
-                                                                    <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                                </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                    @foreach ($subWorker as $key => $worker)
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show {{ $key === 0 ? 'active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                                <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
+                                                <table class="table" id="example1">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th style="color:#929EAE;width:600px;">Pekerjaan</th>
+                                                            <th style="color:#929EAE">Progres</th>
+                                                            <th style="color:#929EAE">Vendor</th>
+                                                            <th style="color:#929EAE">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($worker as $value)
+                                                        @php
+                                                            $status = getProgress($value->id_project,$value->id_kategori);
+                                                        @endphp
+                                                            <tr>
+                                                                <td>{{ $value->subKategori->name }}</td>
+                                                                <td>{{ $status->total_status_2 }} / {{ $status->total_status_1 }}</td>
+                                                                <td>{{ $value->vendors->name }}</td>
+                                                                <td>
+                                                                    <a href="{{ route('on_progres.sub-detail',[$value->kategori,$value->id_project,$value->id_subkategori]) }}" class="btn btn-warning btn-sm">
+                                                                        <span>
+                                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                                        </span>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

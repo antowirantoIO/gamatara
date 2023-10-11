@@ -36,7 +36,7 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Request</h4>
                             <div>
-                          
+
                             </div>
                         </div>
 
@@ -55,7 +55,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                     
+
                                     </tbody>
                                 </table>
                             </div>
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-        </div> 
+        </div>
     </div>
 </div>
 
@@ -102,7 +102,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>                 
+                        </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <div>
@@ -121,20 +121,20 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div> 
+                        </div>
                         <label for="Tanggal Request">Tanggal Request</label>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="start_date" class="form-label">Dari </label>
                                 <input type="date" name="start_date" id="start_date" class="form-control" >
                             </div>
-                        </div>  
+                        </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="to_date" class="form-label">Sampai</label>
                                 <input type="date" name="to_date" id="to_date" class="form-control" >
                             </div>
-                        </div>  
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
@@ -182,7 +182,7 @@
                     d.nama_customer     = $('#nama_customer').val();
                     d.tanggal_request   = $('#tanggal_request').val();
                     d.start_date        = $('#start_date').val();
-                    d.to_date        = $('#to_date').val();
+                    d.to_date           = $('#to_date').val();
                     d.jenis_kapal       = $('#jenis_kapal').val();
                 }
             },
@@ -214,7 +214,7 @@
         }
 
         $('#export-button').on('click', function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
 
             var code            = $('#code').val();
             var nama_project    = $('#nama_project').val();

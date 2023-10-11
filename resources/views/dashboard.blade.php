@@ -23,15 +23,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-auto">
                                         <button type="button" class="btn btn-soft-success"><i class="ri-add-circle-line align-middle me-1"></i> Add Product</button>
                                     </div>
-                                
+
                                     <div class="col-auto">
                                         <button type="button" class="btn btn-soft-info btn-icon waves-effect waves-light layout-rightside-btn"><i class="ri-pulse-line"></i></button>
                                     </div>
-                                
+
                                 </div>
                             </form>
                         </div> -->
@@ -42,7 +42,7 @@
             <!--end row-->
 
             <div class="row">
-                
+
                 <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
@@ -82,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
@@ -154,7 +154,7 @@
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title" style="background:#01E8870D"> 
+                                    <span class="avatar-title" style="background:#01E8870D">
                                         <i>
                                             <img src="{{asset('assets/images/chart-success.svg')}}">
                                         </i>
@@ -222,7 +222,7 @@
                             <div class="flex-shrink-0">
                                 <div class="dropdown card-header-dropdown">
                                     <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All 
+                                        <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All
                                         <!-- </span><span class="text-muted">Today<i class="mdi mdi-chevron-down ms-1"></i></span> -->
                                     </a>
                                 </div>
@@ -257,7 +257,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                              
+
                             </div>
                         </div>
                     </div>
@@ -270,7 +270,7 @@
                             <div class="flex-shrink-0">
                                 <div class="dropdown card-header-dropdown">
                                     <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All 
+                                        <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All
                                         <!-- </span><span class="text-muted">Today<i class="mdi mdi-chevron-down ms-1"></i></span> -->
                                     </a>
                                 </div>
@@ -311,13 +311,11 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
 </div>
 @endsection
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(function() {
             $("#example1").DataTable({

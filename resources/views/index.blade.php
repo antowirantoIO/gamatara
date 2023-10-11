@@ -45,6 +45,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css">
+
 
     @yield("styles")
 
@@ -139,22 +141,17 @@
 
     <!--Swiper slider js-->
     <script src="{{asset('assets/assets/libs/swiper/swiper-bundle.min.js')}}"></script>
- 
+
     <!-- App js -->
     <script src="{{asset('assets/assets/js/app.js')}}"></script>
 
     <!-- Dashboard init -->
     <script src="{{asset('assets/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
-  
-    <!--jquery-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <!-- Scripts -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
-    
-    @yield('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
 
     <!--datatable js-->
     <script src="{{asset('assets/assets/js/pages/datatables.init.js')}}"></script>
@@ -167,6 +164,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    @yield('scripts')
 
     <!-- Sweet Alerts js -->
     <script src="{{asset('assets/assets/libs/sweetalert2/sweetalert2.min.js')}}"></script>
@@ -176,7 +174,6 @@
     <script src="{{ asset('assets/js/global.js') }}"></script>
 
     <!-- select 2 js-->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{asset('assets/assets/js/pages/select2.init.js')}}"></script>
 
     <!-- apexcharts -->
@@ -198,6 +195,26 @@
           '{{ session('success') }}',
           'success'
           );
+        </script>
+    @endif
+    @if (session()->has('error'))
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'error',
+                title: '{{ session()->get('error') }}'
+            })
         </script>
     @endif
 

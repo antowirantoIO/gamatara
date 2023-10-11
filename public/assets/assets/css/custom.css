@@ -158,3 +158,43 @@ body{
 .card-rad{
     border-radius: 10px;
 }
+
+.lb-image {
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.table-container {
+	overflow-y: hidden;
+	overflow-x: auto;
+}
+
+#tablePekerjaan {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#tablePekerjaan input,
+#tablePekerjaan select {
+    width: 200px;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Warna latar belakang scrollbar track (bagian latar belakang scrollbar) */
+.table-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Warna scrollbar thumb (bagian yang dapat digeser) */
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px; /* Membuat sudut scrollbar terlihat lebih bulat */
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+

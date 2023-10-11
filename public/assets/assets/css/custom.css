@@ -174,7 +174,8 @@ body{
     overflow-x: auto;
 }
 
-#tablePekerjaan input {
+#tablePekerjaan input,
+#tablePekerjaan select {
     width: 200px;
 }
 

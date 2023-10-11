@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_request')}}">
+                            <a href="{{route('on_progres.detail-worker',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Detail Pekerjaan</h4>
@@ -42,28 +42,34 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Diver service naik / turun</td>
-                                            <td>1 / 1</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>CV DUA PUTRA</td>
-                                            <td>
-                                                <span class="text-success">Complete</span>
-                                            </td>
-                                            <td>
-                                                <div class="btn btn-warning btn-sm btn-modal">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @foreach ($data as $item)
+                                            <tr>
+                                                <td>{{ $item->pekerjaan->name }}</td>
+                                                <td>{{ $item->projects->lokasi->name }}</td>
+                                                <td>{{ $item->detail }}</td>
+                                                <td>{{ $item->length }}</td>
+                                                <td>{{ $item->width }}</td>
+                                                <td>{{ $item->thick }}</td>
+                                                <td>{{ $item->qty }}</td>
+                                                <td>{{ $item->amount }}</td>
+                                                <td>{{ $item->unit }}</td>
+                                                <td>{{ $item->vendors->name }}</td>
+                                                <td>
+                                                    @if ($item->status == 1)
+                                                        <span class="text-warning">Progres</span>
+                                                    @else
+                                                        <span an class="text-success">Complete</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="btn btn-warning btn-sm btn-modal">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

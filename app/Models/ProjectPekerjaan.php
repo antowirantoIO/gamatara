@@ -26,4 +26,14 @@ class ProjectPekerjaan extends Model
     {
         return $this->belongsTo(OnRequest::class,'id_project','id');
     }
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class,'id_kategori','id');
+    }
+
+    public function subKategori()
+    {
+        return $this->belongsTo(SubKategori::class,'id_subkategori','id');
+    }
 }

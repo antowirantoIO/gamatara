@@ -247,7 +247,7 @@ Route::prefix('on_progress')->group(function () {
     Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
     Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
     Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
-    Route::get('sub-detail',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
+    Route::get('sub-detail/{id}/{idProject}/{idSub}',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
     Route::get('tagihan-vendor/{id}',[OnProgressController::class,'tagihanVendor'])->name('on_progres.tagihan-vendor');
     Route::get('tagihan-customer/{id}',[OnProgressController::class,'tagihanCustomer'])->name('on_progres.tagihan-customer');
     Route::get('vendor-worker/{id}/{idProject}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
@@ -259,7 +259,12 @@ Route::prefix('on_progress')->group(function () {
         Route::get('detail-estimasi',[OnProgressController::class,'detailEstimasi'])->name('setting.estimasi.detail');
     });
 
+    Route::prefix('ajax')->group(function(){
+        Route::get('pekerjaan-vendor',[OnProgressController::class,'ajaxPekerjaanVendor'])->name('ajax.vendor');
+    });
+
     Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');
+    Route::get('pekerjaan/{id}',[OnProgressController::class,'getPekerjaan'])->name('on_progres.pekerjaan');
 });
 
 //complete

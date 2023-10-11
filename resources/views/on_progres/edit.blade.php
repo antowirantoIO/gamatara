@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_request')}}">
+                            <a href="{{route('on_progress')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
@@ -31,13 +31,13 @@
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nama_project" class="form-label">Nama Project</label>
-                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->nama_project }}">
+                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->nama_project }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nama_project" class="form-label">Kode Project</label>
-                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->code }}">
+                                            <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->code }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
@@ -47,19 +47,19 @@
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="contact_person" class="form-label">Contact Person</label>
-                                            <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person" value="{{ $data->contact_person }}">
+                                            <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person" value="{{ $data->contact_person }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                            <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" value="{{ $data->nomor_contact_person }}">
+                                            <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" value="{{ $data->nomor_contact_person }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="alamat" class="form-label">Project Manager</label>
-                                            <input type="text" class="form-control" id="alamat" value="Dodi Setiawan">
+                                            <input type="text" class="form-control" id="alamat" value="{{ $data->pm->karyawan->name }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -80,8 +80,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            @foreach ($projects as $project)
+                                        @foreach ($projects as $project)
+                                            <tr>
                                                 <td>{{ $project->vendors->name }}</td>
                                                 <td>{{ $project->total_status_2 }} / {{ $project->total_status_1 }}</td>
                                                 <td>
@@ -91,8 +91,8 @@
                                                         </span>
                                                     </a>
                                                 </td>
-                                            @endforeach
-                                        </tr>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -106,9 +106,9 @@
                                     <div class="d-flex flex-column gap-3">
                                         <a href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-primary btn-block w-100 rounded-3 border-0">
                                             <div class="d-flex justify-content-between align-items-end">
-                                                <div class="fs-4">
-                                                    Pekerjaan <br>
-                                                    110 / 1002
+                                                <div class="fs-4 text-start">
+                                                    Pekerjaan<br>
+                                                    {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
                                                 </div>
                                                 <div>
                                                     <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
@@ -118,7 +118,7 @@
                                         <div class="d-flex gap-3">
                                             <a href="{{ route('on_progres.tagihan-vendor',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5">
+                                                    <div class="fs-5 text-start">
                                                         Tagihan <br>
                                                        <strong>Vendor</strong>
                                                     </div>
@@ -129,7 +129,7 @@
                                             </a>
                                             <a href="{{ route('on_progres.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5">
+                                                    <div class="fs-5 text-start">
                                                         Tagihan <br>
                                                         <strong>Customer</strong>
                                                     </div>
@@ -156,7 +156,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data->complaint as $item)
+                                        @foreach ($data->keluhan as $item)
                                             <tr>
                                                 <td>{{ $item->keluhan }}</td>
                                             </tr>

@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('on_progress.edit',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
@@ -35,7 +35,7 @@
                         <div class="card-body">
                             <div class="live-preview">
                                 <span class="fs-5"><strong>{{ $nama_vendor }} ( {{ $nama_project }} )</strong></span>
-                                <table class="table mt-3" id="example1">
+                                <table class="table mt-3" id="dataTable">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Pekerjaan</th>
@@ -47,11 +47,10 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
-                                            <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       @foreach ($data as $item)
+                                       {{-- @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $item->pekerjaan->name }}</td>
                                                 <td>{{ $item->projects->lokasi->name }}</td>
@@ -62,15 +61,8 @@
                                                 <td>{{ $item->qty }}</td>
                                                 <td>{{ $item->amount }}</td>
                                                 <td>{{ $item->unit }}</td>
-                                                <td>
-                                                    <a href="{{ route('on_progres.detail-vendor-worker',$id) }}" class="btn btn-warning btn-sm">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </a>
-                                                </td>
                                             </tr>
-                                       @endforeach
+                                       @endforeach --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -88,10 +80,49 @@
 @section('scripts')
     <script>
         $(document).ready(function(){
-            let modalInput = $('#modalInput');
-            $("#btn-setting").click(function(){
-                modalInput.modal('show');
-            })
+            let table = $('#dataTable').DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                ajax : {
+                    url : '{{ route('ajax.vendor') }}',
+                    methdo : 'GET',
+                    data : function(d){
+                        d._token = '{{ csrf_token() }}',
+                        d.id_project = '{{ $idProject }}',
+                        d.id_vendor = '{{ $id }}'
+                    }
+                },
+
+                columns : [
+                    { data : 'pekerjaan.name' },
+                    { data : 'projects.lokasi.name' },
+                    { data : 'detail' },
+                    { data : 'length' },
+                    { data : 'width' },
+                    { data : 'thick' },
+                    { data : 'qty' },
+                    { data : 'amount' },
+                    { data : 'unit' },
+                ]
+
+            });
         })
     </script>
 @endsection

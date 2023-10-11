@@ -26,6 +26,7 @@
                             <div class="live-preview">
                                 <form action="{{ route('on_progres.work',$id) }}" method="post">
                                     @csrf
+                                    <input type="hidden" id="id_project" name="id_project">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="kategori" class="form-label">Kategori Pekerjaan</label>
@@ -78,11 +79,8 @@
                                                 <tbody id="clone">
                                                     <tr class="parent-clone">
                                                         <td>
-                                                            <select name="pekerjaan[]" id="pekerjaan" class="form-select">
+                                                            <select name="pekerjaan[]" id="pekerjaan" class="form-select pekerjaan">
                                                                 <option selected disabled>Pilih Pekerjaan</option>
-                                                                @foreach ($works as $work)
-                                                                    <option value="{{ $work->id }}">{{ $work->name }}</option>
-                                                                @endforeach
                                                             </select>
                                                         </td>
                                                         <td>
@@ -92,25 +90,22 @@
                                                             <input type="text" class="form-control" name="detail[]">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="length[]">
+                                                            <input type="number" class="form-control" name="length[]">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="width[]">
+                                                            <input type="number" class="form-control" name="width[]">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="thick[]">
+                                                            <input type="number" class="form-control" name="thick[]">
                                                         </td>
                                                         <td>
                                                             <input type="text" class="form-control" name="unit[]">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="volume[]">
-                                                        </td>
-                                                        <td>
                                                             <input type="text" class="form-control" name="qty[]">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="amount[]">
+                                                            <input type="number" class="form-control" name="amount[]">
                                                         </td>
                                                         <td>
                                                             <div class="btn btn-danger btn-trash">
@@ -151,16 +146,14 @@
             $('.form-select').select2({
                 theme : "bootstrap-5",
                 search: true
-            })
+            });
+
             let count = 1;
             $('.btn-add').click(function(){
                 $('#clone').append(`<tr class="parent-clone">
                     <td>
-                        <select name="pekerjaan[]" id="pekerjaan-${count}" class="form-select">
+                        <select name="pekerjaan[]" id="pekerjaan-${count}" class="form-select pekerjaan">
                             <option selected disabled>Pilih Pekerjaan</option>
-                            @foreach ($works as $work)
-                                <option value="{{ $work->id }}">{{ $work->name }}</option>
-                            @endforeach
                         </select>
                     </td>
                     <td>
@@ -182,9 +175,6 @@
                         <input type="text" class="form-control" name="unit[]">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="volume[]">
-                    </td>
-                    <td>
                         <input type="text" class="form-control" name="qty[]">
                     </td>
                     <td>
@@ -196,10 +186,12 @@
                         </div>
                     </td>
                 </tr>`)
-                $(`#pekerjaan-${count}`).select2({
+                let select = $(`#pekerjaan-${count}`).select2({
                     theme : "bootstrap-5",
                     search: true
                 })
+                let id = $('#sub_kategori').val();
+                getSelect(id,select);
                 count++;
             })
 
@@ -239,6 +231,39 @@
                 })
                 // $('#loader').hide();
             })
+
+            $('#sub_kategori').on('change',function(){
+                let id = $(this).val();
+                let select = $('#pekerjaan');
+                getSelect(id,select);
+
+            })
+
+            const getSelect = (id,select) => {
+                let url = '{{ route('on_progres.pekerjaan',':id') }}'
+                let urlReplace = url.replace(':id',id);
+
+                $.ajax({
+                    url : urlReplace,
+                    method : 'GET'
+                }).then(ress => {
+                    if(ress.data.length != null){
+                        select.empty();
+                        select.append(`
+                            <option selected disabled>Pilih Pekerjaan</option>
+                        `)
+                        ress.data.forEach(item => {
+                            select.append(`
+                                <option value="${item.id}">${item.pekerjaan.name}</option>
+                            `)
+                        })
+                    }else{
+                        select.append(`
+                            <option selected disabled>Pilih Pekerjaan</option>
+                        `)
+                    }
+                })
+            }
         })
     </script>
 @endsection

@@ -26,14 +26,19 @@ class OnRequest extends Model
         return $this->hasMany(Keluhan::class,'on_request_id','id');
     }
 
+    public function pm()
+    {
+        return $this->hasOne(ProjectManager::class,'id','pm_id');
+    }
+
+    public function complaint()
+    {
+        return $this->hasMany(Keluhan::class,'on_request_id','id');
+    }
+
     public function lokasi()
     {
         return $this->hasOne(LokasiProject::class,'id','id_lokasi_project');
-    }
-
-    public function pm()
-    {
-        return $this->hasOne(Karyawan::class,'id','pm_id');
     }
 
     public function scopeFilter($query, $filter)

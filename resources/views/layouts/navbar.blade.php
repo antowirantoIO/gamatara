@@ -1,6 +1,3 @@
-<?php
-   require_once app_path('Helper/helper.php');
-?>
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Light Logo-->
@@ -113,26 +110,26 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->is('laporan*') ? 'active' : ''}}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
+                    <a class="nav-link menu-link {{ request()->is('laporan_customer*') ? 'active' : '' || request()->is('laporan_vendor*') ? 'active' : '' || request()->is('laporan_project_manager*') ? 'active' : '' }}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
                         <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Laporan</span>
                     </a>
                     <div class="collapse menu-dropdown" id="laporandashboard">
                         <ul class="nav nav-sm flex-column">
 
                             <li class="nav-item">
-                                <a href="" class="nav-link {{ request()->is('laporan_customer*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Customer </a>
+                                <a href="{{ route('laporan_customer') }}" class="nav-link {{ request()->is('laporan_customer*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Customer </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="" class="nav-link {{ request()->is('laporan_vendor*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Vendor </a>
+                                <a href="{{ route('laporan_vendor') }}" class="nav-link {{ request()->is('laporan_vendor*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Vendor </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="" class="nav-link {{ request()->is('laporan_pd*') ? 'active' : ''}}" data-key="t-ecommerce"> Laporan PM </a>
+                                <a href="{{ route('laporan_project_manager') }}" class="nav-link {{ request()->is('laporan_project_manager*') ? 'active' : ''}}" data-key="t-ecommerce"> Laporan PM </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="" class="nav-link {{ set_active(['satisfaction_note']) }}" data-key="t-crypto"> Satisfaction Note</a>
+                                <a href="{{ route('satisfaction_note') }}" class="nav-link {{  request()->is('satisfaction_note') }}" data-key="t-crypto"> Satisfaction Note</a>
                             </li>
 
                         </ul>

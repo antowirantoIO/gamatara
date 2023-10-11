@@ -9,12 +9,12 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; On Request</h4>
+                            <a href="{{route('laporan_customer')}}">
+                                <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
+                            </a>
+                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Customer Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Tambah Project
-                            </a>
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -34,28 +34,28 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Request</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">{{ $name->customer->name ?? ''}}</h4>
                             <div>
-
+                          
                             </div>
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
+                            <div class="table-container">
                                 <table class="table" id="tableData">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Kode Project</th>
                                             <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Tanggal Request</th>
-                                            <th style="color:#929EAE">Displacement Kapal</th>
-                                            <th style="color:#929EAE">Jenis Kapal</th>
+                                            <th style="color:#929EAE">Tanggal Mulai</th>
+                                            <th style="color:#929EAE">Tanggal Selesai</th>
+                                            <th style="color:#929EAE">Nilai Project</th>
+                                            <th style="color:#929EAE">Status Project</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-        </div>
+        </div> 
     </div>
 </div>
 
@@ -88,59 +88,24 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama_project" class="form-label">Nama Project</label>
-                                <input type="text" name="nama_project" id="nama_project" class="form-control">
+                                <label for="customer" class="form-label">Nama Project</label>
+                                <input type="text" name="nama_project" class="form-control" id="nama_project">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama_customer" class="form-label">Nama Customer</label>
-                                <select name="nama_customer" id="nama_customer" class="form-control">
-                                    <option value="">Pilih Nama Customer</option>
-                                    @foreach($customer as $k)
-                                    <option value="{{$k->id}}">{{$k->name}}</option>
-                                    @endforeach
-                                </select>
+                                <label for="nilai_project" class="form-label">Nilai Project</label>
+                                <input type="text" name="nilai_project" id="nilai_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <div>
-                                    <label for="displacement" class="form-label">Displacement Kapal</label>
-                                    <input name="displacement" id="displacement" class="form-control form-control-icon">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="npwp" class="form-label">Jenis Kapal</label>
-                                <select name="jenis_kapal" id="jenis_kapal" class="form-control">
-                                    <option value="">Pilih Jenis Kapal</option>
-                                    @foreach($jenis_kapal as $k)
-                                    <option value="{{ $k->id }}">{{ $k->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <label for="Tanggal Request">Tanggal Request</label>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="start_date" class="form-label">Dari </label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" >
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="to_date" class="form-label">Sampai</label>
-                                <input type="date" name="to_date" id="to_date" class="form-control" >
+                                <label for="jumlah_project" class="form-label">Jumlah Project</label>
+                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
-                    <button class="btn btn-primary">Search</button>
-                </div> -->
             </form>
         </div>
     </div>
@@ -150,9 +115,11 @@
 
 @section('scripts')
 <script>
+    //datatable
      $(document).ready(function () {
         var table = $('#tableData').DataTable({
             fixedHeader:true,
+            lengthChange: false,
             scrollX: false,
             processing: true,
             serverSide: true,
@@ -175,36 +142,29 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('on_request') }}",
+                url: "{{ route('laporan_customer.detail', 5) }}",
                 data: function (d) {
                     d.code              = $('#code').val();
                     d.nama_project      = $('#nama_project').val();
-                    d.nama_customer     = $('#nama_customer').val();
                     d.tanggal_request   = $('#tanggal_request').val();
-                    d.start_date        = $('#start_date').val();
-                    d.to_date           = $('#to_date').val();
-                    d.jenis_kapal       = $('#jenis_kapal').val();
+                    d.tanggal_selesai   = $('#tanggal_selesai').val();
+                    d.nilai_project     = $('#nilai_project').val();
+                    d.status_project    = $('#status_project').val();
                 }
             },
             columns: [
                 {data: 'code', code: 'name'},
                 {data: 'nama_project', name: 'nama_project'},
-                {data: 'nama_customer', name: 'nama_customer'},
                 {data: 'tanggal_request', name: 'tanggal_request'},
-                {data: 'displacement', name: 'displacement'},
-                {data: 'jenis_kapal', name: 'jenis_kapal'},
+                {data: 'tanggal_request', name: 'tanggal_request'},
+                {data: 'nilai_project', name: 'nilai_project'},
+                {data: 'status_project', name: 'status_project'},
                 {data: 'action', name: 'action'}
             ]
         });
 
         $('.form-control').on('change', function() {
             table.draw();
-        });
-
-        $('#clear-filter').on('click', function() {
-            event.preventDefault();
-            $('#search-form')[0].reset();
-            table.search('').draw();
         });
 
         function hideOverlay() {
@@ -214,24 +174,22 @@
         }
 
         $('#export-button').on('click', function(event) {
-            event.preventDefault();
+            event.preventDefault(); 
 
             var code            = $('#code').val();
             var nama_project    = $('#nama_project').val();
-            var nama_customer   = $('#nama_customer').val();
-            var displacement    = $('#displacement').val();
-            var start_date      = $('#start_date').val();
-            var to_date         = $('#to_date').val();
-            var jenis_kapal     = $('#jenis_kapal').val();
+            var tanggal_request = $('#tanggal_request').val();
+            var tanggal_selesai = $('#tanggal_selesai').val();
+            var nilai_project   = $('#nilai_project').val();
+            var status_project  = $('#status_project').val();
 
-            var url = '{{ route("on_request.export") }}?' + $.param({
+            var url = '{{ route("laporan_detail_customer.export") }}?' + $.param({
                 code: code,
                 nama_project: nama_project,
-                nama_customer: nama_customer,
-                displacement: displacement,
-                start_date: start_date,
-                to_date: to_date,
-                jenis_kapal: jenis_kapal
+                tanggal_request: tanggal_request,
+                tanggal_selesai: tanggal_selesai,
+                nilai_project: nilai_project,
+                status_project: status_project
             });
 
             $('.loading-overlay').show();
@@ -247,4 +205,3 @@
     });
 </script>
 @endsection
-

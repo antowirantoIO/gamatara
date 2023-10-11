@@ -31,6 +31,11 @@ class OnRequest extends Model
         return $this->hasOne(ProjectManager::class,'id','pm_id');
     }
 
+    public function complaint()
+    {
+        return $this->hasMany(Keluhan::class,'on_request_id','id');
+    }
+
     public function lokasi()
     {
         return $this->hasOne(LokasiProject::class,'id','id_lokasi_project');

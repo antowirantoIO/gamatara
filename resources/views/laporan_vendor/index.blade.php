@@ -8,12 +8,9 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Customer</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Vendor</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('customer.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
-                            </a>
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -30,26 +27,23 @@
             </div>
 
             <div class="row">
-                <div class="col-xl-12">
+                <div class="col-xl-6">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Customer</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Vendor</h4>
                             <div>
                           
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 640px;">
                             <div class="table-container">
                                 <table class="table" id="tableData">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Alamat</th>
-                                            <th style="color:#929EAE">Contact Person</th>
-                                            <th style="color:#929EAE">Nomor Contact Person</th>
-                                            <th style="color:#929EAE">Email</th>
-                                            <th style="color:#929EAE">Npwp</th>
+                                            <th style="color:#929EAE">Nama Vendor</th>
+                                            <th style="color:#929EAE">Jumlah Project</th>
+                                            <th style="color:#929EAE">Nilai Project</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -59,6 +53,36 @@
                                 </table>
                             </div>
                         </div>
+
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header border-0 align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">
+                                <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
+                                &nbsp; Jumlah Kapal
+                                &nbsp;
+                                <span style="width: 15px;height: 15px;background-color:#194BFB; display: inline-block;"></span>
+                                &nbsp; Volume
+                            </h4>
+                            <div class="mt-3 mt-lg-0 ml-lg-auto">
+                                <div class="dropdown" role="group">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        2023
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -87,42 +111,18 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="contact_person" class="form-label">Contact Person</label>
-                                <input type="text" name="contact_person" id="contact_person" class="form-control">
+                                <label for="nilai_project" class="form-label">Nilai Project</label>
+                                <input type="text" name="nilai_project" id="nilai_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="alamat" class="form-label">Alamat</label>
-                                <input type="text" name="alamat" id="alamat" class="form-control">
+                                <label for="jumlah_project" class="form-label">Jumlah Project</label>
+                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                <input type="number" name="nomor_contact_person" id="nomor_contact_person" class="form-control" >
-                            </div>
-                        </div>                    
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <div>
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" name="email" id="email" class="form-control form-control-icon">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="npwp" class="form-label">NPWP</label>
-                                <input type="text" name="npwp" id="npwp" class="form-control">
-                            </div>
-                        </div> 
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
-                    <button class="btn btn-primary">Search</button>
-                </div> -->
             </form>
         </div>
     </div>
@@ -132,9 +132,51 @@
 
 @section('scripts')
 <script>
+    //chart
+    var options = {
+    chart: {
+        type: 'bar',
+        height: 600,
+    },
+    plotOptions: {
+        bar: {
+        horizontal: true,
+        borderRadius: 5,
+        },
+    },
+    dataLabels: {
+        enabled: false,
+    },
+    series: [
+        {
+            name: 'Jumlah Kapal',
+            data: [150, 220, 350, 280, 420, 310, 260, 380, 420, 330, 280, 200],
+        },
+        {
+            name: 'Volume',
+            data: [200, 270, 380, 310, 450, 350, 280, 420, 460, 350, 300, 220],
+        }
+    ],
+    xaxis: {
+            labels:{
+                show:false,
+            },
+            categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+        },
+        colors: ['#90BDFF','#194BFB'],
+        legend: {
+        show: false,
+    }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#bar"), options);
+    chart.render();
+
+    //datatable
      $(document).ready(function () {
         var table = $('#tableData').DataTable({
             fixedHeader:true,
+            lengthChange: false,
             scrollX: false,
             processing: true,
             serverSide: true,
@@ -157,35 +199,23 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('customer') }}",
+                url: "{{ route('laporan_vendor') }}",
                 data: function (d) {
-                    d.nama_customer         = $('#nama_customer').val();
-                    d.alamat                = $('#alamat').val();
-                    d.contact_person        = $('#contact_person').val();
-                    d.nomor_contact_person  = $('#nomor_contact_person').val();
-                    d.email                 = $('#email').val();
-                    d.npwp                  = $('#npwp').val();
+                    d.name              = $('#name').val();
+                    d.nilai_project     = $('#nilai_project').val();
+                    d.jumlah_project    = $('#jumlah_project').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'alamat', name: 'alamat'},
-                {data: 'contact_person', name: 'contact_person'},
-                {data: 'nomor_contact_person', name: 'nomor_contact_person'},
-                {data: 'email', name: 'email'},
-                {data: 'npwp', name: 'npwp'},
+                {data: 'nilai_project', name: 'nilai_project'},
+                {data: 'jumlah_project', name: 'jumlah_project'},
                 {data: 'action', name: 'action'}
             ]
         });
 
         $('.form-control').on('change', function() {
             table.draw();
-        });
-
-        $('#clear-filter').on('click', function() {
-            event.preventDefault();
-            $('#search-form')[0].reset();
-            table.search('').draw();
         });
 
         function hideOverlay() {
@@ -197,20 +227,14 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var nama_customer           = $('#nama_customer').val();
-            var alamat                  = $('#alamat').val();
-            var contact_person          = $('#contact_person').val();
-            var nomor_contact_person    = $('#nomor_contact_person').val();
-            var email                   = $('#email').val();
-            var npwp                    = $('#npwp').val();
+            var name   = $('#name').val();
+            var nilai_project   = $('#nilai_project').val();
+            var jumlah_project  = $('#jumlah_project').val();
 
-            var url = '{{ route("customer.export") }}?' + $.param({
-                nama_customer: nama_customer,
-                alamat: alamat,
-                contact_person: contact_person,
-                nomor_contact_person: nomor_contact_person,
-                email: email,
-                npwp: npwp
+            var url = '{{ route("laporan_vendor.export") }}?' + $.param({
+                name: name,
+                nilai_project: nilai_project,
+                jumlah_project: jumlah_project,
             });
 
             $('.loading-overlay').show();

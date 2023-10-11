@@ -179,6 +179,12 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{asset('assets/assets/js/pages/select2.init.js')}}"></script>
 
+    <!-- apexcharts -->
+    <script src="{{asset('assets/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
+
+    <!-- barcharts init -->
+    <script src="{{asset('assets/assets/js/pages/apexcharts-bar.init.js')}}"></script>
+
     <!-- autocomplete js -->
     <!-- <script src="{{asset('assets/assets/libs/@tarekraafat/autocomplete.js/autoComplete.min.js')}}"></script> -->
 

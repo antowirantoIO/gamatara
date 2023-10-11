@@ -43,7 +43,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="name" class="form-label">Nama Project Engineer</label>&nbsp;
-                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#selectPeModal">Pilih</button>
+                                                <button type="button" class="btn btn-primary btn-sm" id="openPeModalButton">Pilih</button>
                                                 <ol id="ListPE"></ol>
                                             </div>
                                         </div>
@@ -159,6 +159,29 @@
     var selectedPE = $('#selectedPE').val();
     var selectedPA = $('#selectedPA').val();
 
+    var selected = <?php echo json_encode($selected); ?>;
+  // Event handler untuk tombol "Buka Modal PE"
+  $('#openPeModalButton').on('click', function () {
+            $('#selectPeModal').modal('show'); // Membuka modal PE saat tombol diklik
+        });
+  
+//     $('#selectPeModal').on('show.bs.modal', function () {
+      
+//         var peCheckboxes = $('#pe tbody input[type="checkbox"]');
+      
+//         peCheckboxes.each(function () {
+//             var idPE = $(this).closest('tr').find('td:first').map(function() {
+//     return $(this).text();
+// }).get();
+// var idPE= '[' + idPE.join(', ') + ']';
+// console.log(idPE)
+// console.log(selected)
+//             if (selectedPE.includes(idPE) || selected.includes(idPE)) {
+//                 $(this).prop('disabled', true);
+//             }
+//         });
+//     });
+
     $('#savePeSelections').click(function () {
         selectedPE = [];
         selectedIDPE = [];
@@ -169,6 +192,21 @@
             var idPE = $(this).closest('tr').find('td:first').text();
             selectedIDPE.push(idPE);
         });
+
+        // Validasi PM
+        var selectedPM = $('#pm').val();
+        if (selectedPM !== '' && selectedIDPE.includes(selectedPM)) {
+            alert('Project Manager tidak boleh sama dengan Project Engineer.');
+            return;
+        }
+
+        // Validasi PE tidak boleh sama dengan PA
+        var selectedIDPA = $('#selectedPA').val().split(',');
+        if (selectedIDPE.some(pe => selectedIDPA.includes(pe))) {
+            alert('Project Engineer tidak boleh sama dengan Project Admin.');
+            return;
+        }
+
         var ListPE = $('#ListPE');
         ListPE.empty(); 
         
@@ -180,8 +218,8 @@
         $('#selectedPE').val(selectedIDPE.join(','));
  
         $('#selectPeModal').modal('hide');
-
-        $(".modal-backdrop").remove();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     });
 
     // Tangani pemilihan PA
@@ -195,6 +233,20 @@
             var idPA = $(this).closest('tr').find('td:first').text();
             selectedIDPA.push(idPA);
         });
+
+        // Validasi PM
+        var selectedPM = $('#pm').val();
+        if (selectedPM !== '' && selectedIDPA.includes(selectedPM)) {
+            alert('Project Manager tidak boleh sama dengan Project Admin.');
+            return;
+        }
+
+        // Validasi PA tidak boleh sama dengan PE
+        var selectedIDPE = $('#selectedPE').val().split(',');
+        if (selectedIDPA.some(pa => selectedIDPE.includes(pa))) {
+            alert('Project Admin tidak boleh sama dengan Project Engineer.');
+            return;
+        }
         
         var listPA = $('#ListPA');
         listPA.empty(); 
@@ -207,34 +259,12 @@
         $('#selectedPA').val(selectedIDPA.join(','));
 
         $('#selectPaModal').modal('hide');
-
-        $(".modal-backdrop").remove();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     });
 
     $(function () {
         $("select").select2();
     });
-
-    $('#pm').change(function () {
-        var selectedPM = $(this).val();
-        if (selectedPM === '') {
-            return; // Tidak ada PM yang dipilih, tidak perlu validasi
-        }
-
-        // Periksa apakah PM yang dipilih sudah ada dalam PE
-        var isPMEmployee = $.inArray(selectedPM, selectedPE) !== -1;
-        
-        // Periksa apakah PM yang dipilih sudah ada dalam PA
-        var isPAEmployee = $.inArray(selectedPM, selectedPA) !== -1;
-
-        // Jika PM adalah PE atau PA, tampilkan pesan kesalahan dan kembalikan pemilihan PM ke opsi default
-        if (isPMEmployee || isPAEmployee) {
-            alert("Project Manager tidak boleh sama dengan Project Engineer atau Project Admin.");
-            $(this).val(''); // Kosongkan pemilihan PM
-        }
-    });
 </script>
-
-
-
 @endsection

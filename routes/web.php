@@ -16,6 +16,10 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SubkategoriController;
 use App\Http\Controllers\SettingPekerjaanController;
 use App\Http\Controllers\ProjectManagerController;
+use App\Http\Controllers\LaporanCustomerController;
+use App\Http\Controllers\LaporanVendorController;
+use App\Http\Controllers\LaporanProjectManagerController;
+use App\Http\Controllers\SatisfactionNoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -184,79 +188,111 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/delete/{id}', [ProjectManagerController::class, 'delete'])->name('project_manager.delete');
         Route::get('/export', [ProjectManagerController::class, 'export'])->name('project_manager.export');
     });
+
+    //user
+    Route::prefix('user')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('user');
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::get('/create', [UserController::class, 'create'])->name('user.create');
+        Route::post('/store', [UserController::class, 'store'])->name('user.store');
+        Route::post('/updated/{id}', [UserController::class, 'updated'])->name('user.updated');
+        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
+    });
+
+    //role
+    Route::prefix('role')->group(function () {
+        Route::get('/', [RoleController::class, 'index'])->name('role');
+        Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
+        Route::get('/create', [RoleController::class, 'create'])->name('role.create');
+        Route::post('/store', [RoleController::class, 'store'])->name('role.store');
+        Route::post('/updated/{id}', [RoleController::class, 'updated'])->name('role.updated');
+        Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
+    });
+
+    //vendor
+    Route::prefix('vendor')->group(function () {
+        Route::get('/', [VendorController::class, 'index'])->name('vendor');
+        Route::get('/edit/{id}', [VendorController::class, 'edit'])->name('vendor.edit');
+        Route::get('/create', [VendorController::class, 'create'])->name('vendor.create');
+        Route::post('/store', [VendorController::class, 'store'])->name('vendor.store');
+        Route::post('/updated/{id}', [VendorController::class, 'updated'])->name('vendor.updated');
+        Route::get('/delete/{id}', [VendorController::class, 'delete'])->name('vendor.delete');
+    });
+
+    //pekerjaan
+    Route::prefix('pekerjaan')->group(function () {
+        Route::get('/', [PekerjaanController::class, 'index'])->name('pekerjaan');
+        Route::get('/edit/{id}', [PekerjaanController::class, 'edit'])->name('pekerjaan.edit');
+        Route::get('/create', [PekerjaanController::class, 'create'])->name('pekerjaan.create');
+        Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
+        Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
+        Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
+    });
+
+    //On Request
+    Route::prefix('on_request')->group(function () {
+        Route::get('/', [OnRequestController::class, 'index'])->name('on_request');
+        Route::get('/detail/{id}', [OnRequestController::class, 'detail'])->name('on_request.detail');
+        Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
+        Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
+        Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
+        Route::get('/delete/{id}', [OnRequestController::class, 'delete'])->name('on_request.delete');
+    });
+
+    //On Progress
+    Route::prefix('on_progress')->group(function () {
+        Route::get('/', [OnProgressController::class, 'index'])->name('on_progress');
+        Route::get('/edit/{id}', [OnProgressController::class, 'edit'])->name('on_progress.edit');
+        Route::get('/create', [OnProgressController::class, 'create'])->name('on_progress.create');
+        Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
+        Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
+        Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
+        Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
+        Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
+        Route::get('detail-worker',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
+        Route::get('sub-detail',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
+
+    });
+
+    //complete
+    Route::prefix('complete')->group(function () {
+        Route::get('/', [CompleteController::class, 'index'])->name('complete');
+        Route::get('/edit/{id}', [CompleteController::class, 'edit'])->name('complete.edit');
+        Route::get('/create', [CompleteController::class, 'create'])->name('complete.create');
+        Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
+        Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
+        Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
+    });
+
+    //laporan customer
+    Route::prefix('laporan_customer')->group(function () {
+        Route::get('/', [LaporanCustomerController::class, 'index'])->name('laporan_customer');
+        Route::get('/detail/{id}', [LaporanCustomerController::class, 'detail'])->name('laporan_customer.detail');
+        Route::get('/detail_customer/{id}', [LaporanCustomerController::class, 'detailCustomer'])->name('laporan_customer_detail.detail');
+        Route::get('/export', [LaporanCustomerController::class, 'export'])->name('laporan_customer.export');
+        Route::get('/detail_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_customer.export');
+        Route::get('/detail_project_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_project_customer.export');
+    });
+    
+    //laporan vendor
+    Route::prefix('laporan_vendor')->group(function () {
+        Route::get('/', [LaporanVendorController::class, 'index'])->name('laporan_vendor');
+        Route::get('/detail/{id}', [LaporanVendorController::class, 'detail'])->name('laporan_vendor.detail');
+        Route::get('/export', [LaporanVendorController::class, 'export'])->name('laporan_vendor.export');
+    });
+
+    //laporan project manager
+    Route::prefix('laporan_project_manager')->group(function () {
+        Route::get('/', [LaporanProjectManagerController::class, 'index'])->name('laporan_project_manager');
+        Route::get('/detail/{id}', [LaporanProjectManagerController::class, 'detail'])->name('laporan_project_manager.detail');
+        Route::get('/export', [LaporanProjectManagerController::class, 'export'])->name('laporan_project_manager.export');
+    });
+
+    //laporan Satisfaction note
+    Route::prefix('satisfaction_note')->group(function () {
+        Route::get('/', [SatisfactionNoteController::class, 'index'])->name('satisfaction_note');
+        Route::get('/export', [SatisfactionNoteController::class, 'export'])->name('satisfaction_note.export');
+    });
 });
 
-//user
-Route::prefix('user')->group(function () {
-    Route::get('/', [UserController::class, 'index'])->name('user');
-    Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::get('/create', [UserController::class, 'create'])->name('user.create');
-    Route::post('/store', [UserController::class, 'store'])->name('user.store');
-    Route::post('/updated/{id}', [UserController::class, 'updated'])->name('user.updated');
-    Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
-});
 
-//role
-Route::prefix('role')->group(function () {
-    Route::get('/', [RoleController::class, 'index'])->name('role');
-    Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
-    Route::get('/create', [RoleController::class, 'create'])->name('role.create');
-    Route::post('/store', [RoleController::class, 'store'])->name('role.store');
-    Route::post('/updated/{id}', [RoleController::class, 'updated'])->name('role.updated');
-    Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
-});
-
-//vendor
-Route::prefix('vendor')->group(function () {
-    Route::get('/', [VendorController::class, 'index'])->name('vendor');
-    Route::get('/edit/{id}', [VendorController::class, 'edit'])->name('vendor.edit');
-    Route::get('/create', [VendorController::class, 'create'])->name('vendor.create');
-    Route::post('/store', [VendorController::class, 'store'])->name('vendor.store');
-    Route::post('/updated/{id}', [VendorController::class, 'updated'])->name('vendor.updated');
-    Route::get('/delete/{id}', [VendorController::class, 'delete'])->name('vendor.delete');
-});
-
-//pekerjaan
-Route::prefix('pekerjaan')->group(function () {
-    Route::get('/', [PekerjaanController::class, 'index'])->name('pekerjaan');
-    Route::get('/edit/{id}', [PekerjaanController::class, 'edit'])->name('pekerjaan.edit');
-    Route::get('/create', [PekerjaanController::class, 'create'])->name('pekerjaan.create');
-    Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
-    Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
-    Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
-});
-
-//On Request
-Route::prefix('on_request')->group(function () {
-    Route::get('/', [OnRequestController::class, 'index'])->name('on_request');
-    Route::get('/detail/{id}', [OnRequestController::class, 'detail'])->name('on_request.detail');
-    Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
-    Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
-    Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
-    Route::get('/delete/{id}', [OnRequestController::class, 'delete'])->name('on_request.delete');
-});
-
-//On Progress
-Route::prefix('on_progress')->group(function () {
-    Route::get('/', [OnProgressController::class, 'index'])->name('on_progress');
-    Route::get('/edit/{id}', [OnProgressController::class, 'edit'])->name('on_progress.edit');
-    Route::get('/create', [OnProgressController::class, 'create'])->name('on_progress.create');
-    Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
-    Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
-    Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
-    Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
-    Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
-    Route::get('detail-worker',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
-    Route::get('sub-detail',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
-
-});
-
-//complete
-Route::prefix('complete')->group(function () {
-    Route::get('/', [CompleteController::class, 'index'])->name('complete');
-    Route::get('/edit/{id}', [CompleteController::class, 'edit'])->name('complete.edit');
-    Route::get('/create', [CompleteController::class, 'create'])->name('complete.create');
-    Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
-    Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
-    Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
-});

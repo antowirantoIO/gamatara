@@ -51,8 +51,15 @@ class ProjectManagerController extends Controller
     public function create()
     {
         $karyawan = Karyawan::get();
+        $selectedPM = ProjectManager::select('id_karyawan')->get()->pluck('id_karyawan')->toArray();
+        $selectedPE = ProjectEngineer::select('id_karyawan')->get()->pluck('id_karyawan')->toArray();
+        $selectedPA = ProjectAdmin::select('id_karyawan')->get()->pluck('id_karyawan')->toArray();
+ 
+        $selected = array_merge($selectedPM, $selectedPE, $selectedPA);
+        // sort($selected);
+        // $selected = implode(', ', $selected);
 
-        return view('project_manager.create',compact('karyawan'));
+        return view('project_manager.create',compact('karyawan','selected'));
     }
 
     public function store(Request $request)
@@ -76,7 +83,7 @@ class ProjectManagerController extends Controller
             $dataPE->id_karyawan = $selectedPEId;
             $dataPE->save();
         }
-        
+
         foreach($selectedPAArray as $selectedPAId) {
             $dataPA = new ProjectAdmin();
             $dataPA->id_pm = $data->id;

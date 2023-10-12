@@ -37,7 +37,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
-                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ $data->nomor_telpon }}" class="form-control" placeholder="Masukkan Nomor Telpon">
+                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ $data->nomor_telpon }}" class="form-control" maxlength="13" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_telpon'))
                                                     <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
                                                 @endif

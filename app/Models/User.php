@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->belongsTo(Roles::class, 'id_role', 'id');
     }
 
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class,'id','id_karyawan');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {

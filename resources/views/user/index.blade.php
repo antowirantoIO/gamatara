@@ -45,10 +45,10 @@
                                 <table class="table" id="tableData">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Nama</th>
+                                            <th style="color:#929EAE">Nama Karyawan</th>
                                             <th style="color:#929EAE">Role</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Email</th>
+                                            <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -97,18 +97,18 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_telpom" class="form-label">Nomor Telpon</label>
-                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
-                            </div>
-                        </div>                
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
                                 <div>
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" name="email" id="email" class="form-control form-control-icon">
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="nomor_telpom" class="form-label">Nomor Telpon</label>
+                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
+                            </div>
+                        </div>                
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
@@ -159,9 +159,9 @@
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'jabatan', name: 'jabatan'},
-                {data: 'nomor_telpon', name: 'nomor_telpon'},
+                {data: 'role', name: 'jabatan'},
                 {data: 'email', name: 'email'},
+                {data: 'nomor_telpon', name: 'nomor_telpon'},
                 {data: 'action', name: 'action'}
             ]
         });

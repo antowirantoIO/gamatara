@@ -25,7 +25,7 @@ class UserController extends Controller
                 return $data->role->name ?? '';
             })
             ->addColumn('name', function($data){
-                return $data->karyawan->name;
+                return $data->karyawan->name ?? '';
             })
             ->addColumn('action', function($data){
                 return '<a href="'.route('user.edit', $data->id).'" class="btn btn-success btn-sm">

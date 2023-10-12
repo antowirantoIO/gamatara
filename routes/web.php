@@ -158,6 +158,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/updated/{id}', [SettingPekerjaanController::class, 'updated'])->name('setting_pekerjaan.updated');
         Route::get('/delete/{id}', [SettingPekerjaanController::class, 'delete'])->name('setting_pekerjaan.delete');
         Route::get('/export', [SettingPekerjaanController::class, 'export'])->name('setting_pekerjaan.export');
+        Route::get('kategori-setting',[SettingPekerjaanController::class,'getKategori'])->name('setting_pekerjaan.kategori');
     });
 
     //ProjectManager

@@ -57,12 +57,29 @@ class SettingPekerjaanController extends Controller
         return view('setting_pekerjaan.index',compact('kategori','subkategori','pekerjaan'));
     }
 
+    public function getKategori(Request $request)
+    {
+        $data = SettingPekerjaan::with(['subkategori','subkategori.kategori'])
+                ->where('id_sub_kategori',$request->sub_kategori)
+                ->where('id_pekerjaan',$request->pekerjaan)
+                ->get();
+        foreach($data as $d)
+        {
+            $d['kategori'] = $d->subkategori->kategori->name;
+            $d['sub_kategori'] = $d->subkategori->name;
+            $d['pekerjaan'] = $d->pekerjaan->name;
+        }
+ 
+        return response()->json(['status' => 200,'data' => $data]);
+    }
+
     public function create()
     {
+        $kategori = Kategori::get();
         $subkategori = SubKategori::get();
         $pekerjaan  = Pekerjaan::get();
 
-        return view('setting_pekerjaan.create',compact('subkategori','pekerjaan'));
+        return view('setting_pekerjaan.create',compact('kategori','subkategori','pekerjaan'));
     }
 
     public function store(Request $request)
@@ -81,14 +98,14 @@ class SettingPekerjaanController extends Controller
                     ->with('success', 'Data berhasil disimpan');
     }
 
-    
     public function edit(Request $request)
     {
-        $data = SettingPekerjaan::find($request->id);
-        $subkategori = SubKategori::get();
+        $data = SettingPekerjaan::with(['subkategori'])->first();
+        $kategori = Kategori::get();
+        $subkategori = SubKategori::where('id',$data->id_sub_kategori)->get();
         $pekerjaan  = Pekerjaan::get();
 
-        return view('setting_pekerjaan.edit', Compact('data','subkategori','pekerjaan'));
+        return view('setting_pekerjaan.edit', Compact('data','subkategori','pekerjaan','kategori'));
     }
 
     public function updated(Request $request)

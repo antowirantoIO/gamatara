@@ -50,19 +50,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       {{-- @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->pekerjaan->name }}</td>
-                                                <td>{{ $item->projects->lokasi->name }}</td>
-                                                <td>{{$item->detail}}</td>
-                                                <td>{{ $item->length }}</td>
-                                                <td>{{ $item->width }}</td>
-                                                <td>{{ $item->thick }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>{{ $item->amount }}</td>
-                                                <td>{{ $item->unit }}</td>
-                                            </tr>
-                                       @endforeach --}}
                                     </tbody>
                                 </table>
                             </div>

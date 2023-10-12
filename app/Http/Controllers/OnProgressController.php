@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Karyawan;
 use App\Models\OnRequest;
 use App\Models\Pekerjaan;
 use App\Models\SubKategori;
@@ -16,10 +18,34 @@ use Yajra\DataTables\Facades\DataTables;
 
 class OnProgressController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = OnRequest::get();
-        return view('on_progres.index',compact('data'));
+        if($request->ajax()){
+            $data = OnRequest::with(['pm','pm.karyawan','customer']);
+            if($request->has('code') && !empty($request->code)){
+                $data->where('code','like','%'.$request->code.'%');
+            }
+
+            if($request->has('nama_project') && !empty($request->nama_project)){
+                $data->where('nama_project',$request->nama_project);
+            }
+
+            $data = $data->get();
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('progres', function($data){
+                return getProgresProject($data->id) . ' / ' . getCompleteProject($data->id);
+            })
+            ->addColumn('start', function($data){
+                return $data->tanggal_mulai ? $data->tanggal_mulai->format('d-m-Y H:i') : '';
+            })
+            ->addColumn('end', function($data){
+                return $data->actual_selesai ? $data->actual_selesai->format('d-m-Y H:i') : '';
+            })
+            ->make(true);
+        }
+        $customer   = Customer::get();
+        $pm = Karyawan::all();
+        return view('on_progres.index',compact('customer','pm'));
     }
 
     public function edit($id)
@@ -126,12 +152,18 @@ class OnProgressController extends Controller
 
     public function tagihanVendor($id)
     {
-        return view('on_progres.tagihan_vendor',compact('id'));
+        $kategori = Kategori::all();
+        $allData = ProjectPekerjaan::where('id_project', $id)->get();
+        $workers = $allData->groupBy('id_kategori','id_subkategori');
+        return view('on_progres.tagihan_vendor',compact('id','kategori','workers'));
     }
 
     public function tagihanCustomer($id)
     {
-        return view('on_progres.tagihan_customer',compact('id'));
+        $kategori = Kategori::all();
+        $allData = ProjectPekerjaan::where('id_project', $id)->get();
+        $workers = $allData->groupBy('id_kategori','id_subkategori');
+        return view('on_progres.tagihan_customer',compact('id','kategori','workers'));
     }
 
     public function vendorWorker(Request $request, $id, $project)

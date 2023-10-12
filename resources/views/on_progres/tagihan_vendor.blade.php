@@ -23,27 +23,11 @@
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-between">
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link active rounded-pill" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Umum</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Perawatan Badan Kapal</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Kontruksi Kapal</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Pipa - Pipa</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Permesinan</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Interior Kapal</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Lain - Lain</button>
-                            </li>
+                            @foreach ($kategori as $key => $item)
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {{ $key === 0 ? 'active' : '' }} rounded-pill" id="{{ $item->id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $item->id }}" type="button" role="tab" aria-controls="{{ $item->id }}" aria-selected="true">{{ $item->name }}</button>
+                                </li>
+                            @endforeach
                         </ul>
                         <div>
                             <button class="btn btn-secondary">
@@ -62,66 +46,64 @@
                         <div class="card-body">
                             <div class="live-preview">
                                 <div class="col-md-12">
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                            <span class="fs-5"><strong>Pekerjaan Umum</strong></span>
-                                            <table class="table" id="example1">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th style="color:#929EAE;">Pekerjaan</th>
-                                                        <th style="color:#929EAE">Lokasi</th>
-                                                        <th style="color:#929EAE">Detail / Other</th>
-                                                        <th style="color:#929EAE">Length (mm)</th>
-                                                        <th style="color:#929EAE">Width (mm)</th>
-                                                        <th style="color:#929EAE">Thick (mm)</th>
-                                                        <th style="color:#929EAE">Qty</th>
-                                                        <th style="color:#929EAE">Amount</th>
-                                                        <th style="color:#929EAE">Unit</th>
-                                                        <th style="color:#929EAE">Total Harga</th>
-                                                        <th style="color:#929EAE">Total Tagihan</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Bottom Area</td>
-                                                        <td>Ruang Mesin</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>Rp. 5.000.000</td>
-                                                        <td>Rp. 15.000.000</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Bottom Area</td>
-                                                        <td>Ruang Mesin</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>Rp. 5.000.000</td>
-                                                        <td>Rp. 15.000.000</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
-                                                <strong>Total Tagihan</strong> :
-                                                <strong>Rp. 30.000.000</strong>
+                                    @foreach ($workers as $key => $worker)
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show {{ $key === 0 ? 'active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                                <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
+                                                <table class="table" id="example1">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th style="color:#929EAE;">Pekerjaan</th>
+                                                            <th style="color:#929EAE">Lokasi</th>
+                                                            <th style="color:#929EAE">Detail / Other</th>
+                                                            <th style="color:#929EAE">Length (mm)</th>
+                                                            <th style="color:#929EAE">Width (mm)</th>
+                                                            <th style="color:#929EAE">Thick (mm)</th>
+                                                            <th style="color:#929EAE">Qty</th>
+                                                            <th style="color:#929EAE">Amount</th>
+                                                            <th style="color:#929EAE">Unit</th>
+                                                            <th style="color:#929EAE">Total Harga</th>
+                                                            <th style="color:#929EAE">Total Tagihan</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $total = 0;
+                                                        @endphp
+                                                        @foreach ($worker as $value)
+                                                            @php
+                                                                $harga_vendor = $value->pekerjaan->harga_vendor;
+                                                                $total += $harga_vendor;
+                                                            @endphp
+                                                            <tr>
+                                                                <td>{{ $value->subKategori->name }}</td>
+                                                                <td>{{ $value->projects->lokasi->name }}</td>
+                                                                <td>{{ $value->detail }}</td>
+                                                                <td>{{ $value->length }}</td>
+                                                                <td>{{ $value->width }}</td>
+                                                                <td>{{ $value->thick }}</td>
+                                                                <td>{{ $value->qty }}</td>
+                                                                <td>{{ $value->amount }}</td>
+                                                                <td>{{ $value->unit }}</td>
+                                                                <td>Rp. {{ number_format($value->pekerjaan->harga_vendor, 0, ',', '.') }}</td>
+                                                                <td>Rp. {{ number_format($value->pekerjaan->harga_vendor, 0, ',', '.') }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                                <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
+                                                    <strong>Total Tagihan</strong> :
+                                                    <strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong>
+                                                </div>
                                             </div>
+                                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
                                         </div>
-                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

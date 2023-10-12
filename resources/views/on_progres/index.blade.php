@@ -12,7 +12,7 @@
                             <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" id="btn-fillter">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
@@ -53,24 +53,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->code }}</td>
-                                                <td>{{ $item->nama_project }}</td>
-                                                <td>{{ $item->customer->name }}</td>
-                                                <td>{{ $item->pm->karyawan->name }}</td>
-                                                <td>28 Ags 2023</td>
-                                                <td>28 Des 2023</td>
-                                                <td>133 / 436</td>
-                                                <td>
-                                                    <a href="{{ route('on_progress.edit',$item->id) }}" class="btn btn-warning btn-sm">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -82,16 +64,149 @@
         </div>
     </div>
 </div>
+<div id="modalFillter" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-top-right">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row gy-4">
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="code" class="form-label">Code Project</label>
+                            <input type="text" name="code" class="form-control" id="code">
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="nama_project" class="form-label">Nama Project</label>
+                            <input type="text" name="nama_project" id="nama_project" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="nama_customer" class="form-label">Nama Customer</label>
+                            <select name="nama_customer" id="nama_customer" class="form-select">
+                                <option value="">Pilih Nama Customer</option>
+                                @foreach($customer as $k)
+                                <option value="{{$k->id}}">{{$k->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="nama_pm" class="form-label">Nama Customer</label>
+                            <select name="nama_pm" id="nama_pm" class="form-select">
+                                <option value="">Pilih Nama PM</option>
+                                @foreach($pm as $p)
+                                <option value="{{$p->id}}">{{$p->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xxl-12 col-md-12">
+                        <div>
+                            <label for="date" class="form-label">Dari </label>
+                            <input type="text" name="date" id="date" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                <button class="btn btn-primary" id="btn-search">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-
 <script>
     $(function() {
-            $("#example1").DataTable({
-                fixedHeader:true,
-                scrollX:true
+            let modalInput = $('#modalFillter');
+
+            $('.form-select').select2({
+                theme : "bootstrap-5",
+                search: true
             });
+
+            $('#date').daterangepicker({
+                opens: 'right',
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    cancelLabel: 'Clear'
+
+                },
+            });
+
+            $('#btn-fillter').click(function(){
+                modalInput.modal('show');
+            })
+
+            let table = $("#example1").DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                ajax : {
+                    url : '{{ route('on_progress') }}',
+                    data : function (d) {
+                        d.code = $('#code').val();
+                        d.nama_project = $('#nama_project').val();
+                    }
+                },
+                columns : [
+                    { data : 'code', name : 'code'},
+                    { data : 'nama_project', name : 'nama_project'},
+                    { data : 'customer.name', name : 'customer'},
+                    { data : 'pm.karyawan.name', name : 'code'},
+                    { data : 'start', name : 'start'},
+                    { data : 'end', name : 'end'},
+                    {
+                        data : function(data) {
+                            return data.progres
+                        }
+                    },
+                    {
+                        data : function(data) {
+                            let id = data.id;
+                            let url = '{{ route('on_progress.edit',':id') }}';
+                            let urlReplace = url.replace(':id',id);
+                            return ` <a href="${urlReplace}" class="btn btn-warning btn-sm">
+                                <span>
+                                    <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                </span>
+                            </a>`
+                        }
+                    }
+                ]
+            });
+
+            $('#btn-search').click(function(e){
+                e.preventDefault();
+                modalInput.modal('hide');
+                table.draw();
+                $('#code').val('');
+                $('#nama_project').val('');
+            })
         })
 </script>
 @endsection

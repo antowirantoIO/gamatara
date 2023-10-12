@@ -61,4 +61,9 @@ class OnRequest extends Model
             return $query->where('id_jenis_kapal', 'like', "%$filter->jenis_kapal%");
         });
     }
+
+    public function progress()
+    {
+        return $this->hasMany(ProjectPekerjaan::class,'id_project','id');
+    }
 }

@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <label for="nama_customer" class="form-label">Nama Customer</label>
-                                        <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->customer->name }}" />
+                                        <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->customer->name }}" disabled/>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>

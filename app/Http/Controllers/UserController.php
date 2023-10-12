@@ -21,8 +21,11 @@ class UserController extends Controller
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
-            ->addColumn('jabatan', function($data){
+            ->addColumn('role', function($data){
                 return $data->role->name ?? '';
+            })
+            ->addColumn('name', function($data){
+                return $data->karyawan->name;
             })
             ->addColumn('action', function($data){
                 return '<a href="'.route('user.edit', $data->id).'" class="btn btn-success btn-sm">
@@ -61,7 +64,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'                  => 'required',
             'email'                 => 'required|email|unique:users',
             'role'                  => 'required',
             'karyawan'              => 'required',
@@ -70,7 +72,6 @@ class UserController extends Controller
         ]);
 
         $data                   = New User();
-        $data->name             = $request->input('name');
         $data->email            = $request->input('email');
         $data->nomor_telpon     = $request->input('nomor_telpon');
         $data->id_role          = $request->input('role');
@@ -96,7 +97,6 @@ class UserController extends Controller
     public function updated(Request $request,$id)
     {
         $request->validate([
-            'name'                  => 'required',
             'email'                 => 'required|email|unique:users,email,'.$request->id,
             'role'                  => 'required',
             'karyawan'              => 'required',
@@ -115,7 +115,6 @@ class UserController extends Controller
         else
             $password = $data->password;
         
-        $data->name         = $request->input('name');
         $data->email        = $request->input('email');
         $data->nomor_telpon = $request->input('nomor_telpon');
         $data->id_role      = $request->input('role');

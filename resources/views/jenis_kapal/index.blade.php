@@ -9,10 +9,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; User</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Jenis Kapal</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('user.create') }}" class="btn btn-secondary">
+                            <a href="{{ route('jenis_kapal.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
@@ -34,7 +34,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">User</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Jenis Kapal</h4>
                             <div>
                           
                             </div>
@@ -42,18 +42,15 @@
 
                         <div class="card-body">
                             <div class=" table-responsive">
-                                <table class="table" id="tableData">
+                                <table class="table" id="tableDataLight">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Nama Karyawan</th>
-                                            <th style="color:#929EAE">Role</th>
-                                            <th style="color:#929EAE">Email</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
+                                            <th style="color:#929EAE">Jenis Kapal</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                   
                                     </tbody>
                                 </table>
                             </div>
@@ -78,37 +75,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="row gy-4">
-                        <div class="col-xxl-6 col-md-6">
+                        <div class="col-xxl-12">
                             <div>
-                                <label for="customer" class="form-label">Nama</label>
+                                <label for="nama" class="form-label">Nama Jenis Kapal</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="jabatan" class="form-label">Jabatan</label>
-                                <select name="jabatan" id="jabatan" class="form-control">
-                                    <option value="">Pilih Jabatan</option>
-                                    @foreach($role as $r)
-                                        <option value="{{$r->id}}">{{ $r->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <div>
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" name="email" id="email" class="form-control form-control-icon">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="nomor_telpom" class="form-label">Nomor Telpon</label>
-                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
-                            </div>
-                        </div>                
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
@@ -125,7 +97,7 @@
 @section('scripts')
 <script>
     $(function() {
-        var table = $('#tableData').DataTable({
+        var table = $('#tableDataLight').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
@@ -149,20 +121,14 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('user') }}",
+                url: "{{ route('jenis_kapal') }}",
                 data: function (d) {
                     d.name          = $('#name').val();
-                    d.jabatan       = $('#jabatan').val();
-                    d.nomor_telpon  = $('#nomor_telpon').val();
-                    d.email         = $('#email').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'role', name: 'jabatan'},
-                {data: 'email', name: 'email'},
-                {data: 'nomor_telpon', name: 'nomor_telpon'},
-                {data: 'action', name: 'action'}
+                {data: 'action', name: 'action'},
             ]
         });
 
@@ -180,15 +146,9 @@
             event.preventDefault(); 
 
             var name            = $('#name').val();
-            var jabatan         = $('#jabatan').val();
-            var nomor_telpon    = $('#nomor_telpon').val();
-            var email           = $('#email').val();
 
-            var url = '{{ route("user.export") }}?' + $.param({
+            var url = '{{ route("jenis_kapal.export") }}?' + $.param({
                 name: name,
-                jabatan: jabatan,
-                nomor_telpon: nomor_telpon,
-                email: email
             });
 
             $('.loading-overlay').show();

@@ -58,7 +58,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
@@ -70,7 +70,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" class="form-control" id="npwp" readonly>
+                                                <input type="text" class="form-control" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -173,7 +173,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                    <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
+                                    <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
@@ -187,7 +187,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="npwp" class="form-label">NPWP</label>
-                                    <input type="text" name="npwp" class="form-control" placeholder="Masukkan NPWP">
+                                    <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
                                 </div>
                             </div> 
                         </div>
@@ -204,6 +204,33 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 <script>
+    const NPWP = document.getElementById("npwp")
+        NPWP.oninput = (e) => {
+            e.target.value = autoFormatNPWP(e.target.value);
+        }
+
+        function autoFormatNPWP(NPWPString) {
+            try {
+                var cleaned = ("" + NPWPString).replace(/\D/g, "");
+                var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+                return [      
+                        match[1], 
+                        match[2] ? ".": "",
+                        match[2], 
+                        match[3] ? ".": "",
+                        match[3],
+                        match[4] ? ".": "",
+                        match[4],
+                        match[5] ? "-": "",
+                        match[5],
+                        match[6] ? ".": "",
+                        match[6]].join("")
+                
+            } catch(err) {
+                return "";
+            }
+    }
+
     //save data utama
     $(document).ready(function () {
         $("#saveCustomerButton").click(function (e) {

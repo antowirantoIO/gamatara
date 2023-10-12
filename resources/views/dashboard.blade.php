@@ -187,6 +187,7 @@
                                 <table class="table" id="example1">
                                     <thead class="table-light">
                                         <tr>
+                                            <th style="color:#929EAE">No.</th>
                                             <th style="color:#929EAE">Kode Project</th>
                                             <th style="color:#929EAE">Nama Project</th>
                                             <th style="color:#929EAE">Nama Customer</th>
@@ -198,6 +199,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>1.</td>
                                             <td>P210823-001</td>
                                             <td>Nama Project</td>
                                             <td>PT Bomas Tiga</td>

@@ -27,29 +27,16 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="User" class="form-label">Nama</label>
-                                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama User">
-                                                @if ($errors->has('name'))
-                                                    <span class="text-danger">{{ $errors->first('name') }}</span>
-                                                @endif
+                                                <label for="karyawan" class="form-label">Karyawan</label>
+                                                <select name="karyawan" id="karyawan" class="form-control">
+                                                    <option value="">Pilih Karyawan</option>
+                                                    @foreach($karyawan as $r)
+                                                        <option value="{{$r->id}}" {{ $r->id == old('karyawan') ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                        </div>
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
-                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
-                                            </div>
-                                            @if ($errors->has('nomor_telpon'))
-                                                <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
-                                            @endif
-                                        </div>   
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="email" class="form-label">Email</label>
-                                                <input type="email" name="email" id="email" autocomplete="new-email" value="{{ old('email') }}" class="form-control" placeholder="Masukkan Email">
-                                            </div>
-                                            @if ($errors->has('email'))
-                                                <span class="text-danger">{{ $errors->first('email') }}</span>
+                                            @if ($errors->has('karyawan'))
+                                                <span class="text-danger">{{ $errors->first('karyawan') }}</span>
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -68,20 +55,22 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="karyawan" class="form-label">Karyawan</label>
-                                                <select name="karyawan" id="karyawan" class="form-control">
-                                                    <option value="">Pilih Karyawan</option>
-                                                    @foreach($karyawan as $r)
-                                                        <option value="{{$r->id}}" {{ $r->id == old('karyawan') ? 'selected' : '' }}>{{ $r->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="email" name="email" id="email" autocomplete="new-email" value="{{ old('email') }}" class="form-control" placeholder="Masukkan Email">
                                             </div>
-                                            @if ($errors->has('jabatan'))
-                                                <span class="text-danger">{{ $errors->first('jabatan') }}</span>
+                                            @if ($errors->has('email'))
+                                                <span class="text-danger">{{ $errors->first('email') }}</span>
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                        </div>
+                                            <div>
+                                                <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
+                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                            </div>
+                                            @if ($errors->has('nomor_telpon'))
+                                                <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
+                                            @endif
+                                        </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="password" class="form-label">Password</label>
@@ -122,7 +111,6 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 //konfirmasi password
 function checkPasswordMatch() {
@@ -154,6 +142,11 @@ function checkPasswordLength() {
     }
 }
 document.getElementById('password').addEventListener('input', checkPasswordLength);
+
+//untuk semua select menggunakan select2
+$(function () {
+    $("select").select2();
+});
 </script>
 @endsection
 

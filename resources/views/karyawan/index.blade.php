@@ -47,8 +47,8 @@
                                         <tr>
                                             <th style="color:#929EAE">Nama Customer</th>
                                             <th style="color:#929EAE">Alamat</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Email</th>
+                                            <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>

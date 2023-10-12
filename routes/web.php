@@ -20,6 +20,8 @@ use App\Http\Controllers\LaporanCustomerController;
 use App\Http\Controllers\LaporanVendorController;
 use App\Http\Controllers\LaporanProjectManagerController;
 use App\Http\Controllers\SatisfactionNoteController;
+use App\Http\Controllers\LokasiProjectController;
+use App\Http\Controllers\JenisKapalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -238,5 +240,27 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
         Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
         Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
+    });
+
+    //lokasi_project
+    Route::prefix('lokasi_project')->group(function () {
+        Route::get('/', [LokasiProjectController::class, 'index'])->name('lokasi_project');
+        Route::get('/edit/{id}', [LokasiProjectController::class, 'edit'])->name('lokasi_project.edit');
+        Route::get('/create', [LokasiProjectController::class, 'create'])->name('lokasi_project.create');
+        Route::post('/store', [LokasiProjectController::class, 'store'])->name('lokasi_project.store');
+        Route::post('/updated/{id}', [LokasiProjectController::class, 'updated'])->name('lokasi_project.updated');
+        Route::get('/delete/{id}', [LokasiProjectControllerController::class, 'delete'])->name('lokasi_project.delete');
+        Route::get('/export', [LokasiProjectController::class, 'export'])->name('lokasi_project.export');
+    });
+
+    //jenis_kapal
+    Route::prefix('jenis_kapal')->group(function () {
+        Route::get('/', [JenisKapalController::class, 'index'])->name('jenis_kapal');
+        Route::get('/edit/{id}', [JenisKapalController::class, 'edit'])->name('jenis_kapal.edit');
+        Route::get('/create', [JenisKapalController::class, 'create'])->name('jenis_kapal.create');
+        Route::post('/store', [JenisKapalController::class, 'store'])->name('jenis_kapal.store');
+        Route::post('/updated/{id}', [JenisKapalController::class, 'updated'])->name('jenis_kapal.updated');
+        Route::get('/delete/{id}', [JenisKapalController::class, 'delete'])->name('jenis_kapal.delete');
+        Route::get('/export', [JenisKapalController::class, 'export'])->name('jenis_kapal.export');
     });
 });

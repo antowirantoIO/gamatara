@@ -55,6 +55,16 @@
                                 <a href="{{ route('karyawan') }}" class="nav-link {{ request()->is('karyawan*') ? 'active' : ''}}" data-key="t-analytics"> Karyawan</a>
                             </li>
                             @endcan
+                            @can('lokasi_project')
+                            <li class="nav-item">
+                                <a href="{{ route('lokasi_project') }}" class="nav-link {{ request()->is('lokasi_project*') ? 'active' : ''}}" data-key="t-analytics"> Lokasi Project</a>
+                            </li>
+                            @endcan
+                            @can('jenis_kapal')
+                            <li class="nav-item">
+                                <a href="{{ route('jenis_kapal') }}" class="nav-link {{ request()->is('jenis_kapal*') ? 'active' : ''}}" data-key="t-analytics"> Jenis Kapal</a>
+                            </li>
+                            @endcan
                             @can('pekerjaan')
                             <li class="nav-item">
                                 <a href="{{ route('pekerjaan') }}" class="nav-link {{ request()->is('pekerjaan*') ? 'active' : ''}}" data-key="t-crypto"> Pekerjaan</a>
@@ -85,7 +95,6 @@
                                 <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>
                             </li>
                             @endcan
-
                         </ul>
                     </div>
                 </li>

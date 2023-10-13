@@ -62,7 +62,14 @@ class OnRequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_project'   => 'required',
+            'nama_project'          => 'required',
+            'nama_customer'         => 'required',
+            'lokasi_project'        => 'required',
+            'contact_person'        => 'required',
+            'nomor_contact_person'  => 'required',
+            'nama_customer'         => 'required',
+            'displacement'          => 'required',
+            'jenis_kapal'           => 'required'
         ]);
 
         $code = 'P'.now()->format('d').now()->format('m').now()->format('y')."-";
@@ -74,7 +81,7 @@ class OnRequestController extends Controller
         }
         $randInt = substr($randInt, -5);
 
-        $getCustomer = Customer::where('name',$request->input('id_customer'))->first();
+        $getCustomer = Customer::where('name',$request->input('nama_customer'))->first();
 
         $data                       = New OnRequest();
         $data->code                 = $code.$randInt;

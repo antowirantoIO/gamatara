@@ -30,13 +30,19 @@
                                                 <label for="nama_project" class="form-label">Nama Project</label>
                                                 <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project">
                                             </div>
+                                            @if ($errors->has('nama_project'))
+                                                <span class="text-danger">{{ $errors->first('nama_project') }}</span>
+                                            @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <label for="nama_customer" class="form-label">Nama Customer</label>
                                             <div class="input-group">
-                                                <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" />
+                                                <input type="text" id="customer_name" name="nama_customer" placeholder="Nama Customer" class="form-control" />
                                                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
                                             </div>
+                                            @if ($errors->has('nama_customer'))
+                                                <span class="text-danger">{{ $errors->first('nama_customer') }}</span>
+                                            @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
@@ -47,6 +53,9 @@
                                                     <option value="{{$l->id}}">{{$l->name}}</option>
                                                     @endforeach
                                                 </select>
+                                                @if ($errors->has('lokasi_project'))
+                                                    <span class="text-danger">{{ $errors->first('lokasi_project') }}</span>
+                                                @endif
                                             </div>
                                         </div>      
                                         <div class="col-xxl-6 col-md-6">
@@ -54,12 +63,18 @@
                                                 <label for="contact_person" class="form-label">Contact Person</label>
                                                 <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
                                             </div>
+                                            @if ($errors->has('contact_person'))
+                                                <span class="text-danger">{{ $errors->first('contact_person') }}</span>
+                                            @endif
                                         </div>         
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
                                                 <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
+                                            @if ($errors->has('nomor_contact_person'))
+                                                <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
+                                            @endif
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
@@ -70,7 +85,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" class="form-control" readonly>
+                                                <input type="text" class="form-control" id="npwps" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -78,16 +93,22 @@
                                                 <label for="displacement" class="form-label">Displacement Kapal</label>
                                                 <input type="text" name="displacement" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
                                             </div>
+                                            @if ($errors->has('displacement'))
+                                                <span class="text-danger">{{ $errors->first('displacement') }}</span>
+                                            @endif
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="Jenis Kapal" class="form-label">Jenis Kapal</label>
-                                                    <select name="jenis_kapal" id="jenis_kapal" class="form-control">
-                                                        <option value="">Pilih Jenis Kapal</option>
-                                                        @foreach($jenis_kapal as $l)
-                                                        <option value="{{$l->id}}">{{$l->name}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                <select name="jenis_kapal" id="jenis_kapal" class="form-control">
+                                                    <option value="">Pilih Jenis Kapal</option>
+                                                    @foreach($jenis_kapal as $l)
+                                                    <option value="{{$l->id}}">{{$l->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('jenis_kapal'))
+                                                    <span class="text-danger">{{ $errors->first('jenis_kapal') }}</span>
+                                                @endif
                                             </div>
                                         </div> 
 
@@ -110,7 +131,7 @@
                                                 <thead style="background-color:#194BFB;color:#FFFFFF">
                                                     <tr>
                                                         <th>No.</th>
-                                                        <th>Keluhan</th>
+                                                        <th>Hasil Survey</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -157,24 +178,36 @@
                                     <label for="customer" class="form-label">Nama Customer</label>
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Masukkan Nama Customer">
                                 </div>
+                                @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                @endif
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="contact_person" class="form-label">Contact Person</label>
                                     <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
                                 </div>
+                                @if ($errors->has('contact_person'))
+                                    <span class="text-danger">{{ $errors->first('contact_person') }}</span>
+                                @endif
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="alamat" class="form-label">Alamat</label>
                                     <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Nomor Contact Person">
                                 </div>
+                                @if ($errors->has('alamat'))
+                                    <span class="text-danger">{{ $errors->first('alamat') }}</span>
+                                @endif
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
                                     <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
+                                @if ($errors->has('nomor_contact_person'))
+                                    <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
+                                @endif
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
                                 <div>
@@ -182,6 +215,9 @@
                                         <label for="email" class="form-label">Email</label>
                                         <input type="email" name="email" class="form-control form-control-icon" id="email" placeholder="Masukkan Email">
                                     </div>
+                                    @if ($errors->has('email'))
+                                        <span class="text-danger">{{ $errors->first('email') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
@@ -189,6 +225,9 @@
                                     <label for="npwp" class="form-label">NPWP</label>
                                     <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
                                 </div>
+                                @if ($errors->has('npwp'))
+                                    <span class="text-danger">{{ $errors->first('npwp') }}</span>
+                                @endif
                             </div> 
                         </div>
                     </div>
@@ -200,9 +239,6 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 <script>
     const NPWP = document.getElementById("npwp")
         NPWP.oninput = (e) => {
@@ -233,37 +269,45 @@
 
     //save data utama
     $(document).ready(function () {
-        $("#saveCustomerButton").click(function (e) {
-            e.preventDefault();
+    $("#saveCustomerButton").click(function (e) {
+        e.preventDefault();
 
-            var form = $("#formOnRequest");
-            var formData = form.serialize();
+        var form = $("#formOnRequest");
+        var formData = form.serialize();
 
-            $.ajax({
-                type: "POST",
-                url: form.attr("action"),
-                data: formData,
-                success: function (response) {
-                    if (response) {
-                        $("#exampleModalgrid").modal("hide");
-                    
-                        form[0].reset();
-               
-                        Swal.fire(
-                            '',
-                            'Customer Telah Berhasil Ditambahkan',
-                            'success'
-                        )
+        $.ajax({
+            type: "POST",
+            url: form.attr("action"),
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    $("#exampleModalgrid").modal("hide");
+                    form[0].reset();
+                    Swal.fire(
+                        '',
+                        'Customer Telah Berhasil Ditambahkan',
+                        'success'
+                    );
+                } else if (response.errors) {
+                    // Display validation errors for NPWP
+                    if (response.errors.npwp) {
+                        $("#npwp").addClass('is-invalid');
+                        $("#npwp-error").text(response.errors.npwp[0]);
                     } else {
-                        alert("Validation error: " + response.message);
+                        $("#npwp").removeClass('is-invalid');
+                        $("#npwp-error").text('');
                     }
-                },
-                error: function (error) {
+                } else {
                     alert("An error occurred while saving the customer.");
                 }
-            });
+            },
+            error: function (error) {
+                alert("An error occurred while saving the customer.");
+            }
         });
     });
+});
+
 
     //show data customer
     var route = "{{ url('customer') }}";
@@ -282,7 +326,7 @@
                     $('#contact_person').val(selectedCustomer.contact_person);
                     $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
                     $('#alamat').val(selectedCustomer.alamat);
-                    $('#npwp').val(selectedCustomer.npwp);
+                    $('#npwps').val(selectedCustomer.npwp);
                 }
             });
 

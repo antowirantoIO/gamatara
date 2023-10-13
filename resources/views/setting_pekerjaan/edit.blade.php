@@ -135,40 +135,45 @@
     })
 
     $(document).ready(function() {
-        $('#pekerjaan').on('change', function() {
-            let sub_kategori = $('#sub_kategori').val(); 
-            let pekerjaan = $('#pekerjaan').val();
-
-            let url = '{{ route('setting_pekerjaan.kategori') }}';
-            url = url + '?&sub_kategori=' + sub_kategori + '&pekerjaan=' + pekerjaan;
+        function populateTable(sub_kategori, pekerjaan) {
+            let url = '{{ route('setting_pekerjaan.kategori') }}' + '?sub_kategori=' + sub_kategori + '&pekerjaan=' + pekerjaan;
 
             $.ajax({
                 url: url,
                 method: 'GET',
                 success: function(data) {
-                    populateTable(data);
+                    var tableBody = $('#tabelList tbody');
+                    tableBody.empty();
+
+                    for (var i = 0; i < data.data.length; i++) {
+                        var row = '<tr>' +
+                            '<td>' + (i + 1) + '</td>' +
+                            '<td>' + data.data[i].kategori + '</td>' +
+                            '<td>' + data.data[i].sub_kategori + '</td>' +
+                            '<td>' + data.data[i].pekerjaan.name + '</td>' +
+                            '</tr';
+
+                        tableBody.append(row);
+                    }
                 },
                 error: function() {
+                    // Handle errors if necessary
                 }
             });
-        });
-
-        function populateTable(data) {
-            var tableBody = $('#tabelList tbody');
-            tableBody.empty();
-
-            for (var i = 0; i < data.data.length; i++) {
-               
-                var row = '<tr>' +
-                    '<td>' + (i + 1) + '</td>' +
-                    '<td>' + data.data[i].kategori + '</td>' +
-                    '<td>' + data.data[i].sub_kategori + '</td>' +
-                    '<td>' + data.data[i].pekerjaan.name + '</td>' +
-                    '</tr>';
-
-                tableBody.append(row);
-            }
         }
+
+        // Initial population of the table based on the selected values of sub_kategori and pekerjaan
+        let sub_kategori = $('#sub_kategori').val();
+        let pekerjaan = $('#pekerjaan').val();
+        populateTable(sub_kategori, pekerjaan);
+
+        // Event handlers to update the table when dropdown values change
+        $('#sub_kategori, #pekerjaan').on('change', function() {
+            let sub_kategori = $('#sub_kategori').val();
+            let pekerjaan = $('#pekerjaan').val();
+            populateTable(sub_kategori, pekerjaan);
+        });
     });
+
 </script>
 @endsection

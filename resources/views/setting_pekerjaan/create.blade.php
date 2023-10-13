@@ -135,6 +135,24 @@
     })
 
     $(document).ready(function() {
+        $('#sub_kategori').on('change', function() {
+            let sub_kategori = $('#sub_kategori').val(); 
+            let pekerjaan = $('#pekerjaan').val();
+
+            let url = '{{ route('setting_pekerjaan.kategori') }}';
+            url = url + '?&sub_kategori=' + sub_kategori + '&pekerjaan=' + pekerjaan;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    populateTable(data);
+                },
+                error: function() {
+                }
+            });
+        });
+
         $('#pekerjaan').on('change', function() {
             let sub_kategori = $('#sub_kategori').val(); 
             let pekerjaan = $('#pekerjaan').val();

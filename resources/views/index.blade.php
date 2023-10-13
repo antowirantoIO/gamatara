@@ -223,7 +223,7 @@
         </script>
     @endif
 
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
 
@@ -233,7 +233,7 @@
                 parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
             }
         });
-    </script>
+    </script> -->
 
 </body>
 </html>

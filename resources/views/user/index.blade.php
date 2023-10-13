@@ -80,13 +80,13 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama</label>
+                                <label for="name">Nama</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <label for="jabatan">Jabatan</label>
                                 <select name="jabatan" id="jabatan" class="form-control">
                                     <option value="">Pilih Jabatan</option>
                                     @foreach($role as $r)
@@ -98,14 +98,14 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <div>
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email">Email</label>
                                     <input type="email" name="email" id="email" class="form-control form-control-icon">
                                 </div>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_telpom" class="form-label">Nomor Telpon</label>
+                                <label for="nomor_telpom">Nomor Telpon</label>
                                 <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
                             </div>
                         </div>                

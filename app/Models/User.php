@@ -55,10 +55,10 @@ class User extends Authenticatable
 
     public function scopeFilter($query, $filter)
     {
-        return $query->when($filter->name ?? false, function($query) use ($filter) {
-            return $query->where('name', 'like', "%$filter->name%");
-        })->when($filter->jabatan ?? false, function($query) use ($filter) {
-            return $query->where('jabatan', 'like', "%$filter->jabatan%");
+        return $query->when($filter->karyawan ?? false, function($query) use ($filter) {
+            return $query->where('id_karyawan', 'like', "%$filter->karyawan%");
+        })->when($filter->role ?? false, function($query) use ($filter) {
+            return $query->where('id_role', 'like', "%$filter->role%");
         })->when($filter->nomor_telpon ?? false, function($query) use ($filter) {
             return $query->where('nomor_telpon', 'like', "%$filter->nomor_telpon%");
         })->when($filter->email ?? false, function($query) use ($filter) {

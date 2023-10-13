@@ -44,13 +44,14 @@ class UserController extends Controller
                     '.method_field('DELETE').'
                 </form>';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','role','name'])
             ->make(true);                    
         }
 
-        $role = Role::orderBy('id','DESC')->get();
+        $role = Role::orderBy('name','asc')->get();
+        $karyawan = Karyawan::orderBy('name','asc')->get();
 
-        return view('user.index',compact('role'));
+        return view('user.index',compact('role','karyawan'));
     }
 
     public function create()

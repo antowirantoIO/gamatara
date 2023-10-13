@@ -80,15 +80,20 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="name">Nama</label>
-                                <input type="text" name="name" class="form-control" id="name">
+                                <label for="karyawan">Nama</label>
+                                <select name="karyawan" id="karyawan" class="form-control">
+                                    <option value="">Pilih Karyawan</option>
+                                    @foreach($karyawan as $r)
+                                        <option value="{{$r->id}}">{{ $r->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="jabatan">Jabatan</label>
-                                <select name="jabatan" id="jabatan" class="form-control">
-                                    <option value="">Pilih Jabatan</option>
+                                <label for="role">Role</label>
+                                <select name="role" id="role" class="form-control">
+                                    <option value="">Pilih Role</option>
                                     @foreach($role as $r)
                                         <option value="{{$r->id}}">{{ $r->name }}</option>
                                     @endforeach
@@ -151,8 +156,8 @@
             ajax: {
                 url: "{{ route('user') }}",
                 data: function (d) {
-                    d.name          = $('#name').val();
-                    d.jabatan       = $('#jabatan').val();
+                    d.karyawan      = $('#karyawan').val();
+                    d.role          = $('#role').val();
                     d.nomor_telpon  = $('#nomor_telpon').val();
                     d.email         = $('#email').val();
                 }
@@ -179,14 +184,14 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name            = $('#name').val();
-            var jabatan         = $('#jabatan').val();
+            var karyawan        = $('#karyawan').val();
+            var role            = $('#role').val();
             var nomor_telpon    = $('#nomor_telpon').val();
             var email           = $('#email').val();
 
             var url = '{{ route("user.export") }}?' + $.param({
-                name: name,
-                jabatan: jabatan,
+                karyawan: karyawan,
+                role: role,
                 nomor_telpon: nomor_telpon,
                 email: email
             });

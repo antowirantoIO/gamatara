@@ -26,7 +26,7 @@
                             <div class="live-preview">
                                 <form action="{{ route('on_progres.work',$id) }}" method="post">
                                     @csrf
-                                    <input type="hidden" id="id_project" name="id_project">
+                                    <input type="hidden" id="id_project" name="id_project" value="{{ $id }}">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label for="kategori" class="form-label">Kategori Pekerjaan</label>
@@ -247,6 +247,7 @@
                     url : urlReplace,
                     method : 'GET'
                 }).then(ress => {
+                    console.log(ress.data);
                     if(ress.data.length != null){
                         select.empty();
                         select.append(`
@@ -254,7 +255,7 @@
                         `)
                         ress.data.forEach(item => {
                             select.append(`
-                                <option value="${item.id}">${item.pekerjaan.name}</option>
+                                <option value="${item.pekerjaan.id}">${item.pekerjaan.name}</option>
                             `)
                         })
                     }else{

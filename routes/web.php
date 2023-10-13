@@ -181,7 +181,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/detail_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_customer.export');
         Route::get('/detail_project_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_project_customer.export');
     });
-    
+
     //laporan vendor
     Route::prefix('laporan_vendor')->group(function () {
         Route::get('/', [LaporanVendorController::class, 'index'])->name('laporan_vendor');
@@ -227,6 +227,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('ajax')->group(function(){
             Route::get('pekerjaan-vendor',[OnProgressController::class,'ajaxPekerjaanVendor'])->name('ajax.vendor');
+            Route::get('progres-pekerjaan',[OnProgressController::class,'ajaxProgresPekerjaan'])->name('ajax.progres-pekerjaan');
         });
 
         Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');

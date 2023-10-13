@@ -8,6 +8,7 @@ use App\Models\OnRequest;
 use App\Models\Pekerjaan;
 use App\Models\SubKategori;
 use App\Models\Kategori;
+use App\Models\LokasiProject;
 use App\Models\ProjectPekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\Vendor;
@@ -27,7 +28,21 @@ class OnProgressController extends Controller
             }
 
             if($request->has('nama_project') && !empty($request->nama_project)){
-                $data->where('nama_project',$request->nama_project);
+                $data->where('nama_project','like', '%'.$request->nama_project.'%');
+            }
+            if($request->has('nama_customer') && !empty($request->nama_customer)){
+                $data->where('id_customer',$request->nama_customer);
+            }
+            if($request->has('nama_pm') && !empty($request->nama_pm)){
+                $data->where('pm_id',$request->nama_pm);
+            }
+
+            if ($request->has('date') && !empty($request->date)) {
+                $dates = explode(' - ', $request->date);
+                $start = $dates[0];
+                $end = $dates[1];
+                $data->whereDate('start_project', '>=', $start);
+                $data->whereDate('target_selesai', '<=', $end);
             }
 
             $data = $data->get();
@@ -111,7 +126,7 @@ class OnProgressController extends Controller
             ]);
         }
 
-        return redirect()->to(route('on_progress.edit',$request->id_project))->with('success','Data Berhasil Di Simpan');
+        return back()->with('success','Data Berhasil Di Simpan');
 
     }
 
@@ -119,11 +134,13 @@ class OnProgressController extends Controller
     {
         $kategori = Kategori::all();
         $workers = ProjectPekerjaan::where('id_project',$id)
-                                    ->select('id_project','id_kategori','id_subkategori','id_vendor','status')
-                                    ->groupBy('id_project','id_kategori','id_subkategori','id_vendor','status')
+                                    ->select('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
+                                    ->groupBy('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
                                     ->get();
         $subWorker = groupSubWorker($workers);
-        return view('on_progres.detail',compact('id','kategori','subWorker'));
+        $vendor = Vendor::all();
+        $subKategori = SubKategori::all();
+        return view('on_progres.detail',compact('id','kategori','subWorker','vendor','subKategori'));
     }
 
     public function subDetailWorker($id,$idProject,$subKategori)
@@ -171,7 +188,9 @@ class OnProgressController extends Controller
         $idProject = $project;
         $nama_project = OnRequest::where('id',$project)->pluck('nama_project')->first();
         $nama_vendor = Vendor::where('id',$id)->pluck('name')->first();
-        return view('on_progres.pekerjaan_vendor',compact('idProject','nama_project','nama_vendor','id'));
+        $pekerjaan = Pekerjaan::all();
+        $lokasi = LokasiProject::all();
+        return view('on_progres.pekerjaan_vendor',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi'));
     }
 
     public function detailVendorWorker($id)
@@ -193,11 +212,47 @@ class OnProgressController extends Controller
 
     public function ajaxPekerjaanVendor(Request $request)
     {
-        $data = ProjectPekerjaan::with(['pekerjaan','projects','projects.lokasi'])
-                                ->where('id_project',$request->id_project)
-                                ->where('id_vendor',$request->id_vendor)
-                                ->get();
-        return DataTables::of($data)->addIndexColumn()->make(true);
+        if($request->ajax()){
+            $data = ProjectPekerjaan::with(['pekerjaan','projects','projects.lokasi'])
+                                    ->where('id_project',$request->id_project)
+                                    ->where('id_vendor',$request->id_vendor);
+
+            if($request->has('id_pekerjaan') && !empty($request->id_pekerjaan)){
+                $data->where('id_pekerjaan',$request->id_pekerjaan);
+            }
+            if($request->has('id_lokasi') && !empty($request->id_lokasi)){
+                $lokasi = $request->id_lokasi;
+                $data->whereHas('projects',function ($query) use(&$lokasi){
+                    $query->whereHas('lokasi',function($querys) use(&$lokasi){
+                        $querys->where('id_lokasi_project',$lokasi);
+                    });
+                });
+            }
+
+            $data = $data->get();
+            return DataTables::of($data)->addIndexColumn()->make(true);
+        }
+    }
+
+    public function ajaxProgresPekerjaan(Request $request)
+    {
+
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project',$request->id_project)
+                                    ->where('id_kategori', $request->id_kategori)
+                                    ->with(['subKategori', 'vendors'])
+                                    ->get()
+                                    ->groupBy('id_kategori')
+                                    ->collapse();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('progres', function($data){
+                $progres = getProgress($data->id_project,$data->id_kategori);
+                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+            })
+            ->make(true);
+
+        }
     }
 
 }

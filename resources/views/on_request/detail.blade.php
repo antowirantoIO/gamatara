@@ -78,7 +78,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person">
+                                                <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
@@ -90,7 +90,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" class="form-control" value="{{$getCustomer->npwp}}" id="npwp" readonly>
+                                                <input type="text" class="form-control" value="{{$getCustomer->npwp}}" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -198,7 +198,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Masukkan Nomor Contact Person">
+                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
@@ -212,7 +212,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="npwp" class="form-label">NPWP</label>
-                                    <input type="text" name="npwp" class="form-control" placeholder="Masukkan NPWP">
+                                    <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
                                 </div>
                             </div> 
                         </div>
@@ -225,17 +225,40 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 <script>
+     const NPWP = document.getElementById("npwp")
+        NPWP.oninput = (e) => {
+            e.target.value = autoFormatNPWP(e.target.value);
+        }
+
+        function autoFormatNPWP(NPWPString) {
+            try {
+                var cleaned = ("" + NPWPString).replace(/\D/g, "");
+                var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+                return [      
+                        match[1], 
+                        match[2] ? ".": "",
+                        match[2], 
+                        match[3] ? ".": "",
+                        match[3],
+                        match[4] ? ".": "",
+                        match[4],
+                        match[5] ? "-": "",
+                        match[5],
+                        match[6] ? ".": "",
+                        match[6]].join("")
+                
+            } catch(err) {
+                return "";
+            }
+    }
+
     // Fungsi untuk menyimpan data formulir utama
     function simpanDataFormUtama() {
         var dataForm = {
             nama_project: document.getElementById('nama_project').value,
             id_customer: document.getElementById('customer_name').value,
-            lokasi_project: document.getElementById('lokasi_project').value,
+            lokasi_project: $('#lokasi_project').find(":selected").val(),
             contact_person: document.getElementById('contact_person').value,
             nomor_contact_person: document.getElementById('nomor_contact_person').value,
             displacement: document.getElementById('displacement').value,
@@ -267,11 +290,8 @@
         });
     });
 
-    // Simpan data formulir utama secara otomatis saat ada perubahan pada elemen select
-    document.querySelectorAll('select').forEach(function (select) {
-        select.addEventListener('change', function () {
-            simpanDataFormUtama();
-        });
+    $('.form-control').on('change', function () {
+        simpanDataFormUtama();
     });
 
     //hapus keluhan

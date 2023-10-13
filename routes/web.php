@@ -20,6 +20,8 @@ use App\Http\Controllers\LaporanCustomerController;
 use App\Http\Controllers\LaporanVendorController;
 use App\Http\Controllers\LaporanProjectManagerController;
 use App\Http\Controllers\SatisfactionNoteController;
+use App\Http\Controllers\LokasiProjectController;
+use App\Http\Controllers\JenisKapalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [UserController::class, 'store'])->name('user.store');
         Route::post('/updated/{id}', [UserController::class, 'updated'])->name('user.updated');
         Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
-        Route::get('/user', [UserController::class, 'export'])->name('user.export');
+        Route::get('/export', [UserController::class, 'export'])->name('user.export');
     });
 
     //role
@@ -106,16 +108,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
         Route::get('/export', [OnRequestController::class, 'export'])->name('on_request.export');
         Route::get('/export-detail/{id}', [OnRequestController::class, 'exportDetail'])->name('on_request.exportDetail');
-    });
-
-    //On Progress
-    Route::prefix('on_progress')->group(function () {
-        Route::get('/', [OnProgressController::class, 'index'])->name('on_progress');
-        Route::get('/edit/{id}', [OnProgressController::class, 'edit'])->name('on_progress.edit');
-        Route::get('/create', [OnProgressController::class, 'create'])->name('on_progress.create');
-        Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
-        Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
-        Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
     });
 
     //keluhan
@@ -166,6 +158,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/updated/{id}', [SettingPekerjaanController::class, 'updated'])->name('setting_pekerjaan.updated');
         Route::get('/delete/{id}', [SettingPekerjaanController::class, 'delete'])->name('setting_pekerjaan.delete');
         Route::get('/export', [SettingPekerjaanController::class, 'export'])->name('setting_pekerjaan.export');
+        Route::get('kategori-setting',[SettingPekerjaanController::class,'getKategori'])->name('setting_pekerjaan.kategori');
     });
 
     //ProjectManager
@@ -177,71 +170,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/updated/{id}', [ProjectManagerController::class, 'updated'])->name('project_manager.updated');
         Route::get('/delete/{id}', [ProjectManagerController::class, 'delete'])->name('project_manager.delete');
         Route::get('/export', [ProjectManagerController::class, 'export'])->name('project_manager.export');
-    });
-
-    //user
-    Route::prefix('user')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('user');
-        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-        Route::get('/create', [UserController::class, 'create'])->name('user.create');
-        Route::post('/store', [UserController::class, 'store'])->name('user.store');
-        Route::post('/updated/{id}', [UserController::class, 'updated'])->name('user.updated');
-        Route::get('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
-    });
-
-    //role
-    Route::prefix('role')->group(function () {
-        Route::get('/', [RoleController::class, 'index'])->name('role');
-        Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('role.edit');
-        Route::get('/create', [RoleController::class, 'create'])->name('role.create');
-        Route::post('/store', [RoleController::class, 'store'])->name('role.store');
-        Route::post('/updated/{id}', [RoleController::class, 'updated'])->name('role.updated');
-        Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('role.delete');
-    });
-
-    //vendor
-    Route::prefix('vendor')->group(function () {
-        Route::get('/', [VendorController::class, 'index'])->name('vendor');
-        Route::get('/edit/{id}', [VendorController::class, 'edit'])->name('vendor.edit');
-        Route::get('/create', [VendorController::class, 'create'])->name('vendor.create');
-        Route::post('/store', [VendorController::class, 'store'])->name('vendor.store');
-        Route::post('/updated/{id}', [VendorController::class, 'updated'])->name('vendor.updated');
-        Route::get('/delete/{id}', [VendorController::class, 'delete'])->name('vendor.delete');
-    });
-
-    //pekerjaan
-    Route::prefix('pekerjaan')->group(function () {
-        Route::get('/', [PekerjaanController::class, 'index'])->name('pekerjaan');
-        Route::get('/edit/{id}', [PekerjaanController::class, 'edit'])->name('pekerjaan.edit');
-        Route::get('/create', [PekerjaanController::class, 'create'])->name('pekerjaan.create');
-        Route::post('/store', [PekerjaanController::class, 'store'])->name('pekerjaan.store');
-        Route::post('/updated/{id}', [PekerjaanController::class, 'updated'])->name('pekerjaan.updated');
-        Route::get('/delete/{id}', [PekerjaanController::class, 'delete'])->name('pekerjaan.delete');
-    });
-
-    //On Request
-    Route::prefix('on_request')->group(function () {
-        Route::get('/', [OnRequestController::class, 'index'])->name('on_request');
-        Route::get('/detail/{id}', [OnRequestController::class, 'detail'])->name('on_request.detail');
-        Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
-        Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
-        Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
-        Route::get('/delete/{id}', [OnRequestController::class, 'delete'])->name('on_request.delete');
-    });
-
-    //On Progress
-    Route::prefix('on_progress')->group(function () {
-        Route::get('/', [OnProgressController::class, 'index'])->name('on_progress');
-        Route::get('/edit/{id}', [OnProgressController::class, 'edit'])->name('on_progress.edit');
-        Route::get('/create', [OnProgressController::class, 'create'])->name('on_progress.create');
-        Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
-        Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
-        Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
-        Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
-        Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
-        Route::get('detail-worker',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
-        Route::get('sub-detail',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
-
     });
 
     //laporan customer
@@ -314,5 +242,27 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
         Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
         Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
+    });
+
+    //lokasi_project
+    Route::prefix('lokasi_project')->group(function () {
+        Route::get('/', [LokasiProjectController::class, 'index'])->name('lokasi_project');
+        Route::get('/edit/{id}', [LokasiProjectController::class, 'edit'])->name('lokasi_project.edit');
+        Route::get('/create', [LokasiProjectController::class, 'create'])->name('lokasi_project.create');
+        Route::post('/store', [LokasiProjectController::class, 'store'])->name('lokasi_project.store');
+        Route::post('/updated/{id}', [LokasiProjectController::class, 'updated'])->name('lokasi_project.updated');
+        Route::get('/delete/{id}', [LokasiProjectControllerController::class, 'delete'])->name('lokasi_project.delete');
+        Route::get('/export', [LokasiProjectController::class, 'export'])->name('lokasi_project.export');
+    });
+
+    //jenis_kapal
+    Route::prefix('jenis_kapal')->group(function () {
+        Route::get('/', [JenisKapalController::class, 'index'])->name('jenis_kapal');
+        Route::get('/edit/{id}', [JenisKapalController::class, 'edit'])->name('jenis_kapal.edit');
+        Route::get('/create', [JenisKapalController::class, 'create'])->name('jenis_kapal.create');
+        Route::post('/store', [JenisKapalController::class, 'store'])->name('jenis_kapal.store');
+        Route::post('/updated/{id}', [JenisKapalController::class, 'updated'])->name('jenis_kapal.updated');
+        Route::get('/delete/{id}', [JenisKapalController::class, 'delete'])->name('jenis_kapal.delete');
+        Route::get('/export', [JenisKapalController::class, 'export'])->name('jenis_kapal.export');
     });
 });

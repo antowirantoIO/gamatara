@@ -42,13 +42,13 @@
 
                         <div class="card-body">
                             <div class="table-container">
-                                <table class="table" id="tableDataLight">
+                                <table class="table" id="tableData">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Nama Customer</th>
                                             <th style="color:#929EAE">Alamat</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Email</th>
+                                            <th style="color:#929EAE">Nomor Telpon</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -118,10 +118,9 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(function() {
-        var table = $('#tableDataLight').DataTable({
+        var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,

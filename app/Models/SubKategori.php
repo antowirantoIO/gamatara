@@ -10,7 +10,12 @@ class SubKategori extends Model
     protected $table = 'sub_kategori';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
-
+    
+    public function kategori()
+    {
+        return $this->hasOne(Kategori::class, 'id','id_kategori');
+    }
+    
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {
@@ -20,8 +25,4 @@ class SubKategori extends Model
         });
     }
 
-    public function kategori()
-    {
-        return $this->hasOne(Kategori::class, 'id','id_kategori');
-    }
 }

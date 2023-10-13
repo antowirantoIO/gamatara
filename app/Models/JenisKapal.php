@@ -10,4 +10,11 @@ class JenisKapal extends Model
     protected $table = 'jenis_kapal';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
+
+    public function scopeFilter($query, $filter)
+    {
+        return $query->when($filter->name ?? false, function($query) use ($filter) {
+            return $query->where('name', 'like', "%$filter->name%");
+        });
+    }
 }

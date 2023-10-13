@@ -20,6 +20,7 @@ class OnRequestController extends Controller
     {
         if ($request->ajax()) {
             $data = OnRequest::with(['kapal','customer'])
+                    ->whereNull('pm_id')
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()

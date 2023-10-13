@@ -37,19 +37,19 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="length" class="form-label">Length (mm)</label>
-                                                <input type="text" name="length" class="form-control" id="length" placeholder="1.00">
+                                                <input type="text" name="length" class="form-control" id="length" value="1.00" placeholder="1.00">
                                             </div>
                                         </div>                 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="width" class="form-label">Width (mm)</label>
-                                                <input type="text" name="width" class="form-control" id="width" placeholder="1.00">
+                                                <input type="text" name="width" class="form-control" id="width" value="1.00" placeholder="1.00">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="thick" class="form-label">Thick (mm)</label>
-                                                <input type="text" name="thick" class="form-control" id="thick" placeholder="1.00">
+                                                <input type="text" name="thick" class="form-control" id="thick" value="1.00" placeholder="1.00">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -61,7 +61,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="conversion" class="form-label">Conversion</label>
-                                                <input type="text" name="conversion" class="form-control" id="conversion" placeholder="100/100">
+                                                <input type="text" name="conversion" class="form-control" id="conversion" value="1.00" placeholder="100/100">
                                             </div>
                                         </div>  
                                         

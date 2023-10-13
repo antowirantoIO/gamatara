@@ -17,6 +17,9 @@ class PekerjaanController extends Controller
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
+            ->addColumn('unit', function($data){
+                return $data->unit ?? '-';
+            })
             ->addColumn('action', function($data){
                 return '<a href="'.route('pekerjaan.edit', $data->id).'" class="btn btn-success btn-sm">
                     <span>

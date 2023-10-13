@@ -2,7 +2,7 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box horizontal-logo">
-                <a href="index.html" class="logo logo-dark">
+                <a href="{{ route('dashboard') }}" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{asset('assets/assets/images/logo-sm.png')}}" alt="" height="22">
                     </span>
@@ -11,7 +11,7 @@
                     </span>
                 </a>
 
-                <a href="index.html" class="logo logo-light">
+                <a href="{{ route('dashboard') }}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{asset('assets/assets/images/logo-sm.png')}}" alt="" height="22">
                     </span>
@@ -44,14 +44,14 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
                     <h6 class="dropdown-header">Welcome, {{ Auth::user()->name }}</h6>
-                        <div class="dropdown-divider"></div>
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="dropdown-item">
-                                    <i class="mdi mdi-logout text-muted fs-16 align-middle me-1 logout"></i>
-                                    <span class="align-middle" data-key="t-logout">Logout</span>
-                                </button>
-                            </form>
-                    </div>
+                    <div class="dropdown-divider"></div>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="mdi mdi-logout text-muted fs-16 align-middle me-1 logout"></i>
+                                <span class="align-middle" data-key="t-logout">Logout</span>
+                            </button>
+                        </form>
+                </div>
         </div>
     </div>

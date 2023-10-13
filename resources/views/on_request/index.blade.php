@@ -41,24 +41,22 @@
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Kode Project</th>
-                                            <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Tanggal Request</th>
-                                            <th style="color:#929EAE">Displacement Kapal</th>
-                                            <th style="color:#929EAE">Jenis Kapal</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Kode Project</th>
+                                        <th style="color:#929EAE">Nama Project</th>
+                                        <th style="color:#929EAE">Nama Customer</th>
+                                        <th style="color:#929EAE">Tanggal Request</th>
+                                        <th style="color:#929EAE">Displacement Kapal</th>
+                                        <th style="color:#929EAE">Jenis Kapal</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

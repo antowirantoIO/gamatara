@@ -2,9 +2,8 @@
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
 
 <head>
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard</title>
+    <title>GAMATARA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -48,7 +47,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     @yield("styles")
-
 </head>
 
 <body>
@@ -122,7 +120,6 @@
         </div>
     </div> -->
 
-
     <!-- JAVASCRIPT -->
     <script src="{{asset('assets/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/assets/libs/simplebar/simplebar.min.js')}}"></script>
@@ -148,7 +145,7 @@
     <script src="{{asset('assets/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
 
@@ -223,7 +220,7 @@
         </script>
     @endif
 
-    <!-- <script>
+    <script>
         $(document).ready(function () {
             var activeSubmenuItem = $(".navbar-menu .navbar-nav .nav-link.active");
 
@@ -233,7 +230,6 @@
                 parentMenu.find(".nav-link[data-bs-toggle=collapse]").attr("aria-expanded", true);
             }
         });
-    </script> -->
-
+    </script>
 </body>
 </html>

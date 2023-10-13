@@ -14,7 +14,7 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
                         </div>
                         <div class="d-flex justify-content-center align-items-center gap-3">
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" id="btn-fillter">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
@@ -61,12 +61,62 @@
         </div>
     </div>
 </div>
-
+<div id="modalFillter" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-top-right">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row gy-4">
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="id_pekerjaan" class="form-label">Pekerjaan</label>
+                            <select type="text" name="id_pekerjaan" class="form-select" id="id_pekerjaan">
+                                <option value="">Pilih Pekerjaan</option>
+                                @foreach ($pekerjaan as $p)
+                                    <option value="{{ $p->id }}">{{ $p->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="id_lokasi" class="form-label">Nama Project</label>
+                            <select type="text" name="id_lokasi" id="id_lokasi" class="form-select">
+                                <option value="">Pilih Lokasi</option>
+                                @foreach ($lokasi as $l)
+                                    <option value="{{ $l->id }}">{{ $l->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn btn-danger" id="btn-reset" style="margin-right: 10px;">Reset</div>
+                <button class="btn btn-primary" id="btn-search">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function(){
+            let modalInput = $('#modalFillter');
+
+            $('.form-select').select2({
+                theme : "bootstrap-5",
+                search: true
+            });
+
+            $('#btn-fillter').click(function(){
+                modalInput.modal('show');
+            });
+
             let table = $('#dataTable').DataTable({
                 fixedHeader:true,
                 scrollX: false,
@@ -91,9 +141,11 @@
                     url : '{{ route('ajax.vendor') }}',
                     methdo : 'GET',
                     data : function(d){
-                        d._token = '{{ csrf_token() }}',
-                        d.id_project = '{{ $idProject }}',
-                        d.id_vendor = '{{ $id }}'
+                        d._token = '{{ csrf_token() }}';
+                        d.id_project = '{{ $idProject }}';
+                        d.id_vendor = '{{ $id }}';
+                        d.id_lokasi = $('#id_lokasi').val();
+                        d.id_pekerjaan = $('#id_pekerjaan').val();
                     }
                 },
 
@@ -110,6 +162,21 @@
                 ]
 
             });
+
+
+            $('#btn-search').click(function(e){
+                e.preventDefault();
+                modalInput.modal('hide');
+                table.draw();
+            })
+
+            $('#btn-reset').click(function(e){
+                e.preventDefault();
+                $('.form-control').val('');
+                $('.form-select').val(null).trigger('change');
+                table.draw();
+            })
+
         })
     </script>
 @endsection

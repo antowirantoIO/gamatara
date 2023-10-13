@@ -108,7 +108,11 @@
                                             <div class="d-flex justify-content-between align-items-end">
                                                 <div class="fs-4 text-start">
                                                     Pekerjaan<br>
-                                                    {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
+                                                    @if (!$pekerjaan->total_status_1)
+                                                        0 / 0
+                                                    @else
+                                                        {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
+                                                    @endif
                                                 </div>
                                                 <div>
                                                     <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>

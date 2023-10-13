@@ -57,7 +57,11 @@ function getCompleteProject($id)
     $pekerjaan = ProjectPekerjaan::where('id_project',$id)
                                 ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                                 ->first();
-    return $pekerjaan->total_status_1;
+    if($pekerjaan->total_status_1){
+        return $pekerjaan->total_status_1;
+    }else{
+        return 0;
+    }
 }
 
 function getProgresProject($id)
@@ -65,5 +69,9 @@ function getProgresProject($id)
     $pekerjaan = ProjectPekerjaan::where('id_project',$id)
                                 ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                 ->first();
-    return $pekerjaan->total_status_2;
+    if($pekerjaan->total_status_2){
+        return $pekerjaan->total_status_2;
+    }else{
+        return 0;
+    }
 }

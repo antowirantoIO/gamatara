@@ -36,4 +36,6 @@ class ProjectPekerjaan extends Model
     {
         return $this->belongsTo(SubKategori::class,'id_subkategori','id');
     }
+
+
 }

@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                <div class="btn btn-danger" id="btn-reset" style="margin-right: 10px;">Reset</div>
                 <button class="btn btn-primary" id="btn-search">Search</button>
             </div>
         </div>
@@ -135,6 +135,7 @@
 
             $('#date').daterangepicker({
                 opens: 'right',
+                autoUpdateInput: false,
                 locale: {
                     format: 'YYYY-MM-DD',
                     cancelLabel: 'Clear'
@@ -142,8 +143,19 @@
                 },
             });
 
+            $('#date').on('apply.daterangepicker',function(e,picker){
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+            })
+
             $('#btn-fillter').click(function(){
                 modalInput.modal('show');
+            })
+
+            $('#btn-reset').click(function(e){
+                e.preventDefault();
+                $('.form-control').val('');
+                $('.form-select').val(null).trigger('change');
+                $('#date').val('');
             })
 
             let table = $("#example1").DataTable({
@@ -171,6 +183,9 @@
                     data : function (d) {
                         d.code = $('#code').val();
                         d.nama_project = $('#nama_project').val();
+                        d.nama_customer = $('#nama_customer').val();
+                        d.nama_pm = $('#nama_pm').val();
+                        d.date =  $('#date').val();
                     }
                 },
                 columns : [
@@ -204,8 +219,6 @@
                 e.preventDefault();
                 modalInput.modal('hide');
                 table.draw();
-                $('#code').val('');
-                $('#nama_project').val('');
             })
         })
 </script>

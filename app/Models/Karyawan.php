@@ -10,6 +10,11 @@ class Karyawan extends Model
     protected $table = 'karyawan';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
+    
+    public function role()
+    {
+        return $this->belongsTo(Roles::class, 'id_role', 'id');
+    }
 
     public function scopeFilter($query, $filter)
     {
@@ -21,6 +26,8 @@ class Karyawan extends Model
             return $query->where('nomor_telpon', 'like', "%$filter->nomor_telpon%");
         })->when($filter->email ?? false, function($query) use ($filter) {
             return $query->where('email', 'like', "%$filter->email%");
+        })->when($filter->role ?? false, function($query) use ($filter) {
+            return $query->where('id_role', 'like', "%$filter->role%");
         });
     }
 }

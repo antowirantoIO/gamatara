@@ -27,11 +27,11 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="karyawan" class="form-label">Karyawan</label>
+                                                <label for="karyawan">Karyawan</label>
                                                 <select name="karyawan" id="karyawan" class="form-control">
                                                     <option value="">Pilih Karyawan</option>
                                                     @foreach($karyawan as $r)
-                                                        <option value="{{$r->id}}" {{ $r->id == old('karyawan') ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                        <option value="{{$r->id}}" {{ $r->id == old('karyawan') ? 'selected' : '' }} data-email="{{$r->email}}" data-nomor-telepon="{{$r->nomor_telpon}}">{{ $r->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -41,21 +41,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="role" class="form-label">Role</label>
-                                                <select name="role" id="role" class="form-control">
-                                                    <option value="">Pilih role</option>
-                                                    @foreach($role as $r)
-                                                        <option value="{{$r->id}}" {{ $r->id == old('role') ? 'selected' : '' }}>{{ $r->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            @if ($errors->has('role'))
-                                                <span class="text-danger">{{ $errors->first('role') }}</span>
-                                            @endif
-                                        </div>
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="email" class="form-label">Email</label>
+                                                <label for="email">Email</label>
                                                 <input type="email" name="email" id="email" autocomplete="new-email" value="{{ old('email') }}" class="form-control" placeholder="Masukkan Email">
                                             </div>
                                             @if ($errors->has('email'))
@@ -64,7 +50,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
+                                                <label for="nomor_telpon">Nomor Telpon</label>
                                                 <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                             @if ($errors->has('nomor_telpon'))
@@ -72,8 +58,10 @@
                                             @endif
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
+                                        </div>  
+                                        <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="password" class="form-label">Password</label>
+                                                <label for="password">Password</label>
                                                 <input type="password" name="password" id="password" autocomplete="new-password" class="form-control" placeholder="Masukkan Password">
                                                 <span id="passwordLengthError" class="text-danger" style="display:none;">Password harus memiliki setidaknya 6 karakter.</span>
                                             </div>
@@ -82,7 +70,7 @@
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="konfirmasi_password" class="form-label">Konfirmasi Password</label>
+                                            <label for="konfirmasi_password">Konfirmasi Password</label>
                                             <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control" placeholder="Masukkan Konfirmasi Password">
                                             <div class="col-12">
                                                 <span id="passwordMismatchError" class="text-danger" style="display:none;">Password tidak sesuai.</span>
@@ -112,6 +100,33 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function() {
+        var karyawanSelect = $("#karyawan");
+        var emailInput = $("#email");
+        var nomorTelponInput = $("#nomor_telpon");
+
+        // Inisialisasi Select2
+        karyawanSelect.select2();
+
+        karyawanSelect.on("change", function() {
+            var selectedOption = karyawanSelect.find(":selected");
+
+            if (selectedOption.length) {
+                // Dapatkan atribut data dari option yang dipilih
+                var email = selectedOption.data("email");
+                var nomorTelepon = selectedOption.data("nomor-telepon");
+
+                // Setel nilai email dan nomor telepon
+                emailInput.val(email);
+                nomorTelponInput.val(nomorTelepon);
+            } else {
+                // Jika tidak ada yang dipilih, kosongkan input email dan nomor telepon
+                emailInput.val("");
+                nomorTelponInput.val("");
+            }
+        });
+    });
+
 //konfirmasi password
 function checkPasswordMatch() {
     var password = document.getElementById('password').value;

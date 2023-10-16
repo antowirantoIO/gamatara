@@ -8,10 +8,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('setting.estimasi',$idProject)}}">
+                            <a href="{{route('complete.pekerjaan',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Estimasi Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Detail Pekerjaan</h4>
                         </div>
                     </div>
                 </div>
@@ -37,27 +37,39 @@
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
                                             <th style="color:#929EAE">Vendor</th>
-                                            <th style="color:#929EAE">Harga Vendor</th>
-                                            <th style="color:#929EAE">Harga Customer</th>
+                                            <th style="color:#929EAE">Status</th>
+                                            <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       @foreach ($data as $item)
-                                        <tr>
-                                                <td>{{ $item->pekerjaan->name }}n</td>
+                                        @foreach ($data as $item)
+                                            <tr>
+                                                <td>{{ $item->pekerjaan->name }}</td>
                                                 <td>{{ $item->lokasi->name }}</td>
                                                 <td>{{ $item->detail }}</td>
-                                                <td>{{$item->length}}</td>
-                                                <td>{{$item->width}}</td>
-                                                <td>{{$item->thick}}</td>
-                                                <td>{{$item->qty}}</td>
-                                                <td>{{$item->amount}}</td>
-                                                <td>{{$item->unit}}</td>
+                                                <td>{{ $item->length }}</td>
+                                                <td>{{ $item->width }}</td>
+                                                <td>{{ $item->thick }}</td>
+                                                <td>{{ $item->qty }}</td>
+                                                <td>{{ $item->amount }}</td>
+                                                <td>{{ $item->unit }}</td>
                                                 <td>{{ $item->vendors->name }}</td>
-                                                <td>Rp. {{ number_format($item->pekerjaan->harga_vendor, 0, ',', '.') }}</td>
-                                                <td>Rp. {{ number_format($item->pekerjaan->harga_customer, 0, ',', '.') }}</td>
-                                            </tr>`
-                                       @endforeach
+                                                <td>
+                                                    @if ($item->status == 1)
+                                                        <span class="text-warning">Progres</span>
+                                                    @else
+                                                        <span an class="text-success">Complete</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="btn btn-warning btn-sm btn-modal">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

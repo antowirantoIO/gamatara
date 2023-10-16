@@ -13,7 +13,7 @@
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
                             <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
-                                <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
+                                <a href="#"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
                             </div>
                         </div>
                     </div>
@@ -79,17 +79,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>CV Muara Fajar Utama</td>
-                                            <td>57 / 100</td>
-                                            <td>
-                                                <a href="{{ route('on_progres.vendor-worker',$data->id) }}" class="btn btn-warning btn-sm">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @foreach ($projects as $project)
+                                            <tr>
+                                                <td>{{ $project->vendors->name }}</td>
+                                                <td>{{ $project->total_status_2 }} / {{ $project->total_status_1 }}</td>
+                                                <td>
+                                                    <a href="{{ route('complete.pekerjaan-vendor',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -101,11 +103,15 @@
                         <div class="card-body">
                             <div class="live-preview">
                                     <div class="d-flex flex-column gap-3">
-                                        <a href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-primary btn-block w-100 rounded-3 border-0">
+                                        <a href="{{ route('complete.pekerjaan',$data->id) }}" class="btn btn-primary btn-block w-100 rounded-3 border-0">
                                             <div class="d-flex justify-content-between align-items-end">
-                                                <div class="fs-4">
+                                                <div class="fs-4 text-start">
                                                     Pekerjaan <br>
-                                                    110 / 1002
+                                                    @if (!$pekerjaan->total_status_1)
+                                                        0 / 0
+                                                    @else
+                                                        {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
+                                                    @endif
                                                 </div>
                                                 <div>
                                                     <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
@@ -113,9 +119,9 @@
                                             </div>
                                         </a>
                                         <div class="d-flex gap-3">
-                                            <a href="{{ route('on_progres.tagihan-vendor',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
+                                            <a href="{{ route('complete.tagihan-vendor',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5">
+                                                    <div class="fs-5 text-start">
                                                         Tagihan <br>
                                                        <strong>Vendor</strong>
                                                     </div>
@@ -124,9 +130,9 @@
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="{{ route('on_progres.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
+                                            <a href="{{ route('complete.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5">
+                                                    <div class="fs-5 text-start">
                                                         Tagihan <br>
                                                         <strong>Customer</strong>
                                                     </div>
@@ -149,7 +155,7 @@
                                 <table id="tabelKeluhan" class="table table-bordered">
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
-                                            <th>Keluhan</th>
+                                            <th>Survey</th>
                                         </tr>
                                     </thead>
                                     <tbody>

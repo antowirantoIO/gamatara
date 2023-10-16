@@ -50,17 +50,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Mengganti Pipa Udara Tanki Air Tawar</td>
-                                            <td>Kabin</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

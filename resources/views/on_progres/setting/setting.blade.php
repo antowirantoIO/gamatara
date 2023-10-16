@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ route('setting.estimasi') }}">
+                        <a href="{{ route('setting.estimasi', $id) }}">
                             <div class="card p-2 rounded-4">
                                 <div class="card-body">
                                     <div class="live-preview">

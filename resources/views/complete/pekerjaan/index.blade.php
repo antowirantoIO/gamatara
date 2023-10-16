@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('complete.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
@@ -186,7 +186,7 @@
                                 let id_kategori = data.id_kategori;
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
-                                let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori']) }}';
+                                let url = '{{ route('complete.sub-detail-pekerjaan',[':id',':project',':subkategori']) }}';
                                 let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>

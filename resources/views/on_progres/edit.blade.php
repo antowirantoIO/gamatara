@@ -45,6 +45,10 @@
                                         <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->customer->name }}" disabled/>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
+                                        <label for="nama_customer" class="form-label">Lokasi Project</label>
+                                        <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->lokasi->name }}" disabled/>
+                                    </div>
+                                    <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="contact_person" class="form-label">Contact Person</label>
                                             <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person" value="{{ $data->contact_person }}" disabled>
@@ -156,7 +160,7 @@
                                 <table id="tabelKeluhan" class="table table-bordered">
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
-                                            <th>Keluhan</th>
+                                            <th>Survey</th>
                                         </tr>
                                     </thead>
                                     <tbody>

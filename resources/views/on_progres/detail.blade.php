@@ -60,9 +60,8 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($worker as $value)
-                                                        <input type="hidden" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
-                                                        <input type="hidden" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
-                                                        <input type="hidden" class="id_subs" id="id_subkategori-{{ $key }}" value="{{ $value->id_subkategori }}" >
+                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                        <input type="text" class="d-none id_project {{ $loop->first ? 'active' : '' }}" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -92,8 +91,8 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_customer" class="form-label">Nama Pekerjaan</label>
-                            <select name="nama_customer" id="nama_customer" class="form-select">
+                            <label for="sub_kategori" class="form-label">Nama Pekerjaan</label>
+                            <select name="sub_kategori" id="sub_kategori" class="form-select">
                                 <option value="">Pilih Nama Pekerjaan</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
@@ -103,8 +102,8 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_pm" class="form-label">Nama Customer</label>
-                            <select name="nama_pm" id="nama_pm" class="form-select">
+                            <label for="nama_vendor" class="form-label">Nama Vendor</label>
+                            <select name="nama_vendor" id="nama_vendor" class="form-select">
                                 <option value="">Pilih Vendor</option>
                                 @foreach($vendor as $v)
                                 <option value="{{$v->id}}">{{$v->name}}</option>
@@ -139,7 +138,6 @@
 
                 var id_kategori = $('#id_kategori-{{ $key }}').val();
                 var id_project = $('#id_project-{{ $key }}').val();
-                var id_subkategori = $('#id_subkategori-{{ $key }}').val();
 
                 var table{{ $key }} = $('#tableData{{ $key }}').DataTable({
                     fixedHeader:true,
@@ -172,9 +170,8 @@
                             d._token = '{{ csrf_token() }}';
                             d.id_kategori = id_kategori;
                             d.id_project = id_project;
-                            d.nama_customer = $('#nama_customer').val();
-                            d.nama_pm = $('#nama_pm').val();
-                            d.id_subkategori = id_subkategori;
+                            d.sub_kategori = $('#sub_kategori').val();
+                            d.nama_vendor = $('#nama_vendor').val();
                         }
                     },
                     columns : [
@@ -204,17 +201,26 @@
                 $('#btn-search').on('click',function(e){
                     e.preventDefault();
                     modalInput.modal('hide');
-                    var activeTab = $('#myTab .nav-link.active').attr('id');
-                    var active = $('.tab-pane fade show active');
-                    var ids = '#id_subkategori-' + activeTab.substring(0, activeTab.indexOf('-'));
+                    var active = $('#myTabContent .tab-pane.active');
+                    id_kategori = active.find('.id_kategori.active').val();
+                    id_project = active.find('.id_project.active').val();
 
-                    // // var ids = $();
-                    // id_subkategori = $(document).delegate('#id_subkategori-' + activeTab.substring(0, activeTab.indexOf('-'))).val();
-                    console.log( $(document).delegate(ids).val());
-                    if (activeTab === '{{ $key }}-tab') {
+                    var activeTabId = $('#myTab .nav-link.active').attr('id');
+                    if (activeTabId === '{{ $key }}-tab') {
                         table{{ $key }}.draw();
                     }
                 });
+
+
+                $('#btn-reset').click(function(e){
+                    e.preventDefault();
+                    $('.form-control').val('');
+                    $('.form-select').val(null).trigger('change');
+                    var activeTabId = $('#myTab .nav-link.active').attr('id');
+                    if (activeTabId === '{{ $key }}-tab') {
+                        table{{ $key }}.draw();
+                    }
+                })
             @endforeach
 
         })

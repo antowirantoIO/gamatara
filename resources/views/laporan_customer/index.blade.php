@@ -37,22 +37,21 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="table-container">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Jumlah Project</th>
-                                            <th style="color:#929EAE">Nilai Project</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Nama Customer</th>
+                                        <th style="color:#929EAE">Jumlah Project</th>
+                                        <th style="color:#929EAE">Nilai Project</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
+                        
                     </div>
                 </div>
                 <div class="col-xl-6">

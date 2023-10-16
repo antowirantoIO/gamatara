@@ -37,21 +37,19 @@
                         </div>
 
                         <div class="card-body" style="height: 640px;">
-                            <div class="table-container">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Nama Project Manager</th>
-                                            <th style="color:#929EAE">On Progress</th>
-                                            <th style="color:#929EAE">Complete</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Nama Project Manager</th>
+                                        <th style="color:#929EAE">On Progress</th>
+                                        <th style="color:#929EAE">Complete</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
 
                     </div>

@@ -59,10 +59,15 @@ class SettingPekerjaanController extends Controller
 
     public function getKategori(Request $request)
     {
-        $data = SettingPekerjaan::with(['subkategori','subkategori.kategori'])
-                ->where('id_sub_kategori',$request->sub_kategori)
-                ->where('id_pekerjaan',$request->pekerjaan)
-                ->get();
+        $data = SettingPekerjaan::with(['subkategori', 'subkategori.kategori'])
+        ->where('id_sub_kategori', $request->sub_kategori);
+    
+        if ($request->pekerjaan != null) {
+            $data->where('id_pekerjaan', $request->pekerjaan);
+        }
+        
+        $data = $data->get();
+    
         foreach($data as $d)
         {
             $d['kategori'] = $d->subkategori->kategori->name;
@@ -94,7 +99,7 @@ class SettingPekerjaanController extends Controller
         $data->id_sub_kategori  = $request->input('subkategori');
         $data->save();
 
-        return redirect(route('setting_pekerjaan'))
+        return redirect(route('setting_pekerjaan.create'))
                     ->with('success', 'Data berhasil disimpan');
     }
 

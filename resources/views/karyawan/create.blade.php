@@ -36,6 +36,20 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
+                                                <label for="role" class="form-label">Role</label>
+                                                <select name="role" id="role" class="form-control">
+                                                    <option value="">Pilih role</option>
+                                                    @foreach($role as $r)
+                                                        <option value="{{$r->id}}" {{ $r->id == old('role') ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @if ($errors->has('role'))
+                                                <span class="text-danger">{{ $errors->first('role') }}</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
                                                 <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
                                                 <input type="number" name="nomor_telpon" class="form-control" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_telpon'))

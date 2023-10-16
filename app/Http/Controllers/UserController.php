@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Models\Karyawan;
 use App\Exports\ExportUser;
 
-
 class UserController extends Controller
 {
     public function index(Request $request)
@@ -21,51 +20,48 @@ class UserController extends Controller
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
-            ->addColumn('role', function($data){
-                return $data->role->name ?? '';
-            })
             ->addColumn('name', function($data){
                 return $data->karyawan->name ?? '';
             })
             ->addColumn('action', function($data){
-                return '<a href="'.route('user.edit', $data->id).'" class="btn btn-success btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                &nbsp;
-                <a data-id="'.$data->id.'" data-name="user '.$data->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
-                    <span>
-                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                <form method="GET" id="form-user'.$data->id.'" action="'.route('user.delete', $data->id).'">
-                    '.csrf_field().'
-                    '.method_field('DELETE').'
-                </form>';
+                if($data->id != 1){
+                    return '<a href="'.route('user.edit', $data->id).'" class="btn btn-success btn-sm">
+                        <span>
+                            <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                        </span>
+                    </a>
+                    &nbsp;
+                    <a data-id="'.$data->id.'" data-name="user '.$data->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
+                        <span>
+                            <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                        </span>
+                    </a>
+                    <form method="GET" id="form-user'.$data->id.'" action="'.route('user.delete', $data->id).'">
+                        '.csrf_field().'
+                        '.method_field('DELETE').'
+                    </form>';
+                }
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','name'])
             ->make(true);                    
         }
 
-        $role = Role::orderBy('id','DESC')->get();
+        $karyawan = Karyawan::orderBy('name','asc')->get();
 
-        return view('user.index',compact('role'));
+        return view('user.index',compact('karyawan'));
     }
 
     public function create()
     {
-        $role       = Role::orderBy('id','DESC')->get();
         $karyawan   = Karyawan::orderBy('id','DESC')->get();
 
-        return view('user.create',compact('role','karyawan'));
+        return view('user.create',compact('karyawan'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'email'                 => 'required|email|unique:users',
-            'role'                  => 'required',
             'karyawan'              => 'required',
             'password'              => 'required|min:6',
             'konfirmasi_password'   => 'required|same:password',
@@ -74,12 +70,13 @@ class UserController extends Controller
         $data                   = New User();
         $data->email            = $request->input('email');
         $data->nomor_telpon     = $request->input('nomor_telpon');
-        $data->id_role          = $request->input('role');
         $data->id_karyawan      = $request->input('karyawan');
         $data->password         = bcrypt($request->input('password'));
         $data->save();
 
-        $data->assignRole($request->input('role'));
+        $karyawan = Karyawan::find($request->input('karyawan'));
+
+        $data->assignRole($karyawan->id_role);
 
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');
@@ -88,17 +85,15 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $data       = User::find($request->id);
-        $role       = Role::orderBy('name','asc')->get();
         $karyawan   = Karyawan::orderBy('name','asc')->get();
 
-        return view('user.edit', Compact('data','role','karyawan'));
+        return view('user.edit', Compact('data','karyawan'));
     }
 
     public function updated(Request $request,$id)
     {
         $request->validate([
             'email'                 => 'required|email|unique:users,email,'.$request->id,
-            'role'                  => 'required',
             'karyawan'              => 'required',
         ]);
 
@@ -117,12 +112,13 @@ class UserController extends Controller
         
         $data->email        = $request->input('email');
         $data->nomor_telpon = $request->input('nomor_telpon');
-        $data->id_role      = $request->input('role');
         $data->id_karyawan  = $request->input('karyawan');
         $data->password     = $password;
         $data->save();
 
-        $data->assignRole($request->input('role'));
+        $karyawan = Karyawan::find($request->input('karyawan'));
+
+        $data->assignRole($karyawan->id_role);
 
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');

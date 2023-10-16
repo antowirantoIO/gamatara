@@ -41,23 +41,23 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="table-container">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Alamat</th>
-                                            <th style="color:#929EAE">Email</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Nama Karyawan</th>
+                                        <th style="color:#929EAE">Role</th>
+                                        <th style="color:#929EAE">Alamat</th>
+                                        <th style="color:#929EAE">Email</th>
+                                        <th style="color:#929EAE">Nomor Telpon</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -104,6 +104,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="role">Role</label>
+                                <select name="role" id="role" class="form-control">
+                                    <option value="">Pilih Role</option>
+                                    @foreach($role as $r)
+                                        <option value="{{$r->id}}">{{ $r->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
@@ -147,6 +158,7 @@
                 url: "{{ route('karyawan') }}",
                 data: function (d) {
                     d.name          = $('#name').val();
+                    d.role          = $('#role').val();
                     d.alamat        = $('#alamat').val();
                     d.email         = $('#email').val();
                     d.nomor_telpon  = $('#nomor_telpon').val();
@@ -154,6 +166,7 @@
             },
             columns: [
                 {data: 'name', name: 'name'},
+                {data: 'role', name: 'jabatan'},
                 {data: 'alamat', name: 'alamat'},
                 {data: 'email', name: 'email'},
                 {data: 'nomor_telpon', name: 'nomor_telpon'},
@@ -181,12 +194,14 @@
             event.preventDefault(); 
 
             var name            = $('#name').val();
+            var role            = $('#role').val();
             var alamat          = $('#alamat').val();
             var nomor_telpon    = $('#nomor_telpon').val();
             var email           = $('#email').val();
 
             var url = '{{ route("karyawan.export") }}?' + $.param({
                 name: name,
+                role: role,
                 alamat: alamat,
                 nomor_telpon: nomor_telpon,
                 email: email

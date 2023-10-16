@@ -41,23 +41,21 @@
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Nama Karyawan</th>
-                                            <th style="color:#929EAE">Role</th>
-                                            <th style="color:#929EAE">Email</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Nama Karyawan</th>
+                                        <th style="color:#929EAE">Email</th>
+                                        <th style="color:#929EAE">Nomor Telpon</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -80,16 +78,10 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama</label>
-                                <input type="text" name="name" class="form-control" id="name">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="jabatan" class="form-label">Jabatan</label>
-                                <select name="jabatan" id="jabatan" class="form-control">
-                                    <option value="">Pilih Jabatan</option>
-                                    @foreach($role as $r)
+                                <label for="karyawan">Nama</label>
+                                <select name="karyawan" id="karyawan" class="form-control">
+                                    <option value="">Pilih Karyawan</option>
+                                    @foreach($karyawan as $r)
                                         <option value="{{$r->id}}">{{ $r->name }}</option>
                                     @endforeach
                                 </select>
@@ -98,14 +90,14 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <div>
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email">Email</label>
                                     <input type="email" name="email" id="email" class="form-control form-control-icon">
                                 </div>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_telpom" class="form-label">Nomor Telpon</label>
+                                <label for="nomor_telpom">Nomor Telpon</label>
                                 <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
                             </div>
                         </div>                
@@ -151,15 +143,13 @@
             ajax: {
                 url: "{{ route('user') }}",
                 data: function (d) {
-                    d.name          = $('#name').val();
-                    d.jabatan       = $('#jabatan').val();
+                    d.karyawan      = $('#karyawan').val();
                     d.nomor_telpon  = $('#nomor_telpon').val();
                     d.email         = $('#email').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'role', name: 'jabatan'},
                 {data: 'email', name: 'email'},
                 {data: 'nomor_telpon', name: 'nomor_telpon'},
                 {data: 'action', name: 'action'}
@@ -179,14 +169,12 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name            = $('#name').val();
-            var jabatan         = $('#jabatan').val();
+            var karyawan        = $('#karyawan').val();
             var nomor_telpon    = $('#nomor_telpon').val();
             var email           = $('#email').val();
 
             var url = '{{ route("user.export") }}?' + $.param({
-                name: name,
-                jabatan: jabatan,
+                karyawan: karyawan,
                 nomor_telpon: nomor_telpon,
                 email: email
             });

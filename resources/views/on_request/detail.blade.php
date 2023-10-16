@@ -90,7 +90,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" class="form-control" value="{{$getCustomer->npwp}}" readonly>
+                                                <input type="text" class="form-control" id="npwps" value="{{$getCustomer->npwp}}" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
@@ -127,7 +127,7 @@
                                                 <thead style="background-color:#194BFB;color:#FFFFFF">
                                                     <tr>
                                                         <th>No.</th>
-                                                        <th>Keluhan</th>
+                                                        <th>Hasil Survey</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -406,7 +406,7 @@
                     $('#contact_person').val(selectedCustomer.contact_person);
                     $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
                     $('#alamat').val(selectedCustomer.alamat);
-                    $('#npwp').val(selectedCustomer.npwp);
+                    $('#npwps').val(selectedCustomer.npwp);
                 }
             });
             return item;

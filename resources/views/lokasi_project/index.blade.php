@@ -77,16 +77,12 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Lokasi Project</label>
-                                <input type="text" name="name" class="form-control" id="name">
+                                <label for="name">Nama Lokasi Project</label>
+                                <input type="text" name="name" id="name" class="form-control" autocomplete="off">
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
-                    <button class="btn btn-primary">Search</button>
-                </div> -->
             </form>
         </div>
     </div>

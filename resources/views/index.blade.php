@@ -2,9 +2,8 @@
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
 
 <head>
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard</title>
+    <title>GAMATARA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
@@ -50,7 +49,6 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     @yield("styles")
-
 </head>
 
 <body>
@@ -123,7 +121,6 @@
             <i class='mdi mdi-spin mdi-cog-outline fs-22'></i>
         </div>
     </div> -->
-
 
     <!-- JAVASCRIPT -->
     <script src="{{asset('assets/assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -237,6 +234,5 @@
             }
         });
     </script>
-
 </body>
 </html>

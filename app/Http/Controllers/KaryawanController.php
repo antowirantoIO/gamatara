@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use App\Exports\ExportKaryawan;
 use App\Models\Karyawan;
@@ -17,6 +18,9 @@ class KaryawanController extends Controller
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
+            ->addColumn('role', function($data){
+                return $data->role->name ?? '-';
+            })
             ->addColumn('action', function($data){
                 return '<a href="'.route('karyawan.edit', $data->id).'" class="btn btn-success btn-sm">
                     <span>
@@ -38,18 +42,23 @@ class KaryawanController extends Controller
             ->make(true);                    
         }
 
-        return view('karyawan.index');
+        $role = Role::orderBy('name','asc')->get();
+
+        return view('karyawan.index',compact('role'));
     }
 
     public function create()
     {
-        return view('karyawan.create');
+        $role   = Role::orderBy('name','asc')->get();
+
+        return view('karyawan.create',compact('role'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name'                  => 'required',
+            'role'                  => 'required',
             'alamat'                => 'required',
             'nomor_telpon'          => 'required',
             'email'                 => 'required'
@@ -57,6 +66,7 @@ class KaryawanController extends Controller
 
         $data = New Karyawan();
         $data->name                     = $request->input('name');
+        $data->id_role                  = $request->input('role');
         $data->alamat                   = $request->input('alamat');
         $data->nomor_telpon             = $request->input('nomor_telpon');
         $data->email                    = $request->input('email');
@@ -68,15 +78,17 @@ class KaryawanController extends Controller
 
     public function edit(Request $request)
     {
-        $data = Karyawan::find($request->id);
+        $data   = Karyawan::find($request->id);
+        $role   = Role::orderBy('name','asc')->get();
 
-        return view('karyawan.edit', Compact('data'));
+        return view('karyawan.edit', Compact('data','role'));
     }
 
     public function updated(Request $request)
     {
         $request->validate([
             'name'                  => 'required',
+            'role'                  => 'required',
             'alamat'                => 'required',
             'nomor_telpon'          => 'required',
             'email'                 => 'required'
@@ -84,6 +96,7 @@ class KaryawanController extends Controller
 
         $data                           = Karyawan::find($request->id);
         $data->name                     = $request->input('name');
+        $data->id_role                  = $request->input('role');
         $data->alamat                   = $request->input('alamat');
         $data->nomor_telpon             = $request->input('nomor_telpon');
         $data->email                    = $request->input('email');

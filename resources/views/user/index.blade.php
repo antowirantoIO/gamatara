@@ -41,23 +41,21 @@
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Nama Karyawan</th>
-                                            <th style="color:#929EAE">Role</th>
-                                            <th style="color:#929EAE">Email</th>
-                                            <th style="color:#929EAE">Nomor Telpon</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Nama Karyawan</th>
+                                        <th style="color:#929EAE">Email</th>
+                                        <th style="color:#929EAE">Nomor Telpon</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -84,17 +82,6 @@
                                 <select name="karyawan" id="karyawan" class="form-control">
                                     <option value="">Pilih Karyawan</option>
                                     @foreach($karyawan as $r)
-                                        <option value="{{$r->id}}">{{ $r->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="role">Role</label>
-                                <select name="role" id="role" class="form-control">
-                                    <option value="">Pilih Role</option>
-                                    @foreach($role as $r)
                                         <option value="{{$r->id}}">{{ $r->name }}</option>
                                     @endforeach
                                 </select>
@@ -157,14 +144,12 @@
                 url: "{{ route('user') }}",
                 data: function (d) {
                     d.karyawan      = $('#karyawan').val();
-                    d.role          = $('#role').val();
                     d.nomor_telpon  = $('#nomor_telpon').val();
                     d.email         = $('#email').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'role', name: 'jabatan'},
                 {data: 'email', name: 'email'},
                 {data: 'nomor_telpon', name: 'nomor_telpon'},
                 {data: 'action', name: 'action'}
@@ -185,13 +170,11 @@
             event.preventDefault(); 
 
             var karyawan        = $('#karyawan').val();
-            var role            = $('#role').val();
             var nomor_telpon    = $('#nomor_telpon').val();
             var email           = $('#email').val();
 
             var url = '{{ route("user.export") }}?' + $.param({
                 karyawan: karyawan,
-                role: role,
                 nomor_telpon: nomor_telpon,
                 email: email
             });

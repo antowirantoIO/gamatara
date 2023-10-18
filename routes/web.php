@@ -22,6 +22,7 @@ use App\Http\Controllers\LaporanProjectManagerController;
 use App\Http\Controllers\SatisfactionNoteController;
 use App\Http\Controllers\LokasiProjectController;
 use App\Http\Controllers\JenisKapalController;
+use App\Http\Controllers\OnProgressExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -229,6 +230,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('pekerjaan-vendor',[OnProgressController::class,'ajaxPekerjaanVendor'])->name('ajax.vendor');
             Route::get('progres-pekerjaan',[OnProgressController::class,'ajaxProgresPekerjaan'])->name('ajax.progres-pekerjaan');
             Route::get('setting-estimasi',[OnProgressController::class,'ajaxSettingEstimasi'])->name('ajax.setting-estimasi');
+            Route::get('tagihan',[OnProgressController::class,'ajaxTagihan'])->name('ajax.tagihan');
+        });
+
+        Route::prefix('export')->group(function(){
+            Route::get('data',[OnProgressExportController::class,'allData'])->name('on_progres.export-data');
+            Route::get('pekerjaan-vendor',[OnProgressExportController::class,'pekerjaanVendor'])->name('on_progres.export-pekrjaan-vendor');
         });
 
         Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');

@@ -53,7 +53,7 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $item->code }}</td>
-                                                <td>{{ $item->pm->karyawan->name }}</td>
+                                                <td>{{ $item->pm->karyawan->name ?? '-' }}</td>
                                                 <td>{{ $item->customer->name }}</td>
                                                 <td>{{ $item->contact_person }}</td>
                                                 <td>{{ $item->nomor_contact_person }}</td>

@@ -17,6 +17,11 @@ class ProjectPekerjaan extends Model
         return $this->belongsTo(Vendor::class,'id_vendor','id');
     }
 
+    public function lokasi ()
+    {
+        return $this->belongsTo(LokasiProject::class,'id_lokasi','id');
+    }
+
     public function pekerjaan()
     {
         return $this->belongsTo(Pekerjaan::class,'id_pekerjaan','id');

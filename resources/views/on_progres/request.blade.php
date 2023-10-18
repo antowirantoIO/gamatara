@@ -61,51 +61,57 @@
                                         </div>
                                         <div class="col-md-12">
                                            <div class="table-container">
-                                            <table class="table overflow-x-auto" id="tablePekerjaan">
+                                            <table class="table" id="tablePekerjaan">
                                                 <thead style="background-color:#194BFB;color:#FFFFFF;">
                                                     <tr>
-                                                        <th>Jenis Pekerjaan</th>
-                                                        <th>Deskripsi</th>
-                                                        <th>Dertail / Other</th>
-                                                        <th>Length (mm)</th>
-                                                        <th>Width (mm)</th>
-                                                        <th>Thick (mm)</th>
-                                                        <th>Unit</th>
-                                                        <th>Qty</th>
-                                                        <th>Ammount</th>
+                                                        <th style="width: 200px">Jenis Pekerjaan</th>
+                                                        <th style="width: 200px">Lokasi</th>
+                                                        <th style="width: 200px">Deskripsi</th>
+                                                        <th style="width: 200px">Dertail / Other</th>
+                                                        <th style="width: 90px">Length (mm)</th>
+                                                        <th style="width: 90px">Width (mm)</th>
+                                                        <th style="width: 90px">Thick (mm)</th>
+                                                        <th style="width: 90px">Unit</th>
+                                                        <th style="width: 90px">Qty</th>
+                                                        <th style="width: 90px">Ammount</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="clone">
-                                                    <tr class="parent-clone">
+                                                    <tr class="draggable-row">
                                                         <td>
                                                             <select name="pekerjaan[]" id="pekerjaan" class="form-select pekerjaan">
                                                                 <option selected disabled>Pilih Pekerjaan</option>
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="deskripsi[]">
+                                                            <select name="id_lokasi[]" id="id_lokasi" class="form-select">
+                                                                <option value="">Pilih Lokasi</option>
+                                                            </select>
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="detail[]">
+                                                            <input type="text" class="form-control" name="deskripsi[]" style="width: 100px;">
                                                         </td>
                                                         <td>
-                                                            <input type="number" class="form-control" name="length[]">
+                                                            <input type="text" class="form-control" name="detail[]" style="width: 100px;">
                                                         </td>
                                                         <td>
-                                                            <input type="number" class="form-control" name="width[]">
+                                                            <input type="number" class="form-control" name="length[]" style="width: 70px">
                                                         </td>
                                                         <td>
-                                                            <input type="number" class="form-control" name="thick[]">
+                                                            <input type="number" class="form-control" name="width[]"style="width: 70px">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="unit[]">
+                                                            <input type="number" class="form-control" name="thick[]" style="width: 70px">
                                                         </td>
                                                         <td>
-                                                            <input type="text" class="form-control" name="qty[]">
+                                                            <input type="text" class="form-control" name="unit[]" style="width: 70px">
                                                         </td>
                                                         <td>
-                                                            <input type="number" class="form-control" name="amount[]">
+                                                            <input type="text" class="form-control" name="qty[]" style="width: 70px">
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" class="form-control" name="amount[]" style="width: 70px">
                                                         </td>
                                                         <td>
                                                             <div class="btn btn-danger btn-trash">
@@ -138,22 +144,29 @@
 @section('scripts')
     <script>
         $(document).ready(function(){
-            let modalInput = $('#modalInput');
-            $("#btn-setting").click(function(){
-                modalInput.modal('show');
-            })
+            let select = $('#id_lokasi');
 
             $('.form-select').select2({
                 theme : "bootstrap-5",
                 search: true
             });
 
+            $("#tablePekerjaan tbody").sortable({
+                items: '.draggable-row',
+                axis: 'y',  // Biarkan pengguna menggeser hanya ke atas/bawah (vertikal)
+            });
+
             let count = 1;
             $('.btn-add').click(function(){
-                $('#clone').append(`<tr class="parent-clone">
+                $('#clone').append(`<tr class="draggable-row">
                     <td>
                         <select name="pekerjaan[]" id="pekerjaan-${count}" class="form-select pekerjaan">
                             <option selected disabled>Pilih Pekerjaan</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="id_lokasi[]" id="id_lokasi-${count}" class="form-select">
+                            <option value="">Pilih Lokasi</option>
                         </select>
                     </td>
                     <td>
@@ -163,22 +176,22 @@
                         <input type="text" class="form-control" name="detail[]">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="length[]">
+                        <input type="number" class="form-control" name="length[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="width[]">
+                        <input type="number" class="form-control" name="width[]"style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="thick[]">
+                        <input type="number" class="form-control" name="thick[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="unit[]">
+                        <input type="text" class="form-control" name="unit[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="qty[]">
+                        <input type="text" class="form-control" name="qty[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="amount[]">
+                        <input type="number" class="form-control" name="amount[]" style="width: 70px">
                     </td>
                     <td>
                         <div class="btn btn-danger btn-trash">
@@ -190,8 +203,15 @@
                     theme : "bootstrap-5",
                     search: true
                 })
+
+                let lokasi = $(`#id_lokasi-${count}`).select2({
+                    theme : "bootstrap-5",
+                    search: true
+                })
+
                 let id = $('#sub_kategori').val();
                 getSelect(id,select);
+                getLokasi(lokasi);
                 count++;
             })
 
@@ -265,6 +285,32 @@
                     }
                 })
             }
+
+            const getLokasi = (select) => {
+                $.ajax({
+                    url : '{{ route('on_progres.lokasi') }}',
+                    method : 'GET'
+                }).then(ress => {
+                    console.log(ress.data);
+                    if(ress.data.length != null){
+                        select.empty();
+                        select.append(`
+                            <option selected disabled>Pilih Lokasi</option>
+                        `)
+                        ress.data.forEach(item => {
+                            select.append(`
+                                <option value="${item.id}">${item.name}</option>
+                            `)
+                        })
+                    }else{
+                        select.append(`
+                            <option selected disabled>Pilih Pekerjaan</option>
+                        `)
+                    }
+                })
+            }
+
+            getLokasi(select);
         })
     </script>
 @endsection

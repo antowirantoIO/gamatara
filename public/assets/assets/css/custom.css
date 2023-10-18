@@ -144,10 +144,10 @@ body{
     z-index :2;
 }
 
-.select2-container .select2-selection {
+/* .select2-container .select2-selection {
     border: none!important;
     border-color: none!important;
-}
+} */
 
 .select2-container .select2-selection--single .select2-selection__rendered {
     background-color: #F4F6F9;
@@ -174,9 +174,17 @@ body{
     overflow-x: auto;
 }
 
-#tablePekerjaan input,
+
 #tablePekerjaan select {
     width: 200px;
+}
+
+.draggable-row {
+    cursor: grab;
+}
+
+.ui-sortable-helper {
+    cursor: grabbing;
 }
 
 .table-container::-webkit-scrollbar {
@@ -197,4 +205,24 @@ body{
 .table-container::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
+
+/* Mengubah warna latar belakang dan teks nomor halaman */
+.active>.page-link, .page-link.active {
+    background-color: #194BFB;
+    color: #fff;
+    border-color: #194BFB;
+    border-radius: 5px;
+}
+
+/* Mengubah tampilan tombol aktif saat ini */
+.dataTables_paginate .paginate_button.current {
+    background-color: #194BFB; /* Warna latar belakang */
+}
+
+/* Mengubah margin antara nomor halaman */
+.dataTables_paginate .paginate_button {
+    margin: 0 5px; /* Atur margin kiri-kanan antara nomor halaman */
+}
+
+
 

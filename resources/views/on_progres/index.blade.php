@@ -17,7 +17,7 @@
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -98,7 +98,7 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_pm" class="form-label">Nama Customer</label>
+                            <label for="nama_pm" class="form-label">Nama PM</label>
                             <select name="nama_pm" id="nama_pm" class="form-select">
                                 <option value="">Pilih Nama PM</option>
                                 @foreach($pm as $p)
@@ -156,6 +156,7 @@
                 $('.form-control').val('');
                 $('.form-select').val(null).trigger('change');
                 $('#date').val('');
+                table.draw()
             })
 
             let table = $("#example1").DataTable({
@@ -165,6 +166,7 @@
                 serverSide: true,
                 searching: false,
                 bLengthChange: false,
+                autoWidth : true,
                 language: {
                     processing:
                         '<div class="spinner-border text-info" role="status">' +
@@ -177,6 +179,10 @@
                         last: "<i class='fas fa-angle-double-right'></i>",
                     },
                     "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
                 },
                 ajax : {
                     url : '{{ route('on_progress') }}',
@@ -220,6 +226,36 @@
                 modalInput.modal('hide');
                 table.draw();
             })
+
+            function hideOverlay() {
+                $('.loading-overlay').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }
+
+            $('#export-button').on('click', function(event) {
+                event.preventDefault();
+
+                var code            = $('#code').val();
+                var nama_project    = $('#nama_project').val();
+                var nama_customer   = $('#nama_customer').val();
+                var nama_pm         = $('#nama_pm').val();
+                var date            = $('#date').val();
+
+                var url = '{{ route("on_progres.export-data") }}?' + $.param({
+                    code: code,
+                    nama_project: nama_project,
+                    nama_customer: nama_customer,
+                    nama_pm: nama_pm,
+                    date: date
+                });
+
+                $('.loading-overlay').show();
+
+                window.location.href = url;
+
+                setTimeout(hideOverlay, 2000);
+            });
         })
 </script>
 @endsection

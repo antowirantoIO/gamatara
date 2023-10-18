@@ -8,10 +8,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$idProject)}}">
+                            <a href="{{route('complete.edit',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Pekerjaan Vendor</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
                         </div>
                         <div class="d-flex justify-content-center align-items-center gap-3">
                             <button class="btn btn-secondary" id="btn-fillter">
@@ -19,7 +19,7 @@
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger" id="export-button">
+                            <button class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -176,34 +176,6 @@
                 $('.form-select').val(null).trigger('change');
                 table.draw();
             })
-
-            function hideOverlay() {
-                $('.loading-overlay').fadeOut('slow', function() {
-                    $(this).remove();
-                });
-            }
-
-            $('#export-button').on('click', function(event) {
-                event.preventDefault();
-
-                var id_lokasi       = $('#code').val();
-                var id_pekerjaan    = $('#id_pekerjaan').val();
-                var id_project      = '{{ $idProject }}';
-                var id_vendor       = '{{ $id }}';
-
-                var url = '{{ route("on_progres.export-pekrjaan-vendor") }}?' + $.param({
-                    id_lokasi: id_lokasi,
-                    id_pekerjaan: id_pekerjaan,
-                    id_project: id_project,
-                    id_vendor: id_vendor,
-                });
-
-                $('.loading-overlay').show();
-
-                window.location.href = url;
-
-                setTimeout(hideOverlay, 2000);
-            });
 
         })
     </script>

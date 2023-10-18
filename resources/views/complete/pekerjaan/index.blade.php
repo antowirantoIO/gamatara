@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('complete.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
@@ -60,8 +60,9 @@
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($worker as $value)
-                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
-                                                        <input type="text" class="d-none id_project {{ $loop->first ? 'active' : '' }}" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
+                                                        <input type="hidden" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                        <input type="hidden" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
+                                                        <input type="hidden" class="id_subs" id="id_subkategori-{{ $key }}" value="{{ $value->id_subkategori }}" >
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -91,8 +92,8 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Nama Pekerjaan</label>
-                            <select name="sub_kategori" id="sub_kategori" class="form-select">
+                            <label for="nama_customer" class="form-label">Nama Pekerjaan</label>
+                            <select name="nama_customer" id="nama_customer" class="form-select">
                                 <option value="">Pilih Nama Pekerjaan</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
@@ -102,8 +103,8 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_vendor" class="form-label">Nama Vendor</label>
-                            <select name="nama_vendor" id="nama_vendor" class="form-select">
+                            <label for="nama_pm" class="form-label">Nama Customer</label>
+                            <select name="nama_pm" id="nama_pm" class="form-select">
                                 <option value="">Pilih Vendor</option>
                                 @foreach($vendor as $v)
                                 <option value="{{$v->id}}">{{$v->name}}</option>
@@ -138,6 +139,7 @@
 
                 var id_kategori = $('#id_kategori-{{ $key }}').val();
                 var id_project = $('#id_project-{{ $key }}').val();
+                var id_subkategori = $('#id_subkategori-{{ $key }}').val();
 
                 var table{{ $key }} = $('#tableData{{ $key }}').DataTable({
                     fixedHeader:true,
@@ -170,8 +172,9 @@
                             d._token = '{{ csrf_token() }}';
                             d.id_kategori = id_kategori;
                             d.id_project = id_project;
-                            d.sub_kategori = $('#sub_kategori').val();
-                            d.nama_vendor = $('#nama_vendor').val();
+                            d.nama_customer = $('#nama_customer').val();
+                            d.nama_pm = $('#nama_pm').val();
+                            d.id_subkategori = id_subkategori;
                         }
                     },
                     columns : [
@@ -183,7 +186,7 @@
                                 let id_kategori = data.id_kategori;
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
-                                let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori']) }}';
+                                let url = '{{ route('complete.sub-detail-pekerjaan',[':id',':project',':subkategori']) }}';
                                 let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>
@@ -201,26 +204,17 @@
                 $('#btn-search').on('click',function(e){
                     e.preventDefault();
                     modalInput.modal('hide');
-                    var active = $('#myTabContent .tab-pane.active');
-                    id_kategori = active.find('.id_kategori.active').val();
-                    id_project = active.find('.id_project.active').val();
+                    var activeTab = $('#myTab .nav-link.active').attr('id');
+                    var active = $('.tab-pane fade show active');
+                    var ids = '#id_subkategori-' + activeTab.substring(0, activeTab.indexOf('-'));
 
-                    var activeTabId = $('#myTab .nav-link.active').attr('id');
-                    if (activeTabId === '{{ $key }}-tab') {
+                    // // var ids = $();
+                    // id_subkategori = $(document).delegate('#id_subkategori-' + activeTab.substring(0, activeTab.indexOf('-'))).val();
+                    console.log( $(document).delegate(ids).val());
+                    if (activeTab === '{{ $key }}-tab') {
                         table{{ $key }}.draw();
                     }
                 });
-
-
-                $('#btn-reset').click(function(e){
-                    e.preventDefault();
-                    $('.form-control').val('');
-                    $('.form-select').val(null).trigger('change');
-                    var activeTabId = $('#myTab .nav-link.active').attr('id');
-                    if (activeTabId === '{{ $key }}-tab') {
-                        table{{ $key }}.draw();
-                    }
-                })
             @endforeach
 
         })

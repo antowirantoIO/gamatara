@@ -66,28 +66,91 @@ class ProjectManagerController extends Controller
     {
         $request->validate([
             'pm'            => 'required',
-            'selectedPE'    => 'required',
-            'selectedPA'    => 'required'
+            'pe'    => 'required',
+            'pa'    => 'required'
         ]);
 
         $data               = New ProjectManager();
         $data->id_karyawan  = $request->input('pm');
         $data->save();
 
-        $selectedPEArray = explode(",", $request->input('selectedPE'));
-        $selectedPAArray = explode(",", $request->input('selectedPA'));
-
-        foreach($selectedPEArray as $selectedPEId) {
+        foreach($request->pe as $selectedPEId) {
             $dataPE = new ProjectEngineer();
             $dataPE->id_pm = $data->id;
             $dataPE->id_karyawan = $selectedPEId;
             $dataPE->save();
         }
 
-        foreach($selectedPAArray as $selectedPAId) {
+        foreach($request->pa as $selectedPAId) {
             $dataPA = new ProjectAdmin();
             $dataPA->id_pm = $data->id;
             $dataPA->id_karyawan = $selectedPAId;
+            $dataPA->save();
+        }
+
+        return redirect(route('project_manager'))
+                    ->with('success', 'Data berhasil disimpan');
+    }
+
+    public function edit(Request $request)
+    {
+        $data = ProjectManager::find($request->id);
+        $datas = ProjectEngineer::where('id_pm',$request->id)->get();
+        $datass = ProjectAdmin::where('id_pm',$request->id)->get();
+ 
+        $karyawan = Karyawan::get();
+        $selectedPE = ProjectEngineer::where('id_pm', $request->id)->get()->pluck('id_karyawan')->toArray();
+        $selectedPA = ProjectAdmin::where('id_pm', $request->id)->get()->pluck('id_karyawan')->toArray();
+ 
+        $notSelectedPM = ProjectManager::whereNotIn('id_karyawan', [$data->id_karyawan])
+            ->select('id_karyawan')
+            ->get()
+            ->pluck('id_karyawan')
+            ->toArray();
+    
+        $notSelectedPE = ProjectEngineer::whereNotIn('id_pm', [$request->id])
+            ->select('id_karyawan')
+            ->get()
+            ->pluck('id_karyawan')
+            ->toArray();
+
+        $notSelectedPA = ProjectAdmin::whereNotIn('id_pm', [$request->id])
+            ->select('id_karyawan')
+            ->get()
+            ->pluck('id_karyawan')
+            ->toArray();
+        
+        $notSelected = array_merge($notSelectedPM, $notSelectedPE, $notSelectedPA);
+
+        return view('project_manager.edit',compact('data','notSelected','karyawan','selectedPE','selectedPA'));
+    }
+
+    public function updated(Request $request)
+    {
+        $request->validate([
+            'pm'    => 'required',
+            'pe'    => 'required|array',
+            'pa'    => 'required|array'
+        ]);
+
+        $data               = ProjectManager::find($request->id);
+        $data->id_karyawan  = $request->input('pm');
+        $data->save();
+
+        $data->pe()->delete();
+        $data->pa()->delete();
+
+        foreach($request->pe as $selectedPEId) {
+            $dataPE                 = New ProjectEngineer();
+            $dataPE->id_pm          = $data->id;
+            $dataPE->id_karyawan    = $selectedPEId;
+            $dataPE->save();
+        }
+
+        foreach($request->pa as $selectedPAId) {
+            $dataPA                 = New ProjectAdmin();
+            $dataPA->id_pm          = $data->id;
+            $dataPA->id_karyawan    = $selectedPAId;
             $dataPA->save();
         }
 

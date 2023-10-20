@@ -1,0 +1,47 @@
+body,* {
+    background: white;
+}
+.table {
+    width: auto;
+}
+.table-bordered {
+    border: 2px solid black;
+}
+.table-bordered th {
+    border: 2px solid black;
+}
+.table-bordered tr td {
+    border: 2px solid black;
+}
+
+.tanggal span {
+    background-color: #95B3D7;
+}
+.project span {
+    background-color: #95B3D7;
+}
+.footer-tanggal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.footer-perusahaan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-director {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.footer-director-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 14px;
+}

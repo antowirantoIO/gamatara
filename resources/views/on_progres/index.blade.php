@@ -39,7 +39,7 @@
 
                         <div class="card-body">
                             <div class="container">
-                                <table class="table" id="example1">
+                                <table class="table w-100" id="example1">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Kode Project</th>
@@ -198,7 +198,13 @@
                     { data : 'code', name : 'code'},
                     { data : 'nama_project', name : 'nama_project'},
                     { data : 'customer.name', name : 'customer'},
-                    { data : 'pm.karyawan.name', name : 'code'},
+                    { data : function(data) {
+                           let pm = data.pm || '-';
+                           let karyawan = pm.karyawan || '-';
+                           let name = karyawan.name || '-';
+                           return name;
+                        }, name : 'pm'
+                    },
                     { data : 'start', name : 'start'},
                     { data : 'end', name : 'end'},
                     {

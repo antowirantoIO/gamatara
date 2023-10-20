@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ExportDataOnProgress;
+use App\Exports\ExportDataPekerjaan;
 use App\Exports\ExportPekerjaanVendor;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OnProgressExportController extends Controller
@@ -54,5 +56,15 @@ class OnProgressExportController extends Controller
         $nama_vendor = Vendor::where('id',$request->id_vendor)->pluck('name')->first();
         // return view('export.ExportPekerjaanVendor',compact('data','nama_project','nama_vendor'));
         return Excel::download(new ExportPekerjaanVendor($nama_project,$nama_vendor, $data),'List Pekerjaan ' . $nama_project . ' - ' . $nama_vendor . '.xlsx');
+    }
+
+    public function dataPekerjaan(Request $request)
+    {
+        $data = groupDataPekerjaan($request);
+        return Excel::download(new ExportDataPekerjaan($data),'List_Data_Pekerjaan.xlsx');
+        // header("Content-type: application/vnd-ms-excel");
+        // header('Content-Disposition: attachment; filename=List_Data_Pekerjaan.xlsx');
+        return view('export.ExportPekerjaanOnProgress', compact('data'));
+
     }
 }

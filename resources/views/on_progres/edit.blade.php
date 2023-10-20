@@ -63,7 +63,7 @@
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="alamat" class="form-label">Project Manager</label>
-                                            <input type="text" class="form-control" id="alamat" value="{{ $data->pm->karyawan->name }}" disabled>
+                                            <input type="text" class="form-control" id="alamat" value="{{ $data->pm->karyawan->name ?? '-' }}" disabled>
                                         </div>
                                     </div>
                                 </div>

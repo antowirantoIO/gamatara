@@ -76,3 +76,53 @@ function getProgresProject($id)
         return 0;
     }
 }
+
+function groupDataPekerjaan($request)
+{
+    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","LAIN-LAIN"];
+    $kategori = Kategori::orderByRaw("FIELD(name, '" . implode("','", $customOrder) . "')")->get();
+    $data = collect();
+    $kategori->each(function($item) use ($data,&$request){
+        $datas = ProjectPekerjaan::where('id_kategori',$item->id)->where('id_project',$request->id_project);
+
+        if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+            $datas->where('id_subkategori',$request->id_subkategori);
+        }
+
+        if($request->has('nama_vendor') && !empty($request->nama_vendor)){
+            $datas->where('id_vendor',$request->nama_vendor);
+        }
+        $datas = $datas->get();
+        $data[$item->name] = $datas;
+    });
+    return $data;
+}
+
+function formatTanggal ($tanggal = null)
+{
+    $date = Carbon::now();
+
+    if(!empty($tanggal)){
+        $formattedDate = $tanggal;
+    }else{
+        $formattedDate = $date->format('d F Y');
+    }
+
+    $bulan = [
+        'January' => 'JANUARI',
+        'February' => 'FEBRUARI',
+        'March' => 'MARET',
+        'April' => 'APRIL',
+        'May' => 'MEI',
+        'June' => 'JUNI',
+        'July' => 'JULI',
+        'August' => 'AGUSTUS',
+        'September' => 'SEPTEMBER',
+        'October' => 'OKTOBER',
+        'November' => 'NOVEMBER',
+        'December' => 'DESEMBER',
+    ];
+
+    $formattedDate = strtr($formattedDate, $bulan);
+    return $formattedDate;
+}

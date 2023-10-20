@@ -35,6 +35,13 @@ use App\Http\Controllers\OnProgressExportController;
 |
 */
 
+Route::get('/unauthorized', function() {
+    return response()->json([
+        'status' => false,
+        'message' => 'unauthorized'
+    ]);
+})->name('unauthorized');
+
 Route::get('/', function () {
     return redirect('/login');
 });

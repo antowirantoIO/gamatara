@@ -160,7 +160,7 @@
                                 <table id="tabelKeluhan" class="table table-bordered">
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
-                                            <th>Survey</th>
+                                            <th>Keluhan</th>
                                         </tr>
                                     </thead>
                                     <tbody>

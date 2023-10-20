@@ -10,4 +10,9 @@ class ProjectAdmin extends Model
     protected $table = 'pa';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
+
+    public function pm()
+    {
+        return $this->belongsTo(ProjectManager::class, 'id_pm');
+    }
 }

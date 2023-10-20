@@ -16,6 +16,11 @@ class Karyawan extends Model
         return $this->belongsTo(Roles::class, 'id_role', 'id');
     }
 
+    public function pm()
+    {
+        return $this->belongsTo(ProjectManager::class, 'id','id_karyawan');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {

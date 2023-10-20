@@ -18,12 +18,12 @@ class ProjectManager extends Model
 
     public function pe()
     {
-        return $this->belongsTo(ProjectEngineer::class, 'id','id_pm');
+        return $this->hasMany(ProjectEngineer::class, 'id_pm');
     }
 
     public function pa()
     {
-        return $this->belongsTo(ProjectAdmin::class, 'id','id_pm');
+        return $this->hasMany(ProjectAdmin::class, 'id_pm');
     }
 
     public function scopeFilter($query, $filter)

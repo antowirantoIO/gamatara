@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('jenis_kapal.store')}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('jenis_kapal.updated', $data->id)}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">

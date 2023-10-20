@@ -127,7 +127,7 @@
                                                 <thead style="background-color:#194BFB;color:#FFFFFF">
                                                     <tr>
                                                         <th>No.</th>
-                                                        <th>Hasil Survey</th>
+                                                        <th>Keluhan</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>

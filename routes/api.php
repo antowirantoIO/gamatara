@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserGamataraController;
+use App\Http\Controllers\api\ProjectManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+//login
+Route::post('login', [UserGamataraController::class, 'login']);
+
+//project
+Route::prefix('pm')->group(function () {
+    Route::get('list', [ProjectManagerController::class, 'index']);
+    Route::get('detail-pm', [ProjectManagerController::class, 'detailPM']);
+    Route::get('navbar-pm', [ProjectManagerController::class, 'navbarPM']);
 });

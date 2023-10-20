@@ -42,7 +42,7 @@
                                                             <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Filter
                                                     </button>
-                                                    <button class="btn btn-danger">
+                                                    <button class="btn btn-danger export-button" id="export-button">
                                                         <span>
                                                             <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Export
@@ -222,7 +222,31 @@
                     }
                 })
             @endforeach
+            function hideOverlay() {
+                $('.loading-overlay').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }
 
+            $('.export-button').on('click', function(event) {
+                event.preventDefault();
+
+                // var sub_kategori    = $('#sub_kategori').val();
+                var id_project      = '{{ $id }}';
+                // var id_vendor       = $('#nama_vendor').val();
+
+                var url = '{{ route("on_progress.export-pekerjaan") }}?' + $.param({
+                    // sub_kategori: sub_kategori,
+                    id_project: id_project,
+                    // id_vendor: id_vendor,
+                });
+
+                $('.loading-overlay').show();
+
+                window.location.href = url;
+
+                setTimeout(hideOverlay, 2000);
+            });
         })
     </script>
 @endsection

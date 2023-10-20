@@ -151,7 +151,7 @@
 
                 columns : [
                     { data : 'pekerjaan.name' },
-                    { data : 'lokasi.name' },
+                    { data : 'id_lokasi' },
                     { data : 'detail' },
                     { data : 'length' },
                     { data : 'width' },

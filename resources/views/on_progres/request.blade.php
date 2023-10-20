@@ -85,9 +85,7 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <select name="id_lokasi[]" id="id_lokasi" class="form-select">
-                                                                <option value="">Pilih Lokasi</option>
-                                                            </select>
+                                                            <input type="text" class="form-control" name="lokasi[]" style="width: 100px;">
                                                         </td>
                                                         <td>
                                                             <input type="text" class="form-control" name="deskripsi[]" style="width: 100px;">
@@ -165,9 +163,7 @@
                         </select>
                     </td>
                     <td>
-                        <select name="id_lokasi[]" id="id_lokasi-${count}" class="form-select">
-                            <option value="">Pilih Lokasi</option>
-                        </select>
+                        <input type="text" class="form-control" name="lokasi[]" style="width: 100px;">
                     </td>
                     <td>
                         <input type="text" class="form-control" name="deskripsi[]">
@@ -204,14 +200,9 @@
                     search: true
                 })
 
-                let lokasi = $(`#id_lokasi-${count}`).select2({
-                    theme : "bootstrap-5",
-                    search: true
-                })
 
                 let id = $('#sub_kategori').val();
                 getSelect(id,select);
-                getLokasi(lokasi);
                 count++;
             })
 
@@ -286,31 +277,6 @@
                 })
             }
 
-            const getLokasi = (select) => {
-                $.ajax({
-                    url : '{{ route('on_progres.lokasi') }}',
-                    method : 'GET'
-                }).then(ress => {
-                    console.log(ress.data);
-                    if(ress.data.length != null){
-                        select.empty();
-                        select.append(`
-                            <option selected disabled>Pilih Lokasi</option>
-                        `)
-                        ress.data.forEach(item => {
-                            select.append(`
-                                <option value="${item.id}">${item.name}</option>
-                            `)
-                        })
-                    }else{
-                        select.append(`
-                            <option selected disabled>Pilih Pekerjaan</option>
-                        `)
-                    }
-                })
-            }
-
-            getLokasi(select);
         })
     </script>
 @endsection

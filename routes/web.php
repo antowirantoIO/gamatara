@@ -236,6 +236,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('export')->group(function(){
             Route::get('data',[OnProgressExportController::class,'allData'])->name('on_progres.export-data');
             Route::get('pekerjaan-vendor',[OnProgressExportController::class,'pekerjaanVendor'])->name('on_progres.export-pekrjaan-vendor');
+            Route::get('pekerjaan-onprogres',[OnProgressExportController::class,'dataPekerjaan'])->name('on_progress.export-pekerjaan');
         });
 
         Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');

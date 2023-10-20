@@ -24,7 +24,7 @@
                             <div class="live-preview">
                                 <div class="row gy-4">
                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
-                                        <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Request Form</a>
+                                        <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Input Pekerjaan</a>
                                         <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
                                     </div>
 

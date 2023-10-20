@@ -62,6 +62,13 @@ class OnProgressExportController extends Controller
     {
         $data = groupDataPekerjaan($request);
         return Excel::download(new ExportDataPekerjaan($data),'List_Data_Pekerjaan.xlsx');
+        // header("Pragma: public");
+        // header("Expires: 0");
+        // header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        // header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+        // header("Content-Type: application/force-download");
+        // header("Content-Type: application/octet-stream");
+        // header("Content-Type: application/download");
         // header("Content-type: application/vnd-ms-excel");
         // header('Content-Disposition: attachment; filename=List_Data_Pekerjaan.xlsx');
         return view('export.ExportPekerjaanOnProgress', compact('data'));

@@ -199,7 +199,7 @@
                     },
                     columns : [
                         { data : 'subKategori', name : 'pekerjaan'},
-                        { data : 'projects.lokasi.name', name : 'id_lokasi'},
+                        { data : 'id_lokasi', name : 'id_lokasi'},
                         {data : 'detail', name : 'detail'},
                         {data : 'length', name : 'length'},
                         {data : 'width', name : 'width'},

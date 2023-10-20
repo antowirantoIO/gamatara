@@ -45,7 +45,7 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $item->pekerjaan->name }}</td>
-                                                <td>{{ $item->lokasi->name }}</td>
+                                                <td>{{ $item->id_lokasi }}</td>
                                                 <td>{{ $item->detail }}</td>
                                                 <td>{{ $item->length }}</td>
                                                 <td>{{ $item->width }}</td>

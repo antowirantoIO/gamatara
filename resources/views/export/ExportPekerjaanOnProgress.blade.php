@@ -1,23 +1,23 @@
 <table>
     <tr style="font-size: 14px;">
         <td rowspan="4"></td>
-        <td align="end" rowspan="4">
+        <td align="right" rowspan="4" style="width: 600px;">
             {{-- <img src="{{asset('assets/images/logo.png')}}" width="120px"> --}}
         </td>
-        <td colspan="9" style="font-weight:600;">PT. GAMATARA TRANS OCEAN SHIPYARD</td>
+        <td colspan="8" style="font-weight:600;">PT. GAMATARA TRANS OCEAN SHIPYARD</td>
     </tr>
     <tr style="font-size: 14px;">
-        <td colspan="6">Kantor : Jl. Tanjung Tengah No. 1B</td>
+        <td colspan="8">Kantor : Jl. Tanjung Tengah No. 1B</td>
     </tr>
     <tr style="font-size: 14px;">
-        <td colspan="6">Pelabuhan Cirebon 45112 - Jawa Barat</td>
+        <td colspan="8">Pelabuhan Cirebon 45112 - Jawa Barat</td>
     </tr>
     <tr style="font-size: 14px;">
-        <td colspan="6">Telp. (0231) 226435 Fax. (0231) 226436</td>
+        <td colspan="8">Telp. (0231) 226435 Fax. (0231) 226436</td>
     </tr>
     <tr align="center">
         <td colspan="11" style="font-weight: 600;font-size: 14px;">
-            SATISFACTION NOTE
+            <strong>SATISFACTION NOTE</strong>
         </td>
     </tr>
     <tr style="font-size: 12px;font-weight: bold;">
@@ -89,29 +89,26 @@
     <tr align="center" style="font-size: 14px;">
         <td colspan="11">Cirebon, {{ formatTanggal() }}</td>
     </tr>
+    {!! str_repeat('<tr></tr>', 3) !!}
     <tr>
-        <td colspan="6"></td>
-        <td colspan="3">Hormat Kami</td>
+        <td colspan="9" align="right">Hormat Kami</td>
         <td colspan="2"></td>
     </tr>
     {!! str_repeat('<tr></tr>', 6) !!}
     <tr align="center">
-        <td></td>
-        <td style="font-size: 12px;"><span class="text-decoration-underline"><strong>SUGIARTO SANTOSO, S. KOM</strong></span></td>
-        <td colspan="4"></td>
+        <td style="font-size: 12px;" colspan="5"><span class="text-decoration-underline"><strong>SUGIARTO SANTOSO, S. KOM</strong></span></td>
+        <td ></td>
         <td style="font-size: 12px;" colspan="5"><span class="text-decoration-underline"><strong>UJANG WIJIANTORO</strong></span></td>
     </tr>
     <tr align="center">
+        <td style="font-size: 12px;" colspan="5"><span class="">DIREKTUR</span></td>
         <td></td>
-        <td style="font-size: 12px;"><span class="">DIREKTUR</span></td>
-        <td colspan="4"></td>
         <td style="font-size: 12px;" colspan="5"><span class="">KEPALA PROYEK</span></td>
     </tr>
     <tr align="center">
+        <td style="font-size: 12px;" colspan="5"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>
         <td></td>
-        <td style="font-size: 12px;"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>
-        <td colspan="4"></td>
-        <td colspan="2"></td>
+        <td colspan="5"></td>
     </tr>
     {!! str_repeat('<tr></tr>', 6) !!}
     <tr align="center" style="font-size: 12px;font-weight: bold;">
@@ -135,18 +132,3 @@
         <td colspan="11">PT. PULAU SEROJA JAYA</td>
     </tr>
 </table>
-{{-- <div class="d-flex justify-content-center align-items-center">
-{!! str_repeat('<br>', 6) !!}
-<div class="d-flex justify-content-center align-items-center flex-column fs-5">
-    <span class="text-decoration-underline"><strong>HANAFI SANTOSO, ST</strong></span>
-    <span class="">DIREKTUR</span>
-    <span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span>
-</div>
-<br>
-<div class="text-center fs-5">MENGETAHUI,</div>
-{!! str_repeat('<br>', 5) !!}
-<div class="d-flex justify-content-center align-items-center flex-column fs-5">
-    <span class="text-decoration-underline"><strong>..........................................</strong></span>
-    <span><strong></strong></span>
-</div>
-{!! str_repeat('<br>', 11) !!} --}}

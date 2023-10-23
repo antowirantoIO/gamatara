@@ -10,6 +10,8 @@ use App\Models\Kategori;
 use App\Models\SubKategori;
 use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
+use App\Models\BeforePhoto;
+use App\Models\AfterPhoto;
 
 class ProjectManagerController extends Controller
 {
@@ -191,12 +193,14 @@ class ProjectManagerController extends Controller
             $pekerjaan = Pekerjaan::find($data->id_pekerjaan);
             $subkategori = SubKategori::find($data->id_subkategori);
             $kategori = Kategori::find($data->id_kategori);
+            $beforePhoto = BeforePhoto::where('id_project_pekerjaan',$request->id)->get();
+            $afterPhoto = AfterPhoto::where('id_project_pekerjaan',$request->id)->get();
 
             $data['nama_pekerjaan'] = $data->pekerjaan->name ?? '';
             $data['nama_vendor'] = $data->vendors->name ?? '';
             $data['ukuran'] = $data->length ." ". $data->unit;
          
-            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data]);
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

@@ -22,7 +22,7 @@ class RoleController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('action', function($data){
-                if($data->id != 1){
+                if($data->id != 1 || $data->id != 5 || $data->id != 7 || $data->id != 8 || $data->id != 9){
                     return '<a href="'.route('role.edit', $data->id).'" class="btn btn-success btn-sm">
                         <span>
                             <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>

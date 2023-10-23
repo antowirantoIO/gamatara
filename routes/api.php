@@ -23,12 +23,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //login
 Route::post('login', [UserGamataraController::class, 'login']);
 
-
 Route::group(['middleware' => 'auth:api'], function() {
+
+    //project
     Route::prefix('pm')->group(function () {
         Route::get('list', [ProjectManagerController::class, 'index']);
         Route::get('detail-pm', [ProjectManagerController::class, 'detailPM']);
         Route::get('navbar-pm', [ProjectManagerController::class, 'navbarPM']);
+        Route::get('subkategori-pm', [ProjectManagerController::class, 'subkategoriPM']);
+        Route::get('pekerjaan-pm', [ProjectManagerController::class, 'pekerjaanPM']);
+        Route::get('detailpekerjaan-pm', [ProjectManagerController::class, 'detailpekerjaanPM']);
     });
 });
-//project
+

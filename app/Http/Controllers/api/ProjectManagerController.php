@@ -18,15 +18,34 @@ class ProjectManagerController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::with(['kapal','customer'])
-                        ->filter($request)
+            // $data = OnRequest::with(['kapal','customer'])
+            //             ->filter($request)
+            //             ->where('pm_id',$request->pm_id)
+            //             ->where('status',1)
+            //             ->get();
+
+            // foreach ($data as $item) {
+            //     $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
+            // }     
+
+            $project = OnRequest::filter($request)
                         ->where('pm_id',$request->pm_id)
                         ->where('status',1)
                         ->get();
 
+            $projectIds[] = '';
+            foreach ($project as $projectItem) {
+                $projectIds[] = $projectItem->id;
+            }
+
+            $data = ProjectPekerjaan::select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
+
             foreach ($data as $item) {
                 $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
-            }     
+                $item['nama_project'] = $item->projects->nama_project ?? '-';
+                $item['nama_vendor'] = $item->vendors->name ?? '-';
+                $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
+            }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -58,6 +77,7 @@ class ProjectManagerController extends Controller
                 $pekerjaan = '0 / 0';
             }
 
+            $data['lokasi_project'] = $data->lokasi->name ?? null;
             $data['project_manajer'] = $data->pm->karyawan->name ?? null;
             $data['pekerjaan'] = $pekerjaan;
             $data['vendor'] = count($vendor);
@@ -65,6 +85,31 @@ class ProjectManagerController extends Controller
             foreach($data->pm->pe as $value){
                 $value['nama_karyawan'] =  $value->karyawan->name;
             } 
+
+            // $data = ProjectPekerjaan::find($request->id);
+
+            // $request = OnRequest::find($data->id_project);
+
+            // $vendor = ProjectPekerjaan::where('id',$request->id)
+            //     ->select('id_vendor')
+            //     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+            //     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+            //     ->groupBy('status', 'id_vendor')
+            //     ->get();
+
+            // if($data->total_status_1){
+            //     $data = $data->total_status_2 / $data->total_status_1;
+            // }else{
+            //     $data = '0 / 0';
+            // }
+
+            // $data->lokasi_project = $data->id?? null;
+            // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
+            // $data['vendor'] = count($vendor);
+
+            // foreach($data->pm->pe as $value){
+            //     $value['nama_karyawan'] =  $value->karyawan->name;
+            // } 
          
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -114,8 +159,9 @@ class ProjectManagerController extends Controller
             }
                     
             $data['vendor'] = count($vendor);
-         
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data, 'kategori' => $kategori]);
+            $data['kategori'] = $kategori;
+
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

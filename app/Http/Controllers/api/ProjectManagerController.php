@@ -72,7 +72,10 @@ class ProjectManagerController extends Controller
                 ->get();
 
             if($pekerjaan->total_status_1){
-                $pekerjaan = $pekerjaan->total_status_2 / $pekerjaan->total_status_1;
+                $pekerjaan = [
+                'total_status_1' => $pekerjaan->total_status_1,
+                'total_status_2' => $pekerjaan->total_status_2
+                ];
             }else{
                 $pekerjaan = '0 / 0';
             }

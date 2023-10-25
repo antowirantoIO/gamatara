@@ -8,12 +8,12 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_request')}}">
+                            <a href="{{route('complete')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Complete</h4>
                             <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
-                                <a href="#"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
+                                <a href="{{ route('complete.setting', $data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                                 <table id="tabelKeluhan" class="table table-bordered">
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
-                                            <th>Survey</th>
+                                            <th>Keluhan</th>
                                         </tr>
                                     </thead>
                                     <tbody>

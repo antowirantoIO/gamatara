@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Request Form</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Input Pekerjaan</h4>
                         </div>
                     </div>
                 </div>

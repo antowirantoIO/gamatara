@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('complete.edit',$id)}}">
+                            <a href="{{route('complete.setting',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
@@ -164,7 +164,7 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('complete.ajax.progres-pekerjaan') }}',
+                        url : '{{ route('complete.ajax.setting-estimasi') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';

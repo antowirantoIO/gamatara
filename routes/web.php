@@ -23,6 +23,7 @@ use App\Http\Controllers\SatisfactionNoteController;
 use App\Http\Controllers\LokasiProjectController;
 use App\Http\Controllers\JenisKapalController;
 use App\Http\Controllers\OnProgressExportController;
+use App\Http\Controllers\CompleteExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -261,6 +262,22 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('tagihan')->group(function(){
             Route::get('vendor/{id}',[CompleteController::class,'tagihanVendor'])->name('complete.tagihan-vendor');
             Route::get('customer/{id}',[CompleteController::class,'tagihanCustomer'])->name('complete.tagihan-customer');
+        });
+
+        Route::prefix('ajax')->group(function(){
+            Route::get('pekerjaan',[CompleteController::class,'ajaxProgresPekerjaan'])->name('complete.ajax.progres-pekerjaan');
+            Route::get('pekerjaan-vendor',[CompleteController::class,'ajaxPekerjaanVendor'])->name('complete.ajax.pekerjaan-vendor');
+            Route::get('setting-estimasi',[CompleteController::class,'ajaxSettingEstimasi'])->name('complete.ajax.setting-estimasi');
+        });
+
+        Route::prefix('export')->group(function(){
+            Route::get('all-data',[CompleteExportController::class,'allData'])->name('complete.export.all');
+        });
+
+        Route::prefix('setting')->group(function(){
+            Route::get('index/{id}',[CompleteController::class,'setting'])->name('complete.setting');
+            Route::get('estimasi/{id}',[CompleteController::class,'settingEstimasi'])->name('complete.setting.estimasi');
+            Route::get('detail-estimasi/{id}/{idProjects}',[CompleteController::class,'detailEstimasi'])->name('complete.setting.estimasi-detail');
         });
 
         Route::prefix('pekerjaan-vendor')->group(function(){

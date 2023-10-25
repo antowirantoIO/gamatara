@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserGamataraController;
 use App\Http\Controllers\api\ProjectManagerController;
+use App\Http\Controllers\api\ProjectEngineerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +24,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //login
 Route::post('login', [UserGamataraController::class, 'login']);
 
-//project
-Route::prefix('pm')->group(function () {
-    Route::get('list', [ProjectManagerController::class, 'index']);
-    Route::get('detail-pm', [ProjectManagerController::class, 'detailPM']);
-    Route::get('navbar-pm', [ProjectManagerController::class, 'navbarPM']);
+Route::group(['middleware' => 'auth:api'], function() {
+
+    //pm
+    Route::prefix('pm')->group(function () {
+        Route::get('list', [ProjectManagerController::class, 'index']);
+        Route::get('detail-pm', [ProjectManagerController::class, 'detailPM']);
+        Route::get('navbar-pm', [ProjectManagerController::class, 'navbarPM']);
+        Route::get('subkategori-pm', [ProjectManagerController::class, 'subkategoriPM']);
+        Route::get('pekerjaan-pm', [ProjectManagerController::class, 'pekerjaanPM']);
+        Route::get('detailpekerjaan-pm', [ProjectManagerController::class, 'detailpekerjaanPM']);
+    });
+
+     //pe
+     Route::prefix('pe')->group(function () {
+        Route::get('list', [ProjectEngineerController::class, 'index']);
+        Route::get('detail-pe', [ProjectEngineerController::class, 'detailPE']);
+        Route::get('navbar-pe', [ProjectEngineerController::class, 'navbarPE']);
+        Route::get('subkategori-pe', [ProjectEngineerController::class, 'subkategoriPE']);
+        Route::get('pekerjaan-pe', [ProjectEngineerController::class, 'pekerjaanPE']);
+        Route::get('detailpekerjaan-pe', [ProjectEngineerController::class, 'detailpekerjaanPE']);
+    });
 });
+

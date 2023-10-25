@@ -7,23 +7,45 @@ use Illuminate\Http\Request;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Models\Kategori;
+use App\Models\SubKategori;
+use App\Models\Pekerjaan;
+use App\Models\SettingPekerjaan;
+use App\Models\BeforePhoto;
+use App\Models\AfterPhoto;
 
 class ProjectManagerController extends Controller
 {
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::with(['kapal','customer'])
-                        ->filter($request)
+            // $data = OnRequest::with(['kapal','customer'])
+            //             ->filter($request)
+            //             ->where('pm_id',$request->pm_id)
+            //             ->where('status',1)
+            //             ->get();
+
+            // foreach ($data as $item) {
+            //     $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
+            // }     
+
+            $project = OnRequest::filter($request)
                         ->where('pm_id',$request->pm_id)
                         ->where('status',1)
                         ->get();
 
+            $projectIds[] = '';
+            foreach ($project as $projectItem) {
+                $projectIds[] = $projectItem->id;
+            }
+
+            $data = ProjectPekerjaan::select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
+
             foreach ($data as $item) {
                 $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
-                // Lakukan sesuatu dengan nilai $progress
+                $item['nama_project'] = $item->projects->nama_project ?? '-';
+                $item['nama_vendor'] = $item->vendors->name ?? '-';
+                $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
             }
-            
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -50,11 +72,15 @@ class ProjectManagerController extends Controller
                 ->get();
 
             if($pekerjaan->total_status_1){
-                $pekerjaan = $pekerjaan->total_status_2 / $pekerjaan->total_status_1;
+                $pekerjaan = [
+                'total_status_1' => $pekerjaan->total_status_1,
+                'total_status_2' => $pekerjaan->total_status_2
+                ];
             }else{
                 $pekerjaan = '0 / 0';
             }
 
+            $data['lokasi_project'] = $data->lokasi->name ?? null;
             $data['project_manajer'] = $data->pm->karyawan->name ?? null;
             $data['pekerjaan'] = $pekerjaan;
             $data['vendor'] = count($vendor);
@@ -62,6 +88,31 @@ class ProjectManagerController extends Controller
             foreach($data->pm->pe as $value){
                 $value['nama_karyawan'] =  $value->karyawan->name;
             } 
+
+            // $data = ProjectPekerjaan::find($request->id);
+
+            // $request = OnRequest::find($data->id_project);
+
+            // $vendor = ProjectPekerjaan::where('id',$request->id)
+            //     ->select('id_vendor')
+            //     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+            //     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+            //     ->groupBy('status', 'id_vendor')
+            //     ->get();
+
+            // if($data->total_status_1){
+            //     $data = $data->total_status_2 / $data->total_status_1;
+            // }else{
+            //     $data = '0 / 0';
+            // }
+
+            // $data->lokasi_project = $data->id?? null;
+            // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
+            // $data['vendor'] = count($vendor);
+
+            // foreach($data->pm->pe as $value){
+            //     $value['nama_karyawan'] =  $value->karyawan->name;
+            // } 
          
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -111,8 +162,94 @@ class ProjectManagerController extends Controller
             }
                     
             $data['vendor'] = count($vendor);
+            $data['kategori'] = $kategori;
+
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function subkategoriPM(Request $request)
+    {
+        try{
+            $subkategori = SubKategori::where('id_kategori', $request->id)->get();
+            $namakategori = $subkategori->first()->kategori->name ?? '';            
+
+            $progress = ProjectPekerjaan::where('id_project', $request->id)
+                ->select('id_subkategori')
+                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                ->groupBy('id_subkategori')
+                ->get();
+            
+            $progressBySubkategori = [];
+            
+            foreach ($progress as $item) {
+                $progressBySubkategori[$item->id_subkategori] = [
+                    'total_status_1' => $item->total_status_1,
+                    'total_status_2' => $item->total_status_2,
+                ];
+            }
+            
+            foreach ($subkategori as $item) {
+                $subkategoriProgress = $progressBySubkategori[$item->id] ?? [
+                    'total_status_1' => 0,
+                    'total_status_2' => 0,
+                ];
+            
+                $item->progress = $subkategoriProgress['total_status_2'] . ' / ' . $subkategoriProgress['total_status_1'];
+            }
          
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data, 'kategori' => $kategori]);
+            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function pekerjaanPM(Request $request)
+    {
+        try{
+            $pekerjaan = SettingPekerjaan::where('id_sub_kategori', $request->id)->get();
+            $subkategori = $pekerjaan->first()->subkategori->name ?? '';
+            $kategori = SubKategori::find($request->id);   
+
+            $data = ProjectPekerjaan::select('id','id_pekerjaan','id_vendor','length','unit','status')
+                    ->where('id_subkategori', $request->id)
+                    ->get();
+
+            foreach ($data as $item) {
+                if ($item->status == 1) {
+                    $item->status = 'proses';
+                } elseif ($item->status == 2) {
+                    $item->status = 'done';
+                }
+                $item['nama_pekerjaan'] = $item->pekerjaan->name ?? '';
+                $item['nama_vendor'] = $item->vendors->name ?? '';
+                $item['ukuran'] = $item->length ." ". $item->unit;
+            }
+         
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $subkategori , 'data' => $data]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function detailpekerjaanPM(Request $request)
+    {
+        try{           
+            $data = ProjectPekerjaan::find($request->id);
+            $pekerjaan = Pekerjaan::find($data->id_pekerjaan);
+            $subkategori = SubKategori::find($data->id_subkategori);
+            $kategori = Kategori::find($data->id_kategori);
+            $beforePhoto = BeforePhoto::where('id_project_pekerjaan',$request->id)->get();
+            $afterPhoto = AfterPhoto::where('id_project_pekerjaan',$request->id)->get();
+
+            $data['nama_pekerjaan'] = $data->pekerjaan->name ?? '';
+            $data['nama_vendor'] = $data->vendors->name ?? '';
+            $data['ukuran'] = $data->length ." ". $data->unit;
+         
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

@@ -8,6 +8,7 @@ use App\Models\OnRequest;
 use App\Models\Pekerjaan;
 use App\Models\SubKategori;
 use App\Models\Kategori;
+use App\Models\Keluhan;
 use App\Models\LokasiProject;
 use App\Models\ProjectPekerjaan;
 use App\Models\SettingPekerjaan;
@@ -66,24 +67,44 @@ class OnProgressController extends Controller
     public function edit($id)
     {
         $data = OnRequest::find($id);
-        $projects = ProjectPekerjaan::where('id_project',$id)
+        $projects = Keluhan::where('on_request_id',$id)
+                                    // ->where('id_pm_approval','!=',null)
+                                    ->select('id_vendor')
+                                    // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                                    // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                                    ->groupBy('id_vendor')
+                                    ->get();
+        $progress = ProjectPekerjaan::where('id_project',$id)
                                     ->select('id_vendor')
                                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                                    ->groupBy('status', 'id_vendor')
+                                    ->groupBy('id_vendor')
                                     ->get();
         $pekerjaan = ProjectPekerjaan::where('id_project',$id)
                                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->first();
-        return view('on_progres.edit',compact('data','projects','pekerjaan'));
+        return view('on_progres.edit',compact('data','projects','pekerjaan','progress'));
     }
 
-    public function addWork($id)
+    public function addWork($id, $vendor)
     {
         $works = Kategori::all();
-        $vendors = Vendor::all();
-        return view('on_progres.request',compact('id','works','vendors'));
+        $vendor = Vendor::where('id',$vendor)->first();
+        $pekerjaan = ProjectPekerjaan::where('id_project',$id)->where('id_vendor',$vendor->id)->get();
+        $kategori_id = $pekerjaan->pluck('id_kategori')->first();
+        $subkategori_id = $pekerjaan->pluck('id_subkategori')->first();
+        $subkategori = collect();
+        $settingPekerjaan = collect();
+        $desc = $pekerjaan->pluck('deskripsi_subkategori')->first();
+        if(!empty($kategori_id)){
+            $subkategori = SubKategori::where('id_kategori',$kategori_id)->get();
+        }
+        if(!empty($subkategori_id)){
+            $settingPekerjaan = SettingPekerjaan::where('id_sub_kategori',$subkategori_id)->get();
+        }
+
+        return view('on_progres.request',compact('id','works','vendor','pekerjaan','kategori_id','subkategori_id','subkategori','settingPekerjaan','desc'));
     }
 
 
@@ -108,23 +129,45 @@ class OnProgressController extends Controller
         }
 
         foreach($request->pekerjaan as $key => $item){
-            ProjectPekerjaan::create([
-                'id_project' => $request->id_project,
-                'id_kategori' => $request->kategori,
-                'id_subkategori' => $request->sub_kategori,
-                'id_pekerjaan' => $item,
-                'id_vendor' => $request->vendor,
-                'deskripsi_subkategori' => $request->nama_pekerjaan,
-                'deskripsi_pekerjaan' => $request->deskripsi[$key],
-                'id_lokasi' => $request->id_lokasi[$key],
-                'detail' => $request->detail[$key],
-                'length' => $request->length[$key],
-                'width' => $request->width[$key],
-                'thick' => $request->thick[$key],
-                'unit' => $request->unit[$key],
-                'qty' => $request->qty[$key],
-                'amount' => $request->amount[$key],
-            ]);
+            $ids = $request->id[$key];
+            if($ids !== null){
+                $idProject = $request->id[$key];
+                ProjectPekerjaan::where('id',$idProject)->update([
+                    'id_project' => $request->id_project,
+                    'id_kategori' => $request->kategori,
+                    'id_subkategori' => $request->sub_kategori,
+                    'id_pekerjaan' => $item,
+                    'id_vendor' => $request->vendor,
+                    'deskripsi_subkategori' => $request->nama_pekerjaan,
+                    'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                    'id_lokasi' => $request->lokasi[$key],
+                    'detail' => $request->detail[$key],
+                    'length' => $request->length[$key],
+                    'width' => $request->width[$key],
+                    'thick' => $request->thick[$key],
+                    'unit' => $request->unit[$key],
+                    'qty' => $request->qty[$key],
+                    'amount' => $request->amount[$key],
+                ]);
+            }else {
+                ProjectPekerjaan::create([
+                    'id_project' => $request->id_project,
+                    'id_kategori' => $request->kategori,
+                    'id_subkategori' => $request->sub_kategori,
+                    'id_pekerjaan' => $item,
+                    'id_vendor' => $request->vendor,
+                    'deskripsi_subkategori' => $request->nama_pekerjaan,
+                    'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                    'id_lokasi' => $request->lokasi[$key],
+                    'detail' => $request->detail[$key],
+                    'length' => $request->length[$key],
+                    'width' => $request->width[$key],
+                    'thick' => $request->thick[$key],
+                    'unit' => $request->unit[$key],
+                    'qty' => $request->qty[$key],
+                    'amount' => $request->amount[$key],
+                ]);
+            }
         }
 
         return back()->with('success','Data Berhasil Di Simpan');

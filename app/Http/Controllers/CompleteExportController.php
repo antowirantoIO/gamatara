@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ExportDataOnProgress;
-use App\Exports\ExportDataPekerjaan;
+use App\Exports\ExportDataComplete;
 use App\Exports\ExportPekerjaanVendor;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
-class OnProgressExportController extends Controller
+class CompleteExportController extends Controller
 {
     public function allData(Request $request)
     {
@@ -30,8 +28,7 @@ class OnProgressExportController extends Controller
             $data->where('pm_id',$request->nama_pm);
         }
         $data = $data->get();
-        // return view('export.ExportDataOnProgress',compact('data'));
-        return Excel::download(new ExportDataOnProgress($data),'List Data OnProgress.xlsx');
+        return Excel::download(new ExportDataComplete($data),'List Data Complete.xlsx');
     }
 
     public function pekerjaanVendor(Request $request)
@@ -56,22 +53,5 @@ class OnProgressExportController extends Controller
         $nama_vendor = Vendor::where('id',$request->id_vendor)->pluck('name')->first();
         // return view('export.ExportPekerjaanVendor',compact('data','nama_project','nama_vendor'));
         return Excel::download(new ExportPekerjaanVendor($nama_project,$nama_vendor, $data),'List Pekerjaan ' . $nama_project . ' - ' . $nama_vendor . '.xlsx');
-    }
-
-    public function dataPekerjaan(Request $request)
-    {
-        $data = groupDataPekerjaan($request);
-        $project = OnRequest::where('id',$request->id_project)->first();
-        return Excel::download(new ExportDataPekerjaan($data, $project),'List_Data_Pekerjaan.xlsx');
-        // header("Pragma: public");
-        // header("Expires: 0");
-        // header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        // header("Content-Type: application/force-download");
-        // header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
-        // header("Content-Type: application/octet-stream");
-        // header("Content-Type: application/download");
-        // header('Content-Disposition: attachment; filename=List_Data_Pekerjaan.xlsx');
-        return view('export.ExportPekerjaanOnProgress', compact('data','project'));
-
     }
 }

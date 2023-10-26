@@ -11,14 +11,11 @@
                             <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Request Form</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Input Pekerjaan</h4>
                         </div>
                     </div>
                 </div>
             </div>
-            {{-- <div class="loader d-none">
-                <x-loader/>
-            </div> --}}
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -33,28 +30,33 @@
                                             <select name="kategori" id="kategori" class="form-select">
                                                 <option selected disabled>Masukan Kategori Pekerjaan</option>
                                                 @foreach ($works as $work)
-                                                    <option value="{{ $work->id }}">{{ $work->name }}</option>
+                                                    <option {{ $kategori_id ? ($kategori_id === $work->id ? 'selected' : '') : '' }} value="{{ $work->id }}">{{ $work->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="vendor" class="form-label">Vendor</label>
-                                            <select name="vendor" id="vendor" class="form-select">
-                                                <option selected disabled>Pilih Vendor</option>
-                                                @foreach ($vendors as $vendor)
-                                                    <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input class="form-control" value="{{ $vendor->name }}" disabled></input>
+                                            <input type="hidden" name="vendor" value="{{ $vendor->id }}">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="sub_kategori" class="form-label">Sub Kategori Pekerjaan</label>
-                                            <select name="sub_kategori" id="sub_kategori" class="form-select">
-                                                <option selected disabled>Sub Kategori</option>
-                                            </select>
+                                            @if ($kategori_id)
+                                                <select name="sub_kategori" id="sub_kategori" class="form-select">
+                                                    <option selected disabled>Sub Kategori</option>
+                                                    @foreach ($subkategori as $s)
+                                                        <option {{ $subkategori_id ? ($subkategori_id === $s->id ? 'selected' : '') : '' }} value="{{ $s->id }}">{{ $s->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            @else
+                                                <select name="sub_kategori" id="sub_kategori" class="form-select">
+                                                    <option selected disabled>Sub Kategori</option>
+                                                </select>
+                                            @endif
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
-                                            <input type="text" class="form-control" placeholder="Masukan Nama Pekerjaan" id="nama_pekerjaan" name="nama_pekerjaan">
+                                            <input type="text" class="form-control" placeholder="Masukan Nama Pekerjaan" id="nama_pekerjaan" name="nama_pekerjaan" value="{{ $desc }}">
                                         </div>
                                         <div class="d-flex justify-content-end mb-3">
                                             <div class="btn btn-primary btn-add">Add</div>
@@ -78,45 +80,100 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="clone">
-                                                    <tr class="draggable-row">
-                                                        <td>
-                                                            <select name="pekerjaan[]" id="pekerjaan" class="form-select pekerjaan">
-                                                                <option selected disabled>Pilih Pekerjaan</option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="lokasi[]" style="width: 100px;">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="deskripsi[]" style="width: 100px;">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="detail[]" style="width: 100px;">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="length[]" style="width: 70px">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="width[]"style="width: 70px">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="thick[]" style="width: 70px">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="unit[]" style="width: 70px">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="qty[]" style="width: 70px">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="amount[]" style="width: 70px">
-                                                        </td>
-                                                        <td>
-                                                            <div class="btn btn-danger btn-trash">
-                                                                <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    @if ($pekerjaan->count() > 0)
+                                                        @foreach ($pekerjaan as $keys => $p)
+                                                        <input type="hidden" name="id[]" value="{{ $p->id }}">
+                                                        <tr class="draggable-row">
+                                                            <td>
+                                                                @if ($p->id_pekerjaan)
+                                                                    <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
+                                                                        <option selected disabled>Pilih Pekerjaan</option>
+                                                                        @foreach ($settingPekerjaan as $sp)
+                                                                            <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id_pekerjaan ? 'selected' : '') : '' }} value="{{ $sp->id_pekerjaan }}">{{ $sp->pekerjaan->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                @else
+                                                                    <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
+                                                                        <option selected disabled>Pilih Pekerjaan</option>
+                                                                    </select>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="lokasi[]" style="width: 100px;" value="{{ $p->id_lokasi }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="deskripsi[]" style="width: 100px;" value="{{ $p->deskripsi_pekerjaan }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="detail[]" style="width: 100px;" value="{{ $p->detail }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="length[]" style="width: 70px" value="{{ $p->length }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="width[]"style="width: 70px" value="{{ $p->width }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="unit[]" style="width: 70px" value="{{ $p->unit }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn btn-danger btn-trash">
+                                                                    <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr class="draggable-row">
+                                                            <input type="hidden" name="id[]">
+                                                            <td>
+                                                                <select name="pekerjaan[]" id="pekerjaan" class="form-select pekerjaan">
+                                                                    <option selected disabled>Pilih Pekerjaan</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="lokasi[]" style="width: 100px;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="deskripsi[]" style="width: 100px;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="detail[]" style="width: 100px;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="length[]" style="width: 70px">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="width[]"style="width: 70px">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="thick[]" style="width: 70px">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="unit[]" style="width: 70px">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="qty[]" style="width: 70px">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="amount[]" style="width: 70px">
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn btn-danger btn-trash">
+                                                                    <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                 </tbody>
                                             </table>
                                            </div>
@@ -143,6 +200,35 @@
     <script>
         $(document).ready(function(){
             let select = $('#id_lokasi');
+            let id_kategori = $('#kategori').val();
+            let id_subkategori = '{{ $subkategori_id }}';
+
+            const getSelect = (id,select) => {
+                let url = '{{ route('on_progres.pekerjaan',':id') }}'
+                let urlReplace = url.replace(':id',id);
+
+                $.ajax({
+                    url : urlReplace,
+                    method : 'GET'
+                }).then(ress => {
+                    if(ress.data.length != null){
+                        select.empty();
+                        select.append(`
+                            <option selected disabled>Pilih Pekerjaan</option>
+                        `)
+                        ress.data.forEach(item => {
+                            select.append(`
+                                <option value="${item.pekerjaan.id}">${item.pekerjaan.name}</option>
+                            `)
+                        })
+                    }else{
+                        select.append(`
+                            <option selected disabled>Pilih Pekerjaan</option>
+                        `)
+                    }
+                })
+            }
+
 
             $('.form-select').select2({
                 theme : "bootstrap-5",
@@ -157,8 +243,9 @@
             let count = 1;
             $('.btn-add').click(function(){
                 $('#clone').append(`<tr class="draggable-row">
+                    <input type="hidden" name="id[]">
                     <td>
-                        <select name="pekerjaan[]" id="pekerjaan-${count}" class="form-select pekerjaan">
+                        <select name="pekerjaan[]" id="pekerjaan${count}" class="form-select pekerjaan">
                             <option selected disabled>Pilih Pekerjaan</option>
                         </select>
                     </td>
@@ -195,7 +282,7 @@
                         </div>
                     </td>
                 </tr>`)
-                let select = $(`#pekerjaan-${count}`).select2({
+                let select = $(`#pekerjaan${count}`).select2({
                     theme : "bootstrap-5",
                     search: true
                 })
@@ -218,7 +305,6 @@
                 let id = $(this).val();
                 let url = '{{ route('on_progres.sub-kategori',':id') }}'
                 let urlReplace = url.replace(':id',id);
-                // $('#loader').show();
                 $.ajax({
                     url : urlReplace,
                     method : 'GET'
@@ -240,7 +326,6 @@
                         `)
                     }
                 })
-                // $('#loader').hide();
             })
 
             $('#sub_kategori').on('change',function(){
@@ -250,32 +335,6 @@
 
             })
 
-            const getSelect = (id,select) => {
-                let url = '{{ route('on_progres.pekerjaan',':id') }}'
-                let urlReplace = url.replace(':id',id);
-
-                $.ajax({
-                    url : urlReplace,
-                    method : 'GET'
-                }).then(ress => {
-                    console.log(ress.data);
-                    if(ress.data.length != null){
-                        select.empty();
-                        select.append(`
-                            <option selected disabled>Pilih Pekerjaan</option>
-                        `)
-                        ress.data.forEach(item => {
-                            select.append(`
-                                <option value="${item.pekerjaan.id}">${item.pekerjaan.name}</option>
-                            `)
-                        })
-                    }else{
-                        select.append(`
-                            <option selected disabled>Pilih Pekerjaan</option>
-                        `)
-                    }
-                })
-            }
 
         })
     </script>

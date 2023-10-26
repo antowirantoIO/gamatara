@@ -4,17 +4,59 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
+use Auth;
 
 class KeluhanController extends Controller
 {
     public function store(Request $request)
     {        
-        $keluhan                = new Keluhan();
-        $keluhan->on_request_id = $request->id;
-        $keluhan->keluhan       = $request->input('keluhan');
-        $keluhan->save();
+        if($request->keluhanId == null)
+        {
+            $keluhan                = new Keluhan();
+            $keluhan->on_request_id = $request->id;
+            $keluhan->id_vendor     = $request->vendor;
+            $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+            $keluhan->save();
 
-        return response()->json(['message' => 'Keluhan berhasil ditambahkan','status' => 200,'id' => $keluhan->id]);
+            return response()->json(
+                [
+                    'message' => 'Keluhan berhasil ditambahkan',
+                    'status' => 200, 
+                    'id' => $keluhan->id, 
+                    'id_vendor' => $keluhan->id_vendor
+                ]
+            );
+        }else{
+            $keluhan                = Keluhan::find($request->keluhanId);
+            $keluhan->on_request_id = $request->id;
+            $keluhan->id_vendor     = $request->vendor;
+            $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+            $keluhan->save();
+
+            return response()->json(['keluhan' => $keluhan->keluhan,'message' => 'Keluhan berhasil diubah','status' => 200,]);
+        }       
+    }
+
+    public function getData(Request $request)
+    {        
+        $data   = Keluhan::find($request->id);
+
+        return response()->json(['status' => 200,'data' => $data]);
+    }
+
+    public function approve(Request $request)
+    {        
+        $data   = Keluhan::find($request->id);
+        if($request->type == 'PM')
+        {
+            $data->id_pm_approval   = Auth::user()->id;
+        }
+        else{
+            $data->id_bod_approval   = Auth::user()->id;
+        }
+        $data->save();
+
+        return response()->json(['status' => 200, 'message' => 'Berhasil Di Approve']);
     }
 
     public function delete(Request $request)

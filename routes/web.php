@@ -125,7 +125,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}', [KeluhanController::class, 'delete'])->name('keluhan.delete');
         Route::post('/store/{id}', [KeluhanController::class, 'store'])->name('keluhan.store');
         Route::get('/getData/{id}', [KeluhanController::class, 'getData'])->name('keluhan.getData');
-        Route::post('/approve/{id}', [KeluhanController::class, 'approve'])->name('keluhan.approvePM');
+        Route::post('/approve/{id}', [KeluhanController::class, 'approve'])->name('keluhan.approve');
     });
 
     //karyawan

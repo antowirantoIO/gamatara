@@ -17,7 +17,7 @@
                                                             <td>{{ $complaint->vendors->name ?? ''}}</td>
                                                             <td>
                                                                 @if($pmAuth == 'Project Manager' || $pmAuth == 'PM')
-                                                                    @if($complaint->id_pm_approval == null)
+                                                                    @if($complaint->id_pm_approval == null && $complaint->id_bod_approval == null)
                                                                         <button type="button" class="btn btn-primary btn-sm" onclick="approve({{$complaint->id}}, 'PM')">
                                                                             Approve
                                                                         </button>
@@ -50,9 +50,7 @@
                                                                         </button>
                                                                     @endif
                                                                 @elseif($pmAuth == 'Project Manager')
-                                                                <button type="button" class="btn btn-sm" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
-                                                                    Approved
-                                                                </button>
+                                                               
                                                                 @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                                                                     @if($complaint->id_bod_approval != null)
                                                                         Approved  

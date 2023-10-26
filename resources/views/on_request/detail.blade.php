@@ -126,38 +126,55 @@
                                                 </select>
                                                 <br><br>
                                                 @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
-                                                    @if($count == $keluhan)
-                                                        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                            <button type="button" data-id-keluhan="" class="btn btn-primary" disabled>Save</button>
-                                                        </div>
-                                                    @else
+                                                    @if($keluhan == 0)
                                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                             <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                         </div>
+                                                    @else
+                                                        @if($count == $keluhan)
+                                                            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                                <button type="button" data-id-keluhan="" class="btn btn-primary" disabled>Save</button>
+                                                            </div>
+                                                        @else
+                                                            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                                <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </div>
                                         </div>
 
                                         @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
-                                            @if($keluhan != null && $count == $keluhan) 
-                                            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                    Rekap SPK
-                                                </button>
-                                            </div>
-                                            @elseif($count != $keluhan)
-                                            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                    Rekap SPK
-                                                </button>
-                                            </div>
+                                            @if($keluhan == 0)
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                        Rekap SPK
+                                                    </button>
+                                                </div>
+                                            @else
+                                                @if($keluhan != null && $count == $keluhan) 
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                        Rekap SPK
+                                                    </button>
+                                                </div>
+                                                @elseif($count != $keluhan)
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                        Rekap SPK
+                                                    </button>
+                                                </div>
+                                                @endif
                                             @endif
                                         @elseif($pmAuth == 'BOD')
                                             <div class="flex-grow-1 d-flex align-items-center justify-content-end">

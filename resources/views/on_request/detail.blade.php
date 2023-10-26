@@ -293,7 +293,9 @@
             if (result.isConfirmed) {
                 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                var url = '/keluhan/approve/' + id;
+                var url = `{{route('keluhan.approve', ':id')}}`;
+                url = url.replace(':id', id);
+                
                 var requestConfig = {
                     method: 'post',
                     headers: {
@@ -349,7 +351,6 @@
             var textarea = document.getElementById("keluhan");
             var vendorSelect = document.getElementById("vendor");
 
-            // textarea.value = data.data.keluhan.replace('\n', '<br>');
             textarea.value = data.data.keluhan.replace('<br>', '\n');
             vendorSelect.value = data.data.id_vendor;
             $("#vendor").select2("val", vendorSelect.value);

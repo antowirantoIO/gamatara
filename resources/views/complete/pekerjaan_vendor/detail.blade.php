@@ -19,7 +19,7 @@
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -138,7 +138,7 @@
                     "info": "Displaying _START_ - _END_ of _TOTAL_ result",
                 },
                 ajax : {
-                    url : '{{ route('ajax.vendor') }}',
+                    url : '{{ route('complete.ajax.pekerjaan-vendor') }}',
                     methdo : 'GET',
                     data : function(d){
                         d._token = '{{ csrf_token() }}';
@@ -151,7 +151,7 @@
 
                 columns : [
                     { data : 'pekerjaan.name' },
-                    { data : 'lokasi.name' },
+                    { data : 'id_lokasi' },
                     { data : 'detail' },
                     { data : 'length' },
                     { data : 'width' },
@@ -176,6 +176,34 @@
                 $('.form-select').val(null).trigger('change');
                 table.draw();
             })
+
+            function hideOverlay() {
+                $('.loading-overlay').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }
+
+            $('#export-button').on('click', function(event) {
+                event.preventDefault();
+
+                var id_lokasi       = $('#code').val();
+                var id_pekerjaan    = $('#id_pekerjaan').val();
+                var id_project      = '{{ $idProject }}';
+                var id_vendor       = '{{ $id }}';
+
+                var url = '{{ route("on_progres.export-pekrjaan-vendor") }}?' + $.param({
+                    id_lokasi: id_lokasi,
+                    id_pekerjaan: id_pekerjaan,
+                    id_project: id_project,
+                    id_vendor: id_vendor,
+                });
+
+                $('.loading-overlay').show();
+
+                window.location.href = url;
+
+                setTimeout(hideOverlay, 2000);
+            });
 
         })
     </script>

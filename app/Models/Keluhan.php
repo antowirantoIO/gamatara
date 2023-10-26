@@ -9,9 +9,9 @@ class Keluhan extends Model
 {
     protected $table = 'project_request';
     protected $guarded = [];
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
 
-    public function vendor()
+    public function vendors()
     {
         return $this->belongsTo(Vendor::class,'id_vendor','id');
     }

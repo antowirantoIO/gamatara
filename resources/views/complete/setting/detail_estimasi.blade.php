@@ -8,23 +8,22 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('complete.pekerjaan',$idProject)}}">
+                            <a href="{{route('complete.setting.estimasi',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Detail Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Estimasi Pekerjaan</h4>
                         </div>
                     </div>
                 </div>
             </div>
 
-
-
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card mt-3">
+                    <div class="card mt-3 rounded-4 py-4 px-3">
                         <div class="card-body">
                             <div class="live-preview">
-                                <table class="table" id="example1" style="font-size: 10px;">
+                                <span class="fs-5"><strong>{{ $kategori->name }}</strong></span>
+                                <table class="table mt-3" id="example1" style="font-size: 10px;">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Pekerjaan</th>
@@ -37,39 +36,27 @@
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
                                             <th style="color:#929EAE">Vendor</th>
-                                            <th style="color:#929EAE">Status</th>
-                                            <th style="color:#929EAE">Action</th>
+                                            <th style="color:#929EAE">Harga Vendor</th>
+                                            <th style="color:#929EAE">Harga Customer</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->pekerjaan->name }}</td>
+                                       @foreach ($data as $item)
+                                        <tr>
+                                                <td>{{ $item->pekerjaan->name }}n</td>
                                                 <td>{{ $item->id_lokasi }}</td>
                                                 <td>{{ $item->detail }}</td>
-                                                <td>{{ $item->length }}</td>
-                                                <td>{{ $item->width }}</td>
-                                                <td>{{ $item->thick }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>{{ $item->amount }}</td>
-                                                <td>{{ $item->unit }}</td>
+                                                <td>{{$item->length}}</td>
+                                                <td>{{$item->width}}</td>
+                                                <td>{{$item->thick}}</td>
+                                                <td>{{$item->qty}}</td>
+                                                <td>{{$item->amount}}</td>
+                                                <td>{{$item->unit}}</td>
                                                 <td>{{ $item->vendors->name }}</td>
-                                                <td>
-                                                    @if ($item->status == 1)
-                                                        <span class="text-warning">Progres</span>
-                                                    @else
-                                                        <span an class="text-success">Complete</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <div class="btn btn-warning btn-sm btn-modal">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </div>
-                                                </td>
+                                                <td>Rp. {{ number_format($item->pekerjaan->harga_vendor, 0, ',', '.') }}</td>
+                                                <td>Rp. {{ number_format($item->pekerjaan->harga_customer, 0, ',', '.') }}</td>
                                             </tr>
-                                        @endforeach
+                                       @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -77,7 +64,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -135,15 +121,9 @@
     <script>
         $(document).ready(function(){
             let modalInput = $('#modalInput');
-            $(".btn-modal").click(function(){
-                modalInput.modal('show');
-            })
-
-            lightbox.option({
-                'resizeDuration': 200,
-                'fitImagesInViewport' : true,
-                'wrapAround': true
-            })
+            // $(".btn-modal").click(function(){
+            //     modalInput.modal('show');
+            // })
         })
     </script>
 @endsection

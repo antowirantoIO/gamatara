@@ -24,7 +24,7 @@
                             <div class="live-preview">
                                 <div class="row gy-4">
                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
-                                        <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Input Pekerjaan</a>
+                                        {{-- <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Input Pekerjaan</a> --}}
                                         <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
                                     </div>
 
@@ -79,21 +79,28 @@
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
                                             <th>Nama Vendor</th>
-                                            <th>progres</th>
-                                            <th>Detail</th>
+                                            <th>Progress</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($projects as $project)
+                                        @foreach ($projects as $keys => $project)
                                             <tr>
                                                 <td>{{ $project->vendors->name }}</td>
-                                                <td>{{ $project->total_status_2 }} / {{ $project->total_status_1 }}</td>
+                                                <td>{{ $progress[$keys]->total_status_2 }} / {{ $progress[$keys]->total_status_1 }}</td>
                                                 <td>
-                                                    <a href="{{ route('on_progres.vendor-worker',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </a>
+                                                    <div class="d-flex justify-contetn-center gap-3">
+                                                        <a href="{{ route('on_progres.vendor-worker',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
+                                                            <span>
+                                                                <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                            </span>
+                                                        </a>
+                                                        <a href="{{ route('on_progres.request-pekerjaan',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
+                                                            <span>
+                                                                <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                                            </span>
+                                                        </a>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach

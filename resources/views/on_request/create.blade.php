@@ -112,7 +112,7 @@
                                             </div>
                                         </div> 
 
-                                        <div class="col-xxl-6 col-md-12">
+                                        <!-- <div class="col-xxl-6 col-md-12">
                                         </div>
 
                                         <div class="col-xxl-6 col-md-6">
@@ -138,10 +138,11 @@
                                                 <tbody>
                                                 </tbody>
                                             </table>
-                                        </div>
+                                        </div> -->
 
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                            <button class="btn btn-primary" style="margin-right: 10px;" onclick="simpanData()">Save</button>
+                                            <!-- <button class="btn btn-primary" style="margin-right: 10px;" onclick="simpanData()">Save</button> -->
+                                            <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
                                         </div>
 
@@ -269,45 +270,44 @@
 
     //save data utama
     $(document).ready(function () {
-    $("#saveCustomerButton").click(function (e) {
-        e.preventDefault();
+        $("#saveCustomerButton").click(function (e) {
+            e.preventDefault();
 
-        var form = $("#formOnRequest");
-        var formData = form.serialize();
+            var form = $("#formOnRequest");
+            var formData = form.serialize();
 
-        $.ajax({
-            type: "POST",
-            url: form.attr("action"),
-            data: formData,
-            success: function (response) {
-                if (response.success) {
-                    $("#exampleModalgrid").modal("hide");
-                    form[0].reset();
-                    Swal.fire(
-                        '',
-                        'Customer Telah Berhasil Ditambahkan',
-                        'success'
-                    );
-                } else if (response.errors) {
-                    // Display validation errors for NPWP
-                    if (response.errors.npwp) {
-                        $("#npwp").addClass('is-invalid');
-                        $("#npwp-error").text(response.errors.npwp[0]);
+            $.ajax({
+                type: "POST",
+                url: form.attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        $("#exampleModalgrid").modal("hide");
+                        form[0].reset();
+                        Swal.fire(
+                            '',
+                            'Customer Telah Berhasil Ditambahkan',
+                            'success'
+                        );
+                    } else if (response.errors) {
+                        // Display validation errors for NPWP
+                        if (response.errors.npwp) {
+                            $("#npwp").addClass('is-invalid');
+                            $("#npwp-error").text(response.errors.npwp[0]);
+                        } else {
+                            $("#npwp").removeClass('is-invalid');
+                            $("#npwp-error").text('');
+                        }
                     } else {
-                        $("#npwp").removeClass('is-invalid');
-                        $("#npwp-error").text('');
+                        alert("An error occurred while saving the customer.");
                     }
-                } else {
+                },
+                error: function (error) {
                     alert("An error occurred while saving the customer.");
                 }
-            },
-            error: function (error) {
-                alert("An error occurred while saving the customer.");
-            }
+            });
         });
     });
-});
-
 
     //show data customer
     var route = "{{ url('customer') }}";

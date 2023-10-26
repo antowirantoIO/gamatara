@@ -14,7 +14,7 @@
                                                         <tr>
                                                             <td>{{ $key + 1 }}</td>
                                                             <td>{{ explode('<br>', $complaint->keluhan)[0] ?? '' }}</td>
-                                                            <td>{{ $complaint->vendor->name ?? ''}}</td>
+                                                            <td>{{ $complaint->vendors->name ?? ''}}</td>
                                                             <td>
                                                                 @if($pmAuth == 'Project Manager' || $pmAuth == 'PM')
                                                                     @if($complaint->id_pm_approval == null)

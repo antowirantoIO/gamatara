@@ -130,9 +130,9 @@ class OnRequestController extends Controller
         $pm             = ProjectManager::with(['karyawan'])->get();
         $vendor         = Vendor::get();
         $pmAuth         = Auth::user()->karyawan->role->name ?? '';
-        $keluhan = Keluhan::where('on_request_id', $request->id)->get();
-        $count = $keluhan->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
-        $keluhan = count($keluhan);
+        $keluhan        = Keluhan::where('on_request_id', $request->id)->get();
+        $count          = $keluhan->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+        $keluhan        = count($keluhan);
 
         return view('on_request.detail', Compact('keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pm','vendor','pmAuth'));
     }

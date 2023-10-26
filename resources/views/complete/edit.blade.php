@@ -74,7 +74,7 @@
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
                                             <th>Nama Vendor</th>
-                                            <th>progres</th>
+                                            <th>progress</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>

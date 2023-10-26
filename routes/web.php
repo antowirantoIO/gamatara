@@ -219,7 +219,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
         Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
         Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
-        Route::get('request/{id}',[OnProgressController::class,'addWork'])->name('on_progres.work');
+        Route::get('request/{id}/{vendor}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
         Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
         Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
         Route::get('sub-detail/{id}/{idProject}/{idSub}',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');

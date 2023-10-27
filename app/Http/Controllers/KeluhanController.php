@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
+use App\Models\OnRequest;
 use Auth;
+use PDF;
 
 class KeluhanController extends Controller
 {
@@ -85,6 +87,18 @@ class KeluhanController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Gagal menghapus keluhan'], 500);
         }
+    }
+
+    public function SPK(Request $request)
+    {
+        $data = OnRequest::find($request->id);
+        $keluhan = Keluhan::where('on_request_id',$request->id)->get();
+        $cetak = "SPK ('.date('d F Y').').pdf";
+
+        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
+                    ->setPaper('A4', 'portrait')
+                    ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
+        return $pdf->stream($cetak);
     }
 
 }

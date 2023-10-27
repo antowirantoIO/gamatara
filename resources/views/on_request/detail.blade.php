@@ -131,9 +131,9 @@
                                                             <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                         </div>
                                                     @else
-                                                        @if($count == $keluhan)
+                                                        @if($keluhan != null && $count == $keluhan) 
                                                             <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                                <button type="button" data-id-keluhan="" class="btn btn-primary" disabled>Save</button>
+                                                                <button type="button" id="tambahKeluhan" class="btn btn-primary" disabled>Save</button>
                                                             </div>
                                                         @else
                                                             <div class="flex-grow-1 d-flex align-items-center justify-content-end">
@@ -158,7 +158,7 @@
                                             @else
                                                 @if($keluhan != null && $count == $keluhan) 
                                                 <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
                                                         <span>
                                                             <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                                         </span>
@@ -178,12 +178,12 @@
                                             @endif
                                         @elseif($pmAuth == 'BOD')
                                             <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger">
+                                                <a type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
                                                     <span>
                                                         <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                                     </span>
                                                     Rekap SPK
-                                                </button>
+                                                </a>
                                             </div>
                                         @endif
 
@@ -289,11 +289,14 @@
 @endsection
 
 @section('scripts')
-<!-- Include Signature Pad library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-
 <script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
 <script>
+    function openNewTab() {
+        var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";
+        window.open(urlToOpen, '_blank');
+    }
+
     let idData = "{{$data->id}}";
     function getTableData(id) {
         let url = "{{route('on_request.tableData', ':id')}}";

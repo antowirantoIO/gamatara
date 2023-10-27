@@ -10,6 +10,7 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
 
+    <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
     <!-- jsvectormap css -->
     <link href="{{asset('assets/assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
 

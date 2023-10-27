@@ -264,9 +264,35 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="ttd" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <center>
+                <div class="col-md-12">
+                    <br/>
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="type" id="type">
+                    <div id="sig" style="height: 200px;width: 300px;"></div>
+                    <br/>
+                    <button id="clear" class="btn btn-light btn-sm">Clear</button>
+                    <textarea id="signature64" name="signed" style="display: none"></textarea>
+                </div>
+            
+                <br/>
+                <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                <button class="btn btn-primary" onclick="approve()">Approve</button>
+            </center>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
+<!-- Include Signature Pad library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+
+<script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
 <script>
     let idData = "{{$data->id}}";
     function getTableData(id) {
@@ -280,8 +306,10 @@
         })
     }
     getTableData(idData);
-    
-    function approve(id, type) {
+
+    function approve() {
+        $('#ttd').modal('hide');
+
         Swal.fire({
             title: 'Konfirmasi',
             text: 'Anda yakin ingin menyetujui ini?',
@@ -293,41 +321,59 @@
             if (result.isConfirmed) {
                 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                var url = `{{route('keluhan.approve', ':id')}}`;
-                url = url.replace(':id', id);
-                
+                var url = `{{ route('keluhan.approve', ':id') }}`;
+                url = url.replace(':id', document.getElementById('id').value);
+
+                var signatureData = $('#signature64').val(); // Retrieve the PNG signature from the hidden field
+
+                var requestData = {
+                    id: document.getElementById('id').value,
+                    type: document.getElementById('type').value,
+                    signed: signatureData, // Include the PNG signature
+                };
+
                 var requestConfig = {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken,
                     },
-                    body: JSON.stringify({ id: id, type: type }),
+                    body: JSON.stringify(requestData),
                 };
 
                 fetch(url, requestConfig)
-                    .then(function(response) {
+                    .then(function (response) {
                         if (response.status === 200) {
-                            Swal.fire(
-                                '',
-                                'Success',
-                                'success'
-                            )
-                            getTableData(idData);       
+                            Swal.fire('', 'Success', 'success');
+                            getTableData(idData);
                             return response.json();
                         } else {
                             throw new Error('Gagal melakukan persetujuan');
                         }
                     })
-                    .then(function(data) {
+                    .then(function (data) {
                         console.log('Persetujuan berhasil:', data);
                     })
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.error('Kesalahan saat melakukan persetujuan:', error);
                     });
             }
         });
     }
+
+    function approvalModal(id, type) {
+        document.getElementById('id').value = id;
+        document.getElementById('type').value = type;
+        var myModal = new bootstrap.Modal(document.getElementById('ttd'));
+        myModal.show();
+    }
+
+    var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
+    $('#clear').click(function(e) {
+        e.preventDefault();
+        sig.signature('clear');
+        $("#signature64").val('');
+    })
 
     function setEditData(id, vendorId) {
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -459,103 +505,6 @@
             });
         }
     }
-
-    // function tambahKeluhan($id) {
-    //     var keluhanInput = document.getElementById("keluhan").value;
-    //     var vendorSelect = document.getElementById("vendor");
-    //     var selectedVendor = vendorSelect.options[vendorSelect.selectedIndex];
-    //     var vendorId = selectedVendor.value;
-    //     var vendorName = selectedVendor.text;
-        
-    //     var id = document.getElementById("on_request_id").value;
-    //     var keluhan = document.getElementById("tambahKeluhan");
-    //     var keluhanId = keluhan.getAttribute("data-id-keluhan")
-    //     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    //     if (keluhanInput.trim() !== "") {
-    //         var keluhanBaris = keluhanInput.split("\n");
-
-    //         fetch('{{ route('keluhan.store', '') }}/' + {{ $data->id }}, {
-    //             method: 'post',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-CSRF-TOKEN': csrfToken,
-    //             },
-    //             body: JSON.stringify({ keluhan: keluhanInput, vendor: vendorId, keluhanId : keluhanId }),
-    //         })
-    //         .then(function (response) {
-    //             if (response.status === 200) {
-    //                 Swal.fire(
-    //                     '',
-    //                     'Keluhan Berhasil Ditambahkan',
-    //                     'success'
-    //                 )
-    //                 var idKeluhan = keluhanId;
-    //                 var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
-
-    //                 for (var i = 0; i < tabel.rows.length; i++) {
-    //                     var rowDataId = tabel.rows[i].querySelector(".btnEdit").getAttribute("data-keluhan-id");
-    //                     if (rowDataId == idKeluhan) {
-    //                         tabel.deleteRow(i);
-    //                         break;
-    //                     }
-    //                 }
-                    
-    //                 return response.json();
-    //             } else {
-    //                 Swal.fire({
-    //                     icon: 'error',
-    //                     title: 'Oops...',
-    //                     text: 'Gagal menambahkan keluhan!',
-    //                 });
-    //                 throw new Error('Gagal menambahkan keluhan');
-
-    //             }
-    //         })
-    //         .then(function (data) {
-    //             var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
-    //             var keluhanBaris = keluhanInput.split("\n");
-
-    //             for (var i = 0; i < keluhanBaris.length; i++) {
-    //                 var newRow = tabel.insertRow(tabel.rows.length);
-    //                 var cell1 = newRow.insertCell(0);
-    //                 var cell2 = newRow.insertCell(1);
-    //                 var cell3 = newRow.insertCell(2);
-    //                 var cell4 = newRow.insertCell(3);
-
-    //                 cell1.innerHTML = tabel.rows.length;
-    //                 cell2.innerHTML = keluhanBaris[i];
-    //                 cell3.innerHTML = vendorName;
-    //                 cell4.innerHTML = 
-    //                     '<div>' +
-    //                         '<button type="button" class="btn btn-warning btn-sm btnEdit" data-keluhan-id="' + data.id + '" data-vendor-id="' + data.id_vendor + '" onclick="setEditData(' + data.id + ', ' + data.id_vendor + ')"><img src="{{asset("assets/images/edit.svg")}}" style="width: 15px;"></button>&nbsp;' +
-    //                         '<button type="button" class="btn btn-success btn-sm btnApprove" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/like.svg")}}" style="width: 15px;"></button>&nbsp;' +
-    //                         '<button type="button" class="btn btn-primary btn-sm btnPrint" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/directbox.svg")}}" style="width: 15px;"></button>&nbsp;' +
-    //                         '<button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></button>' +
-    //                     '</div>';
-    //             }
-
-    //             document.getElementById("keluhan").value = "";
-    //             document.getElementById("vendor").value = "";
-
-    //             var btnHapus = newRow.querySelector(".btnHapus");
-    //             btnHapus.addEventListener("click", function () {
-    //                 hapusKeluhan(data.id);
-    //             });
-
-    //             refreshNomorUrut();
-    //         })
-    //         .catch(function (error) {
-    //             console.error(error);
-    //         });
-    //     } else {
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Oops...',
-    //             text: 'Keluhan Tidak Boleh Kosong!',
-    //         });
-    //     }
-    // }
 
     const NPWP = document.getElementById("npwp")
         NPWP.oninput = (e) => {

@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store/{id}', [KeluhanController::class, 'store'])->name('keluhan.store');
         Route::get('/getData/{id}', [KeluhanController::class, 'getData'])->name('keluhan.getData');
         Route::post('/approve/{id}', [KeluhanController::class, 'approve'])->name('keluhan.approve');
+        Route::get('/spk/{id}', [KeluhanController::class, 'SPK'])->name('keluhan.spk');
     });
 
     //karyawan

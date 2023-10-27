@@ -131,7 +131,7 @@
                                                             <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                         </div>
                                                     @else
-                                                        @if($keluhan != null && $count == $keluhan) 
+                                                        @if($count == $keluhan) 
                                                             <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                                 <button type="button" id="tambahKeluhan" class="btn btn-primary" disabled>Save</button>
                                                             </div>

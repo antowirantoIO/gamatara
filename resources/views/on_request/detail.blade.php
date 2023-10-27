@@ -283,7 +283,7 @@
 
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-<script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
+<script type="text/javascript" src="https://keith-wood.name/js/jquery.signature.js"></script>
 <script>
     function openNewTab() {
         var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";

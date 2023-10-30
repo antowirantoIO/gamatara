@@ -77,12 +77,14 @@ class OnProgressController extends Controller
                                     ->groupBy('id_vendor')
                                     ->get();
         $progress = ProjectPekerjaan::where('id_project',$id)
+                                    ->whereNotNull('id_pekerjaan')
                                     ->select('id_vendor')
                                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->groupBy('id_vendor')
                                     ->get();
         $pekerjaan = ProjectPekerjaan::where('id_project',$id)
+                                    ->whereNotNull('id_pekerjaan')
                                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->first();

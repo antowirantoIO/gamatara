@@ -25,6 +25,13 @@ class Vendor extends Model
             return $query->where('email', 'like', "%$filter->email%");
         })->when($filter->npwp ?? false, function($query) use ($filter) {
             return $query->where('npwp', 'like', "%$filter->npwp%");
+        })->when($filter->keyword ?? false, function($query) use ($filter) {
+            return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
+                ->orWhereRaw('LOWER(contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
+                ->orWhereRaw('LOWER(nomor_contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
+                ->orWhereRaw('LOWER(alamat) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
+                ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
+                ->orWhereRaw('LOWER(npwp) LIKE ?', ['%' . strtolower($filter->keyword) . '%']);
         });
     }
 }

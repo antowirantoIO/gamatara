@@ -20,6 +20,12 @@ class PekerjaanController extends Controller
             ->addColumn('unit', function($data){
                 return $data->unit ?? '-';
             })
+            ->addColumn('harga_customer', function($data){
+                return number_format($data->harga_customer, 0, ',', '.');
+            })
+            ->addColumn('harga_vendor', function($data){
+                return number_format($data->harga_vendor, 0, ',', '.');
+            })
             ->addColumn('action', function($data){
                 return '<a href="'.route('pekerjaan.edit', $data->id).'" class="btn btn-success btn-sm">
                     <span>
@@ -52,16 +58,17 @@ class PekerjaanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'   => 'required',
+            'name'              =>  'required',
+            'unit'              =>  'required',
+            'harga_customer'    =>  'required',
+            'harga_vendor'      =>  'required'
         ]);
 
-        $data                           = New Pekerjaan();
-        $data->name                     = $request->input('name');
-        $data->length                   = $request->input('length');
-        $data->width                    = $request->input('width');
-        $data->thick                    = $request->input('thick');
-        $data->unit                     = $request->input('unit');
-        $data->conversion               = $request->input('conversion');
+        $data                   = New Pekerjaan();
+        $data->name             = $request->input('name');
+        $data->unit             = $request->input('unit');
+        $data->harga_customer   = str_replace(".", "", $request->harga_customer);
+        $data->harga_vendor     = str_replace(".", "", $request->harga_vendor);
         $data->save();
 
         return redirect(route('pekerjaan'))
@@ -78,16 +85,17 @@ class PekerjaanController extends Controller
     public function updated(Request $request)
     {
         $request->validate([
-            'name'   => 'required',
+            'name'              =>  'required',
+            'unit'              =>  'required',
+            'harga_customer'    =>  'required',
+            'harga_vendor'      =>  'required'
         ]);
 
-        $data                           = Pekerjaan::find($request->id);
-        $data->name                     = $request->input('name');
-        $data->length                   = $request->input('length');
-        $data->width                    = $request->input('width');
-        $data->thick                    = $request->input('thick');
-        $data->unit                     = $request->input('unit');
-        $data->conversion               = $request->input('conversion');
+        $data                   = Pekerjaan::find($request->id);
+        $data->name             = $request->input('name');
+        $data->unit             = $request->input('unit');
+        $data->harga_customer   = str_replace(".", "", $request->harga_customer);
+        $data->harga_vendor     = str_replace(".", "", $request->harga_vendor);
         $data->save();
 
         return redirect(route('pekerjaan'))

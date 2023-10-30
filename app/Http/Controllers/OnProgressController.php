@@ -24,6 +24,9 @@ class OnProgressController extends Controller
     {
         if($request->ajax()){
             $data = OnRequest::with(['pm','pm.karyawan','customer'])
+                            ->whereHas('keluhan',function($query){
+                                $query->whereNotNull(['id_pm_approval','id_bod_approval']);
+                            })
                             ->where('status',1);
             if($request->has('code') && !empty($request->code)){
                 $data->where('code','like','%'.$request->code.'%');
@@ -69,10 +72,8 @@ class OnProgressController extends Controller
     {
         $data = OnRequest::find($id);
         $projects = Keluhan::where('on_request_id',$id)
-                                    // ->where('id_pm_approval','!=',null)
+                                    ->whereNotNull(['id_pm_approval','id_bod_approval'])
                                     ->select('id_vendor')
-                                    // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                                    // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->groupBy('id_vendor')
                                     ->get();
         $progress = ProjectPekerjaan::where('id_project',$id)

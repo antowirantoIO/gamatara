@@ -198,6 +198,8 @@ class OnProgressController extends Controller
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
                     'amount' => $request->amount[$key],
+                    'harga_vendor' => $request->harga_vendor[$key],
+                    'harga_customer' => $request->harga_customer[$key]
                 ]);
             }else {
                 ProjectPekerjaan::create([
@@ -216,6 +218,8 @@ class OnProgressController extends Controller
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
                     'amount' => $request->amount[$key],
+                    'harga_vendor' => $request->harga_vendor[$key],
+                    'harga_customer' => $request->harga_customer[$key]
                 ]);
             }
         }
@@ -433,12 +437,42 @@ class OnProgressController extends Controller
         }
     }
 
-    public function ajaxTagihan(Request $request)
+    public function ajaxTagihanVendor(Request $request)
     {
         if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                     ->where('id_kategori',$request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
+                                    ->with(['subKategori','projects.lokasi','pekerjaan']);
+
+            if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+                $data->where('id_subkategori',$request->sub_kategori);
+            }
+
+            if($request->has('id_lokasi') && !empty($request->id_lokasi)){
+                $data->where('id_lokasi',$request->id_lokasi);
+            }
+
+            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('subKategori', function($data) {
+                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->make(true);
+        }
+
+    }
+
+    public function ajaxTagihanCustomer(Request $request)
+    {
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                                    ->where('id_kategori',$request->id_kategori)
                                     ->with(['subKategori','projects.lokasi','pekerjaan']);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){

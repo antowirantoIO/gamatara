@@ -173,7 +173,7 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('ajax.tagihan') }}',
+                        url : '{{ route('ajax.tagihan-vendor') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';

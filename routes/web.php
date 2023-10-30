@@ -237,7 +237,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('tagihan')->group(function(){
-            Route::get('list/{id}',[OnProgressController::class,'dataTagihan'])->name('on_progres.tagihan.all');
+            Route::get('list/tagihan-vendor/{id}',[OnProgressController::class,'dataTagihan'])->name('on_progres.tagihan.all');
             Route::get('tagihan-vendor/{id}/{vendor}',[OnProgressController::class,'tagihanVendor'])->name('on_progres.tagihan-vendor');
             Route::get('tagihan-customer/{id}',[OnProgressController::class,'tagihanCustomer'])->name('on_progres.tagihan-customer');
         });
@@ -252,7 +252,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('pekerjaan-vendor',[OnProgressController::class,'ajaxPekerjaanVendor'])->name('ajax.vendor');
             Route::get('progres-pekerjaan',[OnProgressController::class,'ajaxProgresPekerjaan'])->name('ajax.progres-pekerjaan');
             Route::get('setting-estimasi',[OnProgressController::class,'ajaxSettingEstimasi'])->name('ajax.setting-estimasi');
-            Route::get('tagihan',[OnProgressController::class,'ajaxTagihan'])->name('ajax.tagihan');
+            Route::get('tagihan-vendor',[OnProgressController::class,'ajaxTagihanVendor'])->name('ajax.tagihan-vendor');
+            Route::get('tagihan-customer',[OnProgressController::class,'ajaxTagihanCustomer'])->name('ajax.tagihan-customer');
             Route::get('tagihan-all',[OnProgressController::class,'ajaxAllTagihan'])->name('ajax.tagiham-all');
             Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');
             Route::get('pekerjaan/{id}',[OnProgressController::class,'getPekerjaan'])->name('on_progres.pekerjaan');

@@ -180,7 +180,7 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('ajax.tagihan') }}',
+                        url : '{{ route('ajax.tagihan-customer') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';
@@ -192,7 +192,7 @@
                         complete : function(d){
                             let data = d.responseJSON.data;
                             let amount = data.reduce((accumulator, currentValue) => {
-                                return accumulator + currentValue.pekerjaan.harga_customer;
+                                return accumulator + currentValue.harga_customer;
                             }, 0);
                             $('.tagihan-{{ $key }}').text(rupiah(amount))
                         }
@@ -209,14 +209,22 @@
                         {data : 'unit', name : 'unit'},
                         {
                             data : function(data){
-                                let amount = data.pekerjaan.harga_customer || '-';
-                                return rupiah(amount);
+                                if(data.harga_vendor !== null){
+                                    let amount = data.pekerjaan.harga_customer || '-';
+                                    return rupiah(amount);
+                                }else{
+                                    return 0;
+                                }
                             }
                         },
                         {
                             data : function(data){
-                                let amount = data.pekerjaan.harga_customer || '-';
-                                return rupiah(amount);
+                                if(data.harga_vendor !== null){
+                                    let amount = data.pekerjaan.harga_customer || '-';
+                                    return rupiah(amount);
+                                }else{
+                                    return 0;
+                                }
                             }
                         }
                     ]

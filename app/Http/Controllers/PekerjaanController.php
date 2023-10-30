@@ -60,13 +60,15 @@ class PekerjaanController extends Controller
         $request->validate([
             'name'              =>  'required',
             'unit'              =>  'required',
-            'harga_customer'    =>  'required',
-            'harga_vendor'      =>  'required'
+            'konversi'          =>  'required',
+            'harga_vendor'      =>  'required',
+            'harga_customer'    =>  'required'    
         ]);
 
         $data                   = New Pekerjaan();
         $data->name             = $request->input('name');
         $data->unit             = $request->input('unit');
+        $data->konversi         = $request->input('konversi');
         $data->harga_customer   = str_replace(".", "", $request->harga_customer);
         $data->harga_vendor     = str_replace(".", "", $request->harga_vendor);
         $data->save();
@@ -87,13 +89,15 @@ class PekerjaanController extends Controller
         $request->validate([
             'name'              =>  'required',
             'unit'              =>  'required',
-            'harga_customer'    =>  'required',
-            'harga_vendor'      =>  'required'
+            'konversi'          =>  'required',
+            'harga_vendor'      =>  'required',
+            'harga_customer'    =>  'required'    
         ]);
 
         $data                   = Pekerjaan::find($request->id);
         $data->name             = $request->input('name');
         $data->unit             = $request->input('unit');
+        $data->konversi         = $request->input('konversi');
         $data->harga_customer   = str_replace(".", "", $request->harga_customer);
         $data->harga_vendor     = str_replace(".", "", $request->harga_vendor);
         $data->save();

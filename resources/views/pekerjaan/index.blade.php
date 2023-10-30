@@ -46,6 +46,7 @@
                                     <tr>
                                         <th style="color:#929EAE">Nama Pekerjaan</th>
                                         <th style="color:#929EAE">Unit</th>
+                                        <th style="color:#929EAE">Konversi</th>
                                         <th style="color:#929EAE">Harga Customer</th>
                                         <th style="color:#929EAE">Harga Vendor</th>
                                         <th style="color:#929EAE">Action</th>
@@ -78,26 +79,33 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama" class="form-label">Nama Pekerjaan</label>
+                                <label for="nama">Nama Pekerjaan</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>
+                        <div class="col-xxl-6 col-md-6"></div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="unit" class="form-label">Unit</label>
+                                <label for="unit">Unit</label>
                                 <input type="text" name="unit" class="form-control" id="unit">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="harga_customer" class="form-label">Harga Customer</label>
-                                <input type="text" name="harga_customer" class="form-control" id="harga_customer">
+                                <label for="konversi">Konversi</label>
+                                <input type="text" name="konversi" class="form-control" id="konversi">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="harga_vendor" class="form-label">Harga Vendor</label>
+                                <label for="harga_vendor">Harga Vendor</label>
                                 <input type="text" name="harga_vendor" class="form-control" id="harga_vendor">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="harga_customer">Harga Customer</label>
+                                <input type="text" name="harga_customer" class="form-control" id="harga_customer">
                             </div>
                         </div>
                     </div>
@@ -146,6 +154,7 @@
                     filterSearch        = d.search?.value;
                     d.name              = $('#name').val();
                     d.unit              = $('#unit').val();
+                    d.konversi          = $('#konversi').val();
                     d.harga_vendor      = $('#harga_vendor').val();
                     d.harga_customer    = $('#harga_customer').val();
                 }
@@ -153,8 +162,9 @@
             columns: [
                 {data: 'name', name: 'name'},
                 {data: 'unit', name: 'unit'},
-                {data: 'harga_customer', name: 'harga_customer'},
+                {data: 'konversi', name: 'konversi'},
                 {data: 'harga_vendor', name: 'harga_vendor'},
+                {data: 'harga_customer', name: 'harga_customer'},
                 {data: 'action', name: 'action'},
             ]
         });
@@ -174,12 +184,14 @@
 
             var name                = $('#name').val();
             var unit                = $('#unit').val();
+            var konversi                = $('#konversi').val();
             var harga_customer      = $('#harga_customer').val();
             var harga_vendor        = $('#harga_vendor').val();
 
             var url = '{{ route("pekerjaan.export") }}?' + $.param({
                 name            : name,
                 unit            : unit,
+                konversi        : konversi,
                 harga_customer  : harga_customer,
                 harga_vendor    : harga_vendor,
                 keyword         : filterSearch

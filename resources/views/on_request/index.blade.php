@@ -13,7 +13,7 @@
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             @if($auth == 'Project Admin')
                             <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Tambah Project
+                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
                             @endif
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">

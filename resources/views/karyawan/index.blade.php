@@ -45,7 +45,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="color:#929EAE">Nama Karyawan</th>
-                                        <th style="color:#929EAE">Role</th>
+                                        <th style="color:#929EAE">Jabatan</th>
                                         <th style="color:#929EAE">Alamat</th>
                                         <th style="color:#929EAE">Email</th>
                                         <th style="color:#929EAE">Nomor Telpon</th>
@@ -106,13 +106,8 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="role">Role</label>
-                                <select name="role" id="role" class="form-control">
-                                    <option value="">Pilih Role</option>
-                                    @foreach($role as $r)
-                                        <option value="{{$r->id}}">{{ $r->name }}</option>
-                                    @endforeach
-                                </select>
+                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <input type="email" name="jabatan" id="jabatan" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -131,12 +126,13 @@
 @section('scripts')
 <script>
     $(function() {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -157,8 +153,9 @@
             ajax: {
                 url: "{{ route('karyawan') }}",
                 data: function (d) {
+                    filterSearch    = d.search?.value;
                     d.name          = $('#name').val();
-                    d.role          = $('#role').val();
+                    d.jabatan       = $('#jabatan').val();
                     d.alamat        = $('#alamat').val();
                     d.email         = $('#email').val();
                     d.nomor_telpon  = $('#nomor_telpon').val();
@@ -166,7 +163,7 @@
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'role', name: 'jabatan'},
+                {data: 'jabatan', name: 'jabatan'},
                 {data: 'alamat', name: 'alamat'},
                 {data: 'email', name: 'email'},
                 {data: 'nomor_telpon', name: 'nomor_telpon'},
@@ -194,17 +191,18 @@
             event.preventDefault(); 
 
             var name            = $('#name').val();
-            var role            = $('#role').val();
+            var jabatan         = $('#jabatan').val();
             var alamat          = $('#alamat').val();
             var nomor_telpon    = $('#nomor_telpon').val();
             var email           = $('#email').val();
 
             var url = '{{ route("karyawan.export") }}?' + $.param({
-                name: name,
-                role: role,
-                alamat: alamat,
-                nomor_telpon: nomor_telpon,
-                email: email
+                name            : name,
+                jabatan         : jabatan,
+                alamat          : alamat,
+                nomor_telpon    : nomor_telpon,
+                email           : email,
+                keyword         : filterSearch
             });
 
             $('.loading-overlay').show();

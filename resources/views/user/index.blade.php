@@ -45,8 +45,9 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="color:#929EAE">Nama Karyawan</th>
-                                        <th style="color:#929EAE">Email</th>
                                         <th style="color:#929EAE">Nomor Telpon</th>
+                                        <th style="color:#929EAE">Email</th>
+                                        <th style="color:#929EAE">Role</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -89,6 +90,12 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
+                                <label for="nomor_telpom">Nomor Telpon</label>
+                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
+                            </div>
+                        </div>  
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
                                 <div>
                                     <label for="email">Email</label>
                                     <input type="email" name="email" id="email" class="form-control form-control-icon">
@@ -97,10 +104,15 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_telpom">Nomor Telpon</label>
-                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
+                                <label for="role">Role</label>
+                                <select name="role" id="role" class="form-control">
+                                    <option value="">Pilih Role</option>
+                                    @foreach($role as $r)
+                                        <option value="{{$r->id}}">{{ $r->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>                
+                        </div>         
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
@@ -117,12 +129,13 @@
 @section('scripts')
 <script>
     $(function() {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -143,15 +156,18 @@
             ajax: {
                 url: "{{ route('user') }}",
                 data: function (d) {
+                    filterSearch    = d.search?.value;
                     d.karyawan      = $('#karyawan').val();
+                    d.role          = $('#role').val();
                     d.nomor_telpon  = $('#nomor_telpon').val();
                     d.email         = $('#email').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'email', name: 'email'},
                 {data: 'nomor_telpon', name: 'nomor_telpon'},
+                {data: 'email', name: 'email'},
+                {data: 'role', name: 'role'},
                 {data: 'action', name: 'action'}
             ]
         });
@@ -170,13 +186,16 @@
             event.preventDefault(); 
 
             var karyawan        = $('#karyawan').val();
+            var role        = $('#role').val();
             var nomor_telpon    = $('#nomor_telpon').val();
             var email           = $('#email').val();
 
             var url = '{{ route("user.export") }}?' + $.param({
-                karyawan: karyawan,
-                nomor_telpon: nomor_telpon,
-                email: email
+                karyawan        : karyawan,
+                role            : role,
+                nomor_telpon    : nomor_telpon,
+                email           : email,
+                keyword         : filterSearch
             });
 
             $('.loading-overlay').show();

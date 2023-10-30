@@ -22,12 +22,12 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('karyawan.store')}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('karyawan.store')}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Nama Karyawan</label>
+                                                <label for="name">Nama Karyawan</label>
                                                 <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Karyawan">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -36,21 +36,16 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="role" class="form-label">Role</label>
-                                                <select name="role" id="role" class="form-control">
-                                                    <option value="">Pilih role</option>
-                                                    @foreach($role as $r)
-                                                        <option value="{{$r->id}}" {{ $r->id == old('role') ? 'selected' : '' }}>{{ $r->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <label for="jabatan">Jabatan</label>
+                                                <input type="text" name="jabatan" id="jabatan" value="{{ old('jabatan') }}" class="form-control" placeholder="Masukkan Jabatan">
                                             </div>
-                                            @if ($errors->has('role'))
-                                                <span class="text-danger">{{ $errors->first('role') }}</span>
+                                            @if ($errors->has('jabatan'))
+                                                <span class="text-danger">{{ $errors->first('jabatan') }}</span>
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
+                                                <label for="nomor_telpon">Nomor Telpon</label>
                                                 <input type="number" name="nomor_telpon" class="form-control" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_telpon'))
                                                     <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
@@ -59,7 +54,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat</label>
+                                                <label for="alamat">Alamat</label>
                                                 <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Masukkan Alamat">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
@@ -69,7 +64,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <div>
-                                                    <label for="email" class="form-label">Email</label>
+                                                    <label for="email">Email</label>
                                                     <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control form-control-icon" placeholder="Masukkan Email">
                                                     @if ($errors->has('email'))
                                                         <span class="text-danger">{{ $errors->first('email') }}</span>

@@ -36,16 +36,11 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="role" class="form-label">Role</label>
-                                                <select name="role" id="role" class="form-control">
-                                                    <option value="">Pilih role</option>
-                                                    @foreach($role as $r)
-                                                        <option value="{{$r->id}}" {{ $r->id == $data->id_role ? 'selected' : '' }}>{{ $r->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <label for="jabatan">Jabatan</label>
+                                                <input type="text" name="jabatan" id="jabatan" value="{{ old('jabatan') }}" class="form-control" placeholder="Masukkan Jabatan">
                                             </div>
-                                            @if ($errors->has('role'))
-                                                <span class="text-danger">{{ $errors->first('role') }}</span>
+                                            @if ($errors->has('jabatan'))
+                                                <span class="text-danger">{{ $errors->first('jabatan') }}</span>
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">

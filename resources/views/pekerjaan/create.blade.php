@@ -27,28 +27,35 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
+                                                <label for="nama_pekerjaan">Nama Pekerjaan</label>
                                                 <input type="text" name="name" class="form-control" id="name" placeholder="Masukkan Nama Pekerjaan">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif
                                             </div>
                                         </div>     
+                                        <div class="col-xxl-6 col-md-6"></div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="unit" class="form-label">Unit</label>
+                                                <label for="unit">Unit</label>
                                                 <input type="text" name="unit" class="form-control" id="unit" placeholder="m2">
                                             </div>
-                                        </div>    
+                                        </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="harga_vendor" class="form-label">Harga Vendor</label>
+                                                <label for="konversi">Konversi</label>
+                                                <input type="text" name="konversi" class="form-control" id="konversi" placeholder="100/100">
+                                            </div>
+                                        </div>  
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="harga_vendor">Harga Vendor</label>
                                                 <input type="text" name="harga_vendor" class="form-control" id="harga_vendor" placeholder="1.000.000">
                                             </div>
                                         </div>  
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="harga_customer" class="form-label">Harga Customer</label>
+                                                <label for="harga_customer">Harga Customer</label>
                                                 <input type="text" name="harga_customer" class="form-control" id="harga_customer" placeholder="1.000.000">
                                             </div>
                                         </div>  

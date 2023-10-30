@@ -316,7 +316,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [LokasiProjectController::class, 'create'])->name('lokasi_project.create');
         Route::post('/store', [LokasiProjectController::class, 'store'])->name('lokasi_project.store');
         Route::post('/updated/{id}', [LokasiProjectController::class, 'updated'])->name('lokasi_project.updated');
-        Route::get('/delete/{id}', [LokasiProjectControllerController::class, 'delete'])->name('lokasi_project.delete');
+        Route::get('/delete/{id}', [LokasiProjectController::class, 'delete'])->name('lokasi_project.delete');
         Route::get('/export', [LokasiProjectController::class, 'export'])->name('lokasi_project.export');
     });
 

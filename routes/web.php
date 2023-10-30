@@ -111,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
     //On Request
     Route::prefix('on_request')->group(function () {
         Route::get('/', [OnRequestController::class, 'index'])->name('on_request');
+        Route::get('/table-data/{id}', [OnRequestController::class, 'tableData'])->name('on_request.tableData');
         Route::get('/detail/{id}', [OnRequestController::class, 'detail'])->name('on_request.detail');
         Route::get('/create', [OnRequestController::class, 'create'])->name('on_request.create');
         Route::post('/store', [OnRequestController::class, 'store'])->name('on_request.store');
@@ -123,6 +124,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('keluhan')->group(function () {
         Route::get('/{id}', [KeluhanController::class, 'delete'])->name('keluhan.delete');
         Route::post('/store/{id}', [KeluhanController::class, 'store'])->name('keluhan.store');
+        Route::get('/getData/{id}', [KeluhanController::class, 'getData'])->name('keluhan.getData');
+        Route::post('/approve/{id}', [KeluhanController::class, 'approve'])->name('keluhan.approve');
+        Route::get('/spk/{id}', [KeluhanController::class, 'SPK'])->name('keluhan.spk');
     });
 
     //karyawan

@@ -4,17 +4,77 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
+use App\Models\OnRequest;
+use Auth;
+use PDF;
 
 class KeluhanController extends Controller
 {
     public function store(Request $request)
     {        
-        $keluhan                = new Keluhan();
-        $keluhan->on_request_id = $request->id;
-        $keluhan->keluhan       = $request->input('keluhan');
-        $keluhan->save();
+        if($request->keluhanId == null)
+        {
+            $keluhan                = new Keluhan();
+            $keluhan->on_request_id = $request->id;
+            $keluhan->id_vendor     = $request->vendor;
+            $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+            $keluhan->save();
 
-        return response()->json(['message' => 'Keluhan berhasil ditambahkan','status' => 200,'id' => $keluhan->id]);
+            return response()->json(
+                [
+                    'message' => 'Keluhan berhasil ditambahkan',
+                    'status' => 200, 
+                    'id' => $keluhan->id, 
+                    'id_vendor' => $keluhan->id_vendor
+                ]
+            );
+        }else{
+            $keluhan                = Keluhan::find($request->keluhanId);
+            $keluhan->on_request_id = $request->id;
+            $keluhan->id_vendor     = $request->vendor;
+            $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+            $keluhan->save();
+
+            return response()->json(['keluhan' => $keluhan->keluhan,'message' => 'Keluhan berhasil diubah','status' => 200,]);
+        }       
+    }
+
+    public function getData(Request $request)
+    {        
+        $data   = Keluhan::find($request->id);
+
+        return response()->json(['status' => 200,'data' => $data]);
+    }
+
+    public function approve(Request $request)
+    {        
+        $data   = Keluhan::find($request->id);
+
+        $signed = $request->signed;
+        $image_parts = explode(";base64,", $signed);
+        
+        if ($image_parts) {
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $folderPath = 'ttd_images/';
+            $imageName = uniqid();
+            $imageFullPath = $folderPath . $imageName . "." . $image_type;
+            file_put_contents($imageFullPath, $image_base64);
+        }        
+
+        if($request->type == 'PM')
+        {
+            $data->ttd_pm           = $imageFullPath;
+            $data->id_pm_approval   = Auth::user()->id;
+        }
+        else{
+            $data->ttd_bod          = $imageFullPath;
+            $data->id_bod_approval  = Auth::user()->id;
+        }
+        $data->save();
+
+        return response()->json(['status' => 200, 'message' => 'Berhasil Di Approve']);
     }
 
     public function delete(Request $request)
@@ -28,4 +88,17 @@ class KeluhanController extends Controller
             return response()->json(['message' => 'Gagal menghapus keluhan'], 500);
         }
     }
+
+    public function SPK(Request $request)
+    {
+        $data = OnRequest::find($request->id);
+        $keluhan = Keluhan::where('on_request_id',$request->id)->get();
+        $cetak = "SPK ('.date('d F Y').').pdf";
+
+        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
+                    ->setPaper('A4', 'portrait')
+                    ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
+        return $pdf->stream($cetak);
+    }
+
 }

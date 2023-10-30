@@ -29,7 +29,6 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                     <div class="row gy-4">
@@ -118,39 +117,75 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label style="color:white;"><br><br><br></label>
-                                                <button type="button" id="tambahKeluhan" class="btn btn-primary">Save</button>
+                                                <label for="">Vendor</label>
+                                                <select name="vendor" id="vendor" class="form-control">
+                                                    <option value="">Pilih Vendor</option>
+                                                    @foreach($vendor as $v)
+                                                    <option value="{{$v->id}}">{{ $v->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <br><br>
+                                                @if($pmAuth == 'Project Admin')
+                                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                        <button type="button" id="tambahKeluhan" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                @endif
+                                                @if($pmAuth == 'BOD')
+                                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                        <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
+
+                                        @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
+                                            @if($keluhan == 0)
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                        Rekap SPK
+                                                    </button>
+                                                </div>
+                                            @else
+                                                @if($keluhan != null && $count == $keluhan) 
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                        Rekap SPK
+                                                    </button>
+                                                </div>
+                                                @elseif($count != $keluhan)
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                        </span>
+                                                        Rekap SPK
+                                                    </button>
+                                                </div>
+                                                @endif
+                                            @endif
+                                        @elseif($pmAuth == 'BOD')
+                                            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                <a type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
+                                                    <span>
+                                                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                                                    </span>
+                                                    Rekap SPK
+                                                </a>
+                                            </div>
+                                        @endif
+
+                                        <!--tabel-->
                                         <div id="tabelKeluhanWrapper">
-                                            <table id="tabelKeluhan" class="table table-bordered">
-                                                <thead style="background-color:#194BFB;color:#FFFFFF">
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Keluhan</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                        @foreach($keluhan as $key => $complaint)
-                                                        <tr>
-                                                            <td><?php echo $key + 1; ?></td>
-                                                            <td><?php echo $complaint->keluhan; ?></td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="{{ $complaint->id }}">
-                                                                    <span>
-                                                                        <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
-                                                                    </span>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                        @endforeach
-                                                </tbody>
-                                            </table>
+                                            
                                         </div>
                                     </div>
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -222,11 +257,252 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="ttd" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <center>
+                <div class="col-md-12">
+                    <br/>
+                    <input type="hidden" name="id" id="id">
+                    <input type="hidden" name="type" id="type">
+                    <div id="sig" style="height: 200px;width: 300px;"></div>
+                    <br/>
+                    <button id="clear" class="btn btn-light btn-sm">Clear</button>
+                    <textarea id="signature64" name="signed" style="display: none"></textarea>
+                </div>
+            
+                <br/>
+                <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                <button class="btn btn-primary" onclick="approve()">Approve</button>
+            </center>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+<script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
 <script>
-     const NPWP = document.getElementById("npwp")
+    function openNewTab() {
+        var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";
+        window.open(urlToOpen, '_blank');
+    }
+
+    let idData = "{{$data->id}}";
+    function getTableData(id) {
+        let url = "{{route('on_request.tableData', ':id')}}";
+        url = url.replace(':id', id);
+        $.ajax({
+            url: url,
+            success: function(data) {
+               $('#tabelKeluhanWrapper').html(data)
+            }
+        })
+    }
+    getTableData(idData);
+
+    function approve() {
+        $('#ttd').modal('hide');
+
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Anda yakin ingin menyetujui ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                var url = `{{ route('keluhan.approve', ':id') }}`;
+                url = url.replace(':id', document.getElementById('id').value);
+
+                var signatureData = $('#signature64').val(); // Retrieve the PNG signature from the hidden field
+
+                var requestData = {
+                    id: document.getElementById('id').value,
+                    type: document.getElementById('type').value,
+                    signed: signatureData, // Include the PNG signature
+                };
+
+                var requestConfig = {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify(requestData),
+                };
+
+                fetch(url, requestConfig)
+                    .then(function (response) {
+                        if (response.status === 200) {
+                            Swal.fire('', 'Success', 'success');
+                            getTableData(idData);
+                            return response.json();
+                        } else {
+                            throw new Error('Gagal melakukan persetujuan');
+                        }
+                    })
+                    .then(function (data) {
+                        console.log('Persetujuan berhasil:', data);
+                    })
+                    .catch(function (error) {
+                        console.error('Kesalahan saat melakukan persetujuan:', error);
+                    });
+            }
+        });
+    }
+
+    function approvalModal(id, type) {
+        document.getElementById('id').value = id;
+        document.getElementById('type').value = type;
+        var myModal = new bootstrap.Modal(document.getElementById('ttd'));
+        myModal.show();
+    }
+
+    var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
+    $('#clear').click(function(e) {
+        e.preventDefault();
+        sig.signature('clear');
+        $("#signature64").val('');
+    })
+
+    function setEditData(id, vendorId) {
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch('{{ route('keluhan.getData', '') }}/' + id, {
+            method: 'get',
+            headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+        })
+        .then(function (response) {
+            if (response.status === 200) {
+                getTableData(idData);
+                return response.json();
+            } else {
+                throw new Error('Gagal mengambil data keluhan');
+            }
+        })
+        .then(function (data) {
+            var textarea = document.getElementById("keluhan");
+            var vendorSelect = document.getElementById("vendor");
+
+            textarea.value = data.data.keluhan.replace('<br>', '\n');
+            vendorSelect.value = data.data.id_vendor;
+            $("#vendor").select2("val", vendorSelect.value);
+            var saveButton = document.getElementById("tambahKeluhan");
+            saveButton.setAttribute("data-id-keluhan", id);
+        })
+        .catch(function (error) {
+            console.error(error);
+        });
+    }
+
+    //button tambah request keluhan
+    var addButton = document.getElementById("tambahKeluhan");
+    addButton.addEventListener("click", tambahKeluhan);
+
+    function refreshNomorUrut() {
+        var tabel = document.getElementById("tabelKeluhan");
+        var rows = tabel.getElementsByTagName("tr");
+
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].getElementsByTagName("td")[0].textContent = i;
+        }
+    }
+
+    function tambahKeluhan() {
+        var keluhanInput = document.getElementById("keluhan").value;
+        var vendorSelect = document.getElementById("vendor");
+        var selectedVendor = vendorSelect.options[vendorSelect.selectedIndex];
+        var vendorId = selectedVendor.value;
+        var vendorName = selectedVendor.text;
+
+        var id = document.getElementById("on_request_id").value;
+        var keluhan = document.getElementById("tambahKeluhan");
+        var keluhanId = keluhan.getAttribute("data-id-keluhan")
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        if (keluhanInput.trim() !== "") {
+            fetch('{{ route('keluhan.store', '') }}/' + {{ $data->id }}, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({ keluhan: keluhanInput.replace('\n', '<br\>'), vendor: vendorId, keluhanId : keluhanId}),
+            })
+
+            .then(function (response) {
+                if (response.status === 200) {
+                    Swal.fire(
+                        '',
+                        'Success',
+                        'success'
+                    )
+                    getTableData(idData);       
+                    return response.json();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Gagal menambahkan keluhan!',
+                    });
+                    throw new Error('Gagal menambahkan keluhan');
+                }
+            })
+            .then(function (data) {
+                var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
+                var newRow = tabel.insertRow(tabel.rows.length);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+
+                cell1.innerHTML = tabel.rows.length;
+                cell2.innerHTML = keluhanInput.split('<br>')?.length > 1 ? keluhanInput.split('<br>')?.[0] : keluhanInput.split('\n')?.[0];
+                cell3.innerHTML = vendorName;
+                cell4.innerHTML = data.id_pm_approve != null ? 'approve' : '';
+                cell5.innerHTML = data.id_bod_approve != null ? 'approve' : '';
+                cell6.innerHTML = 
+                    '<div>' +
+                        '<button type="button" class="btn btn-warning btn-sm btnEdit" data-keluhan-id="' + data.id + '" data-vendor-id="' + data.id_vendor + '" onclick="setEditData(' + data.id + ', ' + data.id_vendor + ')"><img src="{{asset("assets/images/edit.svg")}}" style="width: 15px;"></button>&nbsp;' +
+                        '<button type="button" class="btn btn-success btn-sm btnApprove" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/like.svg")}}" style="width: 15px;"></button>&nbsp;' +
+                        '<button type="button" class="btn btn-primary btn-sm btnPrint" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/directbox.svg")}}" style="width: 15px;"></button>&nbsp;' +
+                        '<button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></button>' +
+                    '</div>';
+
+                document.getElementById("keluhan").value = "";
+                $("#vendor").val('').trigger('change');
+
+                var btnHapus = newRow.querySelector(".btnHapus");
+                btnHapus.addEventListener("click", function () {
+                    hapusKeluhan(data.id);
+                });
+
+                refreshNomorUrut();
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Keluhan Tidak Boleh Kosong!',
+            });
+        }
+    }
+
+    const NPWP = document.getElementById("npwp")
         NPWP.oninput = (e) => {
             e.target.value = autoFormatNPWP(e.target.value);
         }
@@ -413,83 +689,6 @@
         }
     });
 
-    //button tambah request keluhan
-    var addButton = document.getElementById("tambahKeluhan");
-    addButton.addEventListener("click", tambahKeluhan);
-
-    function refreshNomorUrut() {
-        var tabel = document.getElementById("tabelKeluhan");
-        var rows = tabel.getElementsByTagName("tr");
-
-        for (var i = 1; i < rows.length; i++) {
-            rows[i].getElementsByTagName("td")[0].textContent = i;
-        }
-    }
-
-    function tambahKeluhan() {
-        var keluhanInput = document.getElementById("keluhan").value;
-        var id = document.getElementById("on_request_id").value;
-        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        if (keluhanInput.trim() !== "") {
-            fetch('{{ route('keluhan.store', '') }}/' + {{ $data->id }}, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({ keluhan: keluhanInput }),
-            })
-
-            .then(function (response) {
-                if (response.status === 200) {
-                    Swal.fire(
-                        '',
-                        'Keluhan Berhasil Ditambahkan',
-                        'success'
-                    )
-                    return response.json();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Gagal menambahkan keluhan!',
-                    });
-                    throw new Error('Gagal menambahkan keluhan');
-                }
-            })
-            .then(function (data) {
-                var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
-                var newRow = tabel.insertRow(tabel.rows.length);
-                var cell1 = newRow.insertCell(0);
-                var cell2 = newRow.insertCell(1);
-                var cell3 = newRow.insertCell(2);
-
-                cell1.innerHTML = tabel.rows.length;
-                cell2.innerHTML = keluhanInput;
-                cell3.innerHTML = '<button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="' + data.id + '"><span><i><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></i></span></button>';
-
-                document.getElementById("keluhan").value = "";
-
-                var btnHapus = newRow.querySelector(".btnHapus");
-                btnHapus.addEventListener("click", function () {
-                    hapusKeluhan(data.id);
-                });
-
-                refreshNomorUrut();
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Keluhan Tidak Boleh Kosong!',
-            });
-        }
-    }
-
     //hapus data yg sudah ada sebelumnya 
     var btnHapus = document.querySelectorAll(".btnHapus");
     btnHapus.forEach(function (button) {
@@ -500,31 +699,18 @@
         });
     });
 
-    //simpan data keluhan ke $keluhan
-    function simpanData() {
-        var keluhanRows = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0].rows;
-        var keluhanData = [];
-
-        for (var i = 0; i < keluhanRows.length; i++) {
-            var keluhan = keluhanRows[i].cells[1].innerText;
-            keluhanData.push(keluhan);
-        }
-        var keluhanInput = document.getElementById("keluhanInput");
-        keluhanInput.value = JSON.stringify(keluhanData);
-    }
-
     //export detail
     $('#export-button').on('click', function(event) {
-            event.preventDefault(); 
+        event.preventDefault(); 
 
-            var url = '{{ route("on_request.exportDetail", $data->id) }}?';
+        var url = '{{ route("on_request.exportDetail", $data->id) }}?';
 
-            $('.loading-overlay').show();
+        $('.loading-overlay').show();
 
-            window.location.href = url;
+        window.location.href = url;
 
-            setTimeout(hideOverlay, 2000);
-        });
+        setTimeout(hideOverlay, 2000);
+    });
 
     //untuk semua select menggunakan select2
     $(function () {

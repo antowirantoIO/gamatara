@@ -13,6 +13,8 @@ use App\Models\LokasiProject;
 use App\Models\JenisKapal;
 use App\Models\Keluhan;
 use App\Models\ProjectManager;
+use App\Models\Vendor;
+use Auth;
 
 class OnRequestController extends Controller
 {
@@ -20,7 +22,6 @@ class OnRequestController extends Controller
     {
         if ($request->ajax()) {
             $data = OnRequest::with(['kapal','customer'])
-                    ->whereNull('pm_id')
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
@@ -46,8 +47,9 @@ class OnRequestController extends Controller
 
         $customer   = Customer::get();
         $jenis_kapal= JenisKapal::get();
+        $auth       = Auth::user()->karyawan->role->name ?? '';
 
-        return view('on_request.index',compact('customer','jenis_kapal'));
+        return view('on_request.index',compact('customer','jenis_kapal','auth'));
     }
 
     public function create()
@@ -94,20 +96,28 @@ class OnRequestController extends Controller
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->save();
 
-        $keluhanJson = $request->input('keluhan');
-        $keluhanArray = json_decode($keluhanJson);
+        // $keluhanJson = $request->input('keluhan');
+        // $keluhanArray = json_decode($keluhanJson);
         
-        if (!empty($keluhanArray)) {
-            foreach ($keluhanArray as $keluhanText) {
-                $keluhan = new Keluhan();
-                $keluhan->keluhan = $keluhanText;
-                $keluhan->on_request_id = $data->id;
-                $keluhan->save();
-            }
-        }
+        // if (!empty($keluhanArray)) {
+        //     foreach ($keluhanArray as $keluhanText) {
+        //         $keluhan = new Keluhan();
+        //         $keluhan->keluhan = $keluhanText;
+        //         $keluhan->on_request_id = $data->id;
+        //         $keluhan->save();
+        //     }
+        // }
 
-        return redirect(route('on_request'))
-                    ->with('success', 'Data berhasil disimpan');
+        return redirect()->route('on_request.detail', ['id' => $data->id])
+                        ->with('success', 'Data berhasil disimpan');
+    }
+
+    public function tableData($id) 
+    {
+        $pmAuth         = Auth::user()->karyawan->role->name ?? '';
+        $keluhan        = Keluhan::where('on_request_id',$id)->get();
+
+        return view('on_request.tableData', compact('keluhan', 'pmAuth'));
     }
 
     public function detail(Request $request)
@@ -118,9 +128,13 @@ class OnRequestController extends Controller
         $lokasi         = LokasiProject::get();
         $jenis_kapal    = JenisKapal::get();
         $pm             = ProjectManager::with(['karyawan'])->get();
-        $keluhan        = Keluhan::where('on_request_id',$data->id)->get();
+        $vendor         = Vendor::get();
+        $pmAuth         = Auth::user()->karyawan->role->name ?? '';
+        $keluhan        = Keluhan::where('on_request_id', $request->id)->get();
+        $count          = $keluhan->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+        $keluhan        = count($keluhan);
 
-        return view('on_request.detail', Compact('data','customer','lokasi','jenis_kapal','getCustomer','keluhan','pm'));
+        return view('on_request.detail', Compact('keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pm','vendor','pmAuth'));
     }
 
     public function updated(Request $request)

@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('pekerjaan.updated', $data->id)}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('pekerjaan.updated', $data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
@@ -33,25 +33,7 @@
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif
                                             </div>
-                                        </div>   
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="length" class="form-label">Length (mm)</label>
-                                                <input type="text" name="length" value="{{$data->length}}" class="form-control" id="length" placeholder="1.00">
-                                            </div>
-                                        </div>                 
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="width" class="form-label">Width (mm)</label>
-                                                <input type="text" name="width" value="{{$data->width}}" class="form-control" id="width" placeholder="1.00">
-                                            </div>
-                                        </div>   
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
-                                                <label for="thick" class="form-label">Thick (mm)</label>
-                                                <input type="text" name="thick" value="{{$data->thick}}" class="form-control" id="thick" placeholder="1.00">
-                                            </div>
-                                        </div>   
+                                        </div>     
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="unit" class="form-label">Unit</label>
@@ -60,10 +42,16 @@
                                         </div>    
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="conversion" class="form-label">Conversion</label>
-                                                <input type="text" name="conversion" value="{{$data->conversion}}" class="form-control" id="conversion" placeholder="100/100">
+                                                <label for="harga_customer" class="form-label">Harga Customer</label>
+                                                <input type="text" name="harga_customer" value="{{$data->harga_customer}}" class="form-control" id="harga_customer" placeholder="1.000.000">
                                             </div>
                                         </div>  
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="harga_vendor" class="form-label">Harga Vendor</label>
+                                                <input type="text" name="harga_vendor" value="{{$data->harga_vendor}}" class="form-control" id="harga_vendor" placeholder="1.000.000">
+                                            </div>
+                                        </div> 
                                         
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button class="btn btn-primary" style="margin-right: 10px;">Save</button>
@@ -81,4 +69,39 @@
         </div> 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix === undefined ? rupiah : (rupiah ? rupiah : '');
+    }
+
+    var hargaCustomer = document.getElementById('harga_customer');
+    hargaCustomer.value = formatRupiah(hargaCustomer.value, 'Rp. ');
+
+    hargaCustomer.addEventListener('input', function (e) {
+        this.value = formatRupiah(this.value, 'Rp. ');
+    });
+
+    var hargaVendor = document.getElementById('harga_vendor');
+    hargaVendor.value = formatRupiah(hargaVendor.value, 'Rp. ');
+
+    hargaVendor.addEventListener('input', function (e) {
+        this.value = formatRupiah(this.value, 'Rp. ');
+    });
+
+</script>
 @endsection

@@ -23,7 +23,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('vendor.updated',$data->id)}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('vendor.updated',$data->id)}}" id="npwpForm" method="POST" enctype="multipart/form-data" autocomplete="off">
                                     @csrf
                                     <div class="row gy-4">
                                     <div class="col-xxl-6 col-md-6">
@@ -80,6 +80,19 @@
                                                 @endif
                                             </div>
                                         </div> 
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="ttd">Tanda Tangan <span style='font-size:10px'>(Format hanya PNG Max 1Mb)</span></label>
+                                                <br>
+                                                    <img src="data:image/png;base64,{{ $data->ttd }}" alt="Tanda Tangan Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
+                                                <br><br>
+                                                <input type="file" name="ttd" id="ttd" class="form-control">
+                                                <input type="hidden" name="ttd_base64" id="ttd_base64" value="{{ $data->ttd }}">
+                                                @if ($errors->has('ttd'))
+                                                    <span class="text-danger">{{ $errors->first('ttd') }}</span>
+                                                @endif
+                                            </div>
+                                        </div> 
                                         
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button class="btn btn-primary" style="margin-right: 10px;">Save</button>
@@ -96,4 +109,79 @@
         </div> 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const NPWP = document.getElementById("npwp")
+        NPWP.oninput = (e) => {
+            e.target.value = autoFormatNPWP(e.target.value);
+        }
+
+        function autoFormatNPWP(NPWPString) {
+            try {
+                var cleaned = ("" + NPWPString).replace(/\D/g, "");
+                var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+                return [      
+                        match[1], 
+                        match[2] ? ".": "",
+                        match[2], 
+                        match[3] ? ".": "",
+                        match[3],
+                        match[4] ? ".": "",
+                        match[4],
+                        match[5] ? "-": "",
+                        match[5],
+                        match[6] ? ".": "",
+                        match[6]].join("")
+                
+            } catch(err) {
+                return "";
+            }
+    }
+
+    document.getElementById('ttd').addEventListener('change', function (e) {
+        const fileInput = e.target;
+        const ttdPreview = document.getElementById('ttd_preview');
+        const ttdBase64Input = document.getElementById('ttd_base64');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const allowedTypes = ['image/png'];
+            const maxSize = 1024 * 1024; // 1MB
+
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Terlalu Besar',
+                    text: 'Ukuran file melebihi batas maksimum (1MB).',
+                });
+                fileInput.value = "";
+                return;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Format File Tidak Valid',
+                    text: 'Hanya file PNG yang diizinkan.',
+                });
+                fileInput.value = ""; // Reset input jika file tidak valid
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                ttdPreview.src = e.target.result;
+                ttdBase64Input.value = e.target.result.split(',')[1];
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            ttdPreview.src = "{{ asset('assets/nophoto.jpg') }}";
+            ttdBase64Input.value = "";
+        }
+    });
+</script>
 @endsection

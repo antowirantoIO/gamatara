@@ -10,11 +10,6 @@ class Karyawan extends Model
     protected $table = 'karyawan';
     protected $guarded = [];
     protected $primaryKey = 'id'; 
-    
-    public function role()
-    {
-        return $this->belongsTo(Roles::class, 'id_role', 'id');
-    }
 
     public function pm()
     {
@@ -31,8 +26,16 @@ class Karyawan extends Model
             return $query->where('nomor_telpon', 'like', "%$filter->nomor_telpon%");
         })->when($filter->email ?? false, function($query) use ($filter) {
             return $query->where('email', 'like', "%$filter->email%");
-        })->when($filter->role ?? false, function($query) use ($filter) {
-            return $query->where('id_role', 'like', "%$filter->role%");
+        })->when($filter->jabatan ?? false, function($query) use ($filter) {
+            return $query->where('jabatan', 'like', "%$filter->jabatan%");
+        })->when($filter->keyword ?? false, function($query) use ($filter) {
+            return $query->where(function ($query) use ($filter) {
+                $query->where('nomor_telpon', 'like', "%$filter->keyword%")
+                    ->orWhere('email', 'like', "%$filter->keyword%")
+                    ->orWhere('alamat', 'like', "%$filter->keyword%")
+                    ->orWhere('name', 'like', "%$filter->keyword%")
+                    ->orWhere('jabatan', 'like', "%$filter->keyword%");
+            });
         });
     }
 }

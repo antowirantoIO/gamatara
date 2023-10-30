@@ -18,9 +18,6 @@ class KaryawanController extends Controller
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
-            ->addColumn('role', function($data){
-                return $data->role->name ?? '-';
-            })
             ->addColumn('action', function($data){
                 return '<a href="'.route('karyawan.edit', $data->id).'" class="btn btn-success btn-sm">
                     <span>
@@ -42,9 +39,7 @@ class KaryawanController extends Controller
             ->make(true);                    
         }
 
-        $role = Role::orderBy('name','asc')->get();
-
-        return view('karyawan.index',compact('role'));
+        return view('karyawan.index');
     }
 
     public function create()
@@ -58,7 +53,7 @@ class KaryawanController extends Controller
     {
         $request->validate([
             'name'                  => 'required',
-            'role'                  => 'required',
+            'jabatan'               => 'required',
             'alamat'                => 'required',
             'nomor_telpon'          => 'required',
             'email'                 => 'required'
@@ -66,7 +61,7 @@ class KaryawanController extends Controller
 
         $data = New Karyawan();
         $data->name                     = $request->input('name');
-        $data->id_role                  = $request->input('role');
+        $data->jabatan                  = $request->input('jabatan');
         $data->alamat                   = $request->input('alamat');
         $data->nomor_telpon             = $request->input('nomor_telpon');
         $data->email                    = $request->input('email');
@@ -88,7 +83,7 @@ class KaryawanController extends Controller
     {
         $request->validate([
             'name'                  => 'required',
-            'role'                  => 'required',
+            'jabatan'               => 'required',
             'alamat'                => 'required',
             'nomor_telpon'          => 'required',
             'email'                 => 'required'
@@ -96,7 +91,7 @@ class KaryawanController extends Controller
 
         $data                           = Karyawan::find($request->id);
         $data->name                     = $request->input('name');
-        $data->id_role                  = $request->input('role');
+        $data->jabatan                  = $request->input('jabatan');
         $data->alamat                   = $request->input('alamat');
         $data->nomor_telpon             = $request->input('nomor_telpon');
         $data->email                    = $request->input('email');

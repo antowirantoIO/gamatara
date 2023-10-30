@@ -13,7 +13,7 @@
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <a href="{{ route('vendor.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Tambah Vendor
+                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
@@ -197,7 +197,7 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name           = $('#name').val();
+            var name                    = $('#name').val();
             var alamat                  = $('#alamat').val();
             var contact_person          = $('#contact_person').val();
             var nomor_contact_person    = $('#nomor_contact_person').val();

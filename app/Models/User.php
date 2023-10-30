@@ -61,6 +61,17 @@ class User extends Authenticatable
             return $query->where('nomor_telpon', 'like', "%$filter->nomor_telpon%");
         })->when($filter->email ?? false, function($query) use ($filter) {
             return $query->where('email', 'like', "%$filter->email%");
+        })->when($filter->role ?? false, function($query) use ($filter) {
+            return $query->where('id_role', $filter->role);
+        })->when($filter->keyword ?? false, function($query) use ($filter) {
+            return $query->where(function ($query) use ($filter) {
+                $query->where('nomor_telpon', 'like', "%$filter->keyword%")
+                    ->orWhere('email', 'like', "%$filter->keyword%");
+            })->orWhereHas('role', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
+            })->orWhereHas('karyawan', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
+            });
         });
     }
 }

@@ -25,7 +25,7 @@
                                 <div class="row gy-4">
                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
                                         {{-- <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Input Pekerjaan</a> --}}
-                                        <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
+                                        {{-- <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a> --}}
                                     </div>
 
                                     <div class="col-xxl-6 col-md-6">
@@ -87,7 +87,14 @@
                                         @foreach ($projects as $keys => $project)
                                             <tr>
                                                 <td>{{ $project->vendors->name }}</td>
-                                                <td>{{ $progress[$keys]->total_status_2 }} / {{ $progress[$keys]->total_status_1 }}</td>
+
+                                                @isset($progress[$keys])
+                                                    <td>{{ $progress[$keys]->total_status_2 }} / {{ $progress[$keys]->total_status_1 }}</td>
+                                                @else
+                                                    <td>
+                                                        0 / 0
+                                                    </td>
+                                                @endisset
                                                 <td>
                                                     <div class="d-flex justify-contetn-center gap-3">
                                                         <a href="{{ route('on_progres.vendor-worker',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
@@ -95,7 +102,7 @@
                                                                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                             </span>
                                                         </a>
-                                                        <a href="{{ route('on_progres.request-pekerjaan',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
+                                                        <a href="{{ route('on_progres.request.tambah-kategori',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
                                                             <span>
                                                                 <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
                                                             </span>
@@ -131,7 +138,7 @@
                                             </div>
                                         </a>
                                         <div class="d-flex gap-3">
-                                            <a href="{{ route('on_progres.tagihan-vendor',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
+                                            <a href="{{ route('on_progres.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
                                                         Tagihan <br>

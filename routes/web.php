@@ -219,14 +219,24 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [OnProgressController::class, 'store'])->name('on_progress.store');
         Route::post('/updated/{id}', [OnProgressController::class, 'updated'])->name('on_progress.updated');
         Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
-        Route::get('request/{id}/{vendor}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
-        Route::post('request/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
-        Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
         Route::get('sub-detail/{id}/{idProject}/{idSub}',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
-        Route::get('tagihan-vendor/{id}',[OnProgressController::class,'tagihanVendor'])->name('on_progres.tagihan-vendor');
-        Route::get('tagihan-customer/{id}',[OnProgressController::class,'tagihanCustomer'])->name('on_progres.tagihan-customer');
+        Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
+
         Route::get('vendor-worker/{id}/{idProject}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
         Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
+
+        Route::prefix('request')->group(function(){
+            Route::get('tambah-pekerjaan/{id}/{vendor}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
+            Route::post('tambah-pekerjaan/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
+            Route::get('tambah-kategori/{id}/{vendor}',[OnProgressController::class,'tambahKategori'])->name('on_progres.request.tambah-kategori');
+            Route::post('tambah-kategori',[OnProgressController::class,'storeTambahKategori'])->name('on_progres.store-kategori');
+        });
+
+        Route::prefix('tagihan')->group(function(){
+            Route::get('list/{id}',[OnProgressController::class,'dataTagihan'])->name('on_progres.tagihan.all');
+            Route::get('tagihan-vendor/{id}/{vendor}',[OnProgressController::class,'tagihanVendor'])->name('on_progres.tagihan-vendor');
+            Route::get('tagihan-customer/{id}',[OnProgressController::class,'tagihanCustomer'])->name('on_progres.tagihan-customer');
+        });
 
         Route::prefix('setting')->group(function(){
             Route::get('index/{id}',[OnProgressController::class,'setting'])->name('on_progres.setting');
@@ -239,6 +249,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('progres-pekerjaan',[OnProgressController::class,'ajaxProgresPekerjaan'])->name('ajax.progres-pekerjaan');
             Route::get('setting-estimasi',[OnProgressController::class,'ajaxSettingEstimasi'])->name('ajax.setting-estimasi');
             Route::get('tagihan',[OnProgressController::class,'ajaxTagihan'])->name('ajax.tagihan');
+            Route::get('tagihan-all',[OnProgressController::class,'ajaxAllTagihan'])->name('ajax.tagiham-all');
+            Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');
+            Route::get('pekerjaan/{id}',[OnProgressController::class,'getPekerjaan'])->name('on_progres.pekerjaan');
+            Route::get('lokasi',[OnProgressController::class,'getLokasi'])->name('on_progres.lokasi');
         });
 
         Route::prefix('export')->group(function(){
@@ -247,9 +261,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('pekerjaan-onprogres',[OnProgressExportController::class,'dataPekerjaan'])->name('on_progress.export-pekerjaan');
         });
 
-        Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');
-        Route::get('pekerjaan/{id}',[OnProgressController::class,'getPekerjaan'])->name('on_progres.pekerjaan');
-        Route::get('lokasi',[OnProgressController::class,'getLokasi'])->name('on_progres.lokasi');
+
     });
 
     //complete

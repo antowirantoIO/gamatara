@@ -181,11 +181,13 @@
                             d.id_kategori = id_kategori;
                             d.sub_kategori = $('#sub_kategori').val();
                             d.id_lokasi = $('#id_lokasi').val();
+                            d.id_vendor = '{{ $vendor }}'
                         },
                         complete : function(d){
                             let data = d.responseJSON.data;
+                            console.log(data);
                             let amount = data.reduce((accumulator, currentValue) => {
-                                return accumulator + currentValue.pekerjaan.harga_vendor;
+                                return accumulator + currentValue.harga_vendor;
                             }, 0);
                             $('.tagihan-{{ $key }}').text(rupiah(amount))
                         }
@@ -202,14 +204,22 @@
                         {data : 'unit', name : 'unit'},
                         {
                             data : function(data){
-                                let amount = data.pekerjaan.harga_vendor || '-';
-                                return rupiah(amount);
+                                if(data.harga_vendor !== null){
+                                    let amount = data.pekerjaan.harga_vendor || '-';
+                                    return rupiah(amount);
+                                }else{
+                                    return 0;
+                                }
                             }
                         },
                         {
                             data : function(data){
-                                let amount = data.pekerjaan.harga_vendor || '-';
-                                return rupiah(amount);
+                                if(data.harga_vendor !== null){
+                                    let amount = data.pekerjaan.harga_vendor || '-';
+                                    return rupiah(amount);
+                                }else{
+                                    return 0;
+                                }
                             }
                         }
                     ]

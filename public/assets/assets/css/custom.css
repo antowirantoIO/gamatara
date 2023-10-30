@@ -94,11 +94,18 @@ body{
     border: none !important;
     border-radius: 9px !important;
     font-style: italic;
-    --vz-form-select-bg-img: url('/assets/images/arrow-down.svg')
+}
+
+.select2-results__option:hover {
+    background-color: #0968E5;
+    color: white;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered{
     color: #696969 !important;
+    background-color: #F4F6F9;
+    padding: 0.2rem 0.9rem;
+    border-radius: 0.25rem
 }
 
 .nav-tabs {
@@ -149,11 +156,7 @@ body{
     border-color: none!important;
 } */
 
-.select2-container .select2-selection--single .select2-selection__rendered {
-    background-color: #F4F6F9;
-    padding: 0.2rem 0.8rem;
-    border-radius: 0.25rem
-}
+
 
 .card-rad{
     border-radius: 10px;

@@ -115,9 +115,11 @@ class OnRequestController extends Controller
     public function tableData($id) 
     {
         $pmAuth         = Auth::user()->role->name ?? '';
-        $keluhan        = Keluhan::where('on_request_id',$id)->get();
+        $keluhans        = Keluhan::where('on_request_id',$id)->get();
+        $count          = $keluhans->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+        $keluhan        = count($keluhans);
 
-        return view('on_request.tableData', compact('keluhan', 'pmAuth'));
+        return view('on_request.tableData', compact('keluhan','count', 'pmAuth','keluhans'));
     }
 
     public function detail(Request $request)

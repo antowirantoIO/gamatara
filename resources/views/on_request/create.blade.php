@@ -22,22 +22,22 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('on_request.store')}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('on_request.store')}}" method="POST" enctype="multipart/form-data"  autocomplete="off">
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nama_project" class="form-label">Nama Project</label>
-                                                <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project">
+                                                <label for="nama_project">Nama Project</label>
+                                                <input type="text" name="nama_project" id="nama_project" value="{{ old('nama_project') }}" class="form-control" placeholder="Masukkan Nama Project">
                                             </div>
                                             @if ($errors->has('nama_project'))
                                                 <span class="text-danger">{{ $errors->first('nama_project') }}</span>
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="nama_customer" class="form-label">Nama Customer</label>
+                                            <label for="nama_customer">Nama Customer</label>
                                             <div class="input-group">
-                                                <input type="text" id="customer_name" name="nama_customer" placeholder="Nama Customer" class="form-control" />
+                                                <input type="text" name="nama_customer" id="nama_customer" value="{{ old('nama_customer') }}" placeholder="Nama Customer" class="form-control" />
                                                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
                                             </div>
                                             @if ($errors->has('nama_customer'))
@@ -46,11 +46,11 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="lokasi_project" class="form-label">Lokasi Project</label>
-                                                <select name="lokasi_project" id="lokasi_project" class="form-control">
+                                                <label for="lokasi_project">Lokasi Project</label>
+                                                <select name="lokasi_project" id="lokasi_project" class="form-control" value="{{ old('lokasi_project') }}" >
                                                     <option value="">Pilih Lokasi Project</option>
                                                     @foreach($lokasi as $l)
-                                                    <option value="{{$l->id}}">{{$l->name}}</option>
+                                                    <option value="{{$l->id}}" {{ $l->id == old('lokasi_project') ? 'selected' : '' }}>{{$l->name}}</option>
                                                     @endforeach
                                                 </select>
                                                 @if ($errors->has('lokasi_project'))
@@ -60,8 +60,8 @@
                                         </div>      
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="contact_person" class="form-label">Contact Person</label>
-                                                <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                                <label for="contact_person">Contact Person</label>
+                                                <input type="text" name="contact_person" id="contact_person" value="{{ old('contact_person') }}" class="form-control" placeholder="Masukkan Contact Person">
                                             </div>
                                             @if ($errors->has('contact_person'))
                                                 <span class="text-danger">{{ $errors->first('contact_person') }}</span>
@@ -69,8 +69,8 @@
                                         </div>         
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <label for="nomor_contact_person">Nomor Contact Person</label>
+                                                <input type="text" name="nomor_contact_person" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" class="form-control" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                             @if ($errors->has('nomor_contact_person'))
                                                 <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
@@ -78,20 +78,20 @@
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat Customer</label>
-                                                <input type="text" class="form-control" id="alamat" readonly>
+                                                <label for="alamat">Alamat Customer</label>
+                                                <input type="text" class="form-control" name="alamat" id="alamat" value="{{ old('alamat') }}" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" class="form-control" id="npwps" readonly>
+                                                <label for="npwps">NPWP</label>
+                                                <input type="text" class="form-control" name="npwps" id="npwps" value="{{ old('npwps') }}" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="displacement" class="form-label">Displacement Kapal</label>
-                                                <input type="text" name="displacement" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
+                                                <label for="displacement">Displacement Kapal</label>
+                                                <input type="text" name="displacement" id="displacement" value="{{ old('displacement') }}" class="form-control" placeholder="Masukkan Displacement Kapal">
                                             </div>
                                             @if ($errors->has('displacement'))
                                                 <span class="text-danger">{{ $errors->first('displacement') }}</span>
@@ -99,11 +99,11 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="Jenis Kapal" class="form-label">Jenis Kapal</label>
+                                                <label for="Jenis Kapal">Jenis Kapal</label>
                                                 <select name="jenis_kapal" id="jenis_kapal" class="form-control">
                                                     <option value="">Pilih Jenis Kapal</option>
                                                     @foreach($jenis_kapal as $l)
-                                                    <option value="{{$l->id}}">{{$l->name}}</option>
+                                                    <option value="{{$l->id}}" {{ $l->id == old('jenis_kapal') ? 'selected' : '' }}>{{$l->name}}</option>
                                                     @endforeach
                                                 </select>
                                                 @if ($errors->has('jenis_kapal'))
@@ -176,7 +176,7 @@
                         <div class="row gy-4">
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="customer" class="form-label">Nama Customer</label>
+                                    <label for="customer">Nama Customer</label>
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Masukkan Nama Customer">
                                 </div>
                                 @if ($errors->has('name'))
@@ -185,7 +185,7 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="contact_person" class="form-label">Contact Person</label>
+                                    <label for="contact_person">Contact Person</label>
                                     <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
                                 </div>
                                 @if ($errors->has('contact_person'))
@@ -194,7 +194,7 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="alamat" class="form-label">Alamat</label>
+                                    <label for="alamat">Alamat</label>
                                     <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Nomor Contact Person">
                                 </div>
                                 @if ($errors->has('alamat'))
@@ -203,7 +203,7 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                    <label for="nomor_contact_person">Nomor Contact Person</label>
                                     <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                                 @if ($errors->has('nomor_contact_person'))
@@ -213,7 +213,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <div>
-                                        <label for="email" class="form-label">Email</label>
+                                        <label for="email">Email</label>
                                         <input type="email" name="email" class="form-control form-control-icon" id="email" placeholder="Masukkan Email">
                                     </div>
                                     @if ($errors->has('email'))
@@ -223,7 +223,7 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="npwp" class="form-label">NPWP</label>
+                                    <label for="npwp">NPWP</label>
                                     <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
                                 </div>
                                 @if ($errors->has('npwp'))
@@ -281,7 +281,8 @@
                 url: form.attr("action"),
                 data: formData,
                 success: function (response) {
-                    if (response.success) {
+                    console.log(response)
+                    if (response) {
                         $("#exampleModalgrid").modal("hide");
                         form[0].reset();
                         Swal.fire(
@@ -290,7 +291,6 @@
                             'success'
                         );
                     } else if (response.errors) {
-                        // Display validation errors for NPWP
                         if (response.errors.npwp) {
                             $("#npwp").addClass('is-invalid');
                             $("#npwp-error").text(response.errors.npwp[0]);
@@ -311,7 +311,7 @@
 
     //show data customer
     var route = "{{ url('customer') }}";
-    $('#customer_name').typeahead({
+    $('#nama_customer').typeahead({
         source: function (query, process) {
             return $.get(route, { query: query }, function (data) {
                 return process(data.map(function(customer) {
@@ -335,65 +335,65 @@
     });
 
     //simpan keluhan
-    var addButton = document.getElementById("tambahKeluhan");
-    addButton.addEventListener("click", tambahKeluhan);
+    // var addButton = document.getElementById("tambahKeluhan");
+    // addButton.addEventListener("click", tambahKeluhan);
 
-    function refreshNomorUrut() {
-        var tabel = document.getElementById("tabelKeluhan");
-        var rows = tabel.getElementsByTagName("tr");
+    // function refreshNomorUrut() {
+    //     var tabel = document.getElementById("tabelKeluhan");
+    //     var rows = tabel.getElementsByTagName("tr");
 
-        for (var i = 1; i < rows.length; i++) {
-            rows[i].getElementsByTagName("td")[0].textContent = i;
-        }
-    }
+    //     for (var i = 1; i < rows.length; i++) {
+    //         rows[i].getElementsByTagName("td")[0].textContent = i;
+    //     }
+    // }
 
-    document.getElementById("tambahKeluhan").addEventListener("click", tambahKeluhan);
-    function tambahKeluhan() {
-        var keluhanInput = document.getElementById("keluhan").value;
+    // document.getElementById("tambahKeluhan").addEventListener("click", tambahKeluhan);
+    // function tambahKeluhan() {
+    //     var keluhanInput = document.getElementById("keluhan").value;
         
-        if (keluhanInput.trim() !== "") {
-            var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
-            var newRow = tabel.insertRow(tabel.rows.length);
-            var cell1 = newRow.insertCell(0);
-            var cell2 = newRow.insertCell(1);
-            var cell3 = newRow.insertCell(2);
+    //     if (keluhanInput.trim() !== "") {
+    //         var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
+    //         var newRow = tabel.insertRow(tabel.rows.length);
+    //         var cell1 = newRow.insertCell(0);
+    //         var cell2 = newRow.insertCell(1);
+    //         var cell3 = newRow.insertCell(2);
 
-            cell1.innerHTML = tabel.rows.length;
-            cell2.innerHTML = keluhanInput;
-            cell3.innerHTML = '<button class="btn btn-danger btn-sm btnHapus"> <span><i><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></i></span></button>';
+    //         cell1.innerHTML = tabel.rows.length;
+    //         cell2.innerHTML = keluhanInput;
+    //         cell3.innerHTML = '<button class="btn btn-danger btn-sm btnHapus"> <span><i><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></i></span></button>';
 
-            // Mengosongkan textarea
-            document.getElementById("keluhan").value = "";
+    //         // Mengosongkan textarea
+    //         document.getElementById("keluhan").value = "";
 
-            // Menambahkan event listener untuk tombol "Hapus"
-            var btnHapus = newRow.querySelector(".btnHapus");
-            btnHapus.addEventListener("click", function() {
-                var row = this.parentNode.parentNode;
-                row.parentNode.removeChild(row);
+    //         // Menambahkan event listener untuk tombol "Hapus"
+    //         var btnHapus = newRow.querySelector(".btnHapus");
+    //         btnHapus.addEventListener("click", function() {
+    //             var row = this.parentNode.parentNode;
+    //             row.parentNode.removeChild(row);
 
-                refreshNomorUrut();
-            });
-        } else {
-            Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Keluhan Tidak Boleh Kosong!',
-            })
-        }
-    }
+    //             refreshNomorUrut();
+    //         });
+    //     } else {
+    //         Swal.fire({
+    //         icon: 'error',
+    //         title: 'Oops...',
+    //         text: 'Keluhan Tidak Boleh Kosong!',
+    //         })
+    //     }
+    // }
 
-    function simpanData() {
-        var keluhanRows = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0].rows;
-        var keluhanData = [];
+    // function simpanData() {
+    //     var keluhanRows = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0].rows;
+    //     var keluhanData = [];
 
-        for (var i = 0; i < keluhanRows.length; i++) {
-            var keluhan = keluhanRows[i].cells[1].innerText;
-            keluhanData.push(keluhan);
-        }
+    //     for (var i = 0; i < keluhanRows.length; i++) {
+    //         var keluhan = keluhanRows[i].cells[1].innerText;
+    //         keluhanData.push(keluhan);
+    //     }
 
-        var keluhanInput = document.getElementById("keluhanInput");
-        keluhanInput.value = JSON.stringify(keluhanData);
-    }
+    //     var keluhanInput = document.getElementById("keluhanInput");
+    //     keluhanInput.value = JSON.stringify(keluhanData);
+    // }
 
     //untuk semua select menggunakan select2
     $(function () {

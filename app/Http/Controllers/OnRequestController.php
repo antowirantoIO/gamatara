@@ -47,7 +47,7 @@ class OnRequestController extends Controller
 
         $customer   = Customer::get();
         $jenis_kapal= JenisKapal::get();
-        $auth       = Auth::user()->karyawan->role->name ?? '';
+        $auth       = Auth::user()->role->name ?? '';
 
         return view('on_request.index',compact('customer','jenis_kapal','auth'));
     }

@@ -48,28 +48,13 @@ class KeluhanController extends Controller
 
     public function approve(Request $request)
     {        
-        $data   = Keluhan::find($request->id);
-
-        $signed = $request->signed;
-        $image_parts = explode(";base64,", $signed);
-        
-        if ($image_parts) {
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            $image_base64 = base64_decode($image_parts[1]);
-            $folderPath = 'ttd_images/';
-            $imageName = uniqid();
-            $imageFullPath = $folderPath . $imageName . "." . $image_type;
-            file_put_contents($imageFullPath, $image_base64);
-        }        
+        $data   = Keluhan::find($request->id);     
 
         if($request->type == 'PM')
         {
-            $data->ttd_pm           = $imageFullPath;
             $data->id_pm_approval   = Auth::user()->id;
         }
         else{
-            $data->ttd_bod          = $imageFullPath;
             $data->id_bod_approval  = Auth::user()->id;
         }
         $data->save();

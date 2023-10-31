@@ -106,12 +106,13 @@
                                                                         </span>
                                                                     </button>
                                                                 @else
-                                                                    <button type="button" class="btn btn-sm btnHapus" 
+                                                                    <button type="button" class="btn btn-sm" 
                                                                         @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                                                             style="background-color:grey; 
                                                                             disabled 
                                                                         @else 
                                                                             style="background-color:#FF6666;" 
+                                                                            onclick="hapusKeluhan({{$complaint->id}})"
                                                                         @endif 
                                                                         data-keluhan-id="{{ $complaint->id }}"
                                                                         >

@@ -47,8 +47,8 @@
                                         <th style="color:#929EAE">Nama Pekerjaan</th>
                                         <th style="color:#929EAE">Unit</th>
                                         <th style="color:#929EAE">Konversi</th>
-                                        <th style="color:#929EAE">Harga Customer</th>
                                         <th style="color:#929EAE">Harga Vendor</th>
+                                        <th style="color:#929EAE">Harga Customer</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>

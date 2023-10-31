@@ -49,14 +49,14 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="harga_customer" class="form-label">Harga Customer</label>
-                                                <input type="text" name="harga_customer" value="{{$data->harga_customer}}" class="form-control" id="harga_customer" placeholder="1.000.000">
-                                            </div>
-                                        </div>  
-                                        <div class="col-xxl-6 col-md-6">
-                                            <div>
                                                 <label for="harga_vendor" class="form-label">Harga Vendor</label>
                                                 <input type="text" name="harga_vendor" value="{{$data->harga_vendor}}" class="form-control" id="harga_vendor" placeholder="1.000.000">
+                                            </div>
+                                        </div> 
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="harga_customer" class="form-label">Harga Customer</label>
+                                                <input type="text" name="harga_customer" value="{{$data->harga_customer}}" class="form-control" id="harga_customer" placeholder="1.000.000">
                                             </div>
                                         </div> 
                                         

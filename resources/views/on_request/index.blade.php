@@ -11,7 +11,7 @@
                             <h4 class="mb-0 ml-2"> &nbsp; On Request</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            @if($auth == 'Project Admin')
+                            @if($auth == 'Project Admin' || $auth == 'Administrator')
                             <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>

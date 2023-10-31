@@ -15,4 +15,5 @@ class Keluhan extends Model
     {
         return $this->belongsTo(Vendor::class,'id_vendor','id');
     }
+    
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
 use App\Models\OnRequest;
+use App\Models\User;
 use Auth;
 use PDF;
 
@@ -89,9 +90,41 @@ class KeluhanController extends Controller
     {
         $data = OnRequest::find($request->id);
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
-        $cetak = "SPK ('.date('d F Y').').pdf";
+        $cetak = "Rekap SPK ('.date('d F Y').').pdf";
 
         $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
+                    ->setPaper('A4', 'portrait')
+                    ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
+        return $pdf->stream($cetak);
+    }
+
+    public function SPKSatuan(Request $request)
+    {
+        $keluhan = Keluhan::find($request->id);
+        $data = OnRequest::find($keluhan->on_request_id); 
+        $cetak = "SPK ('.date('d F Y').').pdf";
+        $pm = User::find($keluhan->id_pm_approval);
+        $bod = User::find($keluhan->id_bod_approval);
+
+        $data['approvalPM'] = $pm->karyawan->name ?? '';
+        $data['ttdPM'] = $pm->ttd ?? '';
+        $data['approvalBOD'] = $bod->karyawan->name ?? '';
+        $data['ttdBOD'] = $bod->ttd ?? '';
+
+        if($data->pm)
+        {
+            $cek = $data->pm; 
+            foreach($cek->pe as $value)
+            {
+                $value['pe_name'] =  $value->karyawan->name ?? '';
+            }
+
+            foreach($cek->pa as $value){
+                $value['pa_name'] =  $value->karyawan->name ?? '';
+            }
+        } 
+
+        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan'))
                     ->setPaper('A4', 'portrait')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);

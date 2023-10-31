@@ -272,6 +272,7 @@
             }
         });
     }
+
     function openNewTab() {
         var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";
         window.open(urlToOpen, '_blank');
@@ -374,6 +375,7 @@
                             title: 'Oops...',
                             text: data.message,
                         });
+                        getTableData(idData);     
                     }else{
                         Swal.fire({
                             icon: 'error',

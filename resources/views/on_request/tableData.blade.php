@@ -120,9 +120,11 @@
                             </button>
                         @endif
                         @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
-                            <button type="button" class="btn btn-sm btnPrint" 
+                            <a type="button" class="btn btn-sm btnPrint"
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                     style="background-color:blue;" 
+                                    id="printSPKsatuan"
+                                    href="{{route('keluhan.satuan',$complaint->id)}}"
                                 @else 
                                     style="background-color:grey; 
                                     disabled 
@@ -132,10 +134,10 @@
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                 </span>
-                            </button>
+                            </a>
                         @endif
                         @if($pmAuth == 'BOD')
-                            <button type="button" class="btn btn-sm btnPrint" style="background-color:blue;" data-keluhan-id="{{ $complaint->id }}">
+                            <button type="button" class="btn btn-sm btnPrint" id="printSPKsatuan" onclick="openTab({{$complaint->id}})" style="background-color:blue;" data-keluhan-id="{{ $complaint->id }}">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                 </span>

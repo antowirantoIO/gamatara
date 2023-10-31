@@ -93,7 +93,7 @@
                 <!-- <td>
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td> -->
-                <td style="text-transform: uppercase;padding-left: 200px;font-size: 20px; font-weight: bold;" colspan="8">Rekap Surat Peintah Kerja</td>
+                <td style="text-transform: uppercase;padding-left: 200px;font-size: 20px; font-weight: bold;" colspan="8">Rekapan Surat Perintah Kerja</td>
                 <br><br>
             </tr>
         </table>

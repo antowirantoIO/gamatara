@@ -114,7 +114,7 @@ class OnRequestController extends Controller
 
     public function tableData($id) 
     {
-        $pmAuth         = Auth::user()->karyawan->role->name ?? '';
+        $pmAuth         = Auth::user()->role->name ?? '';
         $keluhan        = Keluhan::where('on_request_id',$id)->get();
 
         return view('on_request.tableData', compact('keluhan', 'pmAuth'));
@@ -159,7 +159,8 @@ class OnRequestController extends Controller
         }
         $data->save();
 
-        return response()->json(['message' => 'success','status' => 200]);
+        return redirect()->route('on_request.detail', ['id' => $request->id])
+                        ->with('success', 'Data berhasil disimpan');
     }
 
     public function export(Request $request)

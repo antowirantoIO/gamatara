@@ -31,6 +31,11 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                        <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
+                                        <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
+                                    </div>
+
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
@@ -257,34 +262,61 @@
         </div>
     </div>
 </div>
+<!--end modal-->
 
-<div class="modal fade" id="ttd" tabindex="-1" aria-labelledby="exampleModalgridLabel">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <center>
-                <div class="col-md-12">
-                    <br/>
-                    <input type="hidden" name="id" id="id">
-                    <input type="hidden" name="type" id="type">
-                    <div id="sig" style="height: 200px;width: 300px;"></div>
-                    <br/>
-                    <button id="clear" class="btn btn-light btn-sm">Clear</button>
-                    <textarea id="signature64" name="signed" style="display: none"></textarea>
-                </div>
-            
-                <br/>
-                <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                <button class="btn btn-primary" onclick="approve()">Approve</button>
-            </center>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('scripts')
-<script src="{{ asset('js/keithwood.js') }}"></script>
-<script src="{{ asset('js/signature.js') }}"></script>
+<!-- <script src="{{ asset('js/keithwood.js') }}"></script>
+<script src="{{ asset('js/signature.js') }}"></script> -->
 <script>
+    function approve(id, type) {
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Anda yakin ingin menyetujui ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                var url = `{{route('keluhan.approve', ':id')}}`;
+                url = url.replace(':id', id);
+
+                var requestConfig = {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({ id: id, type: type }),
+                };
+
+                fetch(url, requestConfig)
+                    .then(function(response) {
+                        if (response.status === 200) {
+                            Swal.fire(
+                                '',
+                                'Success',
+                                'success'
+                            )
+                            getTableData(idData);       
+                            return response.json();
+                        } else {
+                            throw new Error('Gagal melakukan persetujuan');
+                        }
+                    })
+                    .then(function(data) {
+                        console.log('Persetujuan berhasil:', data);
+                    })
+                    .catch(function(error) {
+                        console.error('Kesalahan saat melakukan persetujuan:', error);
+                    });
+            }
+        });
+    }
     function openNewTab() {
         var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";
         window.open(urlToOpen, '_blank');
@@ -302,74 +334,6 @@
         })
     }
     getTableData(idData);
-
-    function approve() {
-        $('#ttd').modal('hide');
-
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Anda yakin ingin menyetujui ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Batal',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                var url = `{{ route('keluhan.approve', ':id') }}`;
-                url = url.replace(':id', document.getElementById('id').value);
-
-                var signatureData = $('#signature64').val(); // Retrieve the PNG signature from the hidden field
-
-                var requestData = {
-                    id: document.getElementById('id').value,
-                    type: document.getElementById('type').value,
-                    signed: signatureData, // Include the PNG signature
-                };
-
-                var requestConfig = {
-                    method: 'post',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                    },
-                    body: JSON.stringify(requestData),
-                };
-
-                fetch(url, requestConfig)
-                    .then(function (response) {
-                        if (response.status === 200) {
-                            Swal.fire('', 'Success', 'success');
-                            getTableData(idData);
-                            return response.json();
-                        } else {
-                            throw new Error('Gagal melakukan persetujuan');
-                        }
-                    })
-                    .then(function (data) {
-                        console.log('Persetujuan berhasil:', data);
-                    })
-                    .catch(function (error) {
-                        console.error('Kesalahan saat melakukan persetujuan:', error);
-                    });
-            }
-        });
-    }
-
-    function approvalModal(id, type) {
-        document.getElementById('id').value = id;
-        document.getElementById('type').value = type;
-        var myModal = new bootstrap.Modal(document.getElementById('ttd'));
-        myModal.show();
-    }
-
-    var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
-    $('#clear').click(function(e) {
-        e.preventDefault();
-        sig.signature('clear');
-        $("#signature64").val('');
-    })
 
     function setEditData(id, vendorId) {
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -528,47 +492,6 @@
                 return "";
             }
     }
-
-    // Fungsi untuk menyimpan data formulir utama
-    function simpanDataFormUtama() {
-        var dataForm = {
-            nama_project: document.getElementById('nama_project').value,
-            id_customer: document.getElementById('customer_name').value,
-            lokasi_project: $('#lokasi_project').find(":selected").val(),
-            contact_person: document.getElementById('contact_person').value,
-            nomor_contact_person: document.getElementById('nomor_contact_person').value,
-            displacement: document.getElementById('displacement').value,
-            jenis_kapal: document.getElementById('jenis_kapal').value,
-            pm_id: document.getElementById('pm_id').value,
-        };
-
-        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        fetch('{{ route('on_request.updated', $data->id) }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            },
-            body: JSON.stringify(dataForm),
-        })
-        .then(function (response) {
-            // Handle respons Anda di sini
-        })
-        .catch(function (error) {
-            console.error(error);
-        });
-    }
-
-    // Simpan data formulir utama secara otomatis saat ada perubahan pada input
-    document.querySelectorAll('.form-control').forEach(function (input) {
-        input.addEventListener('input', function () {
-            simpanDataFormUtama();
-        });
-    });
-
-    $('.form-control').on('change', function () {
-        simpanDataFormUtama();
-    });
 
     //hapus keluhan
     document.querySelectorAll('.btnHapus').forEach(function (button) {

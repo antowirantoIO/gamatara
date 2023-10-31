@@ -18,10 +18,10 @@
                                                             <td>
                                                                 @if($pmAuth == 'Project Manager' || $pmAuth == 'PM')
                                                                     @if($complaint->id_pm_approval == null && $complaint->id_bod_approval == null)
-                                                                        <!-- <button type="button" class="btn btn-primary btn-sm" onclick="approve({{$complaint->id}}, 'PM')">
+                                                                        <button type="button" class="btn btn-primary btn-sm" onclick="approve({{$complaint->id}}, 'PM')">
                                                                             Approve
-                                                                        </button> -->
-                                                                        <button class="btn btn-primary" type="button" onclick="approvalModal({{$complaint->id}}, 'PM')">Approve</button>
+                                                                        </button>
+                                                                        <!-- <button class="btn btn-primary" type="button" onclick="approvalModal({{$complaint->id}}, 'PM')">Approve</button> -->
                                                                     @else
                                                                         <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
                                                                             Approved
@@ -40,12 +40,12 @@
                                                             <td> 
                                                                 @if($pmAuth == 'BOD')
                                                                     @if($complaint->id_bod_approval == null && $complaint->id_pm_approval != null)
-                                                                        <!-- <button type="button" class="btn btn-primary btn-sm" data-keluhan-id="{{ $complaint->id }}" onclick="approve({{$complaint->id}}, 'BOD')">
-                                                                            Approve
-                                                                        </button> -->
-                                                                        <button class="btn btn-primary" type="button" onclick="approvalModal({{$complaint->id}}, 'BOD')">
+                                                                        <button type="button" class="btn btn-primary btn-sm" data-keluhan-id="{{ $complaint->id }}" onclick="approve({{$complaint->id}}, 'BOD')">
                                                                             Approve
                                                                         </button>
+                                                                        <!-- <button class="btn btn-primary" type="button" onclick="approvalModal({{$complaint->id}}, 'BOD')">
+                                                                            Approve
+                                                                        </button> -->
                                                                     @elseif($complaint->id_bod_approval == null && $complaint->id_pm_approval == null)
                                                                         
                                                                     @else

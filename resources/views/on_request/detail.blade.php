@@ -29,7 +29,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                         <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
@@ -39,14 +39,14 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nama_project" class="form-label">Nama Project</label>
+                                                <label>Nama Project</label>
                                                 <input type="hidden" name="on_request_id" value="{{$data->id}}" id="on_request_id">
                                                 <input type="text" name="nama_project" value="{{$data->nama_project}}" class="form-control" id="nama_project" placeholder="Masukkan Nama Project">
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nama_project" class="form-label">Nama Project Manajer</label>
+                                                <label>Nama Project Manajer</label>
                                                 <select name="pm_id" id="pm_id" class="form-control">
                                                     <option value="">Pilih Project Manager</option>
                                                     @foreach($pm as $p)
@@ -56,7 +56,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="nama_customer" class="form-label">Nama Customer</label>
+                                            <label>Nama Customer</label>
                                             <div class="input-group">
                                                 <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
                                                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
@@ -64,7 +64,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="lokasi_project" class="form-label">Lokasi Project</label>
+                                                <label>Lokasi Project</label>
                                                 <select name="lokasi_project" id="lokasi_project" class="form-control">
                                                     <option value="">Pilih Lokasi Project</option>
                                                     @foreach($lokasi as $l)
@@ -75,37 +75,37 @@
                                         </div>      
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="contact_person" class="form-label">Contact Person</label>
+                                                <label>Contact Person</label>
                                                 <input type="text" name="contact_person" value="{{$data->contact_person}}" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
                                             </div>
                                         </div>         
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                                <label>Nomor Contact Person</label>
                                                 <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat Customer</label>
+                                                <label>Alamat Customer</label>
                                                 <input type="text" class="form-control" value="{{$getCustomer->alamat}}" id="alamat" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="npwp" class="form-label">NPWP</label>
+                                                <label>NPWP</label>
                                                 <input type="text" class="form-control" id="npwps" value="{{$getCustomer->npwp}}" readonly>
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="displacement" class="form-label">Displacement Kapal</label>
+                                                <label >Displacement Kapal</label>
                                                 <input type="text" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="Jenis Kapal" class="form-label">Jenis Kapal</label>
+                                                <label>Jenis Kapal</label>
                                                     <select name="jenis_kapal" name="jenis_kapal" id="jenis_kapal" class="form-control">
                                                         <option value="">Pilih Jenis Kapal</option>
                                                         @foreach($jenis_kapal as $l)
@@ -116,13 +116,13 @@
                                         </div> 
 
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="keluhan">Request</label>
+                                            <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">
                                             <textarea id="keluhan" rows="4" cols="50" class="form-control"></textarea>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="">Vendor</label>
+                                                <label>Vendor</label>
                                                 <select name="vendor" id="vendor" class="form-control">
                                                     <option value="">Pilih Vendor</option>
                                                     @foreach($vendor as $v)
@@ -142,48 +142,6 @@
                                                 @endif
                                             </div>
                                         </div>
-
-                                        @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
-                                            @if($keluhan == 0)
-                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                        Rekap SPK
-                                                    </button>
-                                                </div>
-                                            @else
-                                                @if($keluhan != null && $count == $keluhan) 
-                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                        Rekap SPK
-                                                    </button>
-                                                </div>
-                                                @elseif($count != $keluhan)
-                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                    <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                        Rekap SPK
-                                                    </button>
-                                                </div>
-                                                @endif
-                                            @endif
-                                        @elseif($pmAuth == 'BOD')
-                                            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                <a type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                                                    </span>
-                                                    Rekap SPK
-                                                </a>
-                                            </div>
-                                        @endif
 
                                         <!--tabel-->
                                         <div id="tabelKeluhanWrapper">
@@ -219,39 +177,39 @@
                         <div class="row gy-4">
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="customer" class="form-label">Nama Customer</label>
+                                    <label>Nama Customer</label>
                                     <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Customer">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="contact_person" class="form-label">Contact Person</label>
+                                    <label>Contact Person</label>
                                     <input type="text" name="contact_person" class="form-control" placeholder="Masukkan Contact Person">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="alamat" class="form-label">Alamat</label>
+                                    <label>Alamat</label>
                                     <input type="text" name="alamat" class="form-control" placeholder="Masukkan Nomor Contact Person">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                    <label>Nomor Contact Person</label>
                                     <input type="number" name="nomor_contact_person" class="form-control" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <div>
-                                        <label for="email" class="form-label">Email</label>
+                                        <label>Email</label>
                                         <input type="email" name="email" class="form-control form-control-icon" placeholder="Masukkan Email">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="npwp" class="form-label">NPWP</label>
+                                    <label>NPWP</label>
                                     <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
                                 </div>
                             </div> 
@@ -263,12 +221,9 @@
     </div>
 </div>
 <!--end modal-->
-
 @endsection
 
 @section('scripts')
-<!-- <script src="{{ asset('js/keithwood.js') }}"></script>
-<script src="{{ asset('js/signature.js') }}"></script> -->
 <script>
     function approve(id, type) {
         Swal.fire({
@@ -404,22 +359,30 @@
             })
 
             .then(function (response) {
-                if (response.status === 200) {
-                    Swal.fire(
-                        '',
-                        'Success',
-                        'success'
-                    )
-                    getTableData(idData);       
-                    return response.json();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Gagal menambahkan keluhan!',
-                    });
-                    throw new Error('Gagal menambahkan keluhan');
-                }
+                response.json().then(data => {
+                    if (data.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.message,
+                        });
+                        getTableData(idData);       
+                        // return response.json();
+                    } else if(data.status === 500) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message,
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Gagal menambahkan keluhan',
+                        });
+                        throw new Error('Gagal menambahkan keluhan');
+                    }
+                })
             })
             .then(function (data) {
                 var tabel = document.getElementById("tabelKeluhan").getElementsByTagName('tbody')[0];
@@ -434,8 +397,8 @@
                 cell1.innerHTML = tabel.rows.length;
                 cell2.innerHTML = keluhanInput.split('<br>')?.length > 1 ? keluhanInput.split('<br>')?.[0] : keluhanInput.split('\n')?.[0];
                 cell3.innerHTML = vendorName;
-                cell4.innerHTML = data.id_pm_approve != null ? 'approve' : '';
-                cell5.innerHTML = data.id_bod_approve != null ? 'approve' : '';
+                cell4.innerHTML = '';
+                cell5.innerHTML = '';
                 cell6.innerHTML = 
                     '<div>' +
                         '<button type="button" class="btn btn-warning btn-sm btnEdit" data-keluhan-id="' + data.id + '" data-vendor-id="' + data.id_vendor + '" onclick="setEditData(' + data.id + ', ' + data.id_vendor + ')"><img src="{{asset("assets/images/edit.svg")}}" style="width: 15px;"></button>&nbsp;' +
@@ -493,6 +456,7 @@
                         var row = document.querySelector('[data-keluhan-id="' + keluhanId + '"]').closest('tr');
                         row.remove();
                         refreshNomorUrut();
+                        getTableData(idData);    
                         Swal.fire(
                             'Sukses!',
                             'Request berhasil dihapus.',
@@ -582,9 +546,7 @@
                 success: function (response) {
                     if (response) {
                         $("#exampleModalgrid").modal("hide");
-                    
                         form[0].reset();
-               
                         Swal.fire(
                             '',
                             'Customer Telah Berhasil Ditambahkan',

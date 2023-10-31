@@ -441,7 +441,7 @@
                         '<button type="button" class="btn btn-warning btn-sm btnEdit" data-keluhan-id="' + data.id + '" data-vendor-id="' + data.id_vendor + '" onclick="setEditData(' + data.id + ', ' + data.id_vendor + ')"><img src="{{asset("assets/images/edit.svg")}}" style="width: 15px;"></button>&nbsp;' +
                         '<button type="button" class="btn btn-success btn-sm btnApprove" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/like.svg")}}" style="width: 15px;"></button>&nbsp;' +
                         '<button type="button" class="btn btn-primary btn-sm btnPrint" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/directbox.svg")}}" style="width: 15px;"></button>&nbsp;' +
-                        '<button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm" data-keluhan-id="' + data.id + '" onclick="hapusKeluhan(' + data.id + ')"><img src="{{asset("assets/images/trash.svg")}}" style="width: 15px;"></button>' +
                     '</div>';
 
                 document.getElementById("keluhan").value = "";
@@ -464,6 +464,49 @@
                 text: 'Keluhan Tidak Boleh Kosong!',
             });
         }
+    }
+
+    // Fungsi untuk menghapus keluhan sehabis taambah data
+    function hapusKeluhan(keluhanId) {
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Anda yakin ingin menghapus Request ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch('{{ url('keluhan') }}/' + keluhanId, {
+                    method: 'get',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                })
+                .then(function (response) {
+                    if (response.status === 200) {
+                        var row = document.querySelector('[data-keluhan-id="' + keluhanId + '"]').closest('tr');
+                        row.remove();
+                        refreshNomorUrut();
+                        Swal.fire(
+                            'Sukses!',
+                            'Request berhasil dihapus.',
+                            'success'
+                        )
+                    } else {
+                        console.error('Gagal menghapus keluhan');
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Terjadi kesalahan:', error);
+                });
+            }
+        });
     }
 
     const NPWP = document.getElementById("npwp")
@@ -494,66 +537,35 @@
     }
 
     //hapus keluhan
-    document.querySelectorAll('.btnHapus').forEach(function (button) {
-        alert('hahah')
-        button.addEventListener('click', function () {
-            var keluhanId = this.getAttribute('data-keluhan-id');
+    // document.querySelectorAll('.btnHapus').forEach(function (button) {
+    //     button.addEventListener('click', function () {
+    //         var keluhanId = this.getAttribute('data-keluhan-id');
 
-            fetch('{{ url('keluhan') }}/' + keluhanId, {
-                method: 'get',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(function (response) {
-                if (response.status === 200) {
-                    var row = button.closest('tr');
-                    row.remove();
-                    refreshNomorUrut();
-                    Swal.fire(
-                        '',
-                        'Keluhan Berhasil Dihapus',
-                        'success'
-                    )
-                } else {
-                    console.error('Gagal menghapus keluhan');
-                }
-            })
-            .catch(function (error) {
-                console.error('Terjadi kesalahan:', error);
-            });
-        });
-    });
-
-    // Fungsi untuk menghapus keluhan sehabis taambah data
-    function hapusKeluhan(keluhanId) {
-        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        fetch('{{ url('keluhan') }}/' + keluhanId, {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            },
-        })
-        .then(function (response) {
-            if (response.status === 200) {
-                var row = document.querySelector('[data-keluhan-id="' + keluhanId + '"]').closest('tr');
-                row.remove();
-                refreshNomorUrut();
-                Swal.fire(
-                    '',
-                    'Keluhan Berhasil Dihapus',
-                    'success'
-                )
-            } else {
-                console.error('Gagal menghapus keluhan');
-            }
-        })
-        .catch(function (error) {
-            console.error('Terjadi kesalahan:', error);
-        });
-    }
+    //         fetch('{{ url('keluhan') }}/' + keluhanId, {
+    //             method: 'get',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         })
+    //         .then(function (response) {
+    //             if (response.status === 200) {
+    //                 var row = button.closest('tr');
+    //                 row.remove();
+    //                 refreshNomorUrut();
+    //                 Swal.fire(
+    //                     '',
+    //                     'Keluhan Berhasil Dihapus',
+    //                     'success'
+    //                 )
+    //             } else {
+    //                 console.error('Gagal menghapus keluhan');
+    //             }
+    //         })
+    //         .catch(function (error) {
+    //             console.error('Terjadi kesalahan:', error);
+    //         });
+    //     });
+    // });
 
     //tambah customer
     $(document).ready(function () {

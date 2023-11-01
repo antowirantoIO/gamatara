@@ -122,10 +122,14 @@
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td>Nama Vendor: <br> <b>{{ $item->vendors->name }}</b></td>
-                </tr>
-                <tr>
-                    <td>Request:<br> <b>{!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}</b></td>
+                    <td>Nama Vendor: <br> 
+                        <b>{{ $item->vendors->name }} 
+                            <br>
+                                Request:
+                            <br> 
+                            {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
+                    </b>
+                </td>
                 </tr>
                 @endforeach
             </tbody>

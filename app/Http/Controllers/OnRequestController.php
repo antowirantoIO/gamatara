@@ -21,28 +21,41 @@ class OnRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = OnRequest::with(['kapal','customer'])
-                    ->filter($request);
 
-            return Datatables::of($data)->addIndexColumn()
-            ->addColumn('nama_customer', function($data){
-                return $data->customer->name ?? '';
-            })
-            ->addColumn('jenis_kapal', function($data){
-                return $data->kapal->name ?? '';
-            })
-            ->addColumn('tanggal_request', function($data){
-                return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
-            })
-            ->addColumn('action', function($data){
-                return '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>';
-            })
-            ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
-            ->make(true);                    
+            $cekRole = Auth::user()->role->name;
+            if($cekRole)
+            {
+                if($cekRole == 'Project Admin' || $cekRole == 'Project Manager' || $cekRole == 'BOD' || $cekRole == 'Administrator'){
+                    
+                    $data = OnRequest::with(['kapal', 'customer']);
+
+                    if ($cekRole == 'Project Manager') {
+                        $data->where('pm_id', Auth::user()->id_karyawan);
+                    }
+                    
+                    $data = $data->filter($request)->get();
+
+                    return Datatables::of($data)->addIndexColumn()
+                    ->addColumn('nama_customer', function($data){
+                        return $data->customer->name ?? '';
+                    })
+                    ->addColumn('jenis_kapal', function($data){
+                        return $data->kapal->name ?? '';
+                    })
+                    ->addColumn('tanggal_request', function($data){
+                        return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
+                    })
+                    ->addColumn('action', function($data){
+                        return '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
+                            <span>
+                                <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
+                            </span>
+                        </a>';
+                    })
+                    ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
+                    ->make(true); 
+                }
+            }                   
         }
 
         $customer   = Customer::get();

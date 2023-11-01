@@ -124,6 +124,7 @@
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                     style="background-color:blue;" 
                                     id="printSPKsatuan"
+                                    target="_blank"
                                     href="{{route('keluhan.satuan',$complaint->id)}}"
                                 @else 
                                     style="background-color:grey; 
@@ -137,11 +138,11 @@
                             </a>
                         @endif
                         @if($pmAuth == 'BOD')
-                            <button type="button" class="btn btn-sm btnPrint" id="printSPKsatuan" onclick="openTab({{$complaint->id}})" style="background-color:blue;" data-keluhan-id="{{ $complaint->id }}">
+                            <a type="button" class="btn btn-sm btnPrint" id="printSPKsatuan" target="_blank" href="{{route('keluhan.satuan',$complaint->id)}}"" style="background-color:blue;" data-keluhan-id="{{ $complaint->id }}">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                 </span>
-                            </button>
+                            </a>
                         @endif
                         @if($pmAuth == 'Project Manager' || $pmAuth == 'PM' || $pmAuth == 'BOD')
                             <button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="{{ $complaint->id }}">

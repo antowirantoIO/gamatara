@@ -43,7 +43,7 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <h6 class="dropdown-header">Welcome, {{ Auth::user()->name }}</h6>
+                    <h6 class="dropdown-header">Welcome, {{ Auth::user()->karyawan->name ?? '' }}</h6>
                     <div class="dropdown-divider"></div>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf

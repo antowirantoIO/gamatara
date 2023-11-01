@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Rekapan Surat Perintah Kerja</title>
+        <title>Surat Perintah Kerja</title>
         <style>
             * {
                 font-family: 'Arial', sans-serif;
@@ -8,10 +8,6 @@
             .table-header{
                 border-collapse: collapse;
                 width: 100%;
-            }
-
-            .table-header td, .table-header th{
-                /* padding: 10px; */
             }
 
             .table-body {
@@ -30,34 +26,7 @@
                 padding: 5px;
                 font-size: 11px
             }
-
-            .table-bottom {
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            .table-bottom th {
-                background-color: #B2D2E9;
-                color: black;
-                padding: 5px;
-                width: 20%;
-                font-size: 12px;
-                font-weight: 400
-            }
-
-            .table-bottom td {
-                font-size: 11px;
-                font-weight: 400
-            }
-
-            .table-bottom td, .table-bottom th{
-                border: 1px solid black;
-            }
-
-            .font-size-12{
-                font-size: 12px;
-            }
-
+            
             .font-size-11{
                 font-size: 11px;
             }
@@ -88,105 +57,119 @@
         </style>
     </head>
     <body>
-        <table width="100%" style="margin-bottom: 10px;" >
+        <table width="100%" >
             <tr>
             <th colspan="1">
-                <!-- <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo"> -->
+                <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
             </th>
-            <th colspan="5" style="font-size: 16px;">Surat Perintah Kerja <br> No: SPK/GTS/2023-09</th>
+            <th colspan="5" style="font-size: 16px;">Surat Perintah Kerja <br> No: 001/SPK/GTS/2023</th>
                   
             </tr>
         </table>
-        <table width="100%" class="font-size-11" style="border: 1px solid black;">
+        <table class="font-size-11" style="border: 1px solid black;" width="100%">
             <tr>
-                <td width="100px"></td>
-                <td width="10px"></td>
-                <td width="300px"></td>
-                <td width="100px">PO Number</td>
-                <td width="10px"> : </td>
-                <td>{{ $data->created_at }}</td>
-            </tr>
-            <tr>
-                <td width="150px">Nama Proyek</td>
-                <td width="10px"> : </td>
-                <td width="300px">{{ $data->nama_project }}</td>
-                <td width="100px">Tanggal SPK</td>
-                <td width="10px"> : </td>
-                <td>{{ $data->created_at }}</td>
-            </tr>
-
-            <tr>
-                <td width="150px">Sales Order</td>
-                <td width="10px"> : </td>
-                <td width="300px"></td>
-                <td width="100px">Project Manager</td>
-                <td width="10px"> : </td>
-                <td>{{ $data->pm->karyawan->name ?? ''}}</td>
-            </tr>
-
-            <tr>
-                <td width="150px">Penerima SPK/ Subkon</td>
-                <td width="10px">:</td>
-                <td width="300px">{{ $keluhan->vendors->name ?? '' }}</td>
-                <td width="100px">PEngineer - PAdmin</td>
-                <td width="10px"> : </td>
-                <td>{{ $data->pe_name }} - {{ $data->pa_name }}</td>
+                <td>
+                    <table style="border-collapse: collapse; width: 100%;" border="0">
+                        <tbody>
+                        <tr>
+                            <td style="width:100%;border-style: none;">&nbsp;</td>
+                            <td style="width:100%;border-style: none;">&nbsp;</td>
+                            <td style="width:100%;border-style: none;">&nbsp;</td>
+                            <td style="width:100%;border-style: none;">PO Number</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">{{ $data->po_no }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;border-style: none;">Nama Project</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">{{ $data->nama_project }}</td>
+                            <td style="width:100%;border-style: none;">Tanggal SPK</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">{{ $data->created_at }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;border-style: none;">Sales Order No.</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">dddd</td>
+                            <td style="width:100%;border-style: none;">Project Manager</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">{{ $data->pm->karyawan->name ?? ''}}</td>
+                        </tr>
+                        <tr >
+                            <td style="width:100%;border-style: none;">Penerima SPK/ Subkon</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
+                            <td style="width:100%;border-style: none;">PEngineer - PAdmin</td>
+                            <td style="width:100%;border-style: none;">:</td>
+                            <td style="width:100%;border-style: none;">{{ $data->pe_name }} - {{ $data->pa_name }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
             </tr>
             <br><br>
+            <tr>
+                <td>
+                    <table class="font-size-10 table-body">
+                        <thead>
+                            <tr>
+                                <th>Uraian Detail Pekerjaan</th>
+                                <th>Jumlah</th>
+                                <th>Satuan</th>
+                                <th>Harga/Satuan</th>
+                                <th>East</th>
+                                <th>Project</th>
+                                <th>Estimasi Hari</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{!! nl2br(str_replace('<br>', "\n", $keluhan->keluhan)) !!}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="text-wrap:wrap;max-width:100px">{{ $data->code }}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <br><br><br><br><br><br>
+            <tr>
+                <td>
+                    <table class="table-body text-center">
+                        <tbody>
+                            <tr>
+                                <td colspan="6">Catatan</td>
+                                <td colspan="9">Pemberi SPK</td>
+                                <td colspan="5">Penerima SPK</td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" rowspan="3"></td>
+                                <td colspan="3">Project Admin</td>
+                                <td colspan="3">Project Manager</td>
+                                <td colspan="3">Direktur</td>
+                                <td colspan="5" rowspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3"><img src="data:image/png;base64,{{ $data->ttdPM }}" alt="" width="50px"><br></td>
+                                <td colspan="3"><img src="data:image/png;base64,{{ $data->ttdBOD }}" alt="" width="50px"><br></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">PA</td>
+                                <td colspan="3">{{ $data->approvalPM}}</td>
+                                <td colspan="3">{{ $data->approvalBOD}}</td>
+                                <td colspan="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
         </table>
-        <table width="90%" class="font-size-11 table-body">
-            <thead>
-                <tr>
-                    <th>Uraian Detail Pekerjaan</th>
-                    <th>Jumlah</th>
-                    <th>Satuan</th>
-                    <th>Harga/Satuan</th>
-                    <th>East</th>
-                    <th>Project</th>
-                    <th>Estimasi Hari</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{!! nl2br(str_replace('<br>', "\n", $keluhan->keluhan)) !!}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ $data->nama_project }}</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <table width="100%" border="1" cellpadding="2" cellspacing="0" style="margin-top: 10px;">
-            <thead>
-                <tr>
-                    <th colspan="2">Catatan</th>
-                    <th colspan="2">Project Admin</th>
-                    <th colspan="2">Project Manager</th>
-                    <th colspan="2">Direktur</th>
-                    <th colspan="2">Penerima SPK</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="text-center"><br> </td>
-                    <td colspan="2" class="text-center"><img src="data:image/png;base64,{{ $data->ttdPM }}" alt="" width="50px"> <br></td>
-                    <td colspan="2" class="text-center"><img src="data:image/png;base64,{{ $data->ttdBOD }}" alt="" width="50px"> <br></td>
-                    <td colspan="2" class="text-center"><br> </td>
-                </tr>
-
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2"></td>
-                    <td colspan="2"><center>{{ $data->approvalPM}}</center></td>
-                    <td colspan="2"><center>{{ $data->approvalBOD}}</center></td>
-                    <td colspan="2"></td>
-                </tr>
-
-            </tbody>
-        </table>
+        
         <script type="text/php">
             if(isset($pdf)) {
                 $font = $fontMetrics->getFont("Segoe UI, Trebuchet MS, Tahoma, Verdana, sans-serif", "normal");

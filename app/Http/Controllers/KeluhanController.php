@@ -105,11 +105,14 @@ class KeluhanController extends Controller
         $cetak = "SPK ('.date('d F Y').').pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
+        $total = count(OnRequest::get());
 
         $data['approvalPM'] = $pm->karyawan->name ?? '';
         $data['ttdPM'] = $pm->ttd ?? '';
         $data['approvalBOD'] = $bod->karyawan->name ?? '';
         $data['ttdBOD'] = $bod->ttd ?? '';
+        $data['po_no'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
+        $data['no_surat'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
 
         if($data->pm)
         {

@@ -96,12 +96,13 @@
 @section('scripts')
 <script>
     $(function() {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -122,12 +123,13 @@
             ajax: {
                 url: "{{ route('role') }}",
                 data: function (d) {
+                    filterSearch    = d.search?.value;
                     d.name          = $('#name').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'action', name: 'action'},
+                {data: 'action', name: 'action'}
             ]
         });
 
@@ -147,7 +149,8 @@
             var name    = $('#name').val();
 
             var url = '{{ route("role.export") }}?' + $.param({
-                name: name,
+                name        : name,
+                keyword     : filterSearch
             });
 
             $('.loading-overlay').show();

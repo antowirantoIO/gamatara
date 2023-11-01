@@ -74,7 +74,7 @@ class OnRequestController extends Controller
             'jenis_kapal'           => 'required'
         ]);
 
-        $code = 'P'.now()->format('d').now()->format('m').now()->format('y')."-";
+        $code = 'PJ'.now()->format('Y')."-";
         $projectCode = OnRequest::where('code', 'LIKE', '%'.$code.'%')->count();
         $randInt = '00001';
         if ($projectCode >= 1) {

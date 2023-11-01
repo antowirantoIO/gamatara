@@ -151,12 +151,13 @@
 @section('scripts')
 <script>
      $(document).ready(function () {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -177,6 +178,7 @@
             ajax: {
                 url: "{{ route('on_request') }}",
                 data: function (d) {
+                    filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
                     d.nama_project      = $('#nama_project').val();
                     d.nama_customer     = $('#nama_customer').val();
@@ -225,13 +227,14 @@
             var jenis_kapal     = $('#jenis_kapal').val();
 
             var url = '{{ route("on_request.export") }}?' + $.param({
-                code: code,
-                nama_project: nama_project,
-                nama_customer: nama_customer,
-                displacement: displacement,
-                start_date: start_date,
-                to_date: to_date,
-                jenis_kapal: jenis_kapal
+                code            : code,
+                nama_project    : nama_project,
+                nama_customer   : nama_customer,
+                displacement    : displacement,
+                start_date      : start_date,
+                to_date         : to_date,
+                jenis_kapal     : jenis_kapal,
+                keyword         : filterSearch
             });
 
             $('.loading-overlay').show();

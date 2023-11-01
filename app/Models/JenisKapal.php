@@ -15,6 +15,8 @@ class JenisKapal extends Model
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {
             return $query->where('name', 'like', "%$filter->name%");
+        })->when($filter->keyword ?? false, function($query) use ($filter) {
+            return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%']);
         });
     }
 }

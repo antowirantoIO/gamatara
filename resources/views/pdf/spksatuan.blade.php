@@ -59,11 +59,11 @@
     <body>
         <table width="100%" style="margin-bottom: 10px;">
             <tr>
-                <th colspan="1">
+                <td>
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
-                </th>
-                <th style="text-transform: uppercase;padding-left: 100px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
-                </th>
+                </td>
+                <td style="text-transform: uppercase;padding-left: 100px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
+                </td>
             </tr>
         </table>
         <table class="font-size-11" style="border: 1px solid black;" width="100%">

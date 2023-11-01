@@ -25,7 +25,7 @@ class OnRequestController extends Controller
             $cekRole = Auth::user()->role->name;
             if($cekRole)
             {
-                if($cekRole == 'Project Admin' || $cekRole == 'Project Manager' || $cekRole == 'BOD' || $cekRole == 'Administrator'){
+                if($cekRole == 'Project Admin' || $cekRole == 'Project Manager' || $cekRole == 'BOD' || $cekRole == 'Administator'){
                     
                     $data = OnRequest::with(['kapal', 'customer']);
 

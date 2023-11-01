@@ -107,6 +107,7 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
+        $data->user_id              = Auth::user()->id;
         $data->save();
 
         // $keluhanJson = $request->input('keluhan');

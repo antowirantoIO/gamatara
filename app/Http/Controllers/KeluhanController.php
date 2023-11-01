@@ -112,7 +112,6 @@ class KeluhanController extends Controller
         $data['approvalBOD'] = $bod->karyawan->name ?? '';
         $data['ttdBOD'] = $bod->ttd ?? '';
         $data['po_no'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
-        $data['no_surat'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
 
         if($data->pm)
         {

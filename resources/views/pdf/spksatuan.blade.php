@@ -62,7 +62,7 @@
                 <th colspan="1">
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </th>
-                <th style="text-transform: uppercase;padding-left: 113px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
+                <th style="text-transform: uppercase;padding-left: 100px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
                 </th>
             </tr>
         </table>
@@ -74,26 +74,26 @@
                             <tr>
                                 <td style="width:50%;border-style: none;">Nama Project</td>
                                 <td style="width:50%;border-style: none;">:</td>
-                                <td style="border-style: none;">{{ $data->nama_project }}</td>
+                                <td style="width:50%;border-style: none;">{{ $data->nama_project }}</td>
                                 <td style="width:50%;border-style: none;">Tanggal SPK</td>
                                 <td style="width:50%;border-style: none;">:</td>
-                                <td style="border-style: none;">{{ $data->created_at }}</td>
+                                <td style="width:50%;border-style: none;">{{ $data->created_at }}</td>
                             </tr>
                             <tr>
                                 <td style="width:50%;border-style: none;">Sales Order No.</td>
                                 <td style="width:50%;border-style: none;">:</td>
-                                <td style="border-style: none;"></td>
+                                <td style="width:50%;border-style: none;"></td>
                                 <td style="width:50%;border-style: none;">Project Manager</td>
                                 <td style="width:50%;border-style: none;">:</td>
-                                <td style="border-style: none;">{{ $data->pm->karyawan->name ?? ''}}</td>
+                                <td style="width:50%;border-style: none;">{{ $data->pm->karyawan->name ?? ''}}</td>
                             </tr>
                             <tr >
                                 <td style="width:50%;border-style: none;">Penerima SPK/ Subkon</td>
                                 <td style="width:50%;border-style: none;">:</td>
-                                <td style="border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
+                                <td style="width:50%;border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
                                 <td style="width:50%;border-style: none;">PEngineer - PAdmin</td>
                                 <td style="width:50%;border-style: none;">:</td>
-                                <td style="border-style: none;">{{ $data->pe_name }} - {{ $data->pa_name }}</td>
+                                <td style="width:50%;border-style: none;">{{ $data->pe_name }} - {{ $data->pa_name }}</td>
                             </tr>
                         </tbody>
                     </table>

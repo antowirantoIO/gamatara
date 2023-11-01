@@ -62,7 +62,7 @@
             <th colspan="1">
                 <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
             </th>
-            <th colspan="5" style="font-size: 16px;">Surat Perintah Kerja <br> No: 001/SPK/GTS/2023</th>
+            <th colspan="3" style="font-size: 16px;">Surat Perintah Kerja <br> No: 001/SPK/GTS/2023</th>
                   
             </tr>
         </table>

@@ -143,7 +143,7 @@
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <!-- <button class="btn btn-primary" style="margin-right: 10px;" onclick="simpanData()">Save</button> -->
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
-                                            <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
+                                            <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
                                         </div>
 
                                     </div>

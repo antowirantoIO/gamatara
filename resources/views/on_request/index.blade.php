@@ -12,7 +12,14 @@
                         </div>
                      
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            @if($auth == 'Project Admin' || $auth == 'Administator')
+                            @if($auth == 'Project Admin')
+                                @if($cek > 0)
+                                <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                                @endif
+                            @endif
+                            @if($auth == 'Administator')
                             <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>

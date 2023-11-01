@@ -31,10 +31,12 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                        <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
-                                        <a href="{{route('pekerjaan')}}" class="btn btn-danger">Cancel</a>
-                                    </div>
+                                    @if($pmAuth == 'Project Admin' || $pmAuth == 'Administator')
+                                        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                            <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
+                                            <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
+                                        </div>
+                                    @endif
 
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
@@ -47,10 +49,16 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Nama Project Manajer</label>
-                                                <select name="pm_id" id="pm_id" class="form-control">
-                                                    <option value="">Pilih Project Manager</option>
-                                                    @foreach($pm as $p)
-                                                    <option value="{{$p->id}}" {{ $p->id == $data->pm_id ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                <input type="text" value="{{ $data->pm->karyawan->name ?? '' }}" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label>Nama Project Engineer</label>
+                                                <select name="pe_id" id="pe_id" class="form-control">
+                                                    <option value="">Pilih Project Engineer</option>
+                                                    @foreach($pe as $p)
+                                                    <option value="{{$p->id}}" {{ $p->id == $data->pe_id ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -114,6 +122,8 @@
                                                     </select>
                                             </div>
                                         </div> 
+
+                                        <div class="col-xxl-6 col-md-6"></div>
 
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
@@ -303,6 +313,7 @@
         })
         .then(function (response) {
             if (response.status === 200) {
+
                 getTableData(idData);
                 return response.json();
             } else {
@@ -349,7 +360,7 @@
         var keluhanId = keluhan.getAttribute("data-id-keluhan")
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        if (keluhanInput.trim() !== "") {
+        if (keluhanInput.trim() !== "" && vendorId.trim() !== "") {
             fetch('{{ route('keluhan.store', '') }}/' + {{ $data->id }}, {
                 method: 'post',
                 headers: {
@@ -367,7 +378,10 @@
                             title: 'Berhasil',
                             text: data.message,
                         });
-                        getTableData(idData);       
+                        getTableData(idData);  
+
+                        document.getElementById("keluhan").value = "";
+                        $("#vendor").val('').trigger('change');
                         // return response.json();
                     } else if(data.status === 500) {
                         Swal.fire({
@@ -418,6 +432,7 @@
                 });
 
                 refreshNomorUrut();
+                getTableData(idData);  
             })
             .catch(function (error) {
                 console.error(error);
@@ -426,7 +441,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Keluhan Tidak Boleh Kosong!',
+                text: 'Request atau Vendor Tidak Boleh Kosong!',
             });
         }
     }

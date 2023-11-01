@@ -93,7 +93,7 @@
                                 <td style="width:30%;border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
                                 <td style="width:30%;border-style: none;">PEngineer - PAdmin</td>
                                 <td style="width:30%;border-style: none;">:</td>
-                                <td style="width:30%;border-style: none;">{{ $data->pe_name }} - {{ $data->pa_name }}</td>
+                                <td style="width:30%;border-style: none;">{{ $data->pe->karyawan->name ??'' }} - {{ $data->pa->karyawan->name ?? '' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -115,15 +115,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>{!! nl2br(str_replace('<br>', "\n", $keluhan->keluhan)) !!}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td style="text-wrap:wrap;max-width:100px">{{ $data->code }}</td>
-                                <td></td>
-                            </tr>
+                            @foreach($allkeluhan as $d)
+                                <tr>
+                                    <td>{!! nl2br(str_replace('<br>', "\n", $d->keluhan)) !!}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-wrap:wrap;max-width:100px">{{ $data->code }}</td>
+                                    <td></td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </td>

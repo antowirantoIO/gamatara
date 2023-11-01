@@ -14,6 +14,8 @@ use App\Models\JenisKapal;
 use App\Models\Keluhan;
 use App\Models\ProjectManager;
 use App\Models\Vendor;
+use App\Models\ProjectAdmin;
+use App\Models\ProjectEngineer;
 use Auth;
 
 class OnRequestController extends Controller
@@ -26,11 +28,19 @@ class OnRequestController extends Controller
             if($cekRole)
             {
                 if($cekRole == 'Project Admin' || $cekRole == 'Project Manager' || $cekRole == 'BOD' || $cekRole == 'Administator'){
-                    
+                    $cekId = Auth::user()->id_karyawan;
+                    $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+                    $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+
                     $data = OnRequest::with(['kapal', 'customer']);
 
                     if ($cekRole == 'Project Manager') {
-                        $data->where('pm_id', Auth::user()->id_karyawan);
+                        $data->where('pm_id', $cekPa->id);
+                    }
+                    if ($cekRole == 'Project Admin') {
+                       if($cekPm){
+                            $data->where('pm_id', $cekPm->id_pm);
+                       }
                     }
                     
                     $data = $data->filter($request)->get();
@@ -61,8 +71,19 @@ class OnRequestController extends Controller
         $customer   = Customer::get();
         $jenis_kapal= JenisKapal::get();
         $auth       = Auth::user()->role->name ?? '';
+        if($auth == 'Project Admin'){
+            $cekId      = Auth::user()->id_karyawan;
+            $cekPm      = ProjectAdmin::where('id_karyawan',$cekId)->get();
+            $cek        = count($cekPm);
+        }elseif($auth == 'Project Manager'){
+            $cek        = 0;
+        }elseif($auth == 'BOD'){
+            $cek        = 0;
+        }elseif($auth == 'Administator'){
+            $cek        = 1;
+        }
 
-        return view('on_request.index',compact('customer','jenis_kapal','auth'));
+        return view('on_request.index',compact('customer','jenis_kapal','auth','cek'));
     }
 
     public function create()
@@ -97,6 +118,7 @@ class OnRequestController extends Controller
         $randInt = substr($randInt, -5);
 
         $getCustomer = Customer::where('name',$request->input('nama_customer'))->first();
+        $getPM = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
 
         $data                       = New OnRequest();
         $data->code                 = $code.$randInt;
@@ -108,6 +130,7 @@ class OnRequestController extends Controller
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->user_id              = Auth::user()->id;
+        $data->pm_id                = $getPM->id_pm;
         $data->save();
 
         // $keluhanJson = $request->input('keluhan');
@@ -143,14 +166,14 @@ class OnRequestController extends Controller
         $customer       = Customer::get();
         $lokasi         = LokasiProject::get();
         $jenis_kapal    = JenisKapal::get();
-        $pm             = ProjectManager::with(['karyawan'])->get();
+        $pe             = ProjectEngineer::where('id_pm',$data->pm_id)->with(['karyawan'])->get();
         $vendor         = Vendor::get();
         $pmAuth         = Auth::user()->role->name ?? '';
         $keluhan        = Keluhan::where('on_request_id', $request->id)->get();
         $count          = $keluhan->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
         $keluhan        = count($keluhan);
 
-        return view('on_request.detail', Compact('keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pm','vendor','pmAuth'));
+        return view('on_request.detail', Compact('keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pe','vendor','pmAuth'));
     }
 
     public function updated(Request $request)
@@ -169,8 +192,8 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
-        $data->pm_id                = $request->input('pm_id');
-        if($request->input('pm_id')){
+        $data->pe_id                = $request->input('pe_id');
+        if($request->input('pe_id')){
             $data->status = 1;
         }
         $data->save();

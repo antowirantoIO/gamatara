@@ -59,7 +59,7 @@ class CustomerController extends Controller
             'alamat'                => 'required',
             'contact_person'        => 'required',
             'nomor_contact_person'  => 'required',
-            'email'                 => 'required',
+            'email'                 => 'required|email|unique:customer',
             'npwp'                  => 'required|min:15',
         ]);
 
@@ -90,7 +90,7 @@ class CustomerController extends Controller
             'alamat'                => 'required',
             'contact_person'        => 'required',
             'nomor_contact_person'  => 'required',
-            'email'                 => 'required',
+            'email'                 => 'required|email|unique:customer,email,'.$request->id,
             'npwp'                  => 'required|min:15',
         ]);
 

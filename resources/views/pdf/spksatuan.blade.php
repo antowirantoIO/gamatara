@@ -72,28 +72,28 @@
                     <table style="border-collapse: collapse; width: 100%;" border="0">
                         <tbody>
                             <tr>
-                                <td style="width:100%;border-style: none;">Nama Project</td>
-                                <td style="width:100%;border-style: none;">:</td>
-                                <td style="width:100%;border-style: none;">{{ $data->nama_project }}</td>
-                                <td style="width:100%;border-style: none;">Tanggal SPK</td>
-                                <td style="width:100%;border-style: none;">:</td>
-                                <td style="width:100%;border-style: none;">{{ $data->created_at }}</td>
+                                <td style="width:50%;border-style: none;">Nama Project</td>
+                                <td style="width:50%;border-style: none;">:</td>
+                                <td style="width:50%;border-style: none;">{{ $data->nama_project }}</td>
+                                <td style="width:50%;border-style: none;">Tanggal SPK</td>
+                                <td style="width:50%;border-style: none;">:</td>
+                                <td style="width:50%;border-style: none;">{{ $data->created_at }}</td>
                             </tr>
                             <tr>
-                                <td style="width:100%;border-style: none;">Sales Order No.</td>
-                                <td style="width:100%;border-style: none;">:</td>
-                                <td style="width:100%;border-style: none;">dddd</td>
-                                <td style="width:100%;border-style: none;">Project Manager</td>
-                                <td style="width:100%;border-style: none;">:</td>
-                                <td style="width:100%;border-style: none;">{{ $data->pm->karyawan->name ?? ''}}</td>
+                                <td style="width:50%;border-style: none;">Sales Order No.</td>
+                                <td style="width:50%;border-style: none;">:</td>
+                                <td style="width:50%;border-style: none;">dddd</td>
+                                <td style="width:50%;border-style: none;">Project Manager</td>
+                                <td style="width:50%;border-style: none;">:</td>
+                                <td style="width:50%;border-style: none;">{{ $data->pm->karyawan->name ?? ''}}</td>
                             </tr>
                             <tr >
-                                <td style="width:100%;border-style: none;">Penerima SPK/ Subkon</td>
-                                <td style="width:100%;border-style: none;">:</td>
-                                <td style="width:100%;border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
-                                <td style="width:100%;border-style: none;">PEngineer - PAdmin</td>
-                                <td style="width:100%;border-style: none;">:</td>
-                                <td style="width:100%;border-style: none;">{{ $data->pe_name }} - {{ $data->pa_name }}</td>
+                                <td style="width:50%;border-style: none;">Penerima SPK/ Subkon</td>
+                                <td style="width:50%;border-style: none;">:</td>
+                                <td style="width:50%;border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
+                                <td style="width:50%;border-style: none;">PEngineer - PAdmin</td>
+                                <td style="width:50%;border-style: none;">:</td>
+                                <td style="width:50%;border-style: none;">{{ $data->pe_name }} - {{ $data->pa_name }}</td>
                             </tr>
                         </tbody>
                     </table>

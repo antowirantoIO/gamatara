@@ -109,7 +109,7 @@
                                 <th>Jumlah</th>
                                 <th>Satuan</th>
                                 <th>Harga/Satuan</th>
-                                <th>East</th>
+                                <th>Est. Tonase</th>
                                 <th>Project</th>
                                 <th>Estimasi Hari</th>
                             </tr>

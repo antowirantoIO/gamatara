@@ -57,12 +57,12 @@
         </style>
     </head>
     <body>
-        <table width="100%" >
+        <table width="100%" style="margin-bottom: 10px;">
             <tr>
             <th colspan="1">
                 <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
             </th>
-            <th colspan="2" style="font-size: 16px;">Surat Perintah Kerja <br> No: {{ $data->po_no }}</th>
+            <th colspan="1" style="font-size: 16px;">Surat Perintah Kerja <br> No: {{ $data->po_no }}</th>
                   
             </tr>
         </table>

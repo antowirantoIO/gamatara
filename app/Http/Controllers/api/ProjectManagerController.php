@@ -85,8 +85,11 @@ class ProjectManagerController extends Controller
             $data['pekerjaan'] = $pekerjaan;
             $data['vendor'] = count($vendor);
 
-            foreach($data->pm->pe as $value){
-                $value['nama_karyawan'] =  $value->karyawan->name;
+            if($data)
+            {
+                foreach($data->pm->pe ?? [] as $value){
+                    $value['nama_karyawan'] =  $value->karyawan->name ?? '';
+                }
             } 
 
             // $data = ProjectPekerjaan::find($request->id);

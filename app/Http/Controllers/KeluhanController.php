@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
 use App\Models\OnRequest;
+use App\Models\User;
+use App\Models\Vendor;
 use Auth;
 use PDF;
 
@@ -14,20 +16,31 @@ class KeluhanController extends Controller
     {        
         if($request->keluhanId == null)
         {
-            $keluhan                = new Keluhan();
-            $keluhan->on_request_id = $request->id;
-            $keluhan->id_vendor     = $request->vendor;
-            $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
-            $keluhan->save();
 
-            return response()->json(
-                [
-                    'message' => 'Keluhan berhasil ditambahkan',
-                    'status' => 200, 
-                    'id' => $keluhan->id, 
-                    'id_vendor' => $keluhan->id_vendor
-                ]
-            );
+            $cekReq = count(Keluhan::where('on_request_id',$request->id)->where('id_vendor',$request->vendor)->get());
+            if($cekReq > 0){
+                return response()->json(
+                    [
+                        'message' => 'Vendor Sudah Ada',
+                        'status' => 500
+                    ]
+                );
+            }else{
+                $keluhan                = new Keluhan();
+                $keluhan->on_request_id = $request->id;
+                $keluhan->id_vendor     = $request->vendor;
+                $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+                $keluhan->save();
+
+                return response()->json(
+                    [
+                        'message' => 'Keluhan berhasil ditambahkan',
+                        'status' => 200, 
+                        'id' => $keluhan->id, 
+                        'id_vendor' => $keluhan->id_vendor
+                    ]
+                );
+            }
         }else{
             $keluhan                = Keluhan::find($request->keluhanId);
             $keluhan->on_request_id = $request->id;
@@ -48,28 +61,13 @@ class KeluhanController extends Controller
 
     public function approve(Request $request)
     {        
-        $data   = Keluhan::find($request->id);
-
-        $signed = $request->signed;
-        $image_parts = explode(";base64,", $signed);
-        
-        if ($image_parts) {
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            $image_base64 = base64_decode($image_parts[1]);
-            $folderPath = 'ttd_images/';
-            $imageName = uniqid();
-            $imageFullPath = $folderPath . $imageName . "." . $image_type;
-            file_put_contents($imageFullPath, $image_base64);
-        }        
+        $data   = Keluhan::find($request->id);     
 
         if($request->type == 'PM')
         {
-            $data->ttd_pm           = $imageFullPath;
             $data->id_pm_approval   = Auth::user()->id;
         }
         else{
-            $data->ttd_bod          = $imageFullPath;
             $data->id_bod_approval  = Auth::user()->id;
         }
         $data->save();
@@ -93,9 +91,51 @@ class KeluhanController extends Controller
     {
         $data = OnRequest::find($request->id);
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
-        $cetak = "SPK ('.date('d F Y').').pdf";
+        $cetak = "Rekap SPK ('.date('d F Y').').pdf";
 
         $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
+                    ->setPaper('A4', 'portrait')
+                    ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
+        return $pdf->stream($cetak);
+    }
+
+    public function SPKSatuan(Request $request)
+    {
+        $keluhan = Keluhan::find($request->id);
+        $data = OnRequest::find($keluhan->on_request_id); 
+        $cetak = "SPK ('.date('d F Y').').pdf";
+        $pm = User::find($keluhan->id_pm_approval);
+        $bod = User::find($keluhan->id_bod_approval);
+        $pa = User::find($data->user_id);
+        $vendor = Vendor::find($keluhan->id_vendor);
+        $total = count(OnRequest::get());
+        $total = str_pad($total, 3, '0', STR_PAD_LEFT);
+
+        $allkeluhan = Keluhan::where('on_request_id',$keluhan->on_request_id)->get();
+
+        $data['approvalPA'] = $pa->karyawan->name ?? '';
+        $data['ttdPA'] = $pa->ttd ?? '';
+        $data['approvalPM'] = $pm->karyawan->name ?? '';
+        $data['ttdPM'] = $pm->ttd ?? '';
+        $data['approvalBOD'] = $bod->karyawan->name ?? '';
+        $data['ttdBOD'] = $bod->ttd ?? '';
+        $data['ttdVendor'] = $vendor->ttd ?? '';
+        $data['po_no'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
+
+        if($data->pm)
+        {
+            $cek = $data->pm; 
+            foreach($cek->pe as $value)
+            {
+                $value['pe_name'] =  $value->karyawan->name ?? '';
+            }
+
+            foreach($cek->pa as $value){
+                $value['pa_name'] =  $value->karyawan->name ?? '';
+            }
+        } 
+
+        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan','allkeluhan'))
                     ->setPaper('A4', 'portrait')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);

@@ -8,29 +8,44 @@ use Illuminate\Http\Request;
 use App\Exports\ExportLaporanCustomer;
 use App\Models\Customer;
 use App\Models\OnRequest;
+use App\Models\ProjectPekerjaan;
+use DB;
 
 class LaporanCustomerController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Customer::filter($request);
-
+            $data = ProjectPekerjaan::with('projects')
+                ->addSelect(['total' => OnRequest::selectRaw('count(*)')
+                    ->whereColumn('project_pekerjaan.id_project', 'project.id')
+                    ->groupBy('id_customer')
+                ])
+                ->get();
+        
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('jumlah_project', function($data){
-                return '1';
+                return $data->total;
             })
             ->addColumn('nilai_project', function($data){
-                return '2';
+                $harga_customer = $data->harga_customer;
+                    if (is_numeric($harga_customer)) {
+                        return 'Rp' . number_format($harga_customer, 0, ',', '.');
+                    } else {
+                        return 'Rp. 0000';
+                    }
+            })
+            ->addColumn('name', function($data){
+                return $data->projects->customer->name ?? '';
             })
             ->addColumn('action', function($data){
-                return '<a href="'.route('laporan_customer.detail', $data->id).'" class="btn btn-warning btn-sm">
+                return '<a href="'.route('laporan_customer.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
                     <span>
                         <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
                     </span>
                 </a>';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','jumlah_project','nilai_project'])
             ->make(true);                    
         }
 
@@ -39,29 +54,49 @@ class LaporanCustomerController extends Controller
     
     public function detail(Request $request)
     {
-        $name = OnRequest::where('id_customer',$request->id)->first();
-
         if ($request->ajax()) {
-            $data = OnRequest::where('id_customer',$request->id)->filter($request);
+            $cek = OnRequest::where('id_customer', $request->id)->get();
+            $cekIds = $cek->pluck('id')->toArray();
+            $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
+                    ->addSelect(['total' => OnRequest::selectRaw('count(*)')
+                        ->whereColumn('project_pekerjaan.id_project', 'project.id')
+                        ->groupBy('id_customer')
+                    ])
+                    ->filter($request);
+
 
             return Datatables::of($data)->addIndexColumn()
+            ->addColumn('code', function($data){
+                return $data->projects->code ?? '';
+            })
+            ->addColumn('nama_project', function($data){
+                return $data->projects->nama_project ?? '';
+            })
             ->addColumn('jumlah_project', function($data){
-                return '1';
+                return $data->total;
             })
             ->addColumn('nilai_project', function($data){
-                return '2';
+                $harga_customer = $data->harga_customer;
+                if (is_numeric($harga_customer)) {
+                    return 'Rp' . number_format($harga_customer, 0, ',', '.');
+                } else {
+                    return 'Rp. 0000';
+                }
             })
-            ->addColumn('tanggal_request', function($data){
-                return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
+            ->addColumn('tanggal_mulai', function($data){
+                return $data->projects->start_project ;
+            })
+            ->addColumn('tanggal_selesai', function($data){
+                return $data->projects->actual_selesai ?? '-';
             })
             ->addColumn('status_project', function($data){
-                if($data->status == 1){
+                if($data->projects->status == 1){
                     $status = '<span style="color: blue;">Request</span>';
-                }else if($data->status == 2){
+                }else if($data->projects->status == 2){
                     $status = '<span style="color: yellow;">Proses</span>';
-                }else if($data->status == 3){
+                }else if($data->projects->status == 3){
                     $status = '<span style="color: green;">Complete</span>';
-                }else if($data->status == 99){
+                }else if($data->projects->status == 99){
                     $status = '<span style="color: red;">Cancel</span>';
                 }else{
                     $status = '-';
@@ -69,18 +104,28 @@ class LaporanCustomerController extends Controller
                 return $status;
             })
             ->addColumn('action', function($data){
-                return '<a href="'.route('laporan_customer_detail.detail', $data->id).'" class="btn btn-warning btn-sm">
+                return '<a href="'.route('laporan_customer_detail.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
                     <span>
                         <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
                     </span>
                 </a>';
             })
-            ->rawColumns(['action','status_project'])
+            ->rawColumns(['action','status_project','tanggal_mulai','jumlah_project','nilai_project'])
             ->make(true);                    
         }
 
+        $data = OnRequest::where('id',$request->id)->first();
 
-        return view('laporan_customer.detail', Compact('name'));
+        return view('laporan_customer.detail', Compact('data'));
+    }
+
+    public function export(Request $request)
+    {
+        $data = Kategori::orderBy('name','desc')
+                ->filter($request)
+                ->get();
+
+        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
     }
     
 }

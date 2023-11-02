@@ -41,19 +41,17 @@
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
-                                <table class="table" id="tableDataLight">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Lokasi Project</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                   
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableDataLight">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Lokasi Project</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -93,12 +91,13 @@
 @section('scripts')
 <script>
     $(function() {
+        let filterSearch = '';
         var table = $('#tableDataLight').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -119,6 +118,7 @@
             ajax: {
                 url: "{{ route('lokasi_project') }}",
                 data: function (d) {
+                    filterSearch    = d.search?.value;
                     d.name          = $('#name').val();
                 }
             },
@@ -144,7 +144,8 @@
             var name            = $('#name').val();
 
             var url = '{{ route("lokasi_project.export") }}?' + $.param({
-                name: name,
+                name        : name,
+                keyword     : filterSearch
             });
 
             $('.loading-overlay').show();

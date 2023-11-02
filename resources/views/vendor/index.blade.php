@@ -41,24 +41,22 @@
                         </div>
 
                         <div class="card-body">
-                            <div class=" table-responsive">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Nama vendor</th>
-                                            <th style="color:#929EAE">Alamat</th>
-                                            <th style="color:#929EAE">Contact Person</th>
-                                            <th style="color:#929EAE">Nomor Contact Person</th>
-                                            <th style="color:#929EAE">Email</th>
-                                            <th style="color:#929EAE">NPWP</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                      
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Nama vendor</th>
+                                        <th style="color:#929EAE">Alamat</th>
+                                        <th style="color:#929EAE">Contact Person</th>
+                                        <th style="color:#929EAE">Nomor Contact Person</th>
+                                        <th style="color:#929EAE">Email</th>
+                                        <th style="color:#929EAE">NPWP</th>
+                                        <th style="color:#929EAE">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -133,12 +131,13 @@
 @section('scripts')
 <script>
      $(document).ready(function () {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -159,7 +158,8 @@
             ajax: {
                 url: "{{ route('vendor') }}",
                 data: function (d) {
-                    d.name         = $('#name').val();
+                    filterSearch            = d.search?.value;
+                    d.name                  = $('#name').val();
                     d.alamat                = $('#alamat').val();
                     d.contact_person        = $('#contact_person').val();
                     d.nomor_contact_person  = $('#nomor_contact_person').val();
@@ -197,7 +197,7 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name           = $('#name').val();
+            var name                    = $('#name').val();
             var alamat                  = $('#alamat').val();
             var contact_person          = $('#contact_person').val();
             var nomor_contact_person    = $('#nomor_contact_person').val();
@@ -205,12 +205,13 @@
             var npwp                    = $('#npwp').val();
 
             var url = '{{ route("vendor.export") }}?' + $.param({
-                name: name,
-                alamat: alamat,
-                contact_person: contact_person,
+                name                : name,
+                alamat              : alamat,
+                contact_person      : contact_person,
                 nomor_contact_person: nomor_contact_person,
-                email: email,
-                npwp: npwp
+                email               : email,
+                npwp                : npwp,
+                keyword             : filterSearch
             });
 
             $('.loading-overlay').show();

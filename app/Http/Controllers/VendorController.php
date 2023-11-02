@@ -55,6 +55,7 @@ class VendorController extends Controller
             'nomor_contact_person'  => 'required',
             'email'                 => 'required',
             'npwp'                  => 'required|min:15',
+            'ttd'                   => 'required'
         ]);
 
         $data = New Vendor();
@@ -64,6 +65,7 @@ class VendorController extends Controller
         $data->nomor_contact_person     = $request->input('nomor_contact_person');
         $data->email                    = $request->input('email');
         $data->npwp                     = $request->input('npwp');
+        $data->ttd                      = $request->input('ttd_base64');
         $data->save();
 
         return redirect(route('vendor'))
@@ -95,6 +97,7 @@ class VendorController extends Controller
         $data->nomor_contact_person     = $request->input('nomor_contact_person');
         $data->email                    = $request->input('email');
         $data->npwp                     = $request->input('npwp');
+        $data->ttd                      = $request->input('ttd_base64');
         $data->save();
 
         return redirect(route('vendor'))

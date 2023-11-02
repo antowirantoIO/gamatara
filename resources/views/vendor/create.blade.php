@@ -22,12 +22,12 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{route('vendor.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                                <form action="{{route('vendor.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
                                     <div class="row gy-4">
-                                    <div class="col-xxl-6 col-md-6">
+                                        <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="customer" class="form-label">Nama Customer</label>
+                                                <label for="customer">Nama Customer</label>
                                                 <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Customer">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -36,7 +36,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="contact_person" class="form-label">Contact Person</label>
+                                                <label for="contact_person">Contact Person</label>
                                                 <input type="text" name="contact_person" class="form-control" id="contact_person" value="{{ old('contact_person') }}" placeholder="Masukkan Contact Person">
                                                 @if ($errors->has('contact_person'))
                                                     <span class="text-danger">{{ $errors->first('contact_person') }}</span>
@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat</label>
+                                                <label for="alamat">Alamat</label>
                                                 <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Masukkan Alamat">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                                <label for="nomor_contact_person">Nomor Contact Person</label>
                                                 <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_contact_person'))
                                                     <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
@@ -64,7 +64,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <div>
-                                                    <label for="email" class="form-label">Email</label>
+                                                    <label for="email">Email</label>
                                                     <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control form-control-icon" placeholder="Masukkan Email">
                                                     @if ($errors->has('email'))
                                                         <span class="text-danger">{{ $errors->first('email') }}</span>
@@ -74,10 +74,23 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="npwp" class="form-label">NPWP</label>
+                                                <label for="npwp">NPWP</label>
                                                 <input type="text" name="npwp" id="npwp" value="{{ old('npwp') }}" maxlength="16" class="form-control" placeholder="Masukkan NPWP">
                                                 @if ($errors->has('npwp'))
                                                     <span class="text-danger">{{ $errors->first('npwp') }}</span>
+                                                @endif
+                                            </div>
+                                        </div> 
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label for="ttd">Tanda Tangan <span style='font-size:10px'>(Format hanya PNG Max 1Mb)</span></label>
+                                                <br>
+                                                    <img src="{{ asset('assets/images/nophoto.jpg') }}" alt="Tanda Tangan Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
+                                                <br><br>
+                                                <input type="file" name="ttd" id="ttd" value="{{ old('ttd') }}" class="form-control">
+                                                <input type="hidden" name="ttd_base64" id="ttd_base64">
+                                                @if ($errors->has('ttd'))
+                                                    <span class="text-danger">{{ $errors->first('ttd') }}</span>
                                                 @endif
                                             </div>
                                         </div> 
@@ -102,32 +115,77 @@
 
 @section('scripts')
 <script>
-const NPWP = document.getElementById("npwp")
-    NPWP.oninput = (e) => {
-        e.target.value = autoFormatNPWP(e.target.value);
+    const NPWP = document.getElementById("npwp")
+        NPWP.oninput = (e) => {
+            e.target.value = autoFormatNPWP(e.target.value);
+        }
+
+        function autoFormatNPWP(NPWPString) {
+            try {
+                var cleaned = ("" + NPWPString).replace(/\D/g, "");
+                var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+                return [      
+                        match[1], 
+                        match[2] ? ".": "",
+                        match[2], 
+                        match[3] ? ".": "",
+                        match[3],
+                        match[4] ? ".": "",
+                        match[4],
+                        match[5] ? "-": "",
+                        match[5],
+                        match[6] ? ".": "",
+                        match[6]].join("")
+                
+            } catch(err) {
+                return "";
+            }
     }
 
-    function autoFormatNPWP(NPWPString) {
-        try {
-            var cleaned = ("" + NPWPString).replace(/\D/g, "");
-            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
-            return [      
-                    match[1], 
-                    match[2] ? ".": "",
-                    match[2], 
-                    match[3] ? ".": "",
-                    match[3],
-                    match[4] ? ".": "",
-                    match[4],
-                    match[5] ? "-": "",
-                    match[5],
-                    match[6] ? ".": "",
-                    match[6]].join("")
-            
-        } catch(err) {
-            return "";
+    document.getElementById('ttd').addEventListener('change', function (e) {
+        const fileInput = e.target;
+        const ttdPreview = document.getElementById('ttd_preview');
+        const ttdBase64Input = document.getElementById('ttd_base64');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const allowedTypes = ['image/png'];
+            const maxSize = 1024 * 1024; // 1MB
+
+            if (file.size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Terlalu Besar',
+                    text: 'Ukuran file melebihi batas maksimum (1MB).',
+                });
+                fileInput.value = ""; // Reset input jika file melebihi ukuran maksimum
+                return;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Format File Tidak Valid',
+                    text: 'Hanya file PNG yang diizinkan.',
+                });
+                fileInput.value = ""; // Reset input jika file tidak valid
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                ttdPreview.src = e.target.result;
+                ttdBase64Input.value = e.target.result.split(',')[1]; // Simpan base64 dalam input tersembunyi
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            // Jika tidak ada gambar yang dipilih, tampilkan gambar default
+            ttdPreview.src = "{{ asset('assets/nophoto.jpg') }}";
+            ttdBase64Input.value = ""; // Hapus base64 jika tidak ada gambar yang dipilih
         }
- }
+    });
 </script>
 @endsection
 

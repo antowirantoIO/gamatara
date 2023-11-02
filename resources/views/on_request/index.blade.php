@@ -10,10 +10,18 @@
                         <div class="flex-grow-1 d-flex align-items-center">
                             <h4 class="mb-0 ml-2"> &nbsp; On Request</h4>
                         </div>
+                     
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             @if($auth == 'Project Admin')
+                                @if($cek > 0)
+                                <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                                @endif
+                            @endif
+                            @if($auth == 'Administator')
                             <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Tambah Project
+                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>
                             @endif
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
@@ -150,12 +158,13 @@
 @section('scripts')
 <script>
      $(document).ready(function () {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -176,6 +185,7 @@
             ajax: {
                 url: "{{ route('on_request') }}",
                 data: function (d) {
+                    filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
                     d.nama_project      = $('#nama_project').val();
                     d.nama_customer     = $('#nama_customer').val();
@@ -224,13 +234,14 @@
             var jenis_kapal     = $('#jenis_kapal').val();
 
             var url = '{{ route("on_request.export") }}?' + $.param({
-                code: code,
-                nama_project: nama_project,
-                nama_customer: nama_customer,
-                displacement: displacement,
-                start_date: start_date,
-                to_date: to_date,
-                jenis_kapal: jenis_kapal
+                code            : code,
+                nama_project    : nama_project,
+                nama_customer   : nama_customer,
+                displacement    : displacement,
+                start_date      : start_date,
+                to_date         : to_date,
+                jenis_kapal     : jenis_kapal,
+                keyword         : filterSearch
             });
 
             $('.loading-overlay').show();

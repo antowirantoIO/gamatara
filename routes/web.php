@@ -127,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/getData/{id}', [KeluhanController::class, 'getData'])->name('keluhan.getData');
         Route::post('/approve/{id}', [KeluhanController::class, 'approve'])->name('keluhan.approve');
         Route::get('/spk/{id}', [KeluhanController::class, 'SPK'])->name('keluhan.spk');
+        Route::get('/satuan/{id}', [KeluhanController::class, 'SPKSatuan'])->name('keluhan.satuan');
     });
 
     //karyawan
@@ -330,7 +331,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [LokasiProjectController::class, 'create'])->name('lokasi_project.create');
         Route::post('/store', [LokasiProjectController::class, 'store'])->name('lokasi_project.store');
         Route::post('/updated/{id}', [LokasiProjectController::class, 'updated'])->name('lokasi_project.updated');
-        Route::get('/delete/{id}', [LokasiProjectControllerController::class, 'delete'])->name('lokasi_project.delete');
+        Route::get('/delete/{id}', [LokasiProjectController::class, 'delete'])->name('lokasi_project.delete');
         Route::get('/export', [LokasiProjectController::class, 'export'])->name('lokasi_project.export');
     });
 

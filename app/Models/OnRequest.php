@@ -31,6 +31,16 @@ class OnRequest extends Model
         return $this->hasOne(ProjectManager::class,'id','pm_id');
     }
 
+    public function pe()
+    {
+        return $this->hasOne(ProjectEngineer::class,'id','pe_id');
+    }
+
+    public function pa()
+    {
+        return $this->hasOne(user::class,'id','user_id');
+    }
+
     public function complaint()
     {
         return $this->hasMany(Keluhan::class,'on_request_id','id');
@@ -39,6 +49,11 @@ class OnRequest extends Model
     public function lokasi()
     {
         return $this->hasOne(LokasiProject::class,'id','id_lokasi_project');
+    }
+
+    public function progress()
+    {
+        return $this->hasMany(ProjectPekerjaan::class,'id_project','id');
     }
 
     public function scopeFilter($query, $filter)
@@ -59,11 +74,17 @@ class OnRequest extends Model
             return $query->where('displacement', 'like', "%$filter->displacement%");
         })->when($filter->jenis_kapal ?? false, function($query) use ($filter) {
             return $query->where('id_jenis_kapal', 'like', "%$filter->jenis_kapal%");
+        })->when($filter->keyword ?? false, function($query) use ($filter) {
+            return $query->where(function ($query) use ($filter) {
+                $query->where('code', 'like', "%$filter->keyword%")
+                    ->orWhere('nama_project', 'like', "%$filter->keyword%")
+                    ->orWhere('created_at', 'like', "%$filter->keyword%")
+                    ->orWhere('displacement', 'like', "%$filter->keyword%");
+            })->orWhereHas('kapal', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
+            })->orWhereHas('customer', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
+            });
         });
-    }
-
-    public function progress()
-    {
-        return $this->hasMany(ProjectPekerjaan::class,'id_project','id');
     }
 }

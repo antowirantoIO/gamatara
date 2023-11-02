@@ -93,7 +93,7 @@
                 <!-- <td>
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td> -->
-                <td style="text-transform: uppercase;padding-left: 200px;font-size: 20px; font-weight: bold;" colspan="8">Rekap Surat Peintah Kerja</td>
+                <td style="text-transform: uppercase;padding-left: 200px;font-size: 20px; font-weight: bold;" colspan="8">Rekapan Surat Perintah Kerja</td>
                 <br><br>
             </tr>
         </table>
@@ -122,10 +122,14 @@
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td>Nama Vendor: <br> <b>{{ $item->vendors->name }}</b></td>
-                </tr>
-                <tr>
-                    <td>Request:<br> <b>{!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}</b></td>
+                    <td>Nama Vendor: <br> 
+                        <b>{{ $item->vendors->name }} 
+                            <br>
+                                Request:
+                            <br> 
+                            {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
+                    </b>
+                </td>
                 </tr>
                 @endforeach
             </tbody>

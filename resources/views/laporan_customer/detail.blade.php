@@ -1,7 +1,6 @@
 @extends('index')
 
 @section('content')
-
 <div class="row">
     <div class="col">
         <div class="h-100">
@@ -34,31 +33,29 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">{{ $name->customer->name ?? ''}}</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">{{ $data->customer->name ?? ''}}</h4>
                             <div>
                           
                             </div>
                         </div>
 
                         <div class="card-body">
-                            <div class="table-container">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Kode Project</th>
-                                            <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Tanggal Mulai</th>
-                                            <th style="color:#929EAE">Tanggal Selesai</th>
-                                            <th style="color:#929EAE">Nilai Project</th>
-                                            <th style="color:#929EAE">Status Project</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table" id="tableData">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Kode Project</th>
+                                        <th style="color:#929EAE">Nama Project</th>
+                                        <th style="color:#929EAE">Tanggal Mulai</th>
+                                        <th style="color:#929EAE">Tanggal Selesai</th>
+                                        <th style="color:#929EAE">Nilai Project</th>
+                                        <th style="color:#929EAE">Status Project</th>
+                                        <!-- <th style="color:#929EAE">Action</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -82,26 +79,57 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="code" class="form-label">Code Project</label>
+                                <label for="code">Code</label>
                                 <input type="text" name="code" class="form-control" id="code">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama Project</label>
+                                <label for="nama_project">Nama Project</label>
                                 <input type="text" name="nama_project" class="form-control" id="nama_project">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nilai_project" class="form-label">Nilai Project</label>
+                                <label for="nilai_project">Nilai Project</label>
                                 <input type="text" name="nilai_project" id="nilai_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="jumlah_project" class="form-label">Jumlah Project</label>
-                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
+                                <label for="status_project">Status Project</label>
+                                <select name="status_project" id="status_project" class="form-control">
+                                    <option value="">Pilih Status Project</option>
+                                    <option value="1">Request</option>
+                                    <option value="2">Selesai</option>
+                                    <option value="99">Cancel</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label for="tanggal_mulai">Tanggal Mulai</label>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="start_date">Dari </label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="to_date">Sampai</label>
+                                <input type="date" name="to_date" id="to_date" class="form-control" >
+                            </div>
+                        </div>
+                        <label for="tanggal_selesai">Tanggal Selesai</label>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="start_date_selesai">Dari </label>
+                                <input type="date" name="start_date_selesai" id="start_date_selesai" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="to_date_selesai">Sampai</label>
+                                <input type="date" name="to_date_selesai" id="to_date_selesai" class="form-control" >
                             </div>
                         </div>
                     </div>
@@ -117,13 +145,14 @@
 <script>
     //datatable
      $(document).ready(function () {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             lengthChange: false,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -142,11 +171,12 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_customer.detail', 5) }}",
+                url: "{{ route('laporan_customer.detail', '') }}/" + {{ $data->id_customer }},
                 data: function (d) {
+                    filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
                     d.nama_project      = $('#nama_project').val();
-                    d.tanggal_request   = $('#tanggal_request').val();
+                    d.tanggal_mulai     = $('#tanggal_mulai').val();
                     d.tanggal_selesai   = $('#tanggal_selesai').val();
                     d.nilai_project     = $('#nilai_project').val();
                     d.status_project    = $('#status_project').val();
@@ -155,11 +185,11 @@
             columns: [
                 {data: 'code', code: 'name'},
                 {data: 'nama_project', name: 'nama_project'},
-                {data: 'tanggal_request', name: 'tanggal_request'},
-                {data: 'tanggal_request', name: 'tanggal_request'},
+                {data: 'tanggal_mulai', name: 'tanggal_mulai'},
+                {data: 'tanggal_selesai', name: 'tanggal_selesai'},
                 {data: 'nilai_project', name: 'nilai_project'},
                 {data: 'status_project', name: 'status_project'},
-                {data: 'action', name: 'action'}
+                // {data: 'action', name: 'action'}
             ]
         });
 
@@ -178,18 +208,19 @@
 
             var code            = $('#code').val();
             var nama_project    = $('#nama_project').val();
-            var tanggal_request = $('#tanggal_request').val();
+            var tanggal_mulai   = $('#tanggal_mulai').val();
             var tanggal_selesai = $('#tanggal_selesai').val();
             var nilai_project   = $('#nilai_project').val();
             var status_project  = $('#status_project').val();
 
             var url = '{{ route("laporan_detail_customer.export") }}?' + $.param({
-                code: code,
-                nama_project: nama_project,
-                tanggal_request: tanggal_request,
-                tanggal_selesai: tanggal_selesai,
-                nilai_project: nilai_project,
-                status_project: status_project
+                code            : code,
+                nama_project    : nama_project,
+                tanggal_mulai   : tanggal_mulai,
+                tanggal_selesai : tanggal_selesai,
+                nilai_project   : nilai_project,
+                status_project  : status_project,
+                keyword         : filterSearch
             });
 
             $('.loading-overlay').show();

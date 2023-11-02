@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Karyawan;
 use App\Exports\ExportUser;
@@ -22,6 +22,9 @@ class UserController extends Controller
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('name', function($data){
                 return $data->karyawan->name ?? '';
+            })
+            ->addColumn('role', function($data){
+                return $data->role->name ?? '';
             })
             ->addColumn('action', function($data){
                 if($data->id != 1){
@@ -47,15 +50,17 @@ class UserController extends Controller
         }
 
         $karyawan = Karyawan::orderBy('name','asc')->get();
+        $role = Role::orderBy('name','asc')->get();
 
-        return view('user.index',compact('karyawan'));
+        return view('user.index',compact('karyawan','role'));
     }
 
     public function create()
     {
         $karyawan   = Karyawan::orderBy('id','DESC')->get();
+        $role       = Role::orderBy('id','DESC')->get();
 
-        return view('user.create',compact('karyawan'));
+        return view('user.create',compact('role','karyawan'));
     }
 
     public function store(Request $request)
@@ -64,19 +69,21 @@ class UserController extends Controller
             'email'                 => 'required|email|unique:users',
             'karyawan'              => 'required',
             'password'              => 'required|min:6',
+            'role'                  => 'required',
             'konfirmasi_password'   => 'required|same:password',
+            'ttd'                   => 'required'
         ]);
 
         $data                   = New User();
         $data->email            = $request->input('email');
         $data->nomor_telpon     = $request->input('nomor_telpon');
         $data->id_karyawan      = $request->input('karyawan');
+        $data->id_role          = $request->input('role');
+        $data->ttd              = $request->input('ttd_base64');
         $data->password         = bcrypt($request->input('password'));
         $data->save();
 
-        $karyawan = Karyawan::find($request->input('karyawan'));
-
-        $data->assignRole($karyawan->id_role);
+        $data->assignRole($request->input('role'));
 
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');
@@ -86,14 +93,16 @@ class UserController extends Controller
     {
         $data       = User::find($request->id);
         $karyawan   = Karyawan::orderBy('name','asc')->get();
+        $role       = Role::orderBy('id','DESC')->get();
 
-        return view('user.edit', Compact('data','karyawan'));
+        return view('user.edit', Compact('data','karyawan','role'));
     }
 
     public function updated(Request $request,$id)
     {
         $request->validate([
             'email'                 => 'required|email|unique:users,email,'.$request->id,
+            'role'                  => 'required',
             'karyawan'              => 'required',
         ]);
 
@@ -113,12 +122,12 @@ class UserController extends Controller
         $data->email        = $request->input('email');
         $data->nomor_telpon = $request->input('nomor_telpon');
         $data->id_karyawan  = $request->input('karyawan');
+        $data->id_role      = $request->input('role');
+        $data->ttd          = $request->input('ttd_base64');
         $data->password     = $password;
         $data->save();
 
-        $karyawan = Karyawan::find($request->input('karyawan'));
-
-        $data->assignRole($karyawan->id_role);
+        $data->assignRole($request->input('role'));
 
         return redirect(route('user'))
                     ->with('success', 'Data berhasil disimpan');

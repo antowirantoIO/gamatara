@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ExportDataComplete;
+use App\Exports\ExportPekerjaanComplete;
 use App\Exports\ExportPekerjaanVendor;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
@@ -53,5 +54,22 @@ class CompleteExportController extends Controller
         $nama_vendor = Vendor::where('id',$request->id_vendor)->pluck('name')->first();
         // return view('export.ExportPekerjaanVendor',compact('data','nama_project','nama_vendor'));
         return Excel::download(new ExportPekerjaanVendor($nama_project,$nama_vendor, $data),'List Pekerjaan ' . $nama_project . ' - ' . $nama_vendor . '.xlsx');
+    }
+
+    public function dataPekerjaan(Request $request)
+    {
+        $data = groupDataPekerjaan($request);
+        $project = OnRequest::where('id',$request->id_project)->first();
+        return Excel::download(new ExportPekerjaanComplete($data, $project),'List_Data_Pekerjaan_complete.xlsx');
+        // header("Pragma: public");
+        // header("Expires: 0");
+        // header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        // header("Content-Type: application/force-download");
+        // header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+        // header("Content-Type: application/octet-stream");
+        // header("Content-Type: application/download");
+        // header('Content-Disposition: attachment; filename=List_Data_Pekerjaan.xlsx');
+        return view('export.ExportPekerjaanOnProgress', compact('data','project'));
+
     }
 }

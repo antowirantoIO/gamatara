@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('complete.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Tagihan Vendor</h4>
@@ -172,7 +172,7 @@
                     previousButton.css('display', 'none');
                 },
                 ajax : {
-                    url : '{{ route('ajax.tagiham-all') }}',
+                    url : '{{ route('complete.ajax.tagiham-all') }}',
                     data : function (d) {
                         d.code = $('#code').val();
                         d.id = '{{ $id }}';
@@ -191,7 +191,7 @@
                         data : function(data) {
                             let id = data.id_project;
                             let vendor = data.id_vendor;
-                            let url = '{{ route('on_progres.tagihan-vendor',[':id',':vendor']) }}';
+                            let url = '{{ route('complete.tagihan-vendor',[':id',':vendor']) }}';
                             let urlReplace = url.replace(':id',id).replace(':vendor',vendor);
                             return ` <a href="${urlReplace}" class="btn btn-warning btn-sm">
                                 <span>
@@ -218,10 +218,18 @@
             $('#export-button').on('click', function(event) {
                 event.preventDefault();
 
-                var id_project      = '{{ $id }}';
+                var code            = $('#code').val();
+                var nama_project    = $('#nama_project').val();
+                var nama_customer   = $('#nama_customer').val();
+                var nama_pm         = $('#nama_pm').val();
+                var date            = $('#date').val();
 
-                var url = '{{ route("on_progres.export.all-tagihan-vendor") }}?' + $.param({
-                    id_project: id_project,
+                var url = '{{ route("on_progres.export-data") }}?' + $.param({
+                    code: code,
+                    nama_project: nama_project,
+                    nama_customer: nama_customer,
+                    nama_pm: nama_pm,
+                    date: date
                 });
 
                 $('.loading-overlay').show();

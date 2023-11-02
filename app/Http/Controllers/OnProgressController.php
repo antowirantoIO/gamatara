@@ -11,6 +11,7 @@ use App\Models\Kategori;
 use App\Models\Keluhan;
 use App\Models\LokasiProject;
 use App\Models\ProjectPekerjaan;
+use App\Models\RecentActivity;
 use App\Models\SettingPekerjaan;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -104,7 +105,7 @@ class OnProgressController extends Controller
             return DataTables::of($data)->addIndexColumn()
                             ->addColumn('action', function($data) {
                                return ' <div class="d-flex justify-contetn-center gap-3">
-                               <a href="'.route('on_progres.request-pekerjaan',[$data->id_project,$data->id_vendor]).'" class="btn btn-info btn-sm">
+                               <a href="'.route('on_progres.request-pekerjaan',[$data->id_project,$data->id_vendor,$data->id_kategori]).'" class="btn btn-info btn-sm">
                                    <span>
                                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                    </span>
@@ -140,11 +141,14 @@ class OnProgressController extends Controller
         return back()->with('success','Data Berhasil Di Simpan !');
     }
 
-    public function addWork($id, $vendor)
+    public function addWork($id, $vendor,$kategori)
     {
         $works = Kategori::all();
         $vendor = Vendor::where('id',$vendor)->first();
-        $pekerjaan = ProjectPekerjaan::where('id_project',$id)->where('id_vendor',$vendor->id)->get();
+        $pekerjaan = ProjectPekerjaan::where('id_project',$id)
+                                    ->where('id_kategori',$kategori)
+                                    ->where('id_vendor',$vendor->id)
+                                    ->get();
         $kategori_id = $pekerjaan->pluck('id_kategori')->first();
         $subkategori_id = $pekerjaan->pluck('id_subkategori')->first();
         $subkategori = collect();
@@ -200,12 +204,53 @@ class OnProgressController extends Controller
                     'thick' => $request->thick[$key],
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
-                    'amount' => $request->amount[$key],
-                    'harga_vendor' => $request->harga_vendor[$key],
-                    'harga_customer' => $request->harga_customer[$key]
+                    'amount' => str_replace(",", "", $request->amount[$key]),
+                    'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
+                    'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key])
                 ]);
+                $recent = RecentActivity::where('project_pekerjaan_id',$request->id[$key])->first();
+                if($recent){
+                    RecentActivity::create([
+                        'project_pekerjaan_id' => $idProject,
+                        'id_project' => $request->id_project,
+                        'id_pekerjaan' => $item,
+                        'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                        'id_lokasi' => $request->lokasi[$key],
+                        'detail' => $request->detail[$key],
+                        'length' => $request->length[$key],
+                        'width' => $request->width[$key],
+                        'thick' => $request->thick[$key],
+                        'unit' => $request->unit[$key],
+                        'qty' => $request->qty[$key],
+                        'amount' => str_replace(",", "", $request->amount[$key]),
+                        'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
+                        'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
+                        'description' => 'Data Di Rubah',
+                        'status' => 2,
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+                }else{
+                    RecentActivity::create([
+                        'project_pekerjaan_id' => $idProject,
+                        'id_project' => $request->id_project,
+                        'id_pekerjaan' => $item,
+                        'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                        'id_lokasi' => $request->lokasi[$key],
+                        'length' => $request->length[$key],
+                        'width' => $request->width[$key],
+                        'thick' => $request->thick[$key],
+                        'unit' => $request->unit[$key],
+                        'qty' => $request->qty[$key],
+                        'amount' => str_replace(",", "", $request->amount[$key]),
+                        'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
+                        'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
+                        'description' => 'Menambahkan Data Baru',
+                        'status' => 1,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
             }else {
-                ProjectPekerjaan::create([
+                $pekerjaan = ProjectPekerjaan::create([
                     'id_project' => $request->id_project,
                     'id_kategori' => $request->kategori,
                     'id_subkategori' => $request->sub_kategori,
@@ -220,14 +265,58 @@ class OnProgressController extends Controller
                     'thick' => $request->thick[$key],
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
-                    'amount' => $request->amount[$key],
-                    'harga_vendor' => $request->harga_vendor[$key],
-                    'harga_customer' => $request->harga_customer[$key]
+                    'amount' => str_replace(",", "", $request->amount[$key]),
+                    'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]),
+                    'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key])
+                ]);
+
+                RecentActivity::create([
+                    'project_pekerjaan_id' => $pekerjaan->id,
+                    'id_project' => $request->id_project,
+                    'id_pekerjaan' => $item,
+                    'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                    'id_lokasi' => $request->lokasi[$key],
+                    'length' => $request->length[$key],
+                    'width' => $request->width[$key],
+                    'thick' => $request->thick[$key],
+                    'unit' => $request->unit[$key],
+                    'qty' => $request->qty[$key],
+                    'amount' => str_replace(",", "", $request->amount[$key]),
+                    'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
+                    'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
+                    'description' => 'Menambahkan Data Baru',
+                    'status' => 1,
+                    'created_at' => date('Y-m-d H:i:s')
                 ]);
             }
         }
 
         return back()->with('success','Data Berhasil Di Simpan');
+
+    }
+
+    public function deleteRequest(Request $request)
+    {
+        $data = ProjectPekerjaan::where('id',$request->id)->first();
+        ProjectPekerjaan::where('id',$request->id)->delete();
+        RecentActivity::create([
+            'project_pekerjaan_id' => $data->id,
+            'id_project' => $data->id_project,
+            'length' => $data->length,
+            'width' => $data->width,
+            'thick' => $data->thick,
+            'unit' => $data->unit,
+            'qty' => $data->qty,
+            'amount' => str_replace(",", "", $data->amount),
+            'harga_vendor' => str_replace(",", "", $data->harga_vendor) ,
+            'harga_customer' =>  str_replace(",", "", $data->harga_customer),
+            'description' => 'Data Di Delete',
+            'status' => 3,
+            'created_at' => date('Y-m-d H:i:s'),
+            'deleted_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return response()->json(['status' => 200, 'msg' => 'Data Berhasil Di Hapus !']);
 
     }
 
@@ -517,6 +606,33 @@ class OnProgressController extends Controller
                 } else {
                     return $data->subKategori->name;
                 }
+            })
+            ->make(true);
+        }
+
+    }
+
+    public function ajaxUnitPekerjaan ($id)
+    {
+        $data = Pekerjaan::where('id',$id)->first();
+        return response()->json(['data' => $data]);
+    }
+
+    public function ajaxActivityRecent(Request $request)
+    {
+        if($request->ajax()){
+            $data = RecentActivity::where('id_project',$request->id)
+                                ->with(['pekerjaan'])
+                                ->orderBy('created_at','desc')
+                                ->orderBy('updated_at','desc')
+                                ->orderBy('deleted_at','desc');
+            $data = $data->get();
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('harga_vendor', function($data) {
+                return number_format($data->harga_vendor , 0, '.', ',');
+            })
+            ->addColumn('harga_customer', function($data) {
+                return number_format($data->harga_customer , 0, '.', ',');
             })
             ->make(true);
         }

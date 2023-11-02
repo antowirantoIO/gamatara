@@ -77,56 +77,109 @@
                                                 </thead>
                                                 <tbody id="clone">
                                                     @foreach ($pekerjaan as $keys => $p)
-                                                    <input type="hidden" name="id[]" value="{{ $p->id }}">
-                                                    <tr class="draggable-row">
-                                                        <td>
-                                                            <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
-                                                                <option selected disabled>Pilih Pekerjaan</option>
-                                                                @foreach ($settingPekerjaan as $sp)
-                                                                    <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id_pekerjaan ? 'selected' : '') : '' }} value="{{ $sp->id_pekerjaan }}">{{ $sp->pekerjaan->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="deskripsi[]" style="width: 150px;" value="{{ $p->deskripsi_pekerjaan }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="lokasi[]" style="width: 100px;" value="{{ $p->id_lokasi }}">
-                                                        </td>
+                                                    <input type="hidden" name="id[]" value="{{ $p->id }}" class="id">
 
-                                                        <td>
-                                                            <input type="text" class="form-control" name="detail[]" style="width: 100px;" value="{{ $p->detail }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="length[]" style="width: 70px" value="{{ $p->length }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="width[]"style="width: 70px" value="{{ $p->width }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="unit[]" style="width: 70px" value="{{ $p->unit }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="number" class="form-control" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ $p->harga_vendor }}">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="form-control" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ $p->harga_customer }}">
-                                                        </td>
-                                                        <td>
-                                                            <div class="btn btn-danger btn-trash">
-                                                                <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    @if ($p->activity() && $p->activity()->status === 2)
+                                                        <tr class="draggable-row parent-clone">
+                                                            <td>
+                                                                <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
+                                                                    <option selected disabled>Pilih Pekerjaan</option>
+                                                                    @foreach ($settingPekerjaan as $sp)
+                                                                        <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id_pekerjaan ? 'selected' : '') : '' }} value="{{ $sp->id_pekerjaan }}">{{ $sp->pekerjaan->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="deskripsi[]" style="width: 150px;" value="{{ $p->deskripsi_pekerjaan }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="lokasi[]" style="width: 100px;" value="{{ $p->id_lokasi }}">
+                                                            </td>
+
+                                                            <td>
+                                                                <input type="text" class="form-control" name="detail[]" style="width: 100px;" value="{{ $p->detail }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control {{ $p->length !== $p->activity()->length ? 'bg-danger text-white' : '' }}" name="length[]" style="width: 70px" value="{{ $p->length }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control {{ $p->width !== $p->activity()->width ? 'bg-danger text-white' : '' }}" name="width[]"style="width: 70px" value="{{ $p->width }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control {{ $p->thick !== $p->activity()->thick ? 'bg-danger text-white' : '' }}" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control {{ $p->unit !== $p->activity()->unit ? 'bg-danger text-white' : '' }}" name="unit[]" style="width: 70px" id="unit" value="{{ $p->unit }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white' : '' }}" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control {{ $p->amount !== $p->activity()->amount ? 'bg-danger text-white' : '' }}" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn btn-danger" data-id="{{ $p->id }}">
+                                                                    <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @else
+                                                        <tr class="draggable-row parent-clone">
+                                                            <td>
+                                                                <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
+                                                                    <option selected disabled>Pilih Pekerjaan</option>
+                                                                    @foreach ($settingPekerjaan as $sp)
+                                                                        <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id_pekerjaan ? 'selected' : '') : '' }} value="{{ $sp->id_pekerjaan }}">{{ $sp->pekerjaan->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="deskripsi[]" style="width: 150px;" value="{{ $p->deskripsi_pekerjaan }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="lokasi[]" style="width: 100px;" value="{{ $p->id_lokasi }}">
+                                                            </td>
+
+                                                            <td>
+                                                                <input type="text" class="form-control" name="detail[]" style="width: 100px;" value="{{ $p->detail }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="length[]" style="width: 70px" value="{{ $p->length }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="width[]"style="width: 70px" value="{{ $p->width }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="unit[]" style="width: 70px" id="unit" value="{{ $p->unit }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn btn-danger btn-trash" data-id="{{ $p->id }}">
+                                                                    <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -135,9 +188,41 @@
                                     </div>
                                     <div class="d-flex justify-content-end align-items-center gap-3 mt-4">
                                         <button type="submit" class="btn btn-primary">Simpan</button>
-                                        <div class="btn btn-danger">Cancel</div>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <h4>Aktivitas Terkahir</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="live-preview">
+                                <table class="table" id="tableActivity">
+                                    <thead style="background-color:#194BFB;color:#FFFFFF;">
+                                        <tr>
+                                            <th style="width: 200px">Jenis Pekerjaan</th>
+                                            <th style="width: 200px">Tanggal</th>
+                                            <th style="width: 200px">Status</th>
+                                            <th style="width: 90px">Length (mm)</th>
+                                            <th style="width: 90px">Width (mm)</th>
+                                            <th style="width: 90px">Thick (mm)</th>
+                                            <th style="width: 90px">Unit</th>
+                                            <th style="width: 90px">Qty</th>
+                                            <th style="width: 90px">Amount</th>
+                                            <th style="width: 90px">Harga Vendor</th>
+                                            <th style="width: 90px">Harga Customer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -197,13 +282,19 @@
                         <input type="number" class="form-control" name="thick[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="unit[]" style="width: 70px">
+                        <input type="text" class="form-control" id="unit${count}" name="unit[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="harga_vendor[]" style="width: 100px">
+                        <input type="text" class="form-control" name="qty[]" style="width: 70px" >
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="harga_customer[]" style="width: 100px">
+                        <input type="text" class="form-control" name="amount[]" style="width: 70px" >
+                    </td>
+                    <td>
+                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control harga_customer" name="harga_customer[]" style="width: 100px" id="harga_customer${count}">
                     </td>
 
                     <td>
@@ -217,10 +308,40 @@
                     search: true
                 })
 
-
                 let id = $('#sub_kategori').val();
+                var unit = $(`#unit${count}`);
+                var harga_vendor = $(`#harga_vendor${count}`);
+                var harga_customer = $(`#harga_customer${count}`);
+
                 getSelect(id,select);
+
+                $(`#pekerjaan${count}`).on('change',function(){
+                    let id = $(this).val();
+                    let url = '{{ route('ajax.unit-pekerjaan',':id') }}'
+                    let urlReplace = url.replace(':id',id);
+                    $.ajax({
+                        url : urlReplace,
+                    }).then(ress => {
+                        harga_vendor.val(formatRupiah(ress.data.harga_vendor));
+                        harga_customer.val(formatRupiah(ress.data.harga_customer));
+                        unit.val(ress.data.unit)
+                    })
+                });
+
                 count++;
+
+                $('.harga_customer').on('input', function() {
+                    var inputValue = $(this).val();
+                    var formattedValue = formatRupiah(inputValue);
+                    $(this).val(formattedValue);
+                });
+
+                $('.harga_vendor').on('input', function() {
+                    var inputValue = $(this).val();
+                    var formattedValue = formatRupiah(inputValue);
+                    $(this).val(formattedValue);
+                });
+
             })
 
             $('#clone').on('change', '.draggable-row input[name="length[]"], input[name="width[]"], input[name="thick[]"],input[name="qty[]"]', function() {
@@ -230,19 +351,123 @@
                 var thickValue = parseFloat($(this).closest('tr').find('input[name="thick[]"]').val());
                 var qtyValue = parseFloat($(this).closest('tr').find('input[name="qty[]"]').val());
 
-                // Hitung amount
                 var amountValue = (lengthValue * widthValue * thickValue * qtyValue * 0.64) / 1000;
 
-                // Perbarui input amount dengan hasil perhitungan
+                amountValue = amountValue.toFixed(2);
+
                 $(this).closest('tr').find('input[name="amount[]"]').val(amountValue);
             });
 
             $(document).delegate('.btn-trash','click',function(){
                 let data = $('.parent-clone');
-                console.log(data);
-                if(data.length != 1){
-                    $(this).closest('tr').remove();
+                let id = $(this).data('id');
+                if(typeof id !== 'undefined' && id !== null && id !== '' ){
+                    Swal.fire({
+                        title: 'Apakah Anda Ingin Menghapus Data Ini?',
+                        text: "Data akan di hapus permanent!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, hapus!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url : '{{ route('on_progres.request-delete') }}',
+                                method : 'POST',
+                                data : {
+                                    _token : '{{ csrf_token() }}',
+                                    id
+                                }
+                            }).then(ress => {
+                                if(ress.status === 200) {
+                                    $(this).closest('tr').remove();
+                                    alertToast('success',ress.msg);
+                                }
+                            })
+                        }
+                    })
+                }else {
+
+                    if(data.length != 1){
+                        $(this).closest('tr').remove();
+                    }
                 }
+            })
+
+            let table = $('#tableActivity').DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                ordering : false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                autoWidth : true,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
+                ajax : {
+                    url : '{{ route('ajax.recent-activity') }}',
+                    data : function (d) {
+                        d.id =  '{{ $id }}'
+                    }
+                },
+                columns : [
+                    { data : 'pekerjaan.name', name : 'id_pekerjaan'},
+                    {
+                        data : function(data) {
+                            let status = data.status || '-';
+                            if(status === 1) {
+                                let date = moment(data.created_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }else if ( status === 2 ){
+                                let date = moment(data.updated_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }else{
+                                let date = moment(data.deleted_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }
+                        }
+                    },
+                    {
+                        data : function(data) {
+                            let status = data.status;
+                            if(status === 1) {
+                                return `<div class="text-primary">${data.description} </div>`
+                            }else if(status === 2){
+                                return `<div class="text-info">${data.description} </div>`
+                            }else{
+                                return `<div class="text-danger">${data.description} </div>`
+                            }
+                        }
+                    },
+                    { data : 'length', name : 'length' },
+                    { data : 'width', name : 'width' },
+                    { data : 'thick', name : 'thick' },
+                    { data : 'unit', name : 'unit' },
+                    { data : 'qty', name : 'qty' },
+                    { data : 'amount', name : 'amount' },
+                    { data : 'harga_vendor', name : 'harga_vendor' },
+                    { data : 'harga_customer', name : 'harga_customer' },
+                ]
             })
 
             $('#kategori').on('change',function(){
@@ -304,17 +529,32 @@
                 })
             }
 
-            $('#harga_customer').on('input', function() {
+            $('.harga_customer').on('input', function() {
                 var inputValue = $(this).val();
                 var formattedValue = formatRupiah(inputValue);
                 $(this).val(formattedValue);
             });
 
-            $('#harga_vendor').on('input', function() {
+            $('.harga_vendor').on('input', function() {
                 var inputValue = $(this).val();
                 var formattedValue = formatRupiah(inputValue);
                 $(this).val(formattedValue);
             });
+
+            @foreach ($pekerjaan as $keys => $p)
+                $(`#pekerjaan-{{ $keys }}`).on('change',function(){
+                    let id = $(this).val();
+                    let url = '{{ route('ajax.unit-pekerjaan',':id') }}'
+                    let urlReplace = url.replace(':id',id);
+                    $.ajax({
+                        url : urlReplace,
+                    }).then(ress => {
+                        $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
+                        $('#harga_customer').val(formatRupiah(ress.data.harga_customer));
+                        $('#unit').val(ress.data.unit);
+                    })
+                });
+            @endforeach
 
             function formatRupiah(angka) {
                 var numberString = angka.toString().replace(/[^0-9]/g, '');
@@ -331,6 +571,25 @@
                 }
 
                 return rupiah;
+            }
+
+            const alertToast = (icon, message) => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: icon,
+                    title: message
+                })
             }
 
         })

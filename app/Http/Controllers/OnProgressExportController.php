@@ -74,4 +74,11 @@ class OnProgressExportController extends Controller
         return view('export.ExportPekerjaanOnProgress', compact('data','project'));
 
     }
+
+    public function allTagihanVendor (Request $request)
+    {
+        $data = groupDataPekerjaanVendor($request);
+        $project = OnRequest::where('id',$request->id_project)->first();
+        return view('export.ExportTagihanVendor',compact('data'));
+    }
 }

@@ -194,6 +194,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export', [LaporanCustomerController::class, 'export'])->name('laporan_customer.export');
         Route::get('/detail_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_customer.export');
         Route::get('/detail_project_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_project_customer.export');
+        Route::get('/chart', [LaporanCustomerController::class, 'chart'])->name('laporan_customer.chart');
     });
 
     //laporan vendor
@@ -208,6 +209,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [LaporanProjectManagerController::class, 'index'])->name('laporan_project_manager');
         Route::get('/detail/{id}', [LaporanProjectManagerController::class, 'detail'])->name('laporan_project_manager.detail');
         Route::get('/export', [LaporanProjectManagerController::class, 'export'])->name('laporan_project_manager.export');
+
+        Route::prefix('chart')->group(function(){
+            Route::get('data',[LaporanProjectManagerController::class,'chart'])->name('laporan_project_manager.charts');
+        });
     });
 
     //laporan Satisfaction note
@@ -231,10 +236,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
 
         Route::prefix('request')->group(function(){
-            Route::get('tambah-pekerjaan/{id}/{vendor}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
+            Route::get('tambah-pekerjaan/{id}/{vendor}/{kategori}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
             Route::post('tambah-pekerjaan/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
             Route::get('tambah-kategori/{id}/{vendor}',[OnProgressController::class,'tambahKategori'])->name('on_progres.request.tambah-kategori');
             Route::post('tambah-kategori',[OnProgressController::class,'storeTambahKategori'])->name('on_progres.store-kategori');
+            Route::post('delete-request',[OnProgressController::class,'deleteRequest'])->name('on_progres.request-delete');
         });
 
         Route::prefix('tagihan')->group(function(){
@@ -259,12 +265,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('sub-kategori/{id}',[OnProgressController::class,'getSubKategori'])->name('on_progres.sub-kategori');
             Route::get('pekerjaan/{id}',[OnProgressController::class,'getPekerjaan'])->name('on_progres.pekerjaan');
             Route::get('lokasi',[OnProgressController::class,'getLokasi'])->name('on_progres.lokasi');
+            Route::get('unit/{id}',[OnProgressController::class,'ajaxUnitPekerjaan'])->name('ajax.unit-pekerjaan');
+            Route::get('recent-activity',[OnProgressController::class,'ajaxActivityRecent'])->name('ajax.recent-activity');
         });
 
         Route::prefix('export')->group(function(){
             Route::get('data',[OnProgressExportController::class,'allData'])->name('on_progres.export-data');
             Route::get('pekerjaan-vendor',[OnProgressExportController::class,'pekerjaanVendor'])->name('on_progres.export-pekrjaan-vendor');
             Route::get('pekerjaan-onprogres',[OnProgressExportController::class,'dataPekerjaan'])->name('on_progress.export-pekerjaan');
+            Route::get('all/tagihan-vendor',[OnProgressExportController::class,'allTagihanVendor'])->name('on_progres.export.all-tagihan-vendor');
         });
 
 
@@ -285,18 +294,24 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('tagihan')->group(function(){
-            Route::get('vendor/{id}',[CompleteController::class,'tagihanVendor'])->name('complete.tagihan-vendor');
+            Route::get('list/tagihan-vendor/{id}',[CompleteController::class,'dataTagihan'])->name('complete.tagihan.all');
+            Route::get('vendor/{id}/{vendor}',[CompleteController::class,'tagihanVendor'])->name('complete.tagihan-vendor');
             Route::get('customer/{id}',[CompleteController::class,'tagihanCustomer'])->name('complete.tagihan-customer');
+            Route::get('tagihan-all',[CompleteController::class,'ajaxAllTagihan'])->name('complete.ajax.tagiham-all');
         });
 
         Route::prefix('ajax')->group(function(){
             Route::get('pekerjaan',[CompleteController::class,'ajaxProgresPekerjaan'])->name('complete.ajax.progres-pekerjaan');
             Route::get('pekerjaan-vendor',[CompleteController::class,'ajaxPekerjaanVendor'])->name('complete.ajax.pekerjaan-vendor');
             Route::get('setting-estimasi',[CompleteController::class,'ajaxSettingEstimasi'])->name('complete.ajax.setting-estimasi');
+            Route::get('tagihan-vendor',[CompleteController::class,'ajaxTagihanVendor'])->name('complete.ajax.tagihan-vendor');
+            Route::get('tagihan-customer',[CompleteController::class,'ajaxTagihanCustomer'])->name('complete.ajax.tagihan-customer');
         });
 
         Route::prefix('export')->group(function(){
             Route::get('all-data',[CompleteExportController::class,'allData'])->name('complete.export.all');
+            Route::get('pekerjaan-vendor',[CompleteExportController::class,'pekerjaanVendor'])->name('complete.export.pekrjaan-vendor');
+            Route::get('pekerjaan-complete',[CompleteExportController::class,'dataPekerjaan'])->name('complete.export.pekerjaan');
         });
 
         Route::prefix('setting')->group(function(){

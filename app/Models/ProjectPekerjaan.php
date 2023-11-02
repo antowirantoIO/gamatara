@@ -42,6 +42,15 @@ class ProjectPekerjaan extends Model
         return $this->belongsTo(SubKategori::class,'id_subkategori','id');
     }
 
+    public function activity()
+    {
+        return $this->hasMany(RecentActivity::class,'project_pekerjaan_id','id')
+                    ->orderBy('created_at', 'desc')
+                    ->skip(1)
+                    ->take(1)
+                    ->first();
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->code ?? false, function($query) use ($filter) {

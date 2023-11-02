@@ -18,12 +18,12 @@ class ProjectManager extends Model
 
     public function pe()
     {
-        return $this->hasMany(ProjectEngineer::class, 'id_pm');
+        return $this->hasMany(ProjectEngineer::class, 'id_pm')->onDelete('cascade');
     }
 
     public function pa()
     {
-        return $this->hasMany(ProjectAdmin::class, 'id_pm');
+        return $this->hasMany(ProjectAdmin::class, 'id_pm')->onDelete('cascade');
     }
 
     public function scopeFilter($query, $filter)

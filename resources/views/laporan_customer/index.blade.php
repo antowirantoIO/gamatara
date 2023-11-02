@@ -1,6 +1,12 @@
 @extends('index')
 
 @section('content')
+<style>
+    #yearDropdown {
+    max-height: 300px;
+    overflow-y: auto;
+}
+</style>
 <div class="row">
     <div class="col">
         <div class="h-100">
@@ -10,6 +16,7 @@
                         <div class="flex-grow-1 d-flex align-items-center">
                             <h4 class="mb-0 ml-2"> &nbsp; Laporan Customer</h4>
                         </div>
+                        <input type="hidden" id="tot" value="{{$totalHargaData}}">
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
@@ -63,12 +70,11 @@
                             </h4>
                             <div class="mt-3 mt-lg-0 ml-lg-auto">
                                 <div class="dropdown" role="group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        2023
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
+                                        2023 <!-- Tahun awal yang ditampilkan -->
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="yearDropdown">
+                                        <!-- Daftar tahun akan diisi oleh JavaScript -->
                                     </ul>
                                 </div>
                             </div>
@@ -128,6 +134,8 @@
 @section('scripts')
 <script>
     //chart
+    let chartData = JSON.parse($('#tot').val());
+
     var options = {
     chart: {
         type: 'bar',
@@ -145,7 +153,7 @@
     series: [
         {
             name: 'Nominal Project',
-            data: [150, 220, 350, 280, 420, 310, 260, 380, 420, 330, 280, 200],
+            data: chartData
         }
     ],
     xaxis: {
@@ -194,6 +202,7 @@
                     d.name              = $('#name').val();
                     d.jumlah_project    = $('#jumlah_project').val();
                     d.nilai_project     = $('#nilai_project').val();
+                    d.year              = '';
                 }
             },
             columns: [
@@ -240,5 +249,131 @@
             $('.loading-overlay').hide();
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const yearDropdown = document.getElementById('yearDropdown');
+        const yearDropdownButton = document.getElementById('yearDropdownButton');
+        
+        let chart;
+
+        const currentYear = (new Date()).getFullYear();
+        const years = [];
+        for (let i = currentYear - 20; i <= currentYear; i++) {
+            years.push(i);
+        }
+
+        years.forEach(function (year) {
+            const listItem = document.createElement('li');
+            const anchor = document.createElement('a');
+            anchor.classList.add('dropdown-item');
+            anchor.href = '#';
+            anchor.textContent = year;
+        
+            anchor.addEventListener('click', function () {
+                yearDropdownButton.textContent = year;
+                $.ajax({
+                    url: '{{ route('laporan_customer.chart') }}',
+                    method: 'get',
+                    data: {
+                        year: year
+                    },
+                    success: function(response) {
+                        console.log(response.totalHargaData);
+                        const chartData = JSON.parse(response.totalHargaData);
+                        
+                        if (chart) {
+                            chart.updateOptions({
+                                series: [{
+                                    data: chartData
+                                }]
+                            });
+                        } else {
+                            const options = {
+                                chart: {
+                                    type: 'bar',
+                                    height: 600,
+                                },
+                                plotOptions: {
+                                    bar: {
+                                        horizontal: true,
+                                        borderRadius: 5,
+                                    },
+                                },
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                                series: [{
+                                    name: 'Nominal Project',
+                                    data: chartData
+                                }],
+                                xaxis: {
+                                    labels: {
+                                        show: false,
+                                    },
+                                    categories: [
+                                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                                    ],
+                                },
+                                colors: ['#194BFB'],
+                            };
+                            
+                            chart = new ApexCharts(document.querySelector("#bar"), options);
+                            chart.render();
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            });
+        
+            listItem.appendChild(anchor);
+            yearDropdown.appendChild(listItem);
+        });
+    });
+
+ 
+//     document.addEventListener('DOMContentLoaded', function () {
+//         const yearDropdown = document.getElementById('yearDropdown');
+//         const yearDropdownButton = document.getElementById('yearDropdownButton');
+        
+//         let chart; // Inisialisasi objek grafik di sini
+
+//         const years = [2021, 2022, 2023, 2024, 2025];
+
+    
+//         years.forEach(function (year) {
+//             const listItem = document.createElement('li');
+//             const anchor = document.createElement('a');
+//             anchor.classList.add('dropdown-item');
+//             anchor.href = '#';
+//             anchor.textContent = year;
+        
+//             anchor.addEventListener('click', function () {
+//                 yearDropdownButton.textContent = year;
+//                 $.ajax({
+//                     url: '{{ route('laporan_customer.chart') }}',
+//                     method: 'get',
+//                     data: {
+//                         year: year
+//                     },
+//                     success: function(response) {
+//                         console.log(response.totalHargaData);
+//                         const chartData = JSON.parse(response.totalHargaData); // Konversi ke array
+//                         $('#tot').val(response.totalHargaData);
+                
+//                     },
+//                     error: function(error) {
+//                         console.error(error);
+//                     }
+//                 });
+//             });
+        
+//             listItem.appendChild(anchor);
+//             yearDropdown.appendChild(listItem);
+//     });
+// });
+
 </script>
 @endsection

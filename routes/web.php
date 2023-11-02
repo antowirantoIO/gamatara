@@ -194,6 +194,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export', [LaporanCustomerController::class, 'export'])->name('laporan_customer.export');
         Route::get('/detail_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_customer.export');
         Route::get('/detail_project_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_project_customer.export');
+        Route::get('/chart', [LaporanCustomerController::class, 'chart'])->name('laporan_customer.chart');
     });
 
     //laporan vendor

@@ -55,7 +55,11 @@
             @foreach($keluhans as $key => $complaint)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{ explode('<br>', $complaint->keluhan)[0] ?? '' }}</td>
+                    <td> 
+                        <a type="button" data-bs-toggle="modal" data-bs-target="#opo-{{$complaint->id}}"> 
+                            {{ explode('<br>', $complaint->keluhan)[0] ?? '' }}
+                        </a>
+                    </td>
                     <td>{{ $complaint->vendors->name ?? ''}}</td>
                     <td>
                         @if($pmAuth == 'Project Manager' || $pmAuth == 'PM' || $pmAuth == 'Administator')
@@ -168,6 +172,22 @@
                         @endif
                     </td>
                 </tr>
+
+                <!--modal -->
+                <div class="modal fade" id="opo-{{ $complaint->id }}" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalgridLabel">Detail Request</h5>
+                            </div>
+                            <hr>
+                            <div class="modal-body">
+                                {!! nl2br(str_replace('<br>', "\n", $complaint->keluhan)) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal-->
                 @endforeach
         </tbody>
     </table>

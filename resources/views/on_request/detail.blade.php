@@ -495,26 +495,26 @@
             e.target.value = autoFormatNPWP(e.target.value);
         }
 
-        function autoFormatNPWP(NPWPString) {
-            try {
-                var cleaned = ("" + NPWPString).replace(/\D/g, "");
-                var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
-                return [      
-                        match[1], 
-                        match[2] ? ".": "",
-                        match[2], 
-                        match[3] ? ".": "",
-                        match[3],
-                        match[4] ? ".": "",
-                        match[4],
-                        match[5] ? "-": "",
-                        match[5],
-                        match[6] ? ".": "",
-                        match[6]].join("")
-                
-            } catch(err) {
-                return "";
-            }
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [      
+                    match[1], 
+                    match[2] ? ".": "",
+                    match[2], 
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+            
+        } catch(err) {
+            return "";
+        }
     }
 
     //hapus keluhan

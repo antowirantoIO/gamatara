@@ -162,13 +162,14 @@
 
     //datatable
      $(document).ready(function () {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             lengthChange: false,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -189,15 +190,16 @@
             ajax: {
                 url: "{{ route('laporan_customer') }}",
                 data: function (d) {
+                    filterSearch        = d.search?.value;
                     d.name              = $('#name').val();
-                    d.nilai_project     = $('#nilai_project').val();
                     d.jumlah_project    = $('#jumlah_project').val();
+                    d.nilai_project     = $('#nilai_project').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'nilai_project', name: 'nilai_project'},
                 {data: 'jumlah_project', name: 'jumlah_project'},
+                {data: 'nilai_project', name: 'nilai_project'},
                 {data: 'action', name: 'action'}
             ]
         });
@@ -215,14 +217,16 @@
         $('#export-button').on('click', function(event) {
             event.preventDefault(); 
 
-            var name   = $('#name').val();
-            var nilai_project   = $('#nilai_project').val();
+            var name            = $('#name').val();
             var jumlah_project  = $('#jumlah_project').val();
+            var nilai_project   = $('#nilai_project').val();
+          
 
             var url = '{{ route("laporan_customer.export") }}?' + $.param({
-                name: name,
-                nilai_project: nilai_project,
-                jumlah_project: jumlah_project,
+                name            : name,
+                nilai_project   : nilai_project,
+                jumlah_project  : jumlah_project,
+                keyword         : filterSearch
             });
 
             $('.loading-overlay').show();

@@ -100,20 +100,36 @@ class CompleteController extends Controller
         return view('complete.pekerjaan.detail',compact('data','idProject'));
     }
 
+    public function dataTagihan(Request $request, $id)
+    {
+        $kategori = Kategori::all();
+        $allData = ProjectPekerjaan::where('id_project', $id)->get();
+        $workers = $allData->groupBy('id_kategori','id_subkategori');
+        $subKategori = SubKategori::all();
+        $lokasi = LokasiProject::all();
+        return view('complete.tagihan.index',compact('id','kategori','workers','subKategori','lokasi'));
+    }
+
     public function tagihanCustomer($id)
     {
         $kategori = Kategori::all();
         $allData = ProjectPekerjaan::where('id_project', $id)->get();
         $workers = $allData->groupBy('id_kategori','id_subkategori');
-        return view('complete.tagihan.customer',compact('id','kategori','workers'));
+        $subKategori = SubKategori::all();
+        $lokasi = LokasiProject::all();
+        return view('complete.tagihan.customer',compact('id','kategori','workers','subKategori','lokasi'));
     }
 
-    public function tagihanVendor($id)
+    public function tagihanVendor($id,$vendor)
     {
         $kategori = Kategori::all();
-        $allData = ProjectPekerjaan::where('id_project', $id)->get();
+        $subKategori = SubKategori::all();
+        $lokasi = LokasiProject::all();
+        $allData = ProjectPekerjaan::where('id_project', $id)
+                                    ->where('id_vendor',$vendor)
+                                    ->get();
         $workers = $allData->groupBy('id_kategori','id_subkategori');
-        return view('complete.tagihan.vendor',compact('id','kategori','workers'));
+        return view('complete.tagihan.vendor',compact('id','kategori','workers','vendor','subKategori','lokasi'));
     }
 
     public function pekerjaanVendor(Request $request, $id, $project)
@@ -254,5 +270,81 @@ class CompleteController extends Controller
             })
             ->make(true);
         }
+    }
+
+    public function ajaxAllTagihan (Request $request)
+    {
+        $data = ProjectPekerjaan::where('id_project', $request->id)
+                                ->with(['subKategori','projects','pekerjaan','projects.pm','projects.customer','vendors'])
+                                ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                                ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                ->distinct();
+        if($request->ajax()){
+            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
+            return DataTables::of($data)->addIndexColumn()
+            ->make(true);
+        }
+
+    }
+
+    public function ajaxTagihanVendor(Request $request)
+    {
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                                    ->where('id_kategori',$request->id_kategori)
+                                    ->where('id_vendor',$request->id_vendor)
+                                    ->with(['subKategori','projects.lokasi','pekerjaan']);
+
+            if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+                $data->where('id_subkategori',$request->sub_kategori);
+            }
+
+            if($request->has('id_lokasi') && !empty($request->id_lokasi)){
+                $data->where('id_lokasi',$request->id_lokasi);
+            }
+
+            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('subKategori', function($data) {
+                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->make(true);
+        }
+
+    }
+
+    public function ajaxTagihanCustomer(Request $request)
+    {
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                                    ->where('id_kategori',$request->id_kategori)
+                                    ->with(['subKategori','projects.lokasi','pekerjaan']);
+
+            if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+                $data->where('id_subkategori',$request->sub_kategori);
+            }
+
+            if($request->has('id_lokasi') && !empty($request->id_lokasi)){
+                $data->where('id_lokasi',$request->id_lokasi);
+            }
+
+            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('subKategori', function($data) {
+                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->make(true);
+        }
+
     }
 }

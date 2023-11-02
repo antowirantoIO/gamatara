@@ -9,12 +9,17 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('laporan_project_manager')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Tagihan Vendor</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Project Manager Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
+                            <button class="btn btn-secondary" id="btn-fillter">
+                                <span>
+                                    <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
+                                </span> &nbsp; Filter
+                            </button>
                             <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
@@ -28,6 +33,13 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
+                        <div class="card-header border-0 align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">{{ $pm->karyawan->name }}</h4>
+                            <div>
+
+                            </div>
+                        </div>
+
                         <div class="card-body">
                             <div class="container">
                                 <table class="table w-100" id="example1">
@@ -35,8 +47,10 @@
                                         <tr>
                                             <th style="color:#929EAE">Kode Project</th>
                                             <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Nama Vendor</th>
+                                            <th style="color:#929EAE">Tanggal Mulai</th>
+                                            <th style="color:#929EAE">Tanggal Selesai</th>
+                                            <th style="color:#929EAE">Nilai Project</th>
+                                            <th style="color:#929EAE">Status Project</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -115,6 +129,7 @@
 <script>
     $(function() {
             let modalInput = $('#modalFillter');
+
             $('.form-select').select2({
                 theme : "bootstrap-5",
                 search: true
@@ -146,12 +161,16 @@
                 table.draw()
             })
 
+            let id = '{{ $id }}';
+            let url = '{{ route('laporan_project_manager.detail',':id') }}';
+            let urlReplace = url.replace(':id',id);
+
             let table = $("#example1").DataTable({
                 fixedHeader:true,
                 scrollX: false,
                 processing: true,
                 serverSide: true,
-                searching: true,
+                searching: false,
                 bLengthChange: false,
                 autoWidth : true,
                 language: {
@@ -172,28 +191,48 @@
                     previousButton.css('display', 'none');
                 },
                 ajax : {
-                    url : '{{ route('ajax.tagiham-all') }}',
-                    data : function (d) {
-                        d.code = $('#code').val();
-                        d.id = '{{ $id }}';
-                        d.nama_project = $('#nama_project').val();
-                        d.nama_customer = $('#nama_customer').val();
-                        d.nama_pm = $('#nama_pm').val();
-                        d.date =  $('#date').val();
-                    }
+                    url : urlReplace
+                    // data : function (d) {
+                    //     d.code = $('#code').val();
+                    //     d.nama_project = $('#nama_project').val();
+                    //     d.nama_customer = $('#nama_customer').val();
+                    //     d.nama_pm = $('#nama_pm').val();
+                    //     d.date =  $('#date').val();
+                    // }
                 },
                 columns : [
-                    { data : 'projects.code', name : 'code'},
-                    { data : 'projects.nama_project', name : 'nama_project'},
-                    { data : 'projects.customer.name', name : 'customer'},
-                    { data : 'vendors.name', name : 'vendor'},
+                    { data : 'code', name : 'code'},
+                    { data : 'nama_project', name : 'nama_project'},
+                    { data : 'start_project', name : 'start_project'},
+                    { data : 'actual_selesai', name : 'actual_selesai'},
                     {
                         data : function(data) {
-                            let id = data.id_project;
-                            let vendor = data.id_vendor;
-                            let url = '{{ route('on_progres.tagihan-vendor',[':id',':vendor']) }}';
-                            let urlReplace = url.replace(':id',id).replace(':vendor',vendor);
-                            return ` <a href="${urlReplace}" class="btn btn-warning btn-sm">
+                            let harga = data.progress.reduce((accumulator, currentValue) => {
+                                return accumulator + currentValue.harga_customer;
+                            }, 0);
+
+                            return rupiah(harga);
+                        }
+
+                    },
+                    { data : function(data) {
+                            if(data.status === 1){
+                                return '<div class="text-info">Request</div>'
+                            }else if(data.status === 2) {
+                                return '<div class="text-warning">On Progres</div>'
+                            }else if(data.status === 3){
+                                return '<div class="text-success">Complete</div>'
+                            }else {
+                                return ''
+                            }
+                        }, name : 'status'
+                    },
+                    {
+                        data : function(data) {
+                            let id = data.id;
+                            let url = '{{ route('on_progress.edit',':id') }}';
+                            let urlReplace = url.replace(':id',id);
+                            return ` <a href="#" class="btn btn-warning btn-sm">
                                 <span>
                                     <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                 </span>
@@ -203,33 +242,48 @@
                 ]
             });
 
-            $('#btn-search').click(function(e){
-                e.preventDefault();
-                modalInput.modal('hide');
-                table.draw();
-            })
-
-            function hideOverlay() {
-                $('.loading-overlay').fadeOut('slow', function() {
-                    $(this).remove();
-                });
+            const rupiah = (number)=>{
+                var	reverse = number.toString().split('').reverse().join(''),
+                ribuan 	= reverse.match(/\d{1,3}/g);
+                ribuan	= ribuan.join('.').split('').reverse().join('');
+                return ribuan;
             }
 
-            $('#export-button').on('click', function(event) {
-                event.preventDefault();
+            // $('#btn-search').click(function(e){
+            //     e.preventDefault();
+            //     modalInput.modal('hide');
+            //     table.draw();
+            // })
 
-                var id_project      = '{{ $id }}';
+            // function hideOverlay() {
+            //     $('.loading-overlay').fadeOut('slow', function() {
+            //         $(this).remove();
+            //     });
+            // }
 
-                var url = '{{ route("on_progres.export.all-tagihan-vendor") }}?' + $.param({
-                    id_project: id_project,
-                });
+            // $('#export-button').on('click', function(event) {
+            //     event.preventDefault();
 
-                $('.loading-overlay').show();
+            //     var code            = $('#code').val();
+            //     var nama_project    = $('#nama_project').val();
+            //     var nama_customer   = $('#nama_customer').val();
+            //     var nama_pm         = $('#nama_pm').val();
+            //     var date            = $('#date').val();
 
-                window.location.href = url;
+            //     var url = '{{ route("on_progres.export-data") }}?' + $.param({
+            //         code: code,
+            //         nama_project: nama_project,
+            //         nama_customer: nama_customer,
+            //         nama_pm: nama_pm,
+            //         date: date
+            //     });
 
-                setTimeout(hideOverlay, 2000);
-            });
+            //     $('.loading-overlay').show();
+
+            //     window.location.href = url;
+
+            //     setTimeout(hideOverlay, 2000);
+            // });
         })
 </script>
 @endsection

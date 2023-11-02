@@ -12,9 +12,6 @@
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Complete</h4>
-                            <div class="flex-grow-1 d-flex align-items-center justify-content-end gap-3">
-                                <a href="{{ route('complete.setting', $data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,7 +116,7 @@
                                             </div>
                                         </a>
                                         <div class="d-flex gap-3">
-                                            <a href="{{ route('complete.tagihan-vendor',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
+                                            <a href="{{ route('complete.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
                                                         Tagihan <br>

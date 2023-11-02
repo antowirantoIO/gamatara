@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Detail Progres</h4>
                         </div>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
                                     <tbody>
                                         @foreach ($data->keluhan as $item)
                                             <tr>
-                                                <td>{{ $item->keluhan }}</td>
+                                                <td>{!! $item->keluhan !!}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

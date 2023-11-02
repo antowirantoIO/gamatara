@@ -35,7 +35,7 @@
                         <div class="card-body">
                             <div class="live-preview">
                                 <span class="fs-5"><strong>{{ $nama_vendor }} ( {{ $nama_project }} )</strong></span>
-                                <table class="table mt-3" id="dataTable">
+                                <table class="table mt-3 w-100" id="dataTable">
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">Pekerjaan</th>
@@ -122,7 +122,7 @@
                 scrollX: false,
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 bLengthChange: false,
                 language: {
                     processing:
@@ -150,7 +150,11 @@
                 },
 
                 columns : [
-                    { data : 'pekerjaan.name' },
+                    { data : function(data){
+                        let reff = data.pekerjaan || '-';
+                        let name = reff.name || '-';
+                        return name;
+                    } },
                     { data : 'id_lokasi' },
                     { data : 'detail' },
                     { data : 'length' },

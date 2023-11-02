@@ -32,7 +32,7 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Project Manager</h4>
                             <div>
-                          
+
                             </div>
                         </div>
 
@@ -47,7 +47,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -85,7 +85,7 @@
                 </div>
             </div>
 
-        </div> 
+        </div>
     </div>
 </div>
 
@@ -130,48 +130,18 @@
 
 @section('scripts')
 <script>
-    //chart
-    var options = {
-    chart: {
-        type: 'bar',
-        height: 600,
-    },
-    plotOptions: {
-        bar: {
-        horizontal: true,
-        borderRadius: 5,
-        },
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    series: [
-        {
-            name: 'On Progress',
-            data: [150, 220, 350, 280, 420, 310, 260, 380, 420, 330, 280, 200],
-        },
-        {
-            name: 'Complete',
-            data: [200, 270, 380, 310, 450, 350, 280, 420, 460, 350, 300, 220],
-        }
-    ],
-    xaxis: {
-            labels:{
-                show:false,
-            },
-            categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-        },
-        colors: ['#90BDFF','#194BFB'],
-        legend: {
-        show: false,
-    }
-    };
-
-    var chart = new ApexCharts(document.querySelector("#bar"), options);
-    chart.render();
 
     //datatable
      $(document).ready(function () {
+
+        $.ajax({
+            url : '{{ route('laporan_project_manager.charts') }}',
+            success : function(data){
+                charts(data);
+            }
+
+        })
+
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             lengthChange: false,
@@ -223,7 +193,7 @@
         }
 
         $('#export-button').on('click', function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
 
             var name        = $('#name').val();
             var on_progress = $('#on_progress').val();
@@ -245,6 +215,61 @@
         $(document).ready(function() {
             $('.loading-overlay').hide();
         });
+
+        const charts = (data) => {
+
+            var chartData = Object.values(data).map(item => ({
+                name: item.Employee,
+                data: [item['On Progress'], item['Complete']],
+            }));
+
+            var options = {
+                chart: {
+                    type: 'bar',
+                    height: 600,
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        borderRadius: 5,
+                        barHeight:10
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                series: [
+                    {
+                        name: 'On Progress',
+                        data: chartData.map(item => parseInt(item.data[0])),
+                    },
+                    {
+                        name: 'Complete',
+                        data: chartData.map(item => parseInt(item.data[1])),
+                    }
+                ],
+                xaxis: {
+                        labels:{
+                            show:false,
+                        },
+                        categories: chartData.map(item => item.name),
+                    },
+                    colors: ['#90BDFF','#194BFB'],
+                    legend: {
+                    show: false,
+                }
+            };
+
+            // Periksa jumlah data, jika hanya ada satu data, atur tinggi chart sesuai dengan data tersebut
+            if (chartData.length === 1) {
+                var dataValue = chartData[0].data[0]; // Misalnya, mengambil nilai 'On Progress'
+                options.chart.height = 150; // Atur tinggi chart sesuai dengan data (misalnya, gandakan nilai data)
+            }
+
+            var chart = new ApexCharts(document.querySelector("#bar"), options);
+            chart.render();
+        }
+
     });
 </script>
 @endsection

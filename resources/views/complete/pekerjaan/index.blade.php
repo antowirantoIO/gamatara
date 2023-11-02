@@ -235,7 +235,7 @@
                 var id_project      = '{{ $id }}';
                 // var id_vendor       = $('#nama_vendor').val();
 
-                var url = '{{ route("on_progress.export-pekerjaan") }}?' + $.param({
+                var url = '{{ route("complete.export.pekerjaan") }}?' + $.param({
                     // sub_kategori: sub_kategori,
                     id_project: id_project,
                     // id_vendor: id_vendor,

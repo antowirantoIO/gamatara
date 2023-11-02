@@ -196,22 +196,40 @@
                 { data : 'code', name : 'code'},
                 { data : 'nama_project', name : 'nama_project'},
                 { data : 'customer.name', name : 'customer'},
-                { data : function(data) {
-                        let pm = data.pm || '-';
-                        let karyawan = pm.karyawan || '-';
-                        let name = karyawan.name || '-';
-                        return name;
-                    }, name : 'pm'
-                },
+                { data : 'contact_person', name: 'contact_person' },
                 { data : 'customer.nomor_contact_person', name : 'cp'},
                 {
                     data : function(data) {
-                        let mulai = data.start || '';
-                        let berakhir = data.target_selesai || '';
-                        return mulai + ' - ' + berakhir;
+                        let start = data.start_project || '';
+                        let end = data.target_selesai || '';
+
+                        if (start && end) {
+                            let startDate = moment(start);
+                            let endDate = moment(end);
+
+                            let diffInMonths = endDate.diff(startDate, 'months');
+
+                            return diffInMonths + ' bulan';
+                        }
+
+                        return '';
                     }
                 },
-                { data : 'target_selesai', name : 'end'},
+                {
+                    data : function(data){
+                        let end = data.target_selesai || '';
+
+                        if (end) {
+                            let endDate = moment(end);
+
+                            let formattedEndDate = endDate.format('DD MMMM YYYY');
+
+                            return formattedEndDate ;
+                        }
+
+                        return '';
+                    }, name : 'end'
+                },
                 {
                     data : function(data) {
                         let id = data.id;

@@ -43,7 +43,7 @@ class OnRequestController extends Controller
                        }
                     }
                     
-                    $data = $data->filter($request)->get();
+                    $data = $data->filter($request)->orderBy('created_at', 'desc')->get();
 
                     return Datatables::of($data)->addIndexColumn()
                     ->addColumn('nama_customer', function($data){

@@ -33,7 +33,7 @@ class PekerjaanController extends Controller
                     </span>
                 </a>
                 &nbsp;
-                <a data-id="'.$data->id.'" data-name="pekerjaan '.$data->name.'" data-form="form-pekerjaan" class="btn btn-danger btn-sm deleteData">
+                <a data-id="'.$data->id.'" data-name="Pekerjaan '.$data->name.'" data-form="form-pekerjaan" class="btn btn-danger btn-sm deleteData">
                     <span>
                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                     </span>

@@ -24,7 +24,7 @@ class VendorController extends Controller
                     </span>
                 </a>
                 &nbsp;
-                <a data-id="'.$data->id.'" data-name="vendor '.$data->name.'" data-form="form-vendor" class="btn btn-danger btn-sm deleteData">
+                <a data-id="'.$data->id.'" data-name="Vendor '.$data->name.'" data-form="form-vendor" class="btn btn-danger btn-sm deleteData">
                     <span>
                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                     </span>

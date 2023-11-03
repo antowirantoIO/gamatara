@@ -194,7 +194,7 @@
     @if (session('success'))
         <script>
           Swal.fire(
-          'success',
+          'Success',
           '{{ session('success') }}',
           'success'
           );

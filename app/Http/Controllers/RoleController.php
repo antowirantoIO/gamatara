@@ -29,7 +29,7 @@ class RoleController extends Controller
                         </span>
                     </a>
                     &nbsp;
-                    <a data-id="'.$data->id.'" data-name="role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
+                    <a data-id="'.$data->id.'" data-name="Role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
                         <span>
                             <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                         </span>

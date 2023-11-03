@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Exports\ExportVendor;
 use App\Models\Vendor;
+use App\Models\KategoriVendor;
 
 class VendorController extends Controller
 {
@@ -43,7 +44,9 @@ class VendorController extends Controller
 
     public function create()
     {
-        return view('vendor.create');
+        $kategori_vendor = KategoriVendor::get();
+
+        return view('vendor.create',compact('kategori_vendor'));
     }
 
     public function store(Request $request)
@@ -55,7 +58,8 @@ class VendorController extends Controller
             'nomor_contact_person'  => 'required',
             'email'                 => 'required',
             'npwp'                  => 'required|min:15',
-            'ttd'                   => 'required'
+            'ttd'                   => 'required',
+            'kategori_vendor'       => 'required'
         ]);
 
         $data = New Vendor();
@@ -65,6 +69,7 @@ class VendorController extends Controller
         $data->nomor_contact_person     = $request->input('nomor_contact_person');
         $data->email                    = $request->input('email');
         $data->npwp                     = $request->input('npwp');
+        $data->kategori_vendor          = $request->input('kategori_vendor');
         $data->ttd                      = $request->input('ttd_base64');
         $data->save();
 
@@ -75,8 +80,9 @@ class VendorController extends Controller
     public function edit(Request $request)
     {
         $data = Vendor::find($request->id);
+        $kategori_vendor = KategoriVendor::get();
 
-        return view('vendor.edit', Compact('data'));
+        return view('vendor.edit', Compact('data','kategori_vendor'));
     }
     
     public function updated(Request $request)
@@ -88,6 +94,7 @@ class VendorController extends Controller
             'nomor_contact_person'  => 'required',
             'email'                 => 'required',
             'npwp'                  => 'required|min:15',
+            'kategori_vendor'       => 'required'
         ]);
 
         $data                           = Vendor::find($request->id);
@@ -97,6 +104,7 @@ class VendorController extends Controller
         $data->nomor_contact_person     = $request->input('nomor_contact_person');
         $data->email                    = $request->input('email');
         $data->npwp                     = $request->input('npwp');
+        $data->kategori_vendor          = $request->input('kategori_vendor');
         $data->ttd                      = $request->input('ttd_base64');
         $data->save();
 

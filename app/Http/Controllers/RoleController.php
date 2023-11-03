@@ -55,9 +55,17 @@ class RoleController extends Controller
 
     public function create()
     {
-        $permission = Permission::orderBy('name','asc')->get();
+        $group_permission = Permission::select('menu_name')
+            ->orderBy('menu_name', 'asc')
+            ->groupBy('menu_name')
+            ->get();
 
-        return view('role.create',compact('permission'));
+        $permission = Permission::get();
+        $otherpermission = Permission::whereNull('sub_feature')->whereNull('feature')->get();
+        $feature = Permission::whereNotNull('feature')->get();
+        $sub = Permission::whereNotNull('sub_feature')->get();
+
+        return view('role.create',compact('group_permission', 'permission', 'feature', 'sub', 'otherpermission'));
     }
 
     public function store(Request $request)
@@ -76,14 +84,22 @@ class RoleController extends Controller
 
     public function edit(Request $request)
     {
-        $data = Role::find($request->id);
-        $permission = Permission::orderBy('name','asc')->get();
-        $selectedPermissions = DB::table('role_has_permissions')
-                                ->where('role_id', $data->id)
-                                ->select('permission_id')
-                                ->pluck('permission_id')->toArray();
+        $role = Role::find($request->id);
+        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$request->id)
+            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+            ->all();
 
-        return view('role.edit', Compact('data','permission','selectedPermissions'));
+        $group_permission = Permission::select('menu_name')
+            ->orderBy('menu_name', 'asc')
+            ->groupBy('menu_name')
+            ->get();
+
+        $permission = Permission::get();
+        $otherpermission = Permission::whereNull('sub_feature')->whereNull('feature')->get();
+        $feature = Permission::whereNotNull('feature')->get();
+        $sub = Permission::whereNotNull('sub_feature')->get();
+
+        return view('role.edit',compact('role','rolePermissions','group_permission', 'permission', 'feature', 'sub', 'otherpermission'));
     }
 
     public function updated(Request $request, $id)

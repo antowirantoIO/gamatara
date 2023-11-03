@@ -24,7 +24,7 @@ class KategoriController extends Controller
                     </span>
                 </a>
                 &nbsp;
-                <a data-id="'.$data->id.'" data-name="kategori '.$data->name.'" data-form="form-kategori" class="btn btn-danger btn-sm deleteData">
+                <a data-id="'.$data->id.'" data-name="Kategori '.$data->name.'" data-form="form-kategori" class="btn btn-danger btn-sm deleteData">
                     <span>
                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                     </span>

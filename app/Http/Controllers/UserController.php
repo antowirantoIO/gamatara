@@ -34,7 +34,7 @@ class UserController extends Controller
                         </span>
                     </a>
                     &nbsp;
-                    <a data-id="'.$data->id.'" data-name="user '.$data->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
+                    <a data-id="'.$data->id.'" data-name="User '.$data->karyawan->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
                         <span>
                             <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                         </span>

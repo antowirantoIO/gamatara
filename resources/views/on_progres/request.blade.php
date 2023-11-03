@@ -117,12 +117,26 @@
                                                             <td>
                                                                 <input type="text" class="form-control {{ $p->amount !== $p->activity()->amount ? 'bg-danger text-white' : '' }}" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
                                                             </td>
-                                                            <td>
-                                                                <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
-                                                            </td>
+                                                            @hasrole('Project Admin')
+                                                                <td>
+                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
+                                                                </td>
+                                                            @endhasrole
+                                                            @hasrole('Staff Finance')
+                                                                <td>
+                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                                </td>
+                                                            @endhasrole
+                                                            @hasrole('Project Admin')
+                                                                <td>
+                                                                    <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
+                                                                </td>
+                                                            @endhasrole
+                                                            @hasrole('Staff Finance')
                                                             <td>
                                                                 <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
                                                             </td>
+                                                            @endhasrole
                                                             <td>
                                                                 <div class="btn btn-danger" data-id="{{ $p->id }}">
                                                                     <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
@@ -256,6 +270,8 @@
 
             let count = 1;
             $('.btn-add').click(function(){
+                var userRole = '{{ auth()->user()->hasRole("Project Admin") ? "admin" : "non-admin" }}';
+
                 $('#clone').append(`<tr class="draggable-row">
                     <input type="hidden" name="id[]">
                     <td>
@@ -291,10 +307,10 @@
                         <input type="text" class="form-control" name="amount[]" style="width: 70px" >
                     </td>
                     <td>
-                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px">
+                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'disabled' : ''}>
                     </td>
                     <td>
-                        <input type="text" class="form-control harga_customer" name="harga_customer[]" style="width: 100px" id="harga_customer${count}">
+                        <input type="text" class="form-control harga_customer" name="harga_customer[]" style="width: 100px" id="harga_customer${count}" ${userRole === 'admin' ? 'disabled' : ''}>
                     </td>
 
                     <td>

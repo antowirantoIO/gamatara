@@ -24,7 +24,7 @@
     <tbody>
         @foreach ($data as $item)
             <tr>
-                <td style="height: 30px;">{{ $item->projects->nama_project }}</td>
+                <td style="height: 30px;">{{ $item->pekerjaan->name }}</td>
                 <td style="height: 30px;">{{ $item->id_lokasi }}</td>
                 <td style="height: 30px;">{{ $item->detail }}</td>
                 <td style="height: 30px;">{{ $item->length }}</td>

@@ -17,15 +17,15 @@ class KeluhanController extends Controller
         if($request->keluhanId == null)
         {
 
-            $cekReq = count(Keluhan::where('on_request_id',$request->id)->where('id_vendor',$request->vendor)->get());
-            if($cekReq > 0){
-                return response()->json(
-                    [
-                        'message' => 'Vendor Sudah Ada',
-                        'status' => 500
-                    ]
-                );
-            }else{
+            // $cekReq = count(Keluhan::where('on_request_id',$request->id)->where('id_vendor',$request->vendor)->get());
+            // if($cekReq > 0){
+            //     return response()->json(
+            //         [
+            //             'message' => 'Vendor Sudah Ada',
+            //             'status' => 500
+            //         ]
+            //     );
+            // }else{
                 $keluhan                = new Keluhan();
                 $keluhan->on_request_id = $request->id;
                 $keluhan->id_vendor     = $request->vendor;
@@ -40,7 +40,7 @@ class KeluhanController extends Controller
                         'id_vendor' => $keluhan->id_vendor
                     ]
                 );
-            }
+            // }
         }else{
             $keluhan                = Keluhan::find($request->keluhanId);
             $keluhan->on_request_id = $request->id;

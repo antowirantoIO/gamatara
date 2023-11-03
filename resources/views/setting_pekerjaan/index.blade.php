@@ -124,12 +124,14 @@
 @section('scripts')
 <script>
     $(function() {
+        let filterSearch = '';
         var table = $('#tableDataLight').DataTable({
+            ordering: false,
             fixedHeader:true,
             scrollX: false,
             processing: true,
             serverSide: true,
-            searching: false,
+            searching: true,
             language: {
                 processing:
                     '<div class="spinner-border text-info" role="status">' +
@@ -150,6 +152,7 @@
             ajax: {
                 url: "{{ route('setting_pekerjaan') }}",
                 data: function (d) {
+                    filterSearch    = d.search?.value;
                     d.kategori      = $('#kategori').val();
                     d.subkategori   = $('#subkategori').val();
                     d.pekerjaan     = $('#pekerjaan').val();
@@ -180,8 +183,9 @@
             var pekerjaan       = $('#pekerjaan').val();
 
             var url = '{{ route("setting_pekerjaan.export") }}?' + $.param({
-                subkategori: subkategori,
-                pekerjaan: pekerjaan,
+                subkategori : subkategori,
+                pekerjaan   : pekerjaan,
+                keyword     : filterSearch
             });
 
             $('.loading-overlay').show();

@@ -108,7 +108,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label >Displacement Kapal</label>
-                                                <input type="text" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
+                                                <input type="number" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">

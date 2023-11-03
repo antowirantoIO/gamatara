@@ -91,7 +91,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="displacement">Displacement Kapal</label>
-                                                <input type="text" name="displacement" id="displacement" value="{{ old('displacement') }}" class="form-control" placeholder="Masukkan Displacement Kapal">
+                                                <input type="number" name="displacement" id="displacement" value="{{ old('displacement') }}" class="form-control" placeholder="Masukkan Displacement Kapal">
                                             </div>
                                             @if ($errors->has('displacement'))
                                                 <span class="text-danger">{{ $errors->first('displacement') }}</span>

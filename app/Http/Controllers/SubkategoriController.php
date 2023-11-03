@@ -96,7 +96,7 @@ class SubkategoriController extends Controller
 
     public function delete($id)
     {
-        $data           = Kategori::findOrFail($id);
+        $data       = SubKategori::findOrFail($id);
         $data->delete();
 
         return redirect(route('kategori'))

@@ -24,7 +24,7 @@ class LokasiProjectController extends Controller
                     </span>
                 </a>
                 &nbsp;
-                <a data-id="'.$data->id.'" data-name="lokasi_project '.$data->name.'" data-form="form-lokasi_project" class="btn btn-danger btn-sm deleteData">
+                <a data-id="'.$data->id.'" data-name="Lokasi Project '.$data->name.'" data-form="form-lokasi_project" class="btn btn-danger btn-sm deleteData">
                     <span>
                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                     </span>

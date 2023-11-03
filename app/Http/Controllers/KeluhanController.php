@@ -111,8 +111,6 @@ class KeluhanController extends Controller
         $total = count(OnRequest::get());
         $total = str_pad($total, 3, '0', STR_PAD_LEFT);
 
-        $allkeluhan = Keluhan::where('on_request_id',$keluhan->on_request_id)->get();
-
         $data['approvalPA'] = $pa->karyawan->name ?? '';
         $data['ttdPA'] = $pa->ttd ?? '';
         $data['approvalPM'] = $pm->karyawan->name ?? '';
@@ -135,7 +133,7 @@ class KeluhanController extends Controller
             }
         } 
 
-        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan','allkeluhan'))
+        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan'))
                     ->setPaper('A4', 'portrait')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);

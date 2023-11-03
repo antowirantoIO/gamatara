@@ -115,17 +115,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($allkeluhan as $d)
-                                <tr>
-                                    <td>{!! nl2br(str_replace('<br>', "\n", $d->keluhan)) !!}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td style="text-wrap:wrap;max-width:100px">{{ $data->code }}</td>
-                                    <td></td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td>{!! nl2br(str_replace('<br>', "\n", $keluhan->keluhan)) !!}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="text-wrap:wrap;max-width:100px">{{ $data->code }}</td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </td>

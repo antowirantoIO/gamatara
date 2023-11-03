@@ -81,6 +81,8 @@ class OnRequestController extends Controller
             $cek        = 0;
         }elseif($auth == 'Administator'){
             $cek        = 1;
+        }else{
+            $cek = 0;
         }
 
         return view('on_request.index',compact('customer','jenis_kapal','auth','cek'));

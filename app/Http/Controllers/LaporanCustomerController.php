@@ -46,10 +46,58 @@ class LaporanCustomerController extends Controller
                 </a>';
             })
             ->rawColumns(['action','jumlah_project','nilai_project'])
-            ->make(true);                    
+            ->make(true);   
+            
+           
         }
 
-        return view('laporan_customer.index');
+        $tahun = now()->format('Y');
+        $totalHargaPerBulan = array_fill(0, 12, 0);
+
+        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer) as total_harga')
+            ->whereYear('created_at', $tahun)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+            $totalHarga = [];
+
+            foreach ($data as $item) {
+                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+            }
+
+        $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
+
+        return view('laporan_customer.index', compact('totalHargaData'));
+    }
+
+    public function chart(Request $request){
+        if($request->year)
+        {
+            $tahun = $request->year;
+        }else{
+            $tahun = now()->format('Y');
+        }
+       
+        $totalHargaPerBulan = array_fill(0, 12, 0);
+
+        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer) as total_harga')
+            ->whereYear('created_at', $tahun)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+
+            $totalHarga = [];
+
+            foreach ($data as $item) {
+                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+            }
+
+        $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
+
+        return response()->json([
+            'totalHargaData' => $totalHargaData
+        ]);
     }
     
     public function detail(Request $request)

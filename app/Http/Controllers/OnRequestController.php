@@ -25,9 +25,7 @@ class OnRequestController extends Controller
         if ($request->ajax()) {
 
             $cekRole = Auth::user()->role->name;
-            if($cekRole)
-            {
-                if($cekRole == 'Project Admin' || $cekRole == 'Project Manager' || $cekRole == 'BOD' || $cekRole == 'Administator'){
+        
                     $cekId = Auth::user()->id_karyawan;
                     $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
                     $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
@@ -64,8 +62,8 @@ class OnRequestController extends Controller
                     })
                     ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
                     ->make(true); 
-                }
-            }                   
+                
+                           
         }
 
         $customer   = Customer::get();

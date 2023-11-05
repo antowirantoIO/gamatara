@@ -55,7 +55,7 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Project Aktif</p>
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> SPK Request</p>
                                     <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="18"></span></h4>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Request</p>
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Progress</p>
                                     <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$request}}"></span></h4>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Progress</p>
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Complete</p>
                                     <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="13"></span></h4>
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Complete</p>
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Tot East</p>
                                     <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="135"></span></h4>
                                 </div>
                             </div>
@@ -123,8 +123,7 @@
                     </div>
                 </div>
 
-
-                <div class="col-md-3" style="flex:1;">
+                <!-- <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -142,7 +141,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">
@@ -193,8 +192,7 @@
                                             <th style="color:#929EAE">Nama Customer</th>
                                             <th style="color:#929EAE">Project Manajer</th>
                                             <th style="color:#929EAE">Tanggal Mulai</th>
-                                            <th style="color:#929EAE">Tanggal Selesai</th>
-                                            <th style="color:#929EAE">Progress</th>
+                                            <th style="color:#929EAE">Actual Selesai</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -206,7 +204,6 @@
                                             <td>Bagus Ampito</td>
                                             <td>28 Ags 2023</td>
                                             <td>28 Sept 2023</td>
-                                            <td>133/436</td>
                                         </tr>
                                     </tbody>
                                 </table>

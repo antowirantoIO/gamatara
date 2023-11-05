@@ -94,7 +94,7 @@ class KeluhanController extends Controller
         $cetak = "Rekap SPK.pdf";
 
         $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
-                    ->setPaper('A4', 'portrait')
+                    ->setPaper('A4', 'landscape')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
     }

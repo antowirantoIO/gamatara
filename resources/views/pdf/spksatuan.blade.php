@@ -60,9 +60,9 @@
         <table width="100%" style="margin-bottom: 10px;">
             <tr>
                 <td>
-                    <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
+                    <!-- <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo"> -->
                 </td>
-                <td style="text-transform: uppercase;padding-left: 100px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
+                <td style="text-transform: uppercase;padding-left: 150px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
                 </td>
             </tr>
         </table>
@@ -80,20 +80,22 @@
                                 <td style="width:30%;border-style: none;">{{ $data->created_at }}</td>
                             </tr>
                             <tr>
-                                <td style="width:30%;border-style: none;">Sales Order No.</td>
-                                <td style="width:30%;border-style: none;">:</td>
-                                <td style="width:30%;border-style: none;"></td>
                                 <td style="width:30%;border-style: none;">Project Manager</td>
                                 <td style="width:30%;border-style: none;">:</td>
                                 <td style="width:30%;border-style: none;">{{ $data->pm->karyawan->name ?? ''}}</td>
-                            </tr>
-                            <tr >
                                 <td style="width:30%;border-style: none;">Penerima SPK/ Subkon</td>
                                 <td style="width:30%;border-style: none;">:</td>
                                 <td style="width:30%;border-style: none;">{{ $keluhan->vendors->name ?? '' }}</td>
+                                
+                               
+                            </tr>
+                            <tr >
                                 <td style="width:30%;border-style: none;">PEngineer - PAdmin</td>
                                 <td style="width:30%;border-style: none;">:</td>
                                 <td style="width:30%;border-style: none;">{{ $data->pe->karyawan->name ??'' }} - {{ $data->pa->karyawan->name ?? '' }}</td>
+                                <td style="width:30%;border-style: none;"></td>
+                                <td style="width:30%;border-style: none;"></td>
+                                <td style="width:30%;border-style: none;"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -106,23 +108,11 @@
                         <thead>
                             <tr>
                                 <th>Uraian Detail Pekerjaan</th>
-                                <th>Jumlah</th>
-                                <th>Satuan</th>
-                                <th>Harga/Satuan</th>
-                                <th>Est. Tonase</th>
-                                <th>Project</th>
-                                <th>Estimasi Hari</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>{!! nl2br(str_replace('<br>', "\n", $keluhan->keluhan)) !!}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td style="text-wrap:wrap;max-width:100px">{{ $data->code }}</td>
-                                <td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -134,12 +124,10 @@
                     <table class="table-body text-center">
                         <tbody>
                             <tr>
-                                <td colspan="6">Catatan</td>
                                 <td colspan="9">Pemberi SPK</td>
                                 <td colspan="5">Penerima SPK</td>
                             </tr>
                             <tr>
-                                <td colspan="6" rowspan="3"></td>
                                 <td colspan="3">Project Admin</td>
                                 <td colspan="3">Project Manager</td>
                                 <td colspan="3">Direktur</td>

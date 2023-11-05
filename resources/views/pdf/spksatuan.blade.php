@@ -60,7 +60,7 @@
         <table width="100%" style="margin-bottom: 10px;">
             <tr>
                 <td>
-                    <!-- <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo"> -->
+                    <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td>
                 <td style="text-transform: uppercase;padding-left: 150px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
                 </td>

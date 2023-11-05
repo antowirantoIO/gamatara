@@ -110,10 +110,10 @@ class OnRequestController extends Controller
 
         $code = 'PJ'.now()->format('Y')."-";
         $projectCode = OnRequest::where('code', 'LIKE', '%'.$code.'%')->count();
-        $randInt = '00001';
+        $randInt = '0001';
         if ($projectCode >= 1) {
             $count = $projectCode+1;
-            $randInt = '0000'.(string)$count;
+            $randInt = '000'.(string)$count;
         }
         $randInt = substr($randInt, -5);
 

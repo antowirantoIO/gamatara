@@ -54,17 +54,17 @@
                                 <a href="{{ route('role') }}" class="nav-link {{ request()->is('role*') ? 'active' : ''}}" data-key="t-ecommerce"> Role </a>
                             </li>
                             @endcan
-                            @can('setting_pekerjaan-view')
-                            <li class="nav-item">
-                                <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Setting Pekerjaan</a>
-                            </li>
-                            @endcan
+                            
                             @can('customer-view')
                             <li class="nav-item">
                                 <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
                             </li>
                             @endcan
-                            
+                            @can('project_manager-view')
+                            <li class="nav-item">
+                                <a href="{{ route('project_manager') }}" class="nav-link {{ request()->is('project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager</a>
+                            </li>
+                            @endcan
                             @can('lokasi_project-view')
                             <li class="nav-item">
                                 <a href="{{ route('lokasi_project') }}" class="nav-link {{ request()->is('lokasi_project*') ? 'active' : ''}}" data-key="t-analytics"> Lokasi Project</a>
@@ -90,9 +90,9 @@
                                 <a href="{{ route('sub_kategori') }}" class="nav-link {{ request()->is('sub_kategori*') ? 'active' : ''}}" data-key="t-analytics"> Sub Kategori</a>
                             </li>
                             @endcan
-                            @can('project_manager-view')
+                            @can('setting_pekerjaan-view')
                             <li class="nav-item">
-                                <a href="{{ route('project_manager') }}" class="nav-link {{ request()->is('project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager</a>
+                                <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Setting Pekerjaan</a>
                             </li>
                             @endcan
                             @can('vendor-view')

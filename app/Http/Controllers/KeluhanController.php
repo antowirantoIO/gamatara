@@ -91,7 +91,7 @@ class KeluhanController extends Controller
     {
         $data = OnRequest::find($request->id);
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
-        $cetak = "Rekap SPK ('.date('d F Y').').pdf";
+        $cetak = "Rekap SPK.pdf";
 
         $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
                     ->setPaper('A4', 'portrait')
@@ -103,7 +103,7 @@ class KeluhanController extends Controller
     {
         $keluhan = Keluhan::find($request->id);
         $data = OnRequest::find($keluhan->on_request_id); 
-        $cetak = "SPK ('.date('d F Y').').pdf";
+        $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
         $pa = User::find($data->user_id);
@@ -118,7 +118,7 @@ class KeluhanController extends Controller
         $data['approvalBOD'] = $bod->karyawan->name ?? '';
         $data['ttdBOD'] = $bod->ttd ?? '';
         $data['ttdVendor'] = $vendor->ttd ?? '';
-        $data['po_no'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
+        $data['po_no'] = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
 
         if($data->pm)
         {
@@ -134,7 +134,7 @@ class KeluhanController extends Controller
         } 
 
         $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan'))
-                    ->setPaper('A4', 'portrait')
+                    ->setPaper('A4', 'landscape')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
     }

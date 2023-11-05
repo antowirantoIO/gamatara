@@ -27,6 +27,10 @@
                     </a>
                 </li>
                 @endcan
+                @if (Gate::allows('karyawan-view') || Gate::allows('user-view') || Gate::allows('role-view') || 
+                Gate::allows('customer-view') || Gate::allows('setting_pekerjaan-view') || Gate::allows('lokasi_project-view') || 
+                Gate::allows('jenis_kapal-view') || Gate::allows('pekerjaan-view') || Gate::allows('kategori-view') || Gate::allows('sub_kategori-view') ||
+                Gate::allows('project_manager-view') || Gate::allows('vendor-view'))
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('customer*') || request()->is('user*') || request()->is('role*') ||
                         request()->is('vendor*') || request()->is('pekerjaan*')? 'active' : '' || request()->is('karyawan*')? 'active' : '' ||
@@ -99,6 +103,7 @@
                         </ul>
                     </div>
                 </li>
+                @endif
                 @can('on_request-view')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('on_request*') ? 'active' : ''}}" href="{{ route('on_request') }}" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
@@ -125,6 +130,8 @@
                     </a>
                 </li>
                 @endcan
+                @if (Gate::allows('laporan_customer-view') || Gate::allows('laporan_vendor-view') || Gate::allows('laporan_project_manager-view') || 
+                Gate::allows('satisfaction_note-view'))
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('laporan_customer*') ? 'active' : '' || request()->is('laporan_vendor*') ? 'active' : '' || request()->is('laporan_project_manager*') ? 'active' : '' }}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
                         <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Laporan</span>
@@ -154,6 +161,7 @@
                         </ul>
                     </div>
                 </li>
+                @endif
             </ul>
         </div>
     </div>

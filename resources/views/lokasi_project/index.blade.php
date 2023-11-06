@@ -168,14 +168,14 @@
             let form = $(this).data('form');
 
             Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#6492b8da",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#${form}${id}`).submit();

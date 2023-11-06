@@ -34,7 +34,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Project Location/h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Project Location</h4>
                             <div>
                           
                             </div>

@@ -42,7 +42,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_telpon">Phone</label>
-                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" class="form-control" placeholder="Enter Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                             @if ($errors->has('nomor_telpon'))
                                                 <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
@@ -51,7 +51,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="email">Email</label>
-                                                <input type="email" name="email" id="email" autocomplete="new-email" value="{{ old('email') }}" class="form-control" placeholder="Masukkan Email">
+                                                <input type="email" name="email" id="email" autocomplete="new-email" value="{{ old('email') }}" class="form-control" placeholder="Enter Email">
                                             </div>
                                             @if ($errors->has('email'))
                                                 <span class="text-danger">{{ $errors->first('email') }}</span>

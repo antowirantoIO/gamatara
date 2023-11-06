@@ -37,15 +37,15 @@ class UserController extends Controller
                 </a>';
                 }
                 if($this->authorize('user-delete')){
-                    ' <a data-id="'.$data->id.'" data-name="User '.$data->karyawan->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
-                    <span>
-                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                <form method="GET" id="form-user'.$data->id.'" action="'.route('user.delete', $data->id).'">
-                    '.csrf_field().'
-                    '.method_field('DELETE').'
-                </form>';
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="User '.$data->karyawan->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>
+                                <form method="GET" id="form-user'.$data->id.'" action="'.route('user.delete', $data->id).'">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                </form>';
                 }
                 return $btnEdit.'&nbsp;'.$btnDelete;
             })

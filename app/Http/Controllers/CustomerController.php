@@ -23,21 +23,27 @@ class CustomerController extends Controller
     
                 return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function($data){
-                    return '<a href="'.route('customer.edit', $data->id).'" class="btn btn-success btn-sm">
-                        <span>
-                            <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
-                        </span>
-                    </a>
-                    &nbsp;
-                    <a data-id="'.$data->id.'" data-name="Customer '.$data->name.'" data-form="form-customer" class="btn btn-danger btn-sm deleteData">
-                        <span>
-                            <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
-                        </span>
-                    </a>
-                    <form method="GET" id="form-customer'.$data->id.'" action="'.route('customer.delete', $data->id).'">
-                        '.csrf_field().'
-                        '.method_field('DELETE').'
-                    </form>';
+                    $btnEdit = '';
+                    $btnDelete = '';
+                    if($this->authorize('customer-edit')) {
+                        $btnEdit = '<a href="'.route('customer.edit', $data->id).'" class="btn btn-success btn-sm">
+                                        <span>
+                                            <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                                        </span>
+                                    </a>';
+                    }
+                    if($this->authorize('customer-delete')){
+                        $btnDelete = '<a data-id="'.$data->id.'" data-name="Customer '.$data->name.'" data-form="form-customer" class="btn btn-danger btn-sm deleteData">
+                                        <span>
+                                            <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                                        </span>
+                                    </a>
+                                    <form method="GET" id="form-customer'.$data->id.'" action="'.route('customer.delete', $data->id).'">
+                                        '.csrf_field().'
+                                        '.method_field('DELETE').'
+                                    </form>';
+                    }
+                    return $btnEdit.'&nbsp;'.$btnDelete;
                 })
                 ->rawColumns(['action'])
                 ->make(true);                    

@@ -28,7 +28,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="customer" class="form-label">Customer Name</label>
-                                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Enter Nama Customer">
+                                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Enter Customer Name">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif
@@ -46,7 +46,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="alamat" class="form-label">Address</label>
-                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Enter Alamat">
+                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Enter Address">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
                                                 @endif
@@ -55,7 +55,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_contact_person" class="form-label">Contact Person Phone</label>
-                                                <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" maxlength="13" placeholder="Enter Contact Person Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_contact_person'))
                                                     <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
                                                 @endif

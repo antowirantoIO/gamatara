@@ -31,32 +31,32 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    @if($pmAuth == 'Project Admin' || $pmAuth == 'Administator')
+                                    @can('on_request-add')
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
                                         </div>
-                                    @endif
+                                    @endcan
 
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Nama Project</label>
+                                                <label>Project Name</label>
                                                 <input type="hidden" name="on_request_id" value="{{$data->id}}" id="on_request_id">
-                                                <input type="text" name="nama_project" value="{{$data->nama_project}}" class="form-control" id="nama_project" placeholder="Masukkan Nama Project">
+                                                <input type="text" name="nama_project" value="{{$data->nama_project}}" class="form-control" id="nama_project" placeholder="Enter Project Name">
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Nama Project Manajer</label>
+                                                <label>Project Manajer</label>
                                                 <input type="text" value="{{ $data->pm->karyawan->name ?? '' }}" class="form-control" readonly>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Nama Project Engineer</label>
+                                                <label>Project Engineer</label>
                                                 <select name="pe_id" id="pe_id" class="form-control">
-                                                    <option value="">Pilih Project Engineer</option>
+                                                    <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
                                                     <option value="{{$p->id}}" {{ $p->id == $data->pe_id ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
                                                     @endforeach
@@ -64,7 +64,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label>Nama Customer</label>
+                                            <label>Customer Name</label>
                                             <div class="input-group">
                                                 <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
                                                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
@@ -72,9 +72,9 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Lokasi Project</label>
+                                                <label>Project Location</label>
                                                 <select name="lokasi_project" id="lokasi_project" class="form-control">
-                                                    <option value="">Pilih Lokasi Project</option>
+                                                    <option value="">Choose Lokasi Project</option>
                                                     @foreach($lokasi as $l)
                                                     <option value="{{$l->id}}" {{ $l->id == $data->id_lokasi_project ? 'selected' : '' }}>{{$l->name}}</option>
                                                     @endforeach
@@ -84,18 +84,18 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Contact Person</label>
-                                                <input type="text" name="contact_person" value="{{$data->contact_person}}" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" value="{{$data->contact_person}}" class="form-control" id="contact_person" placeholder="Enter Contact Person">
                                             </div>
                                         </div>         
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Nomor Contact Person</label>
-                                                <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <label>Contact Person Phone</label>
+                                                <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Enter Nomor Contact Person" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Alamat Customer</label>
+                                                <label>Customer Address</label>
                                                 <input type="text" class="form-control" value="{{$getCustomer->alamat}}" id="alamat" readonly>
                                             </div>
                                         </div>   
@@ -107,15 +107,15 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label >Displacement Kapal</label>
-                                                <input type="number" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Masukkan Displacement Kapal">
+                                                <label>Displacement Ship</label>
+                                                <input type="number" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Enter Displacement Ship">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Jenis Kapal</label>
+                                                <label>Ship Type</label>
                                                     <select name="jenis_kapal" name="jenis_kapal" id="jenis_kapal" class="form-control">
-                                                        <option value="">Pilih Jenis Kapal</option>
+                                                        <option value="">Choose Ship Type</option>
                                                         @foreach($jenis_kapal as $l)
                                                         <option value="{{$l->id}}" {{ $l->id == $data->id_jenis_kapal ? 'selected' : '' }}>{{$l->name}}</option>
                                                         @endforeach
@@ -134,22 +134,17 @@
                                             <div>
                                                 <label>Vendor</label>
                                                 <select name="vendor" id="vendor" class="form-control">
-                                                    <option value="">Pilih Vendor</option>
+                                                    <option value="">Choose Vendor</option>
                                                     @foreach($vendor as $v)
                                                     <option value="{{$v->id}}">{{ $v->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                @if($pmAuth == 'Project Admin')
-                                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                        <button type="button" id="tambahKeluhan" class="btn btn-primary">Save</button>
-                                                    </div>
-                                                @endif
-                                                @if($pmAuth == 'BOD')
+                                                @can('on_request-request-add')
                                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                         <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                     </div>
-                                                @endif
+                                                @endcan
                                             </div>
                                         </div>
 
@@ -188,39 +183,39 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label>Nama Customer</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Customer">
+                                    <input type="text" name="name" class="form-control" placeholder="Enter Nama Customer">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label>Contact Person</label>
-                                    <input type="text" name="contact_person" class="form-control" placeholder="Masukkan Contact Person">
+                                    <input type="text" name="contact_person" class="form-control" placeholder="Enter Contact Person">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label>Alamat</label>
-                                    <input type="text" name="alamat" class="form-control" placeholder="Masukkan Nomor Contact Person">
+                                    <input type="text" name="alamat" class="form-control" placeholder="Enter Nomor Contact Person">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label>Nomor Contact Person</label>
-                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Enter Nomor Contact Person" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <div>
                                         <label>Email</label>
-                                        <input type="email" name="email" class="form-control form-control-icon" placeholder="Masukkan Email">
+                                        <input type="email" name="email" class="form-control form-control-icon" placeholder="Enter Email">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label>NPWP</label>
-                                    <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
+                                    <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Enter NPWP">
                                 </div>
                             </div> 
                         </div>
@@ -375,7 +370,7 @@
                     if (data.status === 200) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Berhasil',
+                            title: 'Success',
                             text: data.message,
                         });
                         getTableData(idData);  
@@ -441,7 +436,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Request atau Vendor Tidak Boleh Kosong!',
+                text: 'Requests or Vendors Must Not Be Empty!',
             });
         }
     }
@@ -449,8 +444,8 @@
     // Fungsi untuk menghapus keluhan sehabis taambah data
     function hapusKeluhan(keluhanId) {
         Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Anda yakin ingin menghapus Request ini?',
+            title: 'Are you sure',
+            text: 'Are you sure you want to delete this Request?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -476,11 +471,11 @@
                         getTableData(idData);    
                         Swal.fire(
                             'Sukses!',
-                            'Request berhasil dihapus.',
+                            'Request successfully deleted.',
                             'success'
                         )
                     } else {
-                        console.error('Gagal menghapus keluhan');
+                        console.error('Failed to delete request');
                     }
                 })
                 .catch(function (error) {
@@ -566,7 +561,7 @@
                         form[0].reset();
                         Swal.fire(
                             '',
-                            'Customer Telah Berhasil Ditambahkan',
+                            'Customer has been successfully added',
                             'success'
                         )
                     } else {

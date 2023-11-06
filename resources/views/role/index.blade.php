@@ -76,7 +76,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Role</label>
+                                <label for="nama" class="form-label">Role Name</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>

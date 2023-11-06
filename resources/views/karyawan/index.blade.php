@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Karyawan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Employee</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <a href="{{ route('karyawan.create') }}" class="btn btn-secondary">
@@ -34,7 +34,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Karyawan</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Employee</h4>
                             <div>
                           
                             </div>
@@ -44,11 +44,11 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Karyawan</th>
-                                        <th style="color:#929EAE">Jabatan</th>
-                                        <th style="color:#929EAE">Alamat</th>
+                                        <th style="color:#929EAE">Employee Name</th>
+                                        <th style="color:#929EAE">Job Title</th>
+                                        <th style="color:#929EAE">Address</th>
                                         <th style="color:#929EAE">Email</th>
-                                        <th style="color:#929EAE">Nomor Telpon</th>
+                                        <th style="color:#929EAE">Phone</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>

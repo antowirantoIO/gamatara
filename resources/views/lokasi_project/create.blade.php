@@ -11,7 +11,7 @@
                             <a href="{{route('lokasi_project')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Lokasi Project</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Project Location</h4>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Nama Lokasi Project</label>
+                                                <label for="name" class="form-label">Project Location Name</label>
                                                 <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Lokasi Project">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>

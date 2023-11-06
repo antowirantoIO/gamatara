@@ -41,7 +41,7 @@
                         <ul class="nav nav-sm flex-column">
                             @can('karyawan-view')
                             <li class="nav-item">
-                                <a href="{{ route('karyawan') }}" class="nav-link {{ request()->is('karyawan*') ? 'active' : ''}}" data-key="t-analytics"> Karyawan</a>
+                                <a href="{{ route('karyawan') }}" class="nav-link {{ request()->is('karyawan*') ? 'active' : ''}}" data-key="t-analytics"> Employee</a>
                             </li>
                             @endcan
                             @can('user-view')

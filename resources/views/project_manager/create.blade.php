@@ -27,9 +27,9 @@
                                 @csrf
                                     <div class="row gy-4">
                                         <div class="col-xxl-12">
-                                            <label for="pm">Nama Project Manager</label>
+                                            <label for="pm">Project Manager Name</label>
                                             <select name="pm" id="pm" class="form-control">
-                                                <option value="">Pilih Project Manager</option>
+                                                <option value="">Choose Project Manager</option>
                                                 @foreach($karyawan as $k)
                                                 <option value="{{$k->id}}">{{$k->name}}</option>
                                                 @endforeach
@@ -41,9 +41,9 @@
 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Nama Project Engineer</label>&nbsp;
+                                                <label>Project Engineer Name</label>&nbsp;
                                                 <select name="pe[]" id="pe" class="form-control js-example-basic-multiple" multiple="multiple">
-                                                    <option value="">Pilih Project Engineer</option>
+                                                    <option value="">Choose Project Engineer</option>
                                                     @foreach($karyawan as $k)
                                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                                     @endforeach
@@ -56,9 +56,9 @@
 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Nama Project Admin</label>&nbsp;
+                                                <label>Project Admin Name</label>&nbsp;
                                                 <select name="pa[]" id="pa" class="form-control js-example-basic-multiple" multiple="multiple">
-                                                    <option value="">Pilih Project Admin</option>
+                                                    <option value="">Choose Project Admin</option>
                                                     @foreach($karyawan as $k)
                                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                                     @endforeach

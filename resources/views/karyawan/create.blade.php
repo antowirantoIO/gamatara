@@ -11,7 +11,7 @@
                             <a href="{{route('karyawan')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Karyawan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Employee</h4>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name">Nama Karyawan</label>
+                                                <label for="name">Employee Name</label>
                                                 <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Karyawan">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -36,7 +36,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="jabatan">Jabatan</label>
+                                                <label for="jabatan">Job Title</label>
                                                 <input type="text" name="jabatan" id="jabatan" value="{{ old('jabatan') }}" class="form-control" placeholder="Masukkan Jabatan">
                                             </div>
                                             @if ($errors->has('jabatan'))
@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_telpon">Nomor Telpon</label>
+                                                <label for="nomor_telpon">Phone</label>
                                                 <input type="number" name="nomor_telpon" class="form-control" id="nomor_telpon" value="{{ old('nomor_telpon') }}" maxlength="13" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_telpon'))
                                                     <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat">Alamat</label>
+                                                <label for="alamat">Address</label>
                                                 <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Masukkan Alamat">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>

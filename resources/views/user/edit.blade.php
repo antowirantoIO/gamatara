@@ -27,9 +27,9 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="karyawan" class="form-label">Karyawan</label>
+                                                <label for="karyawan" class="form-label">Employee</label>
                                                 <select name="karyawan" id="karyawan" class="form-control">
-                                                    <option value="">Pilih Karyawan</option>
+                                                    <option value="">Choose Employee</option>
                                                     @foreach($karyawan as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == $data->id_karyawan ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
@@ -41,7 +41,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
+                                                <label for="nomor_telpon" class="form-label">Phone</label>
                                                 <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" id="nomor_telpon" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>   
@@ -57,7 +57,7 @@
                                             <div>
                                                 <label for="role" class="form-label">Role</label>
                                                 <select name="role" id="role" class="form-control">
-                                                    <option value="">Pilih role</option>
+                                                    <option value="">Choose Role</option>
                                                     @foreach($role as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == $data->id_role ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
@@ -69,9 +69,9 @@
                                         </div> 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="ttd">Tanda Tangan <span style='font-size:10px'>(Format hanya PNG Max 1Mb)</span></label>
+                                                <label for="ttd">Signature <span style='font-size:10px'>(PNG format only Max 1Mb)</span></label>
                                                 <br>
-                                                    <img src="data:image/png;base64,{{ $data->ttd }}" alt="Tanda Tangan Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
+                                                    <img src="data:image/png;base64,{{ $data->ttd }}" alt="Signature Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
                                                 <br><br>
                                                 <input type="file" name="ttd" id="ttd" class="form-control">
                                                 <input type="hidden" name="ttd_base64" id="ttd_base64" value="{{ $data->ttd }}">
@@ -84,8 +84,8 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="password" class="form-label">Password <span style='font-size:10px'>(Only For Change)</span></label>
-                                                <input type="password" name="password" id="password" autocomplete="new-password" class="form-control" placeholder="Masukkan Password">
-                                                <span id="passwordLengthError" class="text-danger" style="display:none;">Password harus memiliki setidaknya 6 karakter.</span>
+                                                <input type="password" name="password" id="password" autocomplete="new-password" class="form-control" placeholder="Enter Password">
+                                                <span id="passwordLengthError" class="text-danger" style="display:none;">Passwords must have at least 6 characters.</span>
                                             </div>
                                             @if ($errors->has('password'))
                                                 <span class="text-danger">{{ $errors->first('password') }}</span>
@@ -93,9 +93,9 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <label for="konfirmasi_password" class="form-label">Konfirmasi Password</label>
-                                            <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control" placeholder="Masukkan Konfirmasi Password">
+                                            <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control" placeholder="Enter Confirm Password">
                                             <div class="col-12">
-                                                <span id="passwordMismatchError" class="text-danger" style="display:none;">Password tidak sesuai.</span>
+                                                <span id="passwordMismatchError" class="text-danger" style="display:none;">Password does not match.</span>
                                             </div>
                                             @if ($errors->has('konfirmasi_password'))
                                                 <span class="text-danger">{{ $errors->first('konfirmasi_password') }}</span>

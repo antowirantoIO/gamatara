@@ -11,7 +11,7 @@
                             <a href="{{route('role')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Peran</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Role</h4>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-12">
                                             <div>
-                                                <label for="role" class="form-label">Nama Peran</label>
+                                                <label for="role" class="form-label">Role Name</label>
                                                 <input type="text" name="name" value="{{ $role->name }}" class="form-control" id="name" placeholder="Masukkan Nama Customer">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>

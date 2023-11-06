@@ -28,7 +28,7 @@
                                         <div class="col-xxl-12">
                                             <div>
                                                 <label for="role" class="form-label">Role Name</label>
-                                                <input type="text" name="name" value="{{ $role->name }}" class="form-control" id="name" placeholder="Masukkan Nama Customer">
+                                                <input type="text" name="name" value="{{ $role->name }}" class="form-control" id="name" placeholder="Enter Nama Customer">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif

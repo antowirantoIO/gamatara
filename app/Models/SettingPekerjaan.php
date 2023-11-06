@@ -31,6 +31,14 @@ class SettingPekerjaan extends Model
             });
         })->when($filter->pekerjaan ?? false, function($query) use ($filter) {
             return $query->where('id_pekerjaan', 'like', "%$filter->pekerjaan%");
+        })->when($filter->keyword ?? false, function($query) use ($filter) {
+            return $query->where(function ($query) use ($filter) {
+                $query->where('id_sub_kategori', $filter->kategori);
+            })->orWhereHas('subkategori', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
+            })->orWhereHas('pekerjaan', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
+            });
         });
     }
 }

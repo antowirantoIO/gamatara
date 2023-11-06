@@ -18,21 +18,27 @@ class JenisKapalController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('action', function($data){
-                return '<a href="'.route('jenis_kapal.edit', $data->id).'" class="btn btn-success btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                &nbsp;
-                <a data-id="'.$data->id.'" data-name="jenis_kapal '.$data->name.'" data-form="form-jenis_kapal" class="btn btn-danger btn-sm deleteData">
-                    <span>
-                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                <form method="GET" id="form-jenis_kapal'.$data->id.'" action="'.route('jenis_kapal.delete', $data->id).'">
-                    '.csrf_field().'
-                    '.method_field('DELETE').'
-                </form>';
+                $btnEdit = '';
+                $btnDelete = '';
+                if($this->authorize('jenis_kapal-edit')) {
+                    $btnEdit = '<a href="'.route('jenis_kapal.edit', $data->id).'" class="btn btn-success btn-sm">
+                                <span>
+                                    <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                                </span>
+                            </a>';
+                }
+                if($this->authorize('jenis_kapal-delete')) {
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Jenis Kapal '.$data->name.'" data-form="form-jenis_kapal" class="btn btn-danger btn-sm deleteData">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>
+                                <form method="GET" id="form-jenis_kapal'.$data->id.'" action="'.route('jenis_kapal.delete', $data->id).'">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                </form>';
+                }
+                return $btnEdit.'&nbsp;'.$btnDelete;
             })
             ->rawColumns(['action'])
             ->make(true);                    

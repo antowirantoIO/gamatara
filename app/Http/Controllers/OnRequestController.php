@@ -25,9 +25,7 @@ class OnRequestController extends Controller
         if ($request->ajax()) {
 
             $cekRole = Auth::user()->role->name;
-            if($cekRole)
-            {
-                if($cekRole == 'Project Admin' || $cekRole == 'Project Manager' || $cekRole == 'BOD' || $cekRole == 'Administator'){
+        
                     $cekId = Auth::user()->id_karyawan;
                     $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
                     $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
@@ -43,7 +41,7 @@ class OnRequestController extends Controller
                        }
                     }
                     
-                    $data = $data->filter($request)->get();
+                    $data = $data->filter($request)->orderBy('created_at', 'desc')->get();
 
                     return Datatables::of($data)->addIndexColumn()
                     ->addColumn('nama_customer', function($data){
@@ -64,8 +62,8 @@ class OnRequestController extends Controller
                     })
                     ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
                     ->make(true); 
-                }
-            }                   
+                
+                           
         }
 
         $customer   = Customer::get();
@@ -81,6 +79,8 @@ class OnRequestController extends Controller
             $cek        = 0;
         }elseif($auth == 'Administator'){
             $cek        = 1;
+        }else{
+            $cek = 0;
         }
 
         return view('on_request.index',compact('customer','jenis_kapal','auth','cek'));
@@ -110,10 +110,10 @@ class OnRequestController extends Controller
 
         $code = 'PJ'.now()->format('Y')."-";
         $projectCode = OnRequest::where('code', 'LIKE', '%'.$code.'%')->count();
-        $randInt = '00001';
+        $randInt = '0001';
         if ($projectCode >= 1) {
             $count = $projectCode+1;
-            $randInt = '0000'.(string)$count;
+            $randInt = '000'.(string)$count;
         }
         $randInt = substr($randInt, -5);
 

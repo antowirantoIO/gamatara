@@ -102,6 +102,7 @@
 <script>
     $(function() {
         var table = $('#tableData').DataTable({
+            ordering: false,
             fixedHeader:true,
             scrollX: false,
             processing: true,

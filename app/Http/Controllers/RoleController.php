@@ -22,14 +22,14 @@ class RoleController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('action', function($data){
-                if($data->id != 1 && $data->id != 5 && $data->id != 7 && $data->id != 8 && $data->id != 9){
+                if($data->id != 1 && $data->id != 5 && $data->id != 7 && $data->id != 8 && $data->id != 9 && $data->id != 3 && $data->id != 4){
                     return '<a href="'.route('role.edit', $data->id).'" class="btn btn-success btn-sm">
                         <span>
                             <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                         </span>
                     </a>
                     &nbsp;
-                    <a data-id="'.$data->id.'" data-name="role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
+                    <a data-id="'.$data->id.'" data-name="Role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
                         <span>
                             <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                         </span>
@@ -55,9 +55,17 @@ class RoleController extends Controller
 
     public function create()
     {
-        $permission = Permission::orderBy('name','asc')->get();
+        $group_permission = Permission::select('menu_name')
+            ->orderBy('menu_name', 'asc')
+            ->groupBy('menu_name')
+            ->get();
 
-        return view('role.create',compact('permission'));
+        $permission = Permission::get();
+        $otherpermission = Permission::whereNull('sub_feature')->whereNull('feature')->get();
+        $feature = Permission::whereNotNull('feature')->get();
+        $sub = Permission::whereNotNull('sub_feature')->get();
+
+        return view('role.create',compact('group_permission', 'permission', 'feature', 'sub', 'otherpermission'));
     }
 
     public function store(Request $request)
@@ -76,14 +84,22 @@ class RoleController extends Controller
 
     public function edit(Request $request)
     {
-        $data = Role::find($request->id);
-        $permission = Permission::orderBy('name','asc')->get();
-        $selectedPermissions = DB::table('role_has_permissions')
-                                ->where('role_id', $data->id)
-                                ->select('permission_id')
-                                ->pluck('permission_id')->toArray();
+        $role = Role::find($request->id);
+        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$request->id)
+            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+            ->all();
 
-        return view('role.edit', Compact('data','permission','selectedPermissions'));
+        $group_permission = Permission::select('menu_name')
+            ->orderBy('menu_name', 'asc')
+            ->groupBy('menu_name')
+            ->get();
+
+        $permission = Permission::get();
+        $otherpermission = Permission::whereNull('sub_feature')->whereNull('feature')->get();
+        $feature = Permission::whereNotNull('feature')->get();
+        $sub = Permission::whereNotNull('sub_feature')->get();
+
+        return view('role.edit',compact('role','rolePermissions','group_permission', 'permission', 'feature', 'sub', 'otherpermission'));
     }
 
     public function updated(Request $request, $id)

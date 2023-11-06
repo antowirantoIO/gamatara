@@ -110,6 +110,7 @@
 <script>
     $(function() {
         var table = $('#tableDataLight').DataTable({
+            ordering: false,
             fixedHeader:true,
             scrollX: false,
             processing: true,

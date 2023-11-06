@@ -17,15 +17,15 @@ class KeluhanController extends Controller
         if($request->keluhanId == null)
         {
 
-            $cekReq = count(Keluhan::where('on_request_id',$request->id)->where('id_vendor',$request->vendor)->get());
-            if($cekReq > 0){
-                return response()->json(
-                    [
-                        'message' => 'Vendor Sudah Ada',
-                        'status' => 500
-                    ]
-                );
-            }else{
+            // $cekReq = count(Keluhan::where('on_request_id',$request->id)->where('id_vendor',$request->vendor)->get());
+            // if($cekReq > 0){
+            //     return response()->json(
+            //         [
+            //             'message' => 'Vendor Sudah Ada',
+            //             'status' => 500
+            //         ]
+            //     );
+            // }else{
                 $keluhan                = new Keluhan();
                 $keluhan->on_request_id = $request->id;
                 $keluhan->id_vendor     = $request->vendor;
@@ -40,7 +40,7 @@ class KeluhanController extends Controller
                         'id_vendor' => $keluhan->id_vendor
                     ]
                 );
-            }
+            // }
         }else{
             $keluhan                = Keluhan::find($request->keluhanId);
             $keluhan->on_request_id = $request->id;
@@ -91,10 +91,10 @@ class KeluhanController extends Controller
     {
         $data = OnRequest::find($request->id);
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
-        $cetak = "Rekap SPK ('.date('d F Y').').pdf";
+        $cetak = "Rekap SPK.pdf";
 
         $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
-                    ->setPaper('A4', 'portrait')
+                    ->setPaper('A4', 'landscape')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
     }
@@ -103,15 +103,13 @@ class KeluhanController extends Controller
     {
         $keluhan = Keluhan::find($request->id);
         $data = OnRequest::find($keluhan->on_request_id); 
-        $cetak = "SPK ('.date('d F Y').').pdf";
+        $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
         $pa = User::find($data->user_id);
         $vendor = Vendor::find($keluhan->id_vendor);
         $total = count(OnRequest::get());
         $total = str_pad($total, 3, '0', STR_PAD_LEFT);
-
-        $allkeluhan = Keluhan::where('on_request_id',$keluhan->on_request_id)->get();
 
         $data['approvalPA'] = $pa->karyawan->name ?? '';
         $data['ttdPA'] = $pa->ttd ?? '';
@@ -120,7 +118,7 @@ class KeluhanController extends Controller
         $data['approvalBOD'] = $bod->karyawan->name ?? '';
         $data['ttdBOD'] = $bod->ttd ?? '';
         $data['ttdVendor'] = $vendor->ttd ?? '';
-        $data['po_no'] = 'PO'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
+        $data['po_no'] = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
 
         if($data->pm)
         {
@@ -135,8 +133,8 @@ class KeluhanController extends Controller
             }
         } 
 
-        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan','allkeluhan'))
-                    ->setPaper('A4', 'portrait')
+        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan'))
+                    ->setPaper('A4', 'landscape')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
     }

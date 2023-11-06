@@ -83,6 +83,20 @@
                                         </div> 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
+                                                <label for="kategori_vendor">Kategori Vendor</label>
+                                                <select name="kategori_vendor" id="kategori_vendor" class="form-control">
+                                                    <option value="">Pilih Vendor</option>
+                                                    @foreach($kategori_vendor as $k)
+                                                        <option value="{{ $k->id }}"  {{ $k->id == old('kategori_vendor') ? 'selected' : '' }}>{{ $k->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('kategori_vendor'))
+                                                    <span class="text-danger">{{ $errors->first('kategori_vendor') }}</span>
+                                                @endif
+                                            </div>
+                                        </div> 
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
                                                 <label for="ttd">Tanda Tangan <span style='font-size:10px'>(Format hanya PNG Max 1Mb)</span></label>
                                                 <br>
                                                     <img src="{{ asset('assets/images/nophoto.jpg') }}" alt="Tanda Tangan Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
@@ -185,6 +199,11 @@
             ttdPreview.src = "{{ asset('assets/nophoto.jpg') }}";
             ttdBase64Input.value = ""; // Hapus base64 jika tidak ada gambar yang dipilih
         }
+    });
+
+    //untuk semua select menggunakan select2
+    $(function () {
+        $("select").select2();
     });
 </script>
 @endsection

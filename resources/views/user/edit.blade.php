@@ -42,14 +42,14 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="nomor_telpon" class="form-label">Phone</label>
-                                                <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" id="nomor_telpon" maxlength="13" class="form-control" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <input type="number" name="nomor_telpon" value="{{$data->nomor_telpon}}" id="nomor_telpon" maxlength="13" class="form-control" placeholder="Enter Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <div>
                                                     <label for="email" class="form-label">Email</label>
-                                                    <input type="email" name="email" value="{{$data->email}}" id="email" class="form-control form-control-icon" placeholder="Masukkan Email">
+                                                    <input type="email" name="email" value="{{$data->email}}" id="email" class="form-control form-control-icon" placeholder="Enter Email">
                                                 </div>
                                             </div>
                                         </div>

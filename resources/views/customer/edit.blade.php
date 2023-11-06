@@ -47,7 +47,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="alamat" class="form-label">Address</label>
-                                                <input type="text" name="alamat"id="alamat" value="{{$data->alamat}}" class="form-control" placeholder="Enter Alamat">
+                                                <input type="text" name="alamat"id="alamat" value="{{$data->alamat}}" class="form-control" placeholder="Enter Address">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
                                                 @endif

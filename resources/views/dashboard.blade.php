@@ -55,8 +55,10 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> SPK Request</p>
-                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="18"></span></h4>
+                                    <a href="{{ route('on_request') }}">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> SPK Request</p>
+                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$spkrequest}}"></span></h4>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -75,8 +77,10 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Progress</p>
-                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$request}}"></span></h4>
+                                    <a href="{{ route('on_progress') }}">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Progress</p>
+                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$onprogress}}"></span></h4>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -95,8 +99,10 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Complete</p>
-                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="13"></span></h4>
+                                    <a href="{{ route('complete') }}">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Complete</p>
+                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$complete}}"></span></h4>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -115,15 +121,17 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Tot East</p>
-                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="135"></span></h4>
+                                    <a href="{{ route('customer') }}">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Total Customer</p>
+                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$totalcustomer}}"></span></h4>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- <div class="col-md-3" style="flex:1;">
+                <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -135,13 +143,15 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Total Customer</p>
-                                    <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="83"></span></h4>
+                                    <a href="{{ route('vendor') }}">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Total Vendor</p>
+                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$totalvendor}}"></span></h4>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
                 <!-- <div class="col-md-3" style="flex:1;">
                     <div class="card card-animate card-rad">

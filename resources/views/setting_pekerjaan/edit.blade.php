@@ -11,7 +11,7 @@
                             <a href="{{route('setting_pekerjaan')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Setting Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Job Setting</h4>
                         </div>
                     </div>
                 </div>
@@ -27,9 +27,9 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Kategori</label>
+                                                <label for="name" class="form-label">Category</label>
                                                 <select name="kategori" id="kategori" class="form-control">
-                                                    <option value="">Pilih Kategori</option>
+                                                    <option value="">Choose Category</option>
                                                     @foreach($kategori as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == $data->subkategori->id_kategori ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
@@ -42,9 +42,9 @@
 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Nama Sub Kategori</label>
+                                                <label for="name" class="form-label">Sub Category</label>
                                                 <select name="subkategori" id="sub_kategori" class="form-control">
-                                                    <option value="">Pilih subkategori</option>
+                                                    <option value="">Choose sub Category</option>
                                                     @foreach($subkategori as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == $data->id_sub_kategori ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
@@ -57,9 +57,9 @@
 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Pekerjaan</label>
+                                                <label for="name" class="form-label">Job</label>
                                                 <select name="pekerjaan" id="pekerjaan" class="form-control">
-                                                    <option value="">Pilih pekerjaan</option>
+                                                    <option value="">Choose Job</option>
                                                     @foreach($pekerjaan as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == $data->id_pekerjaan ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
@@ -75,9 +75,9 @@
                                                 <thead style="background-color:#194BFB;color:#FFFFFF">
                                                     <tr>
                                                         <th>No.</th>
-                                                        <th>Kategori</th>
-                                                        <th>Sub Kategori</th>
-                                                        <th>Pekerjaaan</th>
+                                                        <th>Category</th>
+                                                        <th>Sub Category</th>
+                                                        <th>Job</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

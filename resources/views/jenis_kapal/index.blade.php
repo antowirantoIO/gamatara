@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Jenis Kapal</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Ship Type</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <a href="{{ route('jenis_kapal.create') }}" class="btn btn-secondary">
@@ -34,7 +34,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Jenis Kapal</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Ship Type</h4>
                             <div>
                           
                             </div>
@@ -44,7 +44,7 @@
                             <table class="table" id="tableDataLight">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Jenis Kapal</th>
+                                        <th style="color:#929EAE">Ship Type</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -75,7 +75,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Jenis Kapal</label>
+                                <label for="nama" class="form-label">Ship Type</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>

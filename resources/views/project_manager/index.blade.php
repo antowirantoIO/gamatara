@@ -44,7 +44,7 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Project Manager</th>
+                                        <th style="color:#929EAE">Project Manager Name</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -76,7 +76,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Project Manager</label>
+                                <label for="nama" class="form-label">Project Manager Name</label>
                                 <select name="pm" id="pm" class="form-control">
                                     <option value="">Pilih Project Manager</option>
                                     @foreach($karyawan as $k)

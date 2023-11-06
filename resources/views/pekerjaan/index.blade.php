@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Job</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <a href="{{ route('pekerjaan.create') }}" class="btn btn-secondary">
@@ -34,7 +34,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Pekerjaan</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Job</h4>
                             <div>
                           
                             </div>
@@ -44,11 +44,11 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Pekerjaan</th>
+                                        <th style="color:#929EAE">Job Name</th>
                                         <th style="color:#929EAE">Unit</th>
-                                        <th style="color:#929EAE">Konversi</th>
-                                        <th style="color:#929EAE">Harga Vendor</th>
-                                        <th style="color:#929EAE">Harga Customer</th>
+                                        <th style="color:#929EAE">Convertion</th>
+                                        <th style="color:#929EAE">Vendor Price</th>
+                                        <th style="color:#929EAE">Customer Price</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -79,7 +79,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama">Nama Pekerjaan</label>
+                                <label for="nama">Job Name</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>
@@ -92,19 +92,19 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="konversi">Konversi</label>
+                                <label for="konversi">Convertion</label>
                                 <input type="text" name="konversi" class="form-control" id="konversi">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="harga_vendor">Harga Vendor</label>
+                                <label for="harga_vendor">Vendor Price</label>
                                 <input type="text" name="harga_vendor" class="form-control" id="harga_vendor">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="harga_customer">Harga Customer</label>
+                                <label for="harga_customer">Customer Price</label>
                                 <input type="text" name="harga_customer" class="form-control" id="harga_customer">
                             </div>
                         </div>

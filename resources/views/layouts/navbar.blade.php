@@ -54,15 +54,14 @@
                                 <a href="{{ route('role') }}" class="nav-link {{ request()->is('role*') ? 'active' : ''}}" data-key="t-ecommerce"> Role </a>
                             </li>
                             @endcan
-                            
-                            @can('customer-view')
-                            <li class="nav-item">
-                                <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
-                            </li>
-                            @endcan
                             @can('project_manager-view')
                             <li class="nav-item">
                                 <a href="{{ route('project_manager') }}" class="nav-link {{ request()->is('project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager</a>
+                            </li>
+                            @endcan
+                            @can('customer-view')
+                            <li class="nav-item">
+                                <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
                             </li>
                             @endcan
                             @can('lokasi_project-view')

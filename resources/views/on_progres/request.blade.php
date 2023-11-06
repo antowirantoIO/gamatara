@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('on_progres.request.tambah-kategori',[$id,$vendor])}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Input Pekerjaan</h4>
@@ -60,18 +60,18 @@
                                             <table class="table" id="tablePekerjaan">
                                                 <thead style="background-color:#194BFB;color:#FFFFFF;">
                                                     <tr>
-                                                        <th style="width: 200px">Jenis Pekerjaan</th>
-                                                        <th style="width: 200px">Deskripsi</th>
-                                                        <th style="width: 200px">Lokasi</th>
-                                                        <th style="width: 200px">Dertail / Other</th>
+                                                        <th style="width: 200px">Work</th>
+                                                        <th style="width: 200px">Description</th>
+                                                        <th style="width: 200px">Location</th>
+                                                        <th style="width: 200px">Detail / Other</th>
                                                         <th style="width: 90px">Length (mm)</th>
                                                         <th style="width: 90px">Width (mm)</th>
                                                         <th style="width: 90px">Thick (mm)</th>
+                                                        <th style="width: 90px">Amount</th>
                                                         <th style="width: 90px">Unit</th>
                                                         <th style="width: 90px">Qty</th>
-                                                        <th style="width: 90px">Amount</th>
-                                                        <th style="width: 90px">Harga Vendor</th>
-                                                        <th style="width: 90px">Harga Customer</th>
+                                                        <th style="width: 90px">Vendor Prices</th>
+                                                        <th style="width: 90px">Customer Prices</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
@@ -79,8 +79,10 @@
                                                     @foreach ($pekerjaan as $keys => $p)
                                                     <input type="hidden" name="id[]" value="{{ $p->id }}" class="id">
 
+
                                                     @if ($p->activity() && $p->activity()->status === 2)
                                                         <tr class="draggable-row parent-clone">
+                                                            <input type="hidden" id="convertion-{{ $keys }}" value="{{ $p->conversion }}" name="convertion[]">
                                                             <td>
                                                                 <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
                                                                     <option selected disabled>Pilih Pekerjaan</option>
@@ -100,41 +102,41 @@
                                                                 <input type="text" class="form-control" name="detail[]" style="width: 100px;" value="{{ $p->detail }}">
                                                             </td>
                                                             <td>
-                                                                <input type="number" class="form-control {{ $p->length !== $p->activity()->length ? 'bg-danger text-white' : '' }}" name="length[]" style="width: 70px" value="{{ $p->length }}">
+                                                                <input type="number" class="form-control {{ $p->length !== $p->activity()->length ? 'bg-danger text-white opacity-50' : '' }}" name="length[]" style="width: 70px" value="{{ $p->length }}">
                                                             </td>
                                                             <td>
-                                                                <input type="number" class="form-control {{ $p->width !== $p->activity()->width ? 'bg-danger text-white' : '' }}" name="width[]"style="width: 70px" value="{{ $p->width }}">
+                                                                <input type="number" class="form-control {{ $p->width !== $p->activity()->width ? 'bg-danger text-white opacity-50' : '' }}" name="width[]"style="width: 70px" value="{{ $p->width }}">
                                                             </td>
                                                             <td>
-                                                                <input type="number" class="form-control {{ $p->thick !== $p->activity()->thick ? 'bg-danger text-white' : '' }}" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
+                                                                <input type="number" class="form-control {{ $p->thick !== $p->activity()->thick ? 'bg-danger text-white opacity-50' : '' }}" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control {{ $p->unit !== $p->activity()->unit ? 'bg-danger text-white' : '' }}" name="unit[]" style="width: 70px" id="unit" value="{{ $p->unit }}">
+                                                                <input type="text" class="form-control {{ $p->amount !== $p->activity()->amount ? 'bg-danger text-white opacity-50' : '' }}" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white' : '' }}" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
+                                                                <input type="text" class="form-control {{ $p->unit !== $p->activity()->unit ? 'bg-danger text-white opacity-50' : '' }}" name="unit[]" style="width: 50px" id="unit" value="{{ $p->unit }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control {{ $p->amount !== $p->activity()->amount ? 'bg-danger text-white' : '' }}" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
+                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white opacity-50' : '' }}" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
                                                             </td>
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
                                                                 </td>
                                                             @endhasrole
-                                                            @hasrole('Staff Finance')
+                                                            @hasrole(['Staff Finance','SPV Finance'])
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
                                                                 </td>
                                                             @endhasrole
-                                                            @hasrole('Staff Finance')
+                                                            @hasrole(['Staff Finance','SPV Finance'])
                                                             <td>
-                                                                <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
+                                                                <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
                                                             </td>
                                                             @endhasrole
                                                             <td>
@@ -145,6 +147,7 @@
                                                         </tr>
                                                     @else
                                                         <tr class="draggable-row parent-clone">
+                                                            <input type="hidden" id="convertion-{{ $keys }}" value="{{ $p->conversion }}" name="convertion[]">
                                                             <td>
                                                                 <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
                                                                     <option selected disabled>Pilih Pekerjaan</option>
@@ -173,20 +176,34 @@
                                                                 <input type="number" class="form-control" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control" name="unit[]" style="width: 70px" id="unit" value="{{ $p->unit }}">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" class="form-control" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
-                                                            </td>
-                                                            <td>
                                                                 <input type="text" class="form-control" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                                <input type="text" class="form-control" name="unit[]" style="width: 45px" id="unit" value="{{ $p->unit }}">
                                                             </td>
+                                                            <td>
+                                                                <input type="text" class="form-control" name="qty[]" style="width: 50px" value="{{ $p->qty }}">
+                                                            </td>
+                                                            @hasrole('Project Admin')
+                                                                <td>
+                                                                    <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
+                                                                </td>
+                                                            @endhasrole
+                                                            @hasrole(['Staff Finance','SPV Finance'])
+                                                                <td>
+                                                                    <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                                </td>
+                                                            @endhasrole
+                                                            @hasrole('Project Admin')
+                                                                <td>
+                                                                    <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
+                                                                </td>
+                                                            @endhasrole
+                                                            @hasrole(['Staff Finance','SPV Finance'])
                                                             <td>
                                                                 <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
                                                             </td>
+                                                            @endhasrole
                                                             <td>
                                                                 <div class="btn btn-danger btn-trash" data-id="{{ $p->id }}">
                                                                     <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
@@ -201,7 +218,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-end align-items-center gap-3 mt-4">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -211,7 +228,7 @@
             </div>
 
             <div class="row">
-                <h4>Aktivitas Terkahir</h4>
+                <h4>Aktivitas Terakhir</h4>
             </div>
 
             <div class="row">
@@ -222,8 +239,8 @@
                                 <table class="table" id="tableActivity">
                                     <thead style="background-color:#194BFB;color:#FFFFFF;">
                                         <tr>
-                                            <th style="width: 200px">Jenis Pekerjaan</th>
-                                            <th style="width: 200px">Tanggal</th>
+                                            <th style="width: 200px">Work</th>
+                                            <th style="width: 200px">Date</th>
                                             <th style="width: 200px">Status</th>
                                             <th style="width: 90px">Length (mm)</th>
                                             <th style="width: 90px">Width (mm)</th>
@@ -231,8 +248,8 @@
                                             <th style="width: 90px">Unit</th>
                                             <th style="width: 90px">Qty</th>
                                             <th style="width: 90px">Amount</th>
-                                            <th style="width: 90px">Harga Vendor</th>
-                                            <th style="width: 90px">Harga Customer</th>
+                                            <th style="width: 90px">Vendor Price</th>
+                                            <th style="width: 90px">Customer Price</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -273,6 +290,7 @@
                 var userRole = '{{ auth()->user()->hasRole("Project Admin") ? "admin" : "non-admin" }}';
 
                 $('#clone').append(`<tr class="draggable-row">
+                    <input type="hidden" name="convertion[]" id="convertion${count}">
                     <input type="hidden" name="id[]">
                     <td>
                         <select name="pekerjaan[]" id="pekerjaan${count}" class="form-select pekerjaan">
@@ -298,13 +316,13 @@
                         <input type="number" class="form-control" name="thick[]" style="width: 70px">
                     </td>
                     <td>
+                        <input type="text" class="form-control" name="amount[]" style="width: 70px" >
+                    </td>
+                    <td>
                         <input type="text" class="form-control" id="unit${count}" name="unit[]" style="width: 70px">
                     </td>
                     <td>
                         <input type="text" class="form-control" name="qty[]" style="width: 70px" >
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" name="amount[]" style="width: 70px" >
                     </td>
                     <td>
                         <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'disabled' : ''}>
@@ -328,6 +346,7 @@
                 var unit = $(`#unit${count}`);
                 var harga_vendor = $(`#harga_vendor${count}`);
                 var harga_customer = $(`#harga_customer${count}`);
+                var konversi = $(`#convertion${count}`);
 
                 getSelect(id,select);
 
@@ -340,6 +359,7 @@
                     }).then(ress => {
                         harga_vendor.val(formatRupiah(ress.data.harga_vendor));
                         harga_customer.val(formatRupiah(ress.data.harga_customer));
+                        konversi.val(ress.data.konversi)
                         unit.val(ress.data.unit)
                     })
                 });
@@ -361,13 +381,14 @@
             })
 
             $('#clone').on('change', '.draggable-row input[name="length[]"], input[name="width[]"], input[name="thick[]"],input[name="qty[]"]', function() {
-                // Ambil nilai dari input length, width, dan thick
                 var lengthValue = parseFloat($(this).closest('tr').find('input[name="length[]"]').val());
                 var widthValue = parseFloat($(this).closest('tr').find('input[name="width[]"]').val());
                 var thickValue = parseFloat($(this).closest('tr').find('input[name="thick[]"]').val());
                 var qtyValue = parseFloat($(this).closest('tr').find('input[name="qty[]"]').val());
-
-                var amountValue = (lengthValue * widthValue * thickValue * qtyValue * 0.64) / 1000;
+                var konversi = $(this).closest('tr').find('input[name="convertion[]"]').val();
+                var parts = konversi.split('/');
+                var amountValue = (lengthValue * widthValue * thickValue * qtyValue * parseFloat(parts[0])) / parseInt(parts[1]);
+                console.log(parts,lengthValue, amountValue);
 
                 amountValue = amountValue.toFixed(2);
 
@@ -377,6 +398,7 @@
             $(document).delegate('.btn-trash','click',function(){
                 let data = $('.parent-clone');
                 let id = $(this).data('id');
+                console.log(id);
                 if(typeof id !== 'undefined' && id !== null && id !== '' ){
                     Swal.fire({
                         title: 'Apakah Anda Ingin Menghapus Data Ini?',
@@ -440,7 +462,8 @@
                 ajax : {
                     url : '{{ route('ajax.recent-activity') }}',
                     data : function (d) {
-                        d.id =  '{{ $id }}'
+                        d.id =  '{{ $id }}',
+                        d.id_kategori = '{{ $kategori }}'
                     }
                 },
                 columns : [
@@ -568,6 +591,7 @@
                         $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
                         $('#harga_customer').val(formatRupiah(ress.data.harga_customer));
                         $('#unit').val(ress.data.unit);
+                        $('#convertion-{{ $keys }}').val(ress.data.konversi);
                     })
                 });
             @endforeach

@@ -161,12 +161,13 @@ class OnProgressController extends Controller
             $settingPekerjaan = SettingPekerjaan::where('id_sub_kategori',$subkategori_id)->get();
         }
 
-        return view('on_progres.request',compact('id','works','vendor','pekerjaan','kategori_id','subkategori_id','subkategori','settingPekerjaan','desc'));
+        return view('on_progres.request',compact('id','works','vendor','pekerjaan','kategori_id','subkategori_id','subkategori','settingPekerjaan','desc','kategori'));
     }
 
 
     public function requestPost(Request $request)
     {
+        dd($request->all());
         $validasi = Validator::make($request->all(),[
             'kategori' => 'required',
             'sub_kategori' => 'required',
@@ -189,6 +190,28 @@ class OnProgressController extends Controller
             $ids = $request->id[$key];
             if($ids !== null){
                 $idProject = $request->id[$key];
+                $currentData = RecentActivity::where('project_pekerjaan_id',$idProject)
+                                            ->orderBy('created_at','desc')
+                                            ->first();
+                $isDifferent = false;
+                if ($currentData) {
+                    if ($currentData->deskripsi_pekerjaan !== $request->deskripsi[$key] ||
+                        $currentData->id_lokasi !== $request->lokasi[$key] ||
+                        intval($currentData->length) !== intval($request->length[$key]) ||
+                        intval($currentData->width) !== intval($request->width[$key]) ||
+                        intval($currentData->thick) !== intval($request->thick[$key]) ||
+                        $currentData->unit !== $request->unit[$key] ||
+                        intval($currentData->qty) !== intval($request->qty[$key]) ||
+                        $currentData->amount != floatval($request->amount[$key]) ||
+                        $currentData->harga_vendor !== str_replace(",", ",", $request->harga_vendor[$key]) ||
+                        $currentData->harga_customer !== str_replace(",", ",", $request->harga_customer[$key])) {
+                        $isDifferent = true;
+                        dd(true, $currentData->amount, $request->amount[$key]);
+                    }else{
+                        dd(false);
+                        $isDifferent = false;
+                    }
+                }
                 ProjectPekerjaan::where('id',$idProject)->update([
                     'id_project' => $request->id_project,
                     'id_kategori' => $request->kategori,
@@ -197,6 +220,7 @@ class OnProgressController extends Controller
                     'id_vendor' => $request->vendor,
                     'deskripsi_subkategori' => $request->nama_pekerjaan,
                     'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                    'conversion' => $request->convertion[$key],
                     'id_lokasi' => $request->lokasi[$key],
                     'detail' => $request->detail[$key],
                     'length' => $request->length[$key],
@@ -204,31 +228,33 @@ class OnProgressController extends Controller
                     'thick' => $request->thick[$key],
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
-                    'amount' => str_replace(",", "", $request->amount[$key]),
+                    'amount' => str_replace(",", ".", $request->amount[$key]),
                     'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
                     'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key])
                 ]);
                 $recent = RecentActivity::where('project_pekerjaan_id',$request->id[$key])->first();
                 if($recent){
-                    RecentActivity::create([
-                        'project_pekerjaan_id' => $idProject,
-                        'id_project' => $request->id_project,
-                        'id_pekerjaan' => $item,
-                        'deskripsi_pekerjaan' => $request->deskripsi[$key],
-                        'id_lokasi' => $request->lokasi[$key],
-                        'detail' => $request->detail[$key],
-                        'length' => $request->length[$key],
-                        'width' => $request->width[$key],
-                        'thick' => $request->thick[$key],
-                        'unit' => $request->unit[$key],
-                        'qty' => $request->qty[$key],
-                        'amount' => str_replace(",", "", $request->amount[$key]),
-                        'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
-                        'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
-                        'description' => 'Data Di Rubah',
-                        'status' => 2,
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ]);
+                    if ($isDifferent === true) {
+                        RecentActivity::create([
+                            'project_pekerjaan_id' => $idProject,
+                            'id_project' => $request->id_project,
+                            'id_pekerjaan' => $item,
+                            'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                            'id_lokasi' => $request->lokasi[$key],
+                            'detail' => $request->detail[$key],
+                            'length' => $request->length[$key],
+                            'width' => $request->width[$key],
+                            'thick' => $request->thick[$key],
+                            'unit' => $request->unit[$key],
+                            'qty' => $request->qty[$key],
+                            'amount' => str_replace(",", ".", $request->amount[$key]),
+                            'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
+                            'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
+                            'description' => 'Data Di Rubah',
+                            'status' => 2,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]);
+                    }
                 }else{
                     RecentActivity::create([
                         'project_pekerjaan_id' => $idProject,
@@ -241,7 +267,7 @@ class OnProgressController extends Controller
                         'thick' => $request->thick[$key],
                         'unit' => $request->unit[$key],
                         'qty' => $request->qty[$key],
-                        'amount' => str_replace(",", "", $request->amount[$key]),
+                        'amount' => str_replace(",", ".", $request->amount[$key]),
                         'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
                         'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
                         'description' => 'Menambahkan Data Baru',
@@ -258,6 +284,7 @@ class OnProgressController extends Controller
                     'id_vendor' => $request->vendor,
                     'deskripsi_subkategori' => $request->nama_pekerjaan,
                     'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                    'conversion' => $request->convertion[$key],
                     'id_lokasi' => $request->lokasi[$key],
                     'detail' => $request->detail[$key],
                     'length' => $request->length[$key],
@@ -265,7 +292,7 @@ class OnProgressController extends Controller
                     'thick' => $request->thick[$key],
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
-                    'amount' => str_replace(",", "", $request->amount[$key]),
+                    'amount' => str_replace(",", ".", $request->amount[$key]),
                     'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]),
                     'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key])
                 ]);
@@ -281,7 +308,7 @@ class OnProgressController extends Controller
                     'thick' => $request->thick[$key],
                     'unit' => $request->unit[$key],
                     'qty' => $request->qty[$key],
-                    'amount' => str_replace(",", "", $request->amount[$key]),
+                    'amount' => str_replace(",", ".", $request->amount[$key]),
                     'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
                     'harga_customer' =>  str_replace(",", "", $request->harga_customer[$key]),
                     'description' => 'Menambahkan Data Baru',
@@ -622,6 +649,7 @@ class OnProgressController extends Controller
     {
         if($request->ajax()){
             $data = RecentActivity::where('id_project',$request->id)
+                                ->where('id_kategori',$request->id_kategori)
                                 ->with(['pekerjaan'])
                                 ->orderBy('created_at','desc')
                                 ->orderBy('updated_at','desc')

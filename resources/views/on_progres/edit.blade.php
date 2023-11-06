@@ -102,7 +102,7 @@
                                                                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                             </span>
                                                         </a>
-                                                        @hasrole(['Staff Finance','Project Admin'])
+                                                        @hasrole(['Staff Finance','Project Admin','SPV Finance'])
                                                         <a href="{{ route('on_progres.request.tambah-kategori',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
                                                             <span>
                                                                 <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>

@@ -121,6 +121,7 @@
                 fixedHeader:true,
                 scrollX: false,
                 processing: true,
+                ordering:false,
                 serverSide: true,
                 searching: true,
                 bLengthChange: false,

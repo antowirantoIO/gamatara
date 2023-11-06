@@ -189,6 +189,7 @@
                             let amount = data.reduce((accumulator, currentValue) => {
                                 return accumulator + currentValue.harga_vendor;
                             }, 0);
+                            console.log(amount);
                             $('.tagihan-{{ $key }}').text(rupiah(amount))
                         }
                     },
@@ -205,7 +206,7 @@
                         {
                             data : function(data){
                                 if(data.harga_vendor !== null){
-                                    let amount = data.pekerjaan.harga_vendor || '-';
+                                    let amount = data.harga_vendor || '-';
                                     return rupiah(amount);
                                 }else{
                                     return 0;
@@ -215,7 +216,7 @@
                         {
                             data : function(data){
                                 if(data.harga_vendor !== null){
-                                    let amount = data.pekerjaan.harga_vendor || '-';
+                                    let amount = data.harga_vendor || '-';
                                     return rupiah(amount);
                                 }else{
                                     return 0;

@@ -38,7 +38,7 @@ class ProjectManagerController extends Controller
                 $projectIds[] = $projectItem->id;
             }
 
-            $data = ProjectPekerjaan::select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
+            $data = ProjectPekerjaan::with(['vendors:id,name'])->select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
 
             foreach ($data as $item) {
                 $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
@@ -62,7 +62,7 @@ class ProjectManagerController extends Controller
                             ->first();
                   
 
-            $data = OnRequest::with(['complaint','complaint.vendors'])->where('id',$pekerjaan->id_project)
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name'])->where('id',$pekerjaan->id_project)
                 ->first();
 
             $vendor = ProjectPekerjaan::where('id_project',$request->id)

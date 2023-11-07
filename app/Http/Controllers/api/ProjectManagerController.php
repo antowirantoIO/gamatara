@@ -56,7 +56,7 @@ class ProjectManagerController extends Controller
     public function detailPM(Request $request)
     {
         try{
-            $data = OnRequest::with(['complaint'])->where('id',$request->id)
+            $data = OnRequest::with(['complaint','complaint.vendors'])->where('id',$request->id)
                     ->first();
 
             $pekerjaan = ProjectPekerjaan::where('id_project',$request->id)

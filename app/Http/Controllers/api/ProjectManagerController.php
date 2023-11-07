@@ -90,6 +90,7 @@ class ProjectManagerController extends Controller
                 $data['request'] = $requests->complaint;
                 $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
                 $data['project_engineer'] = $data->projects->pe->karyawan->name ?? null;
+                $data['lokasi_project'] = $data->projects->lokasi->name ?? '';
             } else {
                 $data['request'] = null;
             }

@@ -77,8 +77,7 @@
                                                 </thead>
                                                 <tbody id="clone">
                                                     @foreach ($pekerjaan as $keys => $p)
-                                                    <input type="hidden" name="id[]" value="{{ $p->id }}" class="id">
-
+                                                    <input type="hidden" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
 
                                                     @if ($p->activity() && $p->activity()->status === 2)
                                                         <tr class="draggable-row parent-clone">
@@ -140,7 +139,7 @@
                                                             </td>
                                                             @endhasrole
                                                             <td>
-                                                                <div class="btn btn-danger" data-id="{{ $p->id }}">
+                                                                <div class="btn btn-danger btn-trash" data-id="{{ $p->id }}">
                                                                     <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
                                                                 </div>
                                                             </td>
@@ -273,6 +272,7 @@
             $('#sub_kategori').trigger('change');
             let id_kategori = $('#kategori').val();
             let id_subkategori = '{{ $subkategori_id }}';
+            let id_project = '{{ $id }}';
 
             $('#sub_kategori').trigger('change');
             $('.form-select').select2({
@@ -398,7 +398,6 @@
             $(document).delegate('.btn-trash','click',function(){
                 let data = $('.parent-clone');
                 let id = $(this).data('id');
-                console.log(id);
                 if(typeof id !== 'undefined' && id !== null && id !== '' ){
                     Swal.fire({
                         title: 'Apakah Anda Ingin Menghapus Data Ini?',
@@ -415,11 +414,14 @@
                                 method : 'POST',
                                 data : {
                                     _token : '{{ csrf_token() }}',
-                                    id
+                                    id,
+                                    id_kategori
                                 }
                             }).then(ress => {
                                 if(ress.status === 200) {
                                     $(this).closest('tr').remove();
+                                    $(`.id-${id}`).remove();
+                                    table.draw();
                                     alertToast('success',ress.msg);
                                 }
                             })
@@ -462,7 +464,7 @@
                 ajax : {
                     url : '{{ route('ajax.recent-activity') }}',
                     data : function (d) {
-                        d.id =  '{{ $id }}',
+                        d.id =  id_project,
                         d.id_kategori = '{{ $kategori }}'
                     }
                 },

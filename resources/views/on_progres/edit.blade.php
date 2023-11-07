@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Detail Progres</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Details Progres</h4>
                         </div>
                     </div>
                 </div>
@@ -30,22 +30,22 @@
 
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
-                                            <label for="nama_project" class="form-label">Nama Project</label>
+                                            <label for="nama_project" class="form-label">Project Name</label>
                                             <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->nama_project }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
-                                            <label for="nama_project" class="form-label">Kode Project</label>
+                                            <label for="nama_project" class="form-label">Project Code</label>
                                             <input type="text" name="nama_project" class="form-control" id="nama_project" placeholder="Masukkan Nama Project" value="{{ $data->code }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
-                                        <label for="nama_customer" class="form-label">Nama Customer</label>
+                                        <label for="nama_customer" class="form-label">Customer Name</label>
                                         <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->customer->name }}" disabled/>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
-                                        <label for="nama_customer" class="form-label">Lokasi Project</label>
+                                        <label for="nama_customer" class="form-label">Project Location</label>
                                         <input type="text" id="customer_name" name="id_customer" placeholder="Nama Customer" class="form-control" value="{{ $data->lokasi->name }}" disabled/>
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
-                                            <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                            <label for="nomor_contact_person" class="form-label">Contact Person Number</label>
                                             <input type="text" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" value="{{ $data->nomor_contact_person }}" disabled>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                                 <table id="tableVendor" class="table">
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
-                                            <th>Nama Vendor</th>
+                                            <th>Vendor Name</th>
                                             <th>Progress</th>
                                             <th>Action</th>
                                         </tr>
@@ -97,7 +97,7 @@
                                                 @endisset
                                                 <td>
                                                     <div class="d-flex justify-contetn-center gap-3">
-                                                        <a href="{{ route('on_progres.vendor-worker',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
+                                                        <a href="{{ route('on_progress.pekerjaan-vendor.all',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
                                                             <span>
                                                                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                             </span>
@@ -124,26 +124,53 @@
                         <div class="card-body">
                             <div class="live-preview">
                                     <div class="d-flex flex-column gap-3">
-                                        <a href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-primary btn-block w-100 rounded-3 border-0">
-                                            <div class="d-flex justify-content-between align-items-end">
-                                                <div class="fs-4 text-start">
-                                                    Pekerjaan<br>
-                                                    @if (!$pekerjaan->total_status_1)
-                                                        0 / 0
-                                                    @else
-                                                        {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
-                                                    @endif
+                                        <div class="d-flex gap-3">
+                                            <a href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-primary btn-block w-100 rounded-3 border-0">
+                                                <div class="d-flex justify-content-between align-items-end">
+                                                    <div class="fs-5 text-start">
+                                                        Work Progress<br>
+                                                        @if (!$pekerjaan->total_status_1)
+                                                            0 / 0
+                                                        @else
+                                                            {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
+                                                        @endif
+                                                    </div>
+                                                    <div>
+                                                        <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
-                                                </div>
-                                            </div>
-                                        </a>
+                                            </a>
+                                            @hasrole('BOD')
+                                                @if ($status > 0)
+                                                    <button href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-block w-100 rounded-3 border-0 text-white" style="background: grey;" disabled>
+                                                        <div class="d-flex justify-content-between align-items-end">
+                                                            <div class="fs-5 text-start">
+                                                                Approval Complete<br>
+                                                            </div>
+                                                            <div>
+                                                                <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                @else
+                                                    <button href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-success btn-block w-100 rounded-3 border-0">
+                                                        <div class="d-flex justify-content-between align-items-end">
+                                                            <div class="fs-5 text-start">
+                                                                Approval Complete<br>
+                                                            </div>
+                                                            <div>
+                                                                <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                @endif
+                                            @endhasrole
+                                        </div>
                                         <div class="d-flex gap-3">
                                             <a href="{{ route('on_progres.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
-                                                        Tagihan <br>
+                                                        Bill <br>
                                                        <strong>Vendor</strong>
                                                     </div>
                                                     <div>
@@ -154,7 +181,7 @@
                                             <a href="{{ route('on_progres.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
-                                                        Tagihan <br>
+                                                        Bill <br>
                                                         <strong>Customer</strong>
                                                     </div>
                                                     <div>
@@ -176,7 +203,7 @@
                                 <table id="tabelKeluhan" class="table table-bordered">
                                     <thead style="background-color:#194BFB;color:#FFFFFF">
                                         <tr>
-                                            <th>Keluhan</th>
+                                            <th>Request</th>
                                         </tr>
                                     </thead>
                                     <tbody>

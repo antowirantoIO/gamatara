@@ -10,6 +10,7 @@ class RecentActivity extends Model
     use HasFactory;
     protected $table = 'recent_activity';
     protected $guarded = [];
+    public $timestmaps = false;
 
 
     public function pekerjaan()

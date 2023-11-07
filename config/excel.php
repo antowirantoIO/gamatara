@@ -4,6 +4,9 @@ use Maatwebsite\Excel\Excel;
 
 return [
     'exports' => [
+        'font' => [
+            'family' => 'Times New Roman',
+        ],
 
         /*
         |--------------------------------------------------------------------------

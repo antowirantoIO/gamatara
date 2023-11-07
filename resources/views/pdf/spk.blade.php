@@ -20,16 +20,16 @@
             }
 
             table {
-        border-collapse: collapse;
-    }
+                border-collapse: collapse;
+            }
 
-    table thead th {
-        border-bottom: 1px solid black; /* Atur border bawah pada header */
-    }
+            table thead th {
+                border-bottom: 1px solid black;
+            }
 
-    table tbody td {
-        border: none; /* Hilangkan semua border dari sel-sel dalam tbody */
-    }
+            table tbody td {
+                border: none;
+            }
 
             .table-bottom {
                 border-collapse: collapse;
@@ -94,9 +94,9 @@
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td>
                 <td style="text-transform: uppercase;padding-left: 100px;">
-                    <span style="font-size: 15px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
-                    <span style="font-size: 20px; font-weight: bold;">Rekap SPK KTM - 1001, TK - 2023</span><br>
-                    <span style="font-size: 12px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
+                    <span style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
+                    <span style="font-size: 20px; font-weight: bold;color:maroon;">Rekap SPK KTM - 1001, TK - 2023</span><br>
+                    <span style="font-size: 12px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
                 </td>
                 <br><br>
             </tr>
@@ -124,7 +124,7 @@
         <br>
         <table class="table-body font-size-11">
             <thead>
-                <th>SPK No.</th>
+                <th>PO No.</th>
                 <th>PO Date</th>
                 <th>Description</th>
             </thead>

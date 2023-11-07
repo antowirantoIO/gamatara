@@ -91,7 +91,7 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control" name="deskripsi[]" style="width: 150px;" value="{{ $p->deskripsi_pekerjaan }}">
+                                                                <input type="text" class="form-control {{ $p->deskripsi_pekerjaan !== $p->activity()->deskripsi_pekerjaan ? 'bg-danger text-white opacity-50' : '' }}" name="deskripsi[]" style="width: 150px;" value="{{ $p->deskripsi_pekerjaan }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text" class="form-control" name="lokasi[]" style="width: 100px;" value="{{ $p->id_lokasi }}">
@@ -116,26 +116,26 @@
                                                                 <input type="text" class="form-control {{ $p->unit !== $p->activity()->unit ? 'bg-danger text-white opacity-50' : '' }}" name="unit[]" style="width: 50px" id="unit" value="{{ $p->unit }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white opacity-50' : '' }}" name="qty[]" style="width: 70px" value="{{ $p->qty }}">
+                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white opacity-50' : '' }}" name="qty[]" style="width: 50px" value="{{ $p->qty }}">
                                                             </td>
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_vendor {{ intval($p->harga_vendor) !== intval($p->activity()->harga_vendor) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole(['Staff Finance','SPV Finance'])
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_vendor {{ $p->harga_vendor !== $p->activity()->harga_vendor ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
+                                                                    <input type="text" class="form-control harga_vendor {{ intval($p->harga_vendor) !== intval($p->activity()->harga_vendor) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_customer {{ intval($p->harga_customer) !== intval($p->activity()->harga_customer) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole(['Staff Finance','SPV Finance'])
                                                             <td>
-                                                                <input type="text" class="form-control harga_customer {{ $p->harga_customer !== $p->activity()->harga_customer ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
+                                                                <input type="text" class="form-control harga_customer {{ intval($p->harga_customer) !== intval($p->activity()->harga_customer) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
                                                             </td>
                                                             @endhasrole
                                                             <td>
@@ -322,7 +322,7 @@
                         <input type="text" class="form-control" id="unit${count}" name="unit[]" style="width: 70px">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="qty[]" style="width: 70px" >
+                        <input type="text" class="form-control" name="qty[]" style="width: 50px" >
                     </td>
                     <td>
                         <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'disabled' : ''}>

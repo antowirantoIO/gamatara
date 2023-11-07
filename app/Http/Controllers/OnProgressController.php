@@ -488,6 +488,29 @@ class OnProgressController extends Controller
             'amount' => $request->amount
         ]);
 
+        $data = ProjectPekerjaan::where('id',$request->id)->first();
+
+        RecentActivity::create([
+            'project_pekerjaan_id' => $data->id,
+            'id_project' => $data->id_project,
+            'id_pekerjaan' => $data->id_pekerjaan,
+            'id_kategori' => $data->id_kategori,
+            'deskripsi_pekerjaan' => $data->deskripsi,
+            'id_lokasi' => $data->lokasi,
+            'detail' => $data->detail,
+            'length' => $data->length,
+            'width' => $data->width,
+            'thick' => $data->thick,
+            'unit' => $data->unit,
+            'qty' => $data->qty,
+            'amount' => str_replace(",", ".", $data->amount),
+            'harga_vendor' => str_replace(",", "", $data->harga_vendor) ,
+            'harga_customer' =>  str_replace(",", "", $data->harga_customer),
+            'description' => 'Data Di Delete',
+            'status' => 2,
+            'deleted_at' => date('Y-m-d H:i:s')
+        ]);
+
         return back()->with('success','Successfully Updated Data');
     }
 

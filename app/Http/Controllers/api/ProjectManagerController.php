@@ -45,6 +45,7 @@ class ProjectManagerController extends Controller
                 $item['nama_project'] = $item->projects->nama_project ?? '-';
                 $item['nama_vendor'] = $item->vendors->name ?? '-';
                 $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
+                $data['ids'] = $item->id;
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
@@ -56,13 +57,14 @@ class ProjectManagerController extends Controller
     public function detailPM(Request $request)
     {
         try{
-            $data = OnRequest::with(['complaint','complaint.vendors'])->where('id',$request->id)
-                    ->first();
-
-            $pekerjaan = ProjectPekerjaan::where('id_project',$request->id)
-                            ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                            ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+            $pekerjaan = ProjectPekerjaan::where('id',$request->id)
+                            // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                            // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                             ->first();
+                  
+
+            $data = OnRequest::with(['complaint','complaint.vendors'])->where('id',$pekerjaan->id_project)
+                ->first();
 
             $vendor = ProjectPekerjaan::where('id_project',$request->id)
                 ->select('id_vendor')
@@ -71,10 +73,10 @@ class ProjectManagerController extends Controller
                 ->groupBy('status', 'id_vendor')
                 ->get();
 
-            if($pekerjaan->total_status_1){
+            if($pekerjaan){
                 $pekerjaan = [
-                'total_status_1' => $pekerjaan->total_status_1,
-                'total_status_2' => $pekerjaan->total_status_2
+                'total_status_1' => 0,
+                'total_status_2' => 0
                 ];
             }else{
                 $pekerjaan = '0 / 0';

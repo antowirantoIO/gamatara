@@ -7,6 +7,7 @@ use App\Models\Keluhan;
 use App\Models\OnRequest;
 use App\Models\User;
 use App\Models\Vendor;
+use Carbon\Carbon;
 use Auth;
 use PDF;
 
@@ -93,8 +94,26 @@ class KeluhanController extends Controller
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
         $cetak = "Rekap SPK.pdf";
 
-        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
-                    ->setPaper('A4', 'landscape')
+        foreach($keluhan as $value)
+        {
+            $value['created_ats'] = Carbon::parse($value->created_at)->format('d M Y');
+        }
+        
+        if ($keluhan->isNotEmpty()) {
+            $min = $keluhan->min(function ($item) {
+                return Carbon::parse($item->created_at)->format('d M Y');
+            });
+        
+            $max = $keluhan->max(function ($item) {
+                return Carbon::parse($item->created_at)->format('d M Y');
+            });
+        } else {
+            $min = null;
+            $max = null;
+        }
+
+        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan','min','max'))
+                    ->setPaper('A4', 'potrait')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
     }

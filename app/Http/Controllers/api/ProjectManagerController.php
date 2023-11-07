@@ -45,7 +45,6 @@ class ProjectManagerController extends Controller
                 $item['nama_project'] = $item->projects->nama_project ?? '-';
                 $item['nama_vendor'] = $item->vendors->name ?? '-';
                 $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
-                $data['ids'] = $item->id;
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

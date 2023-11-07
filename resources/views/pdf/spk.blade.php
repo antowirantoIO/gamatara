@@ -93,11 +93,15 @@
                 <td>
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td>
-                <td style="text-transform: uppercase;padding-left: 100px;font-size: 20px; font-weight: bold;" colspan="8">Rekapan Surat Perintah Kerja</td>
+                <td style="text-transform: uppercase;padding-left: 100px;">
+                    <span style="font-size: 15px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
+                    <span style="font-size: 20px; font-weight: bold;">Rekap SPK KTM - 1001, TK - 2023</span><br>
+                    <span style="font-size: 12px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
+                </td>
                 <br><br>
             </tr>
         </table>
-        <table class="font-size-11" style="border-collapse: collapse; width: 100%;" cellpadding="2" cellspacing="0">
+        <!-- <table class="font-size-11" style="border-collapse: collapse; width: 100%;" cellpadding="2" cellspacing="0">
             <tr>
                 <td>Kode Project</td>
                 <td class="w-10">:</td>
@@ -116,18 +120,22 @@
                 <td class="text-left">:</td>
                 <td class="text-left" colspan="2">{{ $data->displacement }}</td>
             </tr>
-        </table>
+        </table> -->
         <br>
         <table class="table-body font-size-11">
+            <thead>
+                <th>SPK No.</th>
+                <th style="border-style: none;">PO Date</th>
+                <th>Description</th>
+            </thead>
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td>Nama Vendor: <br>{{ $item->vendors->name }} </td>
-                    <td>Request:
-                        <b>
-                            <br>{!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
-                        </b>
-                </td>
+                    <td style="border-style: none;">{{ $item->vendors->name }}</td>
+                    <td style="border-style: none;">{{ $item->created_ats }} </td>
+                    <td style="border-style: none;">  
+                        {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

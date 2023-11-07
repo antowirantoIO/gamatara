@@ -64,6 +64,13 @@
                                 </button>
                             @endif
                         @endcan
+                        @can('on_request-request-approval-bod')
+                            @if($complaint->id_pm_approval != null)
+                                <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
+                                    Approved
+                                </button>
+                            @endif
+                        @endcan
                         @can('on_request-request-view-approval')
                             @if($complaint->id_pm_approval != null)
                                 Approved
@@ -77,6 +84,13 @@
                                     Approve
                                 </button>
                             @elseif($complaint->id_bod_approval != null && $complaint->id_pm_approval != null)
+                                <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
+                                    Approved
+                                </button>
+                            @endif
+                        @endcan
+                        @can('on_request-request-approval-pm')
+                            @if($complaint->id_bod_approval != null)
                                 <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
                                     Approved
                                 </button>

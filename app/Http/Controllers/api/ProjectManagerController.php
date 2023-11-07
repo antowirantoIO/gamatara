@@ -120,11 +120,9 @@ class ProjectManagerController extends Controller
     public function navbarPM(Request $request)
     {
         try{
-            $data = OnRequest::where('id',$request->id)
-                    ->select('nama_project')
-                    ->first();
+            $data = ProjectPekerjaan::find($request->id);
 
-            $vendor = ProjectPekerjaan::where('id_project',$request->id)
+            $vendor = ProjectPekerjaan::where('id',$request->id)
                     ->select('id_vendor')
                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
@@ -133,7 +131,7 @@ class ProjectManagerController extends Controller
 
             $kategori = Kategori::get();
 
-            $progress = ProjectPekerjaan::where('id_project', $request->id)
+            $progress = ProjectPekerjaan::where('id', $request->id)
                 ->select('id_kategori')
                 ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                 ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')

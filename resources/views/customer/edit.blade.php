@@ -28,7 +28,7 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="customer" class="form-label">Customer Name</label>
+                                                <label for="customer">Customer Name</label>
                                                 <input type="text" name="name" value="{{$data->name}}" id="name" class="form-control" placeholder="Enter Customer Name">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -37,7 +37,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="contact_person" class="form-label">Contact Person</label>
+                                                <label for="contact_person">Contact Person</label>
                                                 <input type="text" name="contact_person" id="contact_person" value="{{$data->contact_person}}" class="form-control" placeholder="Enter Contact Person">
                                                 @if ($errors->has('contact_person'))
                                                     <span class="text-danger">{{ $errors->first('contact_person') }}</span>
@@ -46,7 +46,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Address</label>
+                                                <label for="alamat">Address</label>
                                                 <input type="text" name="alamat"id="alamat" value="{{$data->alamat}}" class="form-control" placeholder="Enter Address">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person" class="form-label">Contact Person Phone</label>
+                                                <label for="nomor_contact_person">Contact Person Phone</label>
                                                 <input type="number" class="form-control" name="nomor_contact_person"  id="nomor_contact_person" value="{{$data->nomor_contact_person}}" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_contact_person'))
                                                     <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
@@ -64,20 +64,14 @@
                                         </div>                    
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="email" class="form-label">Email</label>
+                                                <label for="email">Email</label>
                                                 <input type="email" name="email" id="email" value="{{$data->email}}" class="form-control" placeholder="Enter Email">
-                                                @if ($errors->has('email'))
-                                                    <span class="text-danger">{{ $errors->first('email') }}</span>
-                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="npwp" class="form-label">NPWP</label>
+                                                <label for="npwp">NPWP</label>
                                                 <input type="text" name="npwp" id="npwp" value="{{$data->npwp}}" maxlength="15" class="form-control" placeholder="Enter NPWP">
-                                                @if ($errors->has('npwp'))
-                                                    <span class="text-danger">{{ $errors->first('npwp') }}</span>
-                                                @endif
                                             </div>
                                         </div> 
                                         

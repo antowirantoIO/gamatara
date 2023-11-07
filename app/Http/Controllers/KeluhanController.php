@@ -33,14 +33,12 @@ class KeluhanController extends Controller
                 $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
                 $keluhan->save();
 
-                return response()->json(
-                    [
+                return response()->json([
                         'message' => 'Keluhan berhasil ditambahkan',
                         'status' => 200, 
                         'id' => $keluhan->id, 
                         'id_vendor' => $keluhan->id_vendor
-                    ]
-                );
+                    ]);
             // }
         }else{
             $keluhan                = Keluhan::find($request->keluhanId);
@@ -49,7 +47,11 @@ class KeluhanController extends Controller
             $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
             $keluhan->save();
 
-            return response()->json(['keluhan' => $keluhan->keluhan,'message' => 'Keluhan berhasil diubah','status' => 200,]);
+            return response()->json([
+                'keluhan' => $keluhan->keluhan,
+                'message' => 'Keluhan berhasil diubah',
+                'status' => 200
+            ]);
         }       
     }
 

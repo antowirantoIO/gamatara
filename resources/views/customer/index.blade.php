@@ -81,39 +81,39 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Customer Name</label>
+                                <label for="customer">Customer Name</label>
                                 <input type="text" name="nama_customer" class="form-control" id="nama_customer">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="contact_person" class="form-label">Contact Person</label>
+                                <label for="contact_person">Contact Person</label>
                                 <input type="text" name="contact_person" id="contact_person" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="alamat" class="form-label">Address</label>
+                                <label for="alamat">Address</label>
                                 <input type="text" name="alamat" id="alamat" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_contact_person" class="form-label">Contact Person Phone</label>
+                                <label for="nomor_contact_person">Contact Person Phone</label>
                                 <input type="number" name="nomor_contact_person" id="nomor_contact_person" class="form-control" >
                             </div>
                         </div>                    
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <div>
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email">Email</label>
                                     <input type="email" name="email" id="email" class="form-control form-control-icon">
                                 </div>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="npwp" class="form-label">NPWP</label>
+                                <label for="npwp">NPWP</label>
                                 <input type="text" name="npwp" id="npwp" class="form-control">
                             </div>
                         </div> 

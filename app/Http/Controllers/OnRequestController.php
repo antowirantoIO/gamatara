@@ -16,6 +16,7 @@ use App\Models\ProjectManager;
 use App\Models\Vendor;
 use App\Models\ProjectAdmin;
 use App\Models\ProjectEngineer;
+use App\Models\StatusSurvey;
 use Auth;
 
 class OnRequestController extends Controller
@@ -91,8 +92,9 @@ class OnRequestController extends Controller
         $customer   = Customer::get();
         $lokasi     = LokasiProject::get();
         $jenis_kapal= JenisKapal::get();
+        $status     = StatusSurvey::get();
 
-        return view('on_request.create',compact('customer','lokasi','jenis_kapal'));
+        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status'));
     }
 
     public function store(Request $request)
@@ -130,7 +132,8 @@ class OnRequestController extends Controller
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->user_id              = Auth::user()->id;
-        $data->pm_id                = $getPM->id_pm;
+        $data->pm_id                = $getPM->id_pm ?? '';
+        $data->status_survey        = $request->input('status_survey');
         $data->save();
 
         // $keluhanJson = $request->input('keluhan');
@@ -171,9 +174,10 @@ class OnRequestController extends Controller
         $pmAuth         = Auth::user()->role->name ?? '';
         $keluhan        = Keluhan::where('on_request_id', $request->id)->get();
         $count          = $keluhan->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+        $status         = StatusSurvey::get();
         $keluhan        = count($keluhan);
 
-        return view('on_request.detail', Compact('keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pe','vendor','pmAuth'));
+        return view('on_request.detail', Compact('status','keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pe','vendor','pmAuth'));
     }
 
     public function updated(Request $request)
@@ -193,6 +197,7 @@ class OnRequestController extends Controller
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pe_id                = $request->input('pe_id');
+        $data->status_survey        = $request->input('status_survey');
         if($request->input('pe_id')){
             $data->status = 1;
         }

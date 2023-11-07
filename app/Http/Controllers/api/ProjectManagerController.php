@@ -18,16 +18,6 @@ class ProjectManagerController extends Controller
     public function index(Request $request)
     {
         try{
-            // $data = OnRequest::with(['kapal','customer'])
-            //             ->filter($request)
-            //             ->where('pm_id',$request->pm_id)
-            //             ->where('status',1)
-            //             ->get();
-
-            // foreach ($data as $item) {
-            //     $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
-            // }     
-
             $project = OnRequest::filter($request)
                         ->where('pm_id',$request->pm_id)
                         ->where('status',1)
@@ -62,11 +52,10 @@ class ProjectManagerController extends Controller
                         ->where('id',$data->id_project)
                         ->first();
 
-
-                // $pekerjaan = ProjectPekerjaan::where('id',$request->id)
-                // // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                // // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                // ->first();
+            // $pekerjaan = ProjectPekerjaan::where('id',$request->id)
+            // // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+            // // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+            // ->first();
 
             $vendor = ProjectPekerjaan::where('id_project',$data->id_project)
                 ->select('id_vendor')
@@ -108,7 +97,9 @@ class ProjectManagerController extends Controller
     public function navbarPM(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::select('id','id_project','id_vendor','id_kategori','status')->with(['projects'])->where('id',$request->id)->first();
+            $data = ProjectPekerjaan::select('id','id_project','id_vendor','id_kategori','status')
+                    ->with(['projects'])->where('id',$request->id)
+                    ->first();
 
             $vendor = ProjectPekerjaan::where('id',$request->id)
                     ->select('id_vendor')

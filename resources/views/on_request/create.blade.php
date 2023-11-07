@@ -35,6 +35,17 @@
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label>Status Survey</label>
+                                                <select name="status_survey" id="status_survey" class="form-control">
+                                                    <option value="">Choose Status Survey</option>
+                                                    @foreach($status as $p)
+                                                    <option value="{{$p->id}}" {{ $p->id == old('status_survey') ? 'selected' : '' }}>{{$p->name ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
                                             <label for="nama_customer">Nama Customer</label>
                                             <div class="input-group">
                                                 <input type="text" name="nama_customer" id="nama_customer" value="{{ old('nama_customer') }}" placeholder="Nama Customer" class="form-control" />

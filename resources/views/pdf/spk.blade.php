@@ -19,17 +19,17 @@
                 width: 100%;
             }
 
-            .table-body th{
-                /* background-color: #4F71BE; */
-                /* color: white; */
-                font-size: 12px
-            }
+            table {
+        border-collapse: collapse;
+    }
 
-            .table-body td, .table-body th{
-                border: 1px solid black;
-                padding: 5px;
-                font-size: 11px
-            }
+    table thead th {
+        border-bottom: 1px solid black; /* Atur border bawah pada header */
+    }
+
+    table tbody td {
+        border: none; /* Hilangkan semua border dari sel-sel dalam tbody */
+    }
 
             .table-bottom {
                 border-collapse: collapse;
@@ -125,16 +125,18 @@
         <table class="table-body font-size-11">
             <thead>
                 <th>SPK No.</th>
-                <th style="border-style: none;">PO Date</th>
+                <th>PO Date</th>
                 <th>Description</th>
             </thead>
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td style="border-style: none;">{{ $item->vendors->name }}</td>
-                    <td style="border-style: none;">{{ $item->created_ats }} </td>
-                    <td style="border-style: none;">  
-                        {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
+                    <td><center>{{ $item->vendors->name }}</center></td>
+                    <td><center>{{ $item->created_ats }} </center></td>
+                    <td>  
+                        <center>
+                            {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
+                        </center>
                     </td>
                 </tr>
                 @endforeach

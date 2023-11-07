@@ -98,18 +98,6 @@ class ProjectManagerController extends Controller
             $data['nama_vendor'] = $data->vendors->name ?? '-';
             $data['pekerjaan'] = $pekerjaan;
             $data['total_vendor'] = count($vendor);
-
-            // $data['nama_project'] = $data->projects->nama_project ?? '';
-            // $data['customer_contact_person'] = $data->projects->nomor_contact_person ?? '';
-            // $data['lokasi_project'] = $data->projects->lokasi->name ?? '';
-            // $data['displacement'] = $data->projects->displacement ?? null;
-            // $data['tanggal_mulai'] = $data->projects->start_project ?? null;
-            // $data['tanggal_selesai'] = $data->projects->actual_selesai ?? null;
-            // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
-            // $data['nomor_project_manajer'] = $data->projects->pm->karyawan->nomor_telpon ?? null;
-        
-            // $data['nomor_project_engineer'] = $data->projects->pe->karyawan->nomor_telpon ?? null;
-      
          
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -120,7 +108,7 @@ class ProjectManagerController extends Controller
     public function navbarPM(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::find($request->id);
+            $data = ProjectPekerjaan::select('id','id_project','id_vendor','id_kategori','status')->with(['projects'])->where('id',$request->id)->first();
 
             $vendor = ProjectPekerjaan::where('id',$request->id)
                     ->select('id_vendor')
@@ -156,6 +144,7 @@ class ProjectManagerController extends Controller
                 $item->progress = $kategoriProgress['total_status_2'] . ' / ' . $kategoriProgress['total_status_1'];
             }
                     
+            $data['name'] = $data->projects->nama_project ?? '';
             $data['vendor'] = count($vendor);
             $data['kategori'] = $kategori;
 

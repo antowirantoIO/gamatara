@@ -96,7 +96,7 @@
                 <td style="text-transform: uppercase;padding-left: 100px;">
                     <span style="font-size: 15px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
                     <span style="font-size: 20px; font-weight: bold;">Rekap SPK KTM - 1001, TK - 2023</span><br>
-                    <span style="font-size: 12px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
+                    <span style="font-size: 12px; font-weight: bold;color:maroon;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
                 </td>
                 <br><br>
             </tr>

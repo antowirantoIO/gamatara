@@ -74,8 +74,8 @@ class ProjectManagerController extends Controller
 
             if($pekerjaan){
                 $pekerjaan = [
-                'total_status_1' => 0,
-                'total_status_2' => 0
+                'total_status_1' => "0",
+                'total_status_2' => "0"
                 ];
             }else{
                 $pekerjaan = '0 / 0';

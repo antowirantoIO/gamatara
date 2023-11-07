@@ -11,6 +11,11 @@ class Vendor extends Model
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 
+    public function kategori()
+    {
+        return $this->hasOne(kategoriVendor::class, 'id','kategori_vendor');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {
@@ -25,8 +30,10 @@ class Vendor extends Model
             return $query->where('email', 'like', "%$filter->email%");
         })->when($filter->npwp ?? false, function($query) use ($filter) {
             return $query->where('npwp', 'like', "%$filter->npwp%");
+        })->when($filter->kategori_vendor ?? false, function($query) use ($filter) {
+            return $query->where('kategori_vendor', 'like', "%$filter->kategori_vendor%");
         })->when($filter->keyword ?? false, function($query) use ($filter) {
-            return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
+        return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(nomor_contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(alamat) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])

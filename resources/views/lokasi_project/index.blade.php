@@ -9,12 +9,14 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Lokasi Project</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Project Location</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('lokasi_project.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
-                            </a>
+                            @can('lokasi_project-add')
+                                <a href="{{ route('lokasi_project.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                            @endcan
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -34,7 +36,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Lokasi Project</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Project Location</h4>
                             <div>
                           
                             </div>
@@ -44,7 +46,7 @@
                             <table class="table" id="tableDataLight">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Lokasi Project</th>
+                                        <th style="color:#929EAE">Project Location</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -75,7 +77,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="name">Nama Lokasi Project</label>
+                                <label for="name">Project Location Name</label>
                                 <input type="text" name="name" id="name" class="form-control" autocomplete="off">
                             </div>
                         </div>
@@ -166,14 +168,14 @@
             let form = $(this).data('form');
 
             Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#6492b8da",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#${form}${id}`).submit();

@@ -11,9 +11,11 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Customer</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('customer.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
-                            </a>
+                            @can('customer-add')
+                                <a href="{{ route('customer.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                            @endcan
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -43,10 +45,10 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Customer</th>
-                                        <th style="color:#929EAE">Alamat</th>
+                                        <th style="color:#929EAE">Customer Name</th>
+                                        <th style="color:#929EAE">Address</th>
                                         <th style="color:#929EAE">Contact Person</th>
-                                        <th style="color:#929EAE">Nomor Contact Person</th>
+                                        <th style="color:#929EAE">Contact Person Name</th>
                                         <th style="color:#929EAE">Email</th>
                                         <th style="color:#929EAE">Npwp</th>
                                         <th style="color:#929EAE">Action</th>
@@ -79,7 +81,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama Customer</label>
+                                <label for="customer" class="form-label">Customer Name</label>
                                 <input type="text" name="nama_customer" class="form-control" id="nama_customer">
                             </div>
                         </div>
@@ -91,13 +93,13 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="alamat" class="form-label">Alamat</label>
+                                <label for="alamat" class="form-label">Address</label>
                                 <input type="text" name="alamat" id="alamat" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                <label for="nomor_contact_person" class="form-label">Contact Person Phone</label>
                                 <input type="number" name="nomor_contact_person" id="nomor_contact_person" class="form-control" >
                             </div>
                         </div>                    
@@ -225,6 +227,27 @@
         $(document).ready(function() {
             $('.loading-overlay').hide();
         });
+
+        table.on('click', '.deleteData', function() {
+            let name = $(this).data('name');
+            let id = $(this).data('id');
+            let form = $(this).data('form');
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#6492b8da",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(`#${form}${id}`).submit();
+                }
+            });
+        })
     });
 </script>
 @endsection

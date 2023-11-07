@@ -11,7 +11,7 @@
                             <a href="{{route('sub_kategori')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Sub Kategori</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Sub Category</h4>
                         </div>
                     </div>
                 </div>
@@ -27,9 +27,9 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="kategori" class="form-label">Nama Kategori</label>
+                                                <label for="kategori" class="form-label">Category</label>
                                                 <select name="kategori" id="kategori" class="form-control">
-                                                    <option value="">Pilih kategori</option>
+                                                    <option value="">Choose Category</option>
                                                     @foreach($kategori as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == old('kategori') ? 'selected' : '' }}>{{ $r->name }}</option>
                                                     @endforeach
@@ -41,7 +41,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Nama Sub Kategori</label>
+                                                <label for="name" class="form-label">Sub Category Name</label>
                                                 <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Kategori">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>

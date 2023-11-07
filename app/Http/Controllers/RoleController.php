@@ -22,29 +22,27 @@ class RoleController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('action', function($data){
-                if($data->id != 1 && $data->id != 5 && $data->id != 7 && $data->id != 8 && $data->id != 9 && $data->id != 3 && $data->id != 4){
-                    return '<a href="'.route('role.edit', $data->id).'" class="btn btn-success btn-sm">
-                        <span>
-                            <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
-                        </span>
-                    </a>
-                    &nbsp;
-                    <a data-id="'.$data->id.'" data-name="Role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
-                        <span>
-                            <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
-                        </span>
-                    </a>
-                    <form method="GET" id="form-role'.$data->id.'" action="'.route('role.delete', $data->id).'">
-                        '.csrf_field().'
-                        '.method_field('DELETE').'
-                    </form>';
-                }else{
-                    return '<a href="'.route('role.edit', $data->id).'" class="btn btn-success btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
-                    </span>
-                    </a>';
+                $btnEdit = '';
+                $btnDelete = '';
+                if($this->authorize('role-edit')) {
+                    $btnEdit = '<a href="'.route('role.edit', $data->id).'" class="btn btn-success btn-sm">
+                                <span>
+                                    <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                                </span>
+                            </a>';
                 }
+                if($this->authorize('role-delete')){
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Role '.$data->name.'" data-form="form-role" class="btn btn-danger btn-sm deleteData">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>
+                                <form method="GET" id="form-role'.$data->id.'" action="'.route('role.delete', $data->id).'">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                </form>';
+                }
+                return $btnEdit.'&nbsp;'.$btnDelete;
             })
             ->rawColumns(['action'])
             ->make(true);                    

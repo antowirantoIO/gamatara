@@ -14,7 +14,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Customer</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Customer</h4>
                         </div>
                         <input type="hidden" id="tot" value="{{$totalHargaData}}">
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
@@ -47,9 +47,9 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Customer</th>
-                                        <th style="color:#929EAE">Jumlah Project</th>
-                                        <th style="color:#929EAE">Nilai Project</th>
+                                        <th style="color:#929EAE">Customer Name</th>
+                                        <th style="color:#929EAE">Project Total</th>
+                                        <th style="color:#929EAE">Project Value</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>

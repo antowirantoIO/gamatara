@@ -46,8 +46,8 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Karyawan</th>
-                                        <th style="color:#929EAE">Nomor Telpon</th>
+                                        <th style="color:#929EAE">Employee Name</th>
+                                        <th style="color:#929EAE">Phone</th>
                                         <th style="color:#929EAE">Email</th>
                                         <th style="color:#929EAE">Role</th>
                                         <th style="color:#929EAE">Action</th>
@@ -81,9 +81,9 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="karyawan">Nama</label>
+                                <label for="karyawan">Employee Name</label>
                                 <select name="karyawan" id="karyawan" class="form-control">
-                                    <option value="">Pilih Karyawan</option>
+                                    <option value="">Choose Employee</option>
                                     @foreach($karyawan as $r)
                                         <option value="{{$r->id}}">{{ $r->name }}</option>
                                     @endforeach
@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nomor_telpom">Nomor Telpon</label>
+                                <label for="nomor_telpom">Phone</label>
                                 <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
                             </div>
                         </div>  
@@ -108,7 +108,7 @@
                             <div>
                                 <label for="role">Role</label>
                                 <select name="role" id="role" class="form-control">
-                                    <option value="">Pilih Role</option>
+                                    <option value="">Choose Role</option>
                                     @foreach($role as $r)
                                         <option value="{{$r->id}}">{{ $r->name }}</option>
                                     @endforeach
@@ -211,21 +211,21 @@
         $(document).ready(function() {
             $('.loading-overlay').hide();
         });
-
+        
         table.on('click', '.deleteData', function() {
             let name = $(this).data('name');
             let id = $(this).data('id');
             let form = $(this).data('form');
 
             Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#6492b8da",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#${form}${id}`).submit();

@@ -12,7 +12,7 @@
                         </div>
                      
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            @can('on_request-view')
+                            @can('on_request-add')
                             <a href="{{ route('on_request.create') }}" class="btn btn-secondary">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
                             </a>

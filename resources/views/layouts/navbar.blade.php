@@ -41,7 +41,7 @@
                         <ul class="nav nav-sm flex-column">
                             @can('karyawan-view')
                             <li class="nav-item">
-                                <a href="{{ route('karyawan') }}" class="nav-link {{ request()->is('karyawan*') ? 'active' : ''}}" data-key="t-analytics"> Karyawan</a>
+                                <a href="{{ route('karyawan') }}" class="nav-link {{ request()->is('karyawan*') ? 'active' : ''}}" data-key="t-analytics"> Employee</a>
                             </li>
                             @endcan
                             @can('user-view')
@@ -54,45 +54,44 @@
                                 <a href="{{ route('role') }}" class="nav-link {{ request()->is('role*') ? 'active' : ''}}" data-key="t-ecommerce"> Role </a>
                             </li>
                             @endcan
-                            
-                            @can('customer-view')
-                            <li class="nav-item">
-                                <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
-                            </li>
-                            @endcan
                             @can('project_manager-view')
                             <li class="nav-item">
                                 <a href="{{ route('project_manager') }}" class="nav-link {{ request()->is('project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager</a>
                             </li>
                             @endcan
+                            @can('customer-view')
+                            <li class="nav-item">
+                                <a href="{{ route('customer') }}" class="nav-link {{ request()->is('customer*') ? 'active' : ''}}" data-key="t-analytics"> Customer </a>
+                            </li>
+                            @endcan
                             @can('lokasi_project-view')
                             <li class="nav-item">
-                                <a href="{{ route('lokasi_project') }}" class="nav-link {{ request()->is('lokasi_project*') ? 'active' : ''}}" data-key="t-analytics"> Lokasi Project</a>
+                                <a href="{{ route('lokasi_project') }}" class="nav-link {{ request()->is('lokasi_project*') ? 'active' : ''}}" data-key="t-analytics"> Project Location</a>
                             </li>
                             @endcan
                             @can('jenis_kapal-view')
                             <li class="nav-item">
-                                <a href="{{ route('jenis_kapal') }}" class="nav-link {{ request()->is('jenis_kapal*') ? 'active' : ''}}" data-key="t-analytics"> Jenis Kapal</a>
+                                <a href="{{ route('jenis_kapal') }}" class="nav-link {{ request()->is('jenis_kapal*') ? 'active' : ''}}" data-key="t-analytics"> Ship Type</a>
                             </li>
                             @endcan
                             @can('pekerjaan-view')
                             <li class="nav-item">
-                                <a href="{{ route('pekerjaan') }}" class="nav-link {{ request()->is('pekerjaan*') ? 'active' : ''}}" data-key="t-crypto"> Pekerjaan</a>
+                                <a href="{{ route('pekerjaan') }}" class="nav-link {{ request()->is('pekerjaan*') ? 'active' : ''}}" data-key="t-crypto"> Job</a>
                             </li>
                             @endcan
                             @can('kategori-view')
                             <li class="nav-item">
-                                <a href="{{ route('kategori') }}" class="nav-link {{ request()->is('kategori*') ? 'active' : ''}}" data-key="t-analytics"> Kategori</a>
+                                <a href="{{ route('kategori') }}" class="nav-link {{ request()->is('kategori*') ? 'active' : ''}}" data-key="t-analytics"> Category</a>
                             </li>
                             @endcan
                             @can('sub_kategori-view')
                             <li class="nav-item">
-                                <a href="{{ route('sub_kategori') }}" class="nav-link {{ request()->is('sub_kategori*') ? 'active' : ''}}" data-key="t-analytics"> Sub Kategori</a>
+                                <a href="{{ route('sub_kategori') }}" class="nav-link {{ request()->is('sub_kategori*') ? 'active' : ''}}" data-key="t-analytics"> Sub Category</a>
                             </li>
                             @endcan
                             @can('setting_pekerjaan-view')
                             <li class="nav-item">
-                                <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Setting Pekerjaan</a>
+                                <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Job Setting</a>
                             </li>
                             @endcan
                             @can('vendor-view')
@@ -134,23 +133,23 @@
                 Gate::allows('satisfaction_note-view'))
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('laporan_customer*') ? 'active' : '' || request()->is('laporan_vendor*') ? 'active' : '' || request()->is('laporan_project_manager*') ? 'active' : '' }}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
-                        <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Laporan</span>
+                        <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Report</span>
                     </a>
                     <div class="collapse menu-dropdown" id="laporandashboard">
                         <ul class="nav nav-sm flex-column">
                             @can('laporan_customer-view')
                             <li class="nav-item">
-                                <a href="{{ route('laporan_customer') }}" class="nav-link {{ request()->is('laporan_customer*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Customer </a>
+                                <a href="{{ route('laporan_customer') }}" class="nav-link {{ request()->is('laporan_customer*') ? 'active' : ''}}" data-key="t-analytics"> Report Customer </a>
                             </li>
                             @endcan
                             @can('laporan_vendor-view')
                             <li class="nav-item">
-                                <a href="{{ route('laporan_vendor') }}" class="nav-link {{ request()->is('laporan_vendor*') ? 'active' : ''}}" data-key="t-analytics"> Laporan Vendor </a>
+                                <a href="{{ route('laporan_vendor') }}" class="nav-link {{ request()->is('laporan_vendor*') ? 'active' : ''}}" data-key="t-analytics"> Report Vendor </a>
                             </li>
                             @endcan
                             @can('laporan_project_manager-view')
                             <li class="nav-item">
-                                <a href="{{ route('laporan_project_manager') }}" class="nav-link {{ request()->is('laporan_project_manager*') ? 'active' : ''}}" data-key="t-ecommerce"> Laporan PM </a>
+                                <a href="{{ route('laporan_project_manager') }}" class="nav-link {{ request()->is('laporan_project_manager*') ? 'active' : ''}}" data-key="t-ecommerce"> Report Project Manager </a>
                             </li>
                             @can('satisfaction_note-view')
                             @endcan

@@ -12,9 +12,11 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Project Manager</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('project_manager.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
-                            </a>
+                            @can('project_manager-add')
+                                <a href="{{ route('project_manager.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                            @endcan
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -44,7 +46,7 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Project Manager</th>
+                                        <th style="color:#929EAE">Project Manager Name</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -76,7 +78,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Project Manager</label>
+                                <label for="nama" class="form-label">Project Manager Name</label>
                                 <select name="pm" id="pm" class="form-control">
                                     <option value="">Pilih Project Manager</option>
                                     @foreach($karyawan as $k)

@@ -11,7 +11,7 @@
                             <a href="{{route('karyawan')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Karyawan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Employee</h4>
                         </div>
                     </div>
                 </div>
@@ -27,8 +27,8 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="name" class="form-label">Nama Karyawan</label>
-                                                <input type="text" name="name" id="name" value="{{ $data->name }}" class="form-control" placeholder="Masukkan Nama Karyawan">
+                                                <label for="name" class="form-label">Employee Name</label>
+                                                <input type="text" name="name" id="name" value="{{ $data->name }}" class="form-control" placeholder="Enter Employee Name">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif
@@ -36,8 +36,8 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="jabatan">Jabatan</label>
-                                                <input type="text" name="jabatan" id="jabatan" value="{{ old('jabatan') }}" class="form-control" placeholder="Masukkan Jabatan">
+                                                <label for="jabatan">Job Title</label>
+                                                <input type="text" name="jabatan" id="jabatan" value="{{ old('jabatan') }}" class="form-control" placeholder="Enter Job Title">
                                             </div>
                                             @if ($errors->has('jabatan'))
                                                 <span class="text-danger">{{ $errors->first('jabatan') }}</span>
@@ -45,8 +45,8 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
-                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ $data->nomor_telpon }}" class="form-control" maxlength="13" placeholder="Masukkan Nomor Telpon" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <label for="nomor_telpon" class="form-label">Phone</label>
+                                                <input type="number" name="nomor_telpon" id="nomor_telpon" value="{{ $data->nomor_telpon }}" class="form-control" maxlength="13" placeholder="Enter Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_telpon'))
                                                     <span class="text-danger">{{ $errors->first('nomor_telpon') }}</span>
                                                 @endif
@@ -54,8 +54,8 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat</label>
-                                                <input type="text" name="alamat" id="alamat" value="{{ $data->alamat }}" class="form-control" placeholder="Masukkan Alamat">
+                                                <label for="alamat" class="form-label">Address</label>
+                                                <input type="text" name="alamat" id="alamat" value="{{ $data->alamat }}" class="form-control" placeholder="Enter Address">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
                                                 @endif
@@ -65,7 +65,7 @@
                                             <div>
                                                 <div>
                                                     <label for="email" class="form-label">Email</label>
-                                                    <input type="email" name="email" id="email" value="{{ $data->email }}" class="form-control form-control-icon" placeholder="Masukkan Email">
+                                                    <input type="email" name="email" id="email" value="{{ $data->email }}" class="form-control form-control-icon" placeholder="Enter Email">
                                                     @if ($errors->has('email'))
                                                         <span class="text-danger">{{ $errors->first('email') }}</span>
                                                     @endif

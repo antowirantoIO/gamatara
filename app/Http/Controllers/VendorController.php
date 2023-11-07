@@ -14,32 +14,43 @@ class VendorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Vendor::orderBy('name','asc')
+            $data = Vendor::with(['kategori'])->orderBy('name','asc')
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
-            ->addColumn('action', function($data){
-                return '<a href="'.route('vendor.edit', $data->id).'" class="btn btn-success btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                &nbsp;
-                <a data-id="'.$data->id.'" data-name="Vendor '.$data->name.'" data-form="form-vendor" class="btn btn-danger btn-sm deleteData">
-                    <span>
-                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>
-                <form method="GET" id="form-vendor'.$data->id.'" action="'.route('vendor.delete', $data->id).'">
-                    '.csrf_field().'
-                    '.method_field('DELETE').'
-                </form>';
+            ->addColumn('kategori_vendor', function($data){
+                return $data->kategori->name ?? '';
             })
-            ->rawColumns(['action'])
+            ->addColumn('action', function($data){
+                $btnEdit = '';
+                $btnDelete = '';
+                if($this->authorize('vendor-edit')) {
+                    $btnEdit = '<a href="'.route('vendor.edit', $data->id).'" class="btn btn-success btn-sm">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>';
+                }
+                if($this->authorize('vendor-delete')){
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Vendor '.$data->name.'" data-form="form-vendor" class="btn btn-danger btn-sm deleteData">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>
+                                <form method="GET" id="form-vendor'.$data->id.'" action="'.route('vendor.delete', $data->id).'">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                </form>';
+                }
+                return $btnEdit.'&nbsp;'.$btnDelete;
+            })
+            ->rawColumns(['action','kategori_vendor'])
             ->make(true);                    
         }
 
-        return view('vendor.index');
+        $kategori_vendor = KategoriVendor::get();
+
+        return view('vendor.index',compact('kategori_vendor'));
     }
 
     public function create()

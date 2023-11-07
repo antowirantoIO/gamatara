@@ -27,8 +27,8 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="customer" class="form-label">Nama Customer</label>
-                                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Masukkan Nama Customer">
+                                                <label for="customer" class="form-label">Customer Name</label>
+                                                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control" placeholder="Enter Customer Name">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
                                                 @endif
@@ -37,7 +37,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="contact_person" class="form-label">Contact Person</label>
-                                                <input type="text" name="contact_person" class="form-control" id="contact_person" value="{{ old('contact_person') }}" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" class="form-control" id="contact_person" value="{{ old('contact_person') }}" placeholder="Enter Contact Person">
                                                 @if ($errors->has('contact_person'))
                                                     <span class="text-danger">{{ $errors->first('contact_person') }}</span>
                                                 @endif
@@ -45,8 +45,8 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat</label>
-                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Masukkan Alamat">
+                                                <label for="alamat" class="form-label">Address</label>
+                                                <input type="text" name="alamat" id="alamat" value="{{ old('alamat') }}" class="form-control" placeholder="Enter Address">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
                                                 @endif
@@ -54,8 +54,8 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
-                                                <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <label for="nomor_contact_person" class="form-label">Contact Person Phone</label>
+                                                <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" maxlength="13" placeholder="Enter Contact Person Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_contact_person'))
                                                     <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
                                                 @endif
@@ -65,7 +65,7 @@
                                             <div>
                                                 <div>
                                                     <label for="email" class="form-label">Email</label>
-                                                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control form-control-icon" placeholder="Masukkan Email">
+                                                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="form-control form-control-icon" placeholder="Enter Email">
                                                     @if ($errors->has('email'))
                                                         <span class="text-danger">{{ $errors->first('email') }}</span>
                                                     @endif
@@ -75,7 +75,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="npwp" class="form-label">NPWP</label>
-                                                <input type="text" name="npwp" id="npwp" value="{{ old('npwp') }}" maxlength="16" class="form-control" placeholder="Masukkan NPWP">
+                                                <input type="text" name="npwp" id="npwp" value="{{ old('npwp') }}" maxlength="16" class="form-control" placeholder="Enter NPWP">
                                                 @if ($errors->has('npwp'))
                                                     <span class="text-danger">{{ $errors->first('npwp') }}</span>
                                                 @endif

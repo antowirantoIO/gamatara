@@ -11,7 +11,7 @@
                             <a href="{{route('pekerjaan')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Job</h4>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
+                                                <label for="nama_pekerjaan" class="form-label">Job Name</label>
                                                 <input type="text" name="name" value="{{$data->name}}" class="form-control" id="name" placeholder="Masukkan Nama Pekerjaan">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -43,19 +43,19 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="konversi">Konversi</label>
+                                                <label for="konversi">Convertion</label>
                                                 <input type="text" name="konversi" value="{{$data->konversi}}"  class="form-control" id="konversi" placeholder="100/100">
                                             </div>
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="harga_vendor" class="form-label">Harga Vendor</label>
+                                                <label for="harga_vendor" class="form-label">Vendor Price</label>
                                                 <input type="text" name="harga_vendor" value="{{$data->harga_vendor}}" class="form-control" id="harga_vendor" placeholder="1.000.000">
                                             </div>
                                         </div> 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="harga_customer" class="form-label">Harga Customer</label>
+                                                <label for="harga_customer" class="form-label">Customer Price</label>
                                                 <input type="text" name="harga_customer" value="{{$data->harga_customer}}" class="form-control" id="harga_customer" placeholder="1.000.000">
                                             </div>
                                         </div> 

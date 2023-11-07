@@ -12,9 +12,11 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Role</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('role.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
-                            </a>
+                            @can('role-add')
+                                <a href="{{ route('role.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                            @endcan
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -76,7 +78,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-12">
                             <div>
-                                <label for="nama" class="form-label">Nama Role</label>
+                                <label for="nama" class="form-label">Role Name</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>
@@ -171,14 +173,14 @@
             let form = $(this).data('form');
 
             Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#6492b8da",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#${form}${id}`).submit();

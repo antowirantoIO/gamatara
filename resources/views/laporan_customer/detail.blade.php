@@ -11,7 +11,7 @@
                             <a href="{{route('laporan_customer')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Customer Detail</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Customer Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
@@ -43,12 +43,12 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Kode Project</th>
-                                        <th style="color:#929EAE">Nama Project</th>
-                                        <th style="color:#929EAE">Tanggal Mulai</th>
-                                        <th style="color:#929EAE">Tanggal Selesai</th>
-                                        <th style="color:#929EAE">Nilai Project</th>
-                                        <th style="color:#929EAE">Status Project</th>
+                                        <th style="color:#929EAE">Project code</th>
+                                        <th style="color:#929EAE">Project Name</th>
+                                        <th style="color:#929EAE">Start Date</th>
+                                        <th style="color:#929EAE">End Date</th>
+                                        <th style="color:#929EAE">Project Value</th>
+                                        <th style="color:#929EAE">Project Status</th>
                                         <!-- <th style="color:#929EAE">Action</th> -->
                                     </tr>
                                 </thead>
@@ -85,50 +85,50 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama_project">Nama Project</label>
+                                <label for="nama_project">Project Name</label>
                                 <input type="text" name="nama_project" class="form-control" id="nama_project">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nilai_project">Nilai Project</label>
+                                <label for="nilai_project">Project Value</label>
                                 <input type="text" name="nilai_project" id="nilai_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="status_project">Status Project</label>
+                                <label for="status_project">Project Status</label>
                                 <select name="status_project" id="status_project" class="form-control">
-                                    <option value="">Pilih Status Project</option>
+                                    <option value="">Choose Project Status</option>
                                     <option value="1">Request</option>
                                     <option value="2">Selesai</option>
                                     <option value="99">Cancel</option>
                                 </select>
                             </div>
                         </div>
-                        <label for="tanggal_mulai">Tanggal Mulai</label>
+                        <label for="tanggal_mulai">Start Date</label>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="start_date">Dari </label>
+                                <label for="start_date">From </label>
                                 <input type="date" name="start_date" id="start_date" class="form-control" >
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="to_date">Sampai</label>
+                                <label for="to_date">To</label>
                                 <input type="date" name="to_date" id="to_date" class="form-control" >
                             </div>
                         </div>
-                        <label for="tanggal_selesai">Tanggal Selesai</label>
+                        <label for="tanggal_selesai">End Date</label>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="start_date_selesai">Dari </label>
+                                <label for="start_date_selesai">From </label>
                                 <input type="date" name="start_date_selesai" id="start_date_selesai" class="form-control" >
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="to_date_selesai">Sampai</label>
+                                <label for="to_date_selesai">To</label>
                                 <input type="date" name="to_date_selesai" id="to_date_selesai" class="form-control" >
                             </div>
                         </div>

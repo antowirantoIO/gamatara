@@ -9,12 +9,14 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Sub Kategori</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Sub Category</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('sub_kategori.create') }}" class="btn btn-secondary">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
-                            </a>
+                            @can('sub_kategori-add')
+                                <a href="{{ route('sub_kategori.create') }}" class="btn btn-secondary">
+                                    <span><i class="mdi mdi-plus"></i></span> &nbsp; Add
+                                </a>
+                            @endcan
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
@@ -34,7 +36,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Sub Kategori</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Sub Category</h4>
                             <div>
                           
                             </div>
@@ -45,8 +47,8 @@
                                 <table class="table" id="tableDataLight">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Kategori</th>
-                                            <th style="color:#929EAE">Sub Kategori</th>
+                                            <th style="color:#929EAE">Category</th>
+                                            <th style="color:#929EAE">Sub Category</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
@@ -78,9 +80,9 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama" class="form-label">Nama Kategori</label>
+                                <label for="nama" class="form-label">Category</label>
                                 <select name="kategori" id="kategori" class="form-control">
-                                    <option value="">Pilih Kategori</option>
+                                    <option value="">Choose Category</option>
                                     @foreach($kategori as $k)
                                     <option value="{{ $k->id }}">{{ $k->name }}</option>
                                     @endforeach
@@ -89,7 +91,7 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama" class="form-label">Nama Sub Kategori</label>
+                                <label for="nama" class="form-label">Sub Category Name</label>
                                 <input type="text" name="name" id="name" class="form-control">
                             </div>
                         </div>
@@ -185,14 +187,14 @@
             let form = $(this).data('form');
 
             Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#6492b8da",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
+                confirmButtonText: "Delete",
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#${form}${id}`).submit();

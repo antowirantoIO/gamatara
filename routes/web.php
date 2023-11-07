@@ -232,8 +232,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('sub-detail/{id}/{idProject}/{idSub}',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
         Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
 
-        Route::get('vendor-worker/{id}/{idProject}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
-        Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
+
+        Route::prefix('pekerjaan-vendor')->group(function(){
+            Route::get('all-data/{id}/{idProject}',[OnProgressController::class,'allPekerjaanVendor'])->name('on_progress.pekerjaan-vendor.all');
+            Route::get('vendor-worker/{id}/{idProject}/{subKategori}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
+            Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
+            Route::post('update',[OnProgressController::class,'updateVendorWork'])->name('on_progress.pekerjaan-vendor.update');
+        });
+
 
         Route::prefix('request')->group(function(){
             Route::get('tambah-pekerjaan/{id}/{vendor}/{kategori}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
@@ -241,6 +247,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('tambah-kategori/{id}/{vendor}',[OnProgressController::class,'tambahKategori'])->name('on_progres.request.tambah-kategori');
             Route::post('tambah-kategori',[OnProgressController::class,'storeTambahKategori'])->name('on_progres.store-kategori');
             Route::post('delete-request',[OnProgressController::class,'deleteRequest'])->name('on_progres.request-delete');
+
         });
 
         Route::prefix('tagihan')->group(function(){
@@ -267,6 +274,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('lokasi',[OnProgressController::class,'getLokasi'])->name('on_progres.lokasi');
             Route::get('unit/{id}',[OnProgressController::class,'ajaxUnitPekerjaan'])->name('ajax.unit-pekerjaan');
             Route::get('recent-activity',[OnProgressController::class,'ajaxActivityRecent'])->name('ajax.recent-activity');
+            Route::get('edit/request/{id}',[OnProgressController::class,'editRequestPekerjaan'])->name('on_progres.request.edit');
         });
 
         Route::prefix('export')->group(function(){

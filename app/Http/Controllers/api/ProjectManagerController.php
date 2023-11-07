@@ -88,6 +88,8 @@ class ProjectManagerController extends Controller
              
             if ($requests) {
                 $data['request'] = $requests->complaint;
+                $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
+                $data['project_engineer'] = $data->projects->pe->karyawan->name ?? null;
             } else {
                 $data['request'] = null;
             }
@@ -104,7 +106,7 @@ class ProjectManagerController extends Controller
             // $data['tanggal_selesai'] = $data->projects->actual_selesai ?? null;
             // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
             // $data['nomor_project_manajer'] = $data->projects->pm->karyawan->nomor_telpon ?? null;
-            // $data['project_engineer'] = $data->projects->pe->karyawan->name ?? null;
+        
             // $data['nomor_project_engineer'] = $data->projects->pe->karyawan->nomor_telpon ?? null;
       
          

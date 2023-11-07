@@ -60,7 +60,13 @@
                 @if ($subkategori !== $prevSub)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $letters[$count] }}.{{ $indexs + 1 }}.</td>
-                        <td height="20">&nbsp; {{ $value->subKategori->name }}</td>
+                        <td height="20">&nbsp;
+                            @if ($subkategori === 'Telah dilaksanakan pekerjaan')
+                                {{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}
+                            @else
+                                {{ $value->subKategori->name }}
+                            @endif
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -98,18 +104,16 @@
     </tr>
     {!! str_repeat('<tr></tr>', 1) !!}
     <tr>
-        <td colspan="9" align="right" style="font-size: 8px;">Hormat Kami</td>
+        <td colspan="9" align="right" style="font-size: 8px;">HORMAT KAMI</td>
         <td colspan="2"></td>
     </tr>
     {!! str_repeat('<tr></tr>', 6) !!}
     <tr>
-        <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>SUGIARTO SANTOSO, S. KOM</strong></span></td>
-        <td ></td>
-        <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>UJANG WIJIANTORO</strong></span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong style="text-decoration: underline;">WIDJI LAKSANA</strong></span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>{{ $project->pm->karyawan->name }}</strong></span></td>
     </tr>
     <tr align="center">
         <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR</span></td>
-        <td></td>
         <td style="font-size: 8px;" colspan="5" align="center"><span class="">KEPALA PROYEK</span></td>
     </tr>
     <tr>
@@ -118,24 +122,27 @@
         <td colspan="5"></td>
     </tr>
     {!! str_repeat('<tr></tr>', 6) !!}
-    <tr align="center" style="font-size: 8px;font-weight: bold;">
-        <td colspan="11" align="center"><strong>HANAFI SANTOSO, ST</strong></td>
+    <tr>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>HANAFI SANTOSO, ST</strong></span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>SUGIARTO SANTOSO, S.KOM</strong></span></td>
     </tr>
-    <tr align="center" style="font-size: 8px;">
-        <td colspan="11" align="center"><span class="">DIREKTUR</span></td>
+    <tr align="center">
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR</span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR</span></td>
     </tr>
-    <tr align="center" style="font-size: 8px;">
-        <td colspan="11" align="center"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>
+    <tr>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>
     </tr>
     {!! str_repeat('<tr></tr>', 2) !!}
     <tr align="center" style="font-size: 8px;">
         <td colspan="11" align="center"><span class="">MENGETAHUI,</span></td>
     </tr>
     {!! str_repeat('<tr></tr>', 6) !!}
-    <tr align="center" style="font-size: 8px;font-weight: bold;">
-        <td colspan="11" align="center">.....................................</td>
+    <tr align="center" style="font-size: 8px;font-weight: bold;text-decoration: underline;">
+        <td colspan="11" align="center" style="font-size: 8px;font-weight: bold;">OWNER SURVEYOR</td>
     </tr>
     <tr align="center" style="font-size: 8px;font-weight: bold;">
-        <td colspan="11" align="center">{{ $project->customer->name }}</td>
+        <td colspan="11" align="center" style="font-size: 8px;font-weight: bold;">{{ $project->customer->name }}</td>
     </tr>
 </table>

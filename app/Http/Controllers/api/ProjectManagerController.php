@@ -56,23 +56,26 @@ class ProjectManagerController extends Controller
     public function detailPM(Request $request)
     {
         try{
-            $pekerjaan = ProjectPekerjaan::where('id',$request->id)
-                            // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                            // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                            ->first();
+            $data = ProjectPekerjaan::with('vendors:id,name')->where('id',$request->id)->first();
                   
+            $requests = OnRequest::with(['complaint','complaint.vendors:id,name'])
+                        ->where('id',$data->id_project)
+                        ->first();
 
-            $data = OnRequest::with(['complaint','complaint.vendors:id,name'])->where('id',$pekerjaan->id_project)
-                ->first();
 
-            $vendor = ProjectPekerjaan::where('id_project',$request->id)
+                // $pekerjaan = ProjectPekerjaan::where('id',$request->id)
+                // // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                // // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                // ->first();
+
+            $vendor = ProjectPekerjaan::where('id_project',$data->id_project)
                 ->select('id_vendor')
                 ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                 ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                 ->groupBy('status', 'id_vendor')
                 ->get();
 
-            if($pekerjaan){
+            if($data){
                 $pekerjaan = [
                 'total_status_1' => "0",
                 'total_status_2' => "0"
@@ -81,42 +84,29 @@ class ProjectManagerController extends Controller
                 $pekerjaan = '0 / 0';
             }
 
-            $data['lokasi_project'] = $data->lokasi->name ?? null;
-            $data['project_manajer'] = $data->pm->karyawan->name ?? null;
+            $data['projects'] = $data->projects ?? '';
+             
+            if ($requests) {
+                $data['request'] = $requests->complaint;
+            } else {
+                $data['request'] = null;
+            }
+
+            $data['nama_vendor'] = $data->vendors->name ?? '-';
             $data['pekerjaan'] = $pekerjaan;
-            $data['vendor'] = count($vendor);
+            $data['total_vendor'] = count($vendor);
 
-            if($data)
-            {
-                foreach($data->pm->pe ?? [] as $value){
-                    $value['nama_karyawan'] =  $value->karyawan->name ?? '';
-                }
-            } 
-
-            // $data = ProjectPekerjaan::find($request->id);
-
-            // $request = OnRequest::find($data->id_project);
-
-            // $vendor = ProjectPekerjaan::where('id',$request->id)
-            //     ->select('id_vendor')
-            //     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-            //     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-            //     ->groupBy('status', 'id_vendor')
-            //     ->get();
-
-            // if($data->total_status_1){
-            //     $data = $data->total_status_2 / $data->total_status_1;
-            // }else{
-            //     $data = '0 / 0';
-            // }
-
-            // $data->lokasi_project = $data->id?? null;
+            // $data['nama_project'] = $data->projects->nama_project ?? '';
+            // $data['customer_contact_person'] = $data->projects->nomor_contact_person ?? '';
+            // $data['lokasi_project'] = $data->projects->lokasi->name ?? '';
+            // $data['displacement'] = $data->projects->displacement ?? null;
+            // $data['tanggal_mulai'] = $data->projects->start_project ?? null;
+            // $data['tanggal_selesai'] = $data->projects->actual_selesai ?? null;
             // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
-            // $data['vendor'] = count($vendor);
-
-            // foreach($data->pm->pe as $value){
-            //     $value['nama_karyawan'] =  $value->karyawan->name;
-            // } 
+            // $data['nomor_project_manajer'] = $data->projects->pm->karyawan->nomor_telpon ?? null;
+            // $data['project_engineer'] = $data->projects->pe->karyawan->name ?? null;
+            // $data['nomor_project_engineer'] = $data->projects->pe->karyawan->nomor_telpon ?? null;
+      
          
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {

@@ -56,6 +56,11 @@ class OnRequest extends Model
         return $this->hasMany(ProjectPekerjaan::class,'id_project','id');
     }
 
+    public function survey()
+    {
+        return $this->hasOne(StatusSurvey::class, 'id','status_survey');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->code ?? false, function($query) use ($filter) {

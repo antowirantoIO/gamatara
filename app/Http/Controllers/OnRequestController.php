@@ -213,7 +213,7 @@ class OnRequestController extends Controller
 
     public function export(Request $request)
     {
-        $data = OnRequest::orderBy('nama_project','asc')
+        $data = OnRequest::orderBy('created_at','desc')
                 ->filter($request)
                 ->get();
 

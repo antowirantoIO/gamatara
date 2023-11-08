@@ -89,8 +89,8 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="Status Survey">Status Survey</label>
-                                <select name="status" id="status" class="form-control">
+                                <label for="survey">Status Survey</label>
+                                <select name="survey" id="survey" class="form-control">
                                     <option value="">Choose Status Survey</option>
                                     @foreach($status as $k)
                                     <option value="{{ $k->id }}">{{ $k->name }}</option>

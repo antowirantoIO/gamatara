@@ -65,6 +65,8 @@ class OnRequest extends Model
     {
         return $query->when($filter->code ?? false, function($query) use ($filter) {
             return $query->where('code', 'like', "%$filter->code%");
+        })->when($filter->survey ?? false, function($query) use ($filter) {
+            return $query->where('status_survey', $filter->survey);
         })->when($filter->nama_project ?? false, function($query) use ($filter) {
             return $query->where('nama_project', 'like', "%$filter->nama_project%");
         })->when($filter->nama_customer ?? false, function($query) use ($filter) {

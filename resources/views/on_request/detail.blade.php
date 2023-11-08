@@ -179,7 +179,7 @@
             <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalgridLabel">Tambah Customer</h5>
+                    <h5 class="modal-title" id="exampleModalgridLabel">Add Customer</h5>
                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                             <button class="btn btn-primary" style="margin-right: 10px;" id="saveCustomerButton">Save</button>
                             <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
@@ -190,8 +190,8 @@
                         <div class="row gy-4">
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label>Nama Customer</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Enter Nama Customer">
+                                    <label>Customer Name</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Enter Customer Name">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
@@ -202,14 +202,14 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label>Alamat</label>
-                                    <input type="text" name="alamat" class="form-control" placeholder="Enter Nomor Contact Person">
+                                    <label>Address</label>
+                                    <input type="text" name="alamat" class="form-control" placeholder="Enter Address">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label>Nomor Contact Person</label>
-                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Enter Nomor Contact Person" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                    <label>Contact Person Phone</label>
+                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Enter Contact Person Phone" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
@@ -352,6 +352,7 @@
         }
     }
 
+    //tambah keluhan
     function tambahKeluhan() {
         var keluhanInput = document.getElementById("keluhan").value;
         var vendorSelect = document.getElementById("vendor");
@@ -386,6 +387,9 @@
 
                         document.getElementById("keluhan").value = "";
                         $("#vendor").val('').trigger('change');
+
+                        var saveButton = document.getElementById("tambahKeluhan");
+                        saveButton.setAttribute("data-id-keluhan", '');
                         // return response.json();
                     } else if(data.status === 500) {
                         Swal.fire({

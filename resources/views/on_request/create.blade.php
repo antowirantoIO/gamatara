@@ -27,8 +27,8 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nama_project">Nama Project</label>
-                                                <input type="text" name="nama_project" id="nama_project" value="{{ old('nama_project') }}" class="form-control" placeholder="Masukkan Nama Project">
+                                                <label for="nama_project">Project Name</label>
+                                                <input type="text" name="nama_project" id="nama_project" value="{{ old('nama_project') }}" class="form-control" placeholder="Enter Project Name">
                                             </div>
                                             @if ($errors->has('nama_project'))
                                                 <span class="text-danger">{{ $errors->first('nama_project') }}</span>
@@ -46,9 +46,9 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="nama_customer">Nama Customer</label>
+                                            <label for="nama_customer">Customer Name</label>
                                             <div class="input-group">
-                                                <input type="text" name="nama_customer" id="nama_customer" value="{{ old('nama_customer') }}" placeholder="Nama Customer" class="form-control" />
+                                                <input type="text" name="nama_customer" id="nama_customer" value="{{ old('nama_customer') }}" placeholder="Enter Customer Name" class="form-control" />
                                                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
                                             </div>
                                             @if ($errors->has('nama_customer'))
@@ -57,9 +57,9 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="lokasi_project">Lokasi Project</label>
+                                                <label for="lokasi_project">Project Location</label>
                                                 <select name="lokasi_project" id="lokasi_project" class="form-control" value="{{ old('lokasi_project') }}" >
-                                                    <option value="">Pilih Lokasi Project</option>
+                                                    <option value="">Choose Project Location</option>
                                                     @foreach($lokasi as $l)
                                                     <option value="{{$l->id}}" {{ $l->id == old('lokasi_project') ? 'selected' : '' }}>{{$l->name}}</option>
                                                     @endforeach
@@ -72,7 +72,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="contact_person">Contact Person</label>
-                                                <input type="text" name="contact_person" id="contact_person" value="{{ old('contact_person') }}" class="form-control" placeholder="Masukkan Contact Person">
+                                                <input type="text" name="contact_person" id="contact_person" value="{{ old('contact_person') }}" class="form-control" placeholder="Enter Contact Person">
                                             </div>
                                             @if ($errors->has('contact_person'))
                                                 <span class="text-danger">{{ $errors->first('contact_person') }}</span>
@@ -80,8 +80,8 @@
                                         </div>         
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person">Nomor Contact Person</label>
-                                                <input type="text" name="nomor_contact_person" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" class="form-control" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                                <label for="nomor_contact_person">Contact Person</label>
+                                                <input type="text" name="nomor_contact_person" id="nomor_contact_person" value="{{ old('nomor_contact_person') }}" class="form-control" placeholder="Enter Nomor Contact Person" maxlength="13" placeholder="Enter Contact Person Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
                                             @if ($errors->has('nomor_contact_person'))
                                                 <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
@@ -101,8 +101,8 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="displacement">Displacement Kapal</label>
-                                                <input type="number" name="displacement" id="displacement" value="{{ old('displacement') }}" class="form-control" placeholder="Masukkan Displacement Kapal">
+                                                <label for="displacement">Displacement Ship</label>
+                                                <input type="number" name="displacement" id="displacement" value="{{ old('displacement') }}" class="form-control" placeholder="Enter Displacement Kapal">
                                             </div>
                                             @if ($errors->has('displacement'))
                                                 <span class="text-danger">{{ $errors->first('displacement') }}</span>
@@ -110,9 +110,9 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="Jenis Kapal">Jenis Kapal</label>
+                                                <label for="Jenis Kapal">Ship Type</label>
                                                 <select name="jenis_kapal" id="jenis_kapal" class="form-control">
-                                                    <option value="">Pilih Jenis Kapal</option>
+                                                    <option value="">Choose Ship Type</option>
                                                     @foreach($jenis_kapal as $l)
                                                     <option value="{{$l->id}}" {{ $l->id == old('jenis_kapal') ? 'selected' : '' }}>{{$l->name}}</option>
                                                     @endforeach
@@ -176,7 +176,7 @@
             <form action="{{route('customer.store')}}" id="formOnRequest" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalgridLabel">Tambah Customer</h5>
+                    <h5 class="modal-title" id="exampleModalgridLabel">Add Customer</h5>
                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                             <button class="btn btn-primary" style="margin-right: 10px;" id="saveCustomerButton">Save</button>
                             <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
@@ -187,8 +187,8 @@
                         <div class="row gy-4">
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="customer">Nama Customer</label>
-                                    <input type="text" name="name" class="form-control" id="name" placeholder="Masukkan Nama Customer">
+                                    <label for="customer">Customer Name</label>
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter Customer Name">
                                 </div>
                                 @if ($errors->has('name'))
                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -197,7 +197,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="contact_person">Contact Person</label>
-                                    <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Masukkan Contact Person">
+                                    <input type="text" name="contact_person" class="form-control" id="contact_person" placeholder="Enter Contact Person">
                                 </div>
                                 @if ($errors->has('contact_person'))
                                     <span class="text-danger">{{ $errors->first('contact_person') }}</span>
@@ -205,8 +205,8 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="alamat">Alamat</label>
-                                    <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Masukkan Nomor Contact Person">
+                                    <label for="alamat">Address</label>
+                                    <input type="text" name="alamat" class="form-control" id="alamat" placeholder="Enter Address">
                                 </div>
                                 @if ($errors->has('alamat'))
                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
@@ -214,8 +214,8 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label for="nomor_contact_person">Nomor Contact Person</label>
-                                    <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Masukkan Nomor Contact Person" maxlength="13" placeholder="Masukkan Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                    <label for="nomor_contact_person">Contact Person Phone</label>
+                                    <input type="number" name="nomor_contact_person" class="form-control" id="nomor_contact_person" placeholder="Enter Contact Person Phone" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                                 @if ($errors->has('nomor_contact_person'))
                                     <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
@@ -225,7 +225,7 @@
                                 <div>
                                     <div>
                                         <label for="email">Email</label>
-                                        <input type="email" name="email" class="form-control form-control-icon" id="email" placeholder="Masukkan Email">
+                                        <input type="email" name="email" class="form-control form-control-icon" id="email" placeholder="Enter Email">
                                     </div>
                                     @if ($errors->has('email'))
                                         <span class="text-danger">{{ $errors->first('email') }}</span>
@@ -235,7 +235,7 @@
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="npwp">NPWP</label>
-                                    <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Masukkan NPWP">
+                                    <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Enter NPWP">
                                 </div>
                                 @if ($errors->has('npwp'))
                                     <span class="text-danger">{{ $errors->first('npwp') }}</span>
@@ -298,7 +298,7 @@
                         form[0].reset();
                         Swal.fire(
                             '',
-                            'Customer Telah Berhasil Ditambahkan',
+                            'Customer has been successfully added',
                             'success'
                         );
                     } else if (response.errors) {

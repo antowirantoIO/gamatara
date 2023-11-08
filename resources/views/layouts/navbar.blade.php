@@ -17,7 +17,7 @@
     </div>
 
     <div id="scrollbar">
-        <div class="container-fluid">
+        <div class="container-fluid" style="height: 100%">
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
                 @can('dashboard')

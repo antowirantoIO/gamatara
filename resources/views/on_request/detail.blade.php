@@ -133,9 +133,6 @@
                                                     </select>
                                             </div>
                                         </div> 
-
-                                        <div class="col-xxl-6 col-md-6"></div>
-
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">

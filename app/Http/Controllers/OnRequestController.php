@@ -45,6 +45,9 @@ class OnRequestController extends Controller
                     $data = $data->filter($request)->orderBy('created_at', 'desc')->get();
 
                     return Datatables::of($data)->addIndexColumn()
+                    ->addColumn('survey', function($data){
+                        return $data->survey->name ?? '';
+                    })
                     ->addColumn('nama_customer', function($data){
                         return $data->customer->name ?? '';
                     })
@@ -83,8 +86,9 @@ class OnRequestController extends Controller
         }else{
             $cek = 0;
         }
+        $status     = StatusSurvey::get();
 
-        return view('on_request.index',compact('customer','jenis_kapal','auth','cek'));
+        return view('on_request.index',compact('customer','jenis_kapal','auth','cek','status'));
     }
 
     public function create()

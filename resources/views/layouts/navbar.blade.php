@@ -89,11 +89,11 @@
                                 <a href="{{ route('sub_kategori') }}" class="nav-link {{ request()->is('sub_kategori*') ? 'active' : ''}}" data-key="t-analytics"> Sub Category</a>
                             </li>
                             @endcan
-                            @can('setting_pekerjaan-view')
+                            <!-- @can('setting_pekerjaan-view')
                             <li class="nav-item">
                                 <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Job Setting</a>
                             </li>
-                            @endcan
+                            @endcan -->
                             @can('vendor-view')
                             <li class="nav-item">
                                 <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>

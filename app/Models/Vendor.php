@@ -16,6 +16,16 @@ class Vendor extends Model
         return $this->hasOne(kategoriVendor::class, 'id','kategori_vendor');
     }
 
+    public function projectPekerjaan()
+    {
+        return $this->belongsTo(ProjectPekerjaan::class, 'id','id_vendor');
+    }
+
+    public function requests()
+    {
+        return $this->belongsTo(Keluhan::class, 'id_vendor','id');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {

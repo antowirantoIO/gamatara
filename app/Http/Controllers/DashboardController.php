@@ -24,8 +24,27 @@ class DashboardController extends Controller
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 
+        $vendors = Vendor::with('requests')->get();
+
+        $vendors->each(function ($vendor) {
+            if ($vendor->requests) {
+                $vendor->onProgressCount = $vendor->requests->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+            } else {
+                $vendor->onProgressCount = 0;
+            }
+
+            if ($vendor->requests) {
+                $vendor->completeCount = $vendor->requests->whereHas('projects', function ($query) {
+                    $query->where('status', 1);
+                })->count();
+            } else {
+                $vendor->completeCount = 0;
+            }
+         
+        });
+
         $data = OnRequest::get();
 
-        return view('dashboard',compact('spkrequest','onprogress','complete','totalcustomer','totalvendor','data'));
+        return view('dashboard',compact('spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors'));
     }
 }

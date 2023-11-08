@@ -299,21 +299,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($vendors as $v)
                                         <tr>
-                                            <td><center>Bagus Ampito</center></td>
-                                            <td><Center>2</Center></td>
-                                            <td><center>25</center></td>
+                                            <td><center>{{ $v->name }}</center></td>
+                                            <td><Center>{{ $v->onProgressCount }}</Center></td>
+                                            <td><Center>{{ $v->completeCount }}</Center></td>
                                         </tr>
-                                        <tr>
-                                            <td><center>Fina G Bastian</center></td>
-                                            <td><center>1</center></td>
-                                            <td><center>25</center></td>
-                                        </tr>
-                                        <tr>
-                                            <td><center>Adam Makmur</center></td>
-                                            <td><center>3</center></td>
-                                            <td><center>25</center></td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -331,14 +323,17 @@
     $(function() {
             $("#example1").DataTable({
                 fixedHeader:true,
+                lengthMenu: [5, 10, 15]
             });
 
             $("#example2").DataTable({
                 fixedHeader:true,
+                lengthMenu: [5, 10, 15]
             });
 
             $("#example3").DataTable({
                 fixedHeader:true,
+                lengthMenu: [5, 10, 15]
             });
         })
 </script>

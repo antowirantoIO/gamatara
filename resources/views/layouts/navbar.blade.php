@@ -151,12 +151,12 @@
                             <li class="nav-item">
                                 <a href="{{ route('laporan_project_manager') }}" class="nav-link {{ request()->is('laporan_project_manager*') ? 'active' : ''}}" data-key="t-ecommerce"> Report Project Manager </a>
                             </li>
-                            @can('satisfaction_note-view')
                             @endcan
+                            <!-- @can('satisfaction_note-view')
                             <li class="nav-item">
                                 <a href="{{ route('satisfaction_note') }}" class="nav-link {{  request()->is('satisfaction_note') }}" data-key="t-crypto"> Satisfaction Note</a>
                             </li>
-                            @endcan
+                            @endcan -->
                         </ul>
                     </div>
                 </li>

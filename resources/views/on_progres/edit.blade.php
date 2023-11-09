@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Details Progres</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Details Progress</h4>
                         </div>
                     </div>
                 </div>
@@ -170,8 +170,8 @@
                                             <a href="{{ route('on_progres.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
-                                                        Bill <br>
-                                                       <strong>Vendor</strong>
+                                                        Vendor <br>
+                                                       <strong>Bills</strong>
                                                     </div>
                                                     <div>
                                                         <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
@@ -181,8 +181,8 @@
                                             <a href="{{ route('on_progres.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
-                                                        Bill <br>
-                                                        <strong>Customer</strong>
+                                                        Customer <br>
+                                                        <strong>Bills</strong>
                                                     </div>
                                                     <div>
                                                         <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>

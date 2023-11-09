@@ -52,25 +52,29 @@ class ProjectManagerController extends Controller
                         ->where('id',$data->id_project)
                         ->first();
 
-            // $pekerjaan = ProjectPekerjaan::where('id',$request->id)
-            // // ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-            // // ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-            // ->first();
+            $pekerjaan = ProjectPekerjaan::where('id_project',$data->id_project)
+                        ->whereNotNull('id_pekerjaan')
+                        ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                        ->first();
 
             $vendor = ProjectPekerjaan::where('id_project',$data->id_project)
-                ->select('id_vendor')
-                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                ->groupBy('status', 'id_vendor')
-                ->get();
+                    ->select('id_vendor')
+                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                    ->groupBy('status', 'id_vendor')
+                    ->get();
 
-            if($data){
+            if($pekerjaan){
                 $pekerjaan = [
-                'total_status_1' => "0",
-                'total_status_2' => "0"
+                'total_status_1' => $pekerjaan->total_status_1,
+                'total_status_2' => $pekerjaan->total_status_2
                 ];
             }else{
-                $pekerjaan = '0 / 0';
+                $pekerjaan = [
+                    'total_status_1' => "0",
+                    'total_status_2' => "0"
+                    ];
             }
 
             $data['projects'] = $data->projects ?? '';
@@ -111,11 +115,11 @@ class ProjectManagerController extends Controller
             $kategori = Kategori::get();
 
             $progress = ProjectPekerjaan::where('id', $request->id)
-                ->select('id_kategori')
-                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                ->groupBy('id_kategori')
-                ->get();
+                        ->select('id_kategori')
+                        ->selectRaw('COUNT(id) as total_status_1')
+                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                        ->groupBy('id_kategori')
+                        ->get();
             
             $progressByKategori = [];
             

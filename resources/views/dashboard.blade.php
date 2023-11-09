@@ -184,7 +184,9 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Project</h4>
                             <div>
-                                <a href="{{ route('on_request') }}" style="color: #194BFB;">View All</a>
+                                <a href="{{ route('on_request') }}" style="color: #194BFB;" class="text-reset dropdown-btn">
+                                    <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All
+                                </a>
                                 <!-- <button type="button" class="btn btn-soft-secondary btn-sm">
                                     View ALL
                                 </button> -->
@@ -240,7 +242,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 380px;">
                             <div class="table-responsive">
                                 <table class="table" id="example2">
                                     <thead class="table-light">
@@ -251,21 +253,33 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($pm as $keys => $v)
                                         <tr>
-                                            <td><center>Bagus Ampito</center></td>
-                                            <td><Center>2</Center></td>
-                                            <td><center>25</center></td>
+                                            <td>
+                                                <center>
+                                                    {{ $v->projects->pm->karyawan->name ?? ''}}
+                                                </center>
+                                            </td>
+                                            <td>
+                                                <Center>
+                                                @isset($progress[$keys])
+                                                    {{ $progress[$keys]->onprogress }}
+                                                @else
+                                                    0
+                                                @endisset
+                                                </Center>
+                                            </td>
+                                            <td>
+                                                <center>
+                                                @isset($progress[$keys])
+                                                    {{ $progress[$keys]->complete }}
+                                                @else
+                                                    0
+                                                @endisset
+                                                </center>
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td><center>Fina G Bastian</center></td>
-                                            <td><center>1</center></td>
-                                            <td><center>25</center></td>
-                                        </tr>
-                                        <tr>
-                                            <td><center>Adam Makmur</center></td>
-                                            <td><center>3</center></td>
-                                            <td><center>25</center></td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
 
@@ -288,7 +302,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 380px;">
                             <div class="table-responsive">
                                 <table class="table" id="example3">
                                     <thead class="table-light">
@@ -299,11 +313,27 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($vendors as $v)
+                                        @foreach($vendors as $keys => $v)
                                         <tr>
-                                            <td><center>{{ $v->name }}</center></td>
-                                            <td><Center>{{ $v->onProgressCount }}</Center></td>
-                                            <td><Center>{{ $v->completeCount }}</Center></td>
+                                            <td><center>{{ $v->vendors->name }}</center></td>
+                                            <td>
+                                                <Center>
+                                                @isset($progress[$keys])
+                                                    {{ $progress[$keys]->onprogress }}
+                                                @else
+                                                    0
+                                                @endisset
+                                                </Center>
+                                            </td>
+                                            <td>
+                                                <Center>
+                                                @isset($progress[$keys])
+                                                    {{ $progress[$keys]->complete }}
+                                                @else
+                                                    0
+                                                @endisset
+                                                </Center>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -323,17 +353,68 @@
     $(function() {
             $("#example1").DataTable({
                 fixedHeader:true,
-                lengthMenu: [5, 10, 15]
+                lengthMenu: [5, 10, 15],
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
             });
 
             $("#example2").DataTable({
                 fixedHeader:true,
-                lengthMenu: [5, 10, 15]
+                lengthMenu: [5, 10, 15],
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
             });
 
             $("#example3").DataTable({
                 fixedHeader:true,
-                lengthMenu: [5, 10, 15]
+                lengthMenu: [5, 10, 15],
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
             });
         })
 </script>

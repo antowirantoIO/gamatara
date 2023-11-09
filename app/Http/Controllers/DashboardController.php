@@ -7,6 +7,7 @@ use App\Models\OnRequest;
 use App\Models\Customer;
 use App\Models\Vendor;
 use App\Models\Keluhan;
+use App\Models\ProjectPekerjaan;
 
 class DashboardController extends Controller
 {
@@ -24,27 +25,27 @@ class DashboardController extends Controller
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 
-        $vendors = Vendor::with('requests')->get();
-
-        $vendors->each(function ($vendor) {
-            if ($vendor->requests) {
-                $vendor->onProgressCount = $vendor->requests->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
-            } else {
-                $vendor->onProgressCount = 0;
-            }
-
-            if ($vendor->requests) {
-                $vendor->completeCount = $vendor->requests->whereHas('projects', function ($query) {
-                    $query->where('status', 1);
-                })->count();
-            } else {
-                $vendor->completeCount = 0;
-            }
-         
-        });
+        $vendors = Keluhan::whereNotNull(['id_pm_approval','id_bod_approval'])
+                                    ->select('id_vendor')
+                                    ->groupBy('id_vendor')
+                                    ->get();
+        $progress = ProjectPekerjaan::whereNotNull('id_pekerjaan')
+                                    ->select('id_vendor')
+                                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
+                                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
+                                    ->groupBy('id_vendor')
+                                    ->get();
+                           
+        $pm = ProjectPekerjaan::with('projects')
+                                ->whereNotNull('id_pekerjaan')
+                                ->select('id_project')
+                                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
+                                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
+                                ->groupBy('id_project')
+                                ->get();
 
         $data = OnRequest::get();
 
-        return view('dashboard',compact('spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors'));
+        return view('dashboard',compact('spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors','progress','pm'));
     }
 }

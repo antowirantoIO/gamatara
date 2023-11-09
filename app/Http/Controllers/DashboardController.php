@@ -21,7 +21,10 @@ class DashboardController extends Controller
                         ->where('status',1)
                         ->get();
         $onprogress = count($onprogress);
-        $complete = count(OnRequest::where('status',1)->get());
+        $complete = OnRequest::whereHas('progress', function ($query) {
+            $query->whereNotNull('id_pekerjaan')->where('status', 2);
+        })->count();
+        
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 

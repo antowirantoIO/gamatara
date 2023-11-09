@@ -49,19 +49,20 @@ class LaporanCustomerController extends Controller
             })
             ->addColumn('action', function ($data) {
                 $btnDetail = '';
-            
+                $id - '';
+
                 if ($data->projects) {
                     foreach ($data->projects as $project) {
                         $id = $project->id;
-            
-                        if ($this->authorize('laporan_customer-detail')) {
-                            $btnDetail .= '<a href="' . route('laporan_customer.detail', $id) . '" class="btn btn-warning btn-sm">
-                                                <span>
-                                                    <i><img src="' . asset('assets/images/eye.svg') . '" style="width: 15px;"></i>
-                                                </span>
-                                            </a>';
-                        }
                     }
+                }
+ 
+                if ($this->authorize('laporan_customer-detail')) {
+                    $btnDetail .= '<a href="' . route('laporan_customer.detail', $id) . '" class="btn btn-warning btn-sm">
+                                        <span>
+                                            <i><img src="' . asset('assets/images/eye.svg') . '" style="width: 15px;"></i>
+                                        </span>
+                                    </a>';
                 }
             
                 return $btnDetail;

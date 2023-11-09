@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Vendor</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Vendor</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
@@ -36,13 +36,13 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 640px;">
+                        <div class="card-body" style="height: 670px;">
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Vendor</th>
-                                        <th style="color:#929EAE">Jumlah Project</th>
-                                        <th style="color:#929EAE">Nilai Project</th>
+                                        <th style="color:#929EAE">Vendor Name</th>
+                                        <th style="color:#929EAE">Project Total</th>
+                                        <th style="color:#929EAE">Project Value</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -59,25 +59,23 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">
                                 <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
-                                &nbsp; Jumlah Kapal
+                                &nbsp; Number Of Ships
                                 &nbsp;
                                 <span style="width: 15px;height: 15px;background-color:#194BFB; display: inline-block;"></span>
                                 &nbsp; Volume
                             </h4>
                             <div class="mt-3 mt-lg-0 ml-lg-auto">
                                 <div class="dropdown" role="group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
                                         2023
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="yearDropdown">
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 660px;">
                             <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                         </div>
 
@@ -244,6 +242,89 @@
 
         $(document).ready(function() {
             $('.loading-overlay').hide();
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const yearDropdown = document.getElementById('yearDropdown');
+        const yearDropdownButton = document.getElementById('yearDropdownButton');
+        
+        let chart;
+
+        const currentYear = (new Date()).getFullYear();
+        const years = [];
+        for (let i = currentYear; i >= currentYear - 20; i--) {
+            years.push(i);
+        }
+
+        years.forEach(function (year) {
+            const listItem = document.createElement('li');
+            const anchor = document.createElement('a');
+            anchor.classList.add('dropdown-item');
+            anchor.href = '#';
+            anchor.textContent = year;
+        
+            anchor.addEventListener('click', function () {
+                yearDropdownButton.textContent = year;
+                $.ajax({
+                    url: '{{ route('laporan_customer.chart') }}',
+                    method: 'get',
+                    data: {
+                        year: year
+                    },
+                    success: function(response) {
+                        console.log(response.totalHargaData);
+                        const chartData = JSON.parse(response.totalHargaData);
+                        
+                        if (chart) {
+                            chart.updateOptions({
+                                series: [{
+                                    data: chartData
+                                }]
+                            });
+                        } else {
+                            const options = {
+                                chart: {
+                                    type: 'bar',
+                                    height: 600,
+                                },
+                                plotOptions: {
+                                    bar: {
+                                        horizontal: true,
+                                        borderRadius: 5,
+                                    },
+                                },
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                                series: [{
+                                    name: 'Nominal Project',
+                                    data: chartData
+                                }],
+                                xaxis: {
+                                    labels: {
+                                        show: false,
+                                    },
+                                    categories: [
+                                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                                    ],
+                                },
+                                colors: ['#194BFB'],
+                            };
+                            
+                            chart = new ApexCharts(document.querySelector("#bar"), options);
+                            chart.render();
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            });
+        
+            listItem.appendChild(anchor);
+            yearDropdown.appendChild(listItem);
         });
     });
 </script>

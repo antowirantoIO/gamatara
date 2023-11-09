@@ -49,7 +49,7 @@ class LaporanCustomerController extends Controller
             })
             ->addColumn('action', function ($data) {
                 $btnDetail = '';
-                $id - '';
+                $id = '';
 
                 if ($data->projects) {
                     foreach ($data->projects as $project) {

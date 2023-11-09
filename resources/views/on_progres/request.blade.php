@@ -11,7 +11,7 @@
                             <a href="{{route('on_progres.request.tambah-kategori',[$id,$vendor])}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Input Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Input Job</h4>
                         </div>
                     </div>
                 </div>
@@ -26,9 +26,9 @@
                                     <input type="hidden" id="id_project" name="id_project" value="{{ $id }}">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label for="kategori" class="form-label">Kategori Pekerjaan</label>
+                                            <label for="kategori" class="form-label">Job Category</label>
                                             <select name="kategori" id="kategori" class="form-select">
-                                                <option selected disabled>Masukan Kategori Pekerjaan</option>
+                                                <option selected disabled>Choose Work Category</option>
                                                 @foreach ($works as $work)
                                                     <option {{ $kategori_id ? ($kategori_id === $work->id ? 'selected' : '') : '' }} value="{{ $work->id }}">{{ $work->name }}</option>
                                                 @endforeach
@@ -40,7 +40,7 @@
                                             <input type="hidden" name="vendor" value="{{ $vendor->id }}">
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="sub_kategori" class="form-label">Sub Kategori Pekerjaan</label>
+                                            <label for="sub_kategori" class="form-label">Job Subcategory</label>
                                             <select name="sub_kategori" id="sub_kategori" class="form-select">
                                                 <option selected disabled>Sub Kategori</option>
                                                 @foreach ($subkategori as $s)
@@ -49,7 +49,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="nama_pekerjaan" class="form-label">Nama Pekerjaan</label>
+                                            <label for="nama_pekerjaan" class="form-label">Job Name</label>
                                             <input type="text" class="form-control" placeholder="Masukan Nama Pekerjaan" id="nama_pekerjaan" name="nama_pekerjaan" value="{{ $desc }}">
                                         </div>
                                         <div class="d-flex justify-content-end mb-3">
@@ -60,24 +60,26 @@
                                             <table class="table" id="tablePekerjaan">
                                                 <thead style="background-color:#194BFB;color:#FFFFFF;">
                                                     <tr>
-                                                        <th style="width: 200px">Work</th>
+                                                        <th style="width: 200px">Job</th>
                                                         <th style="width: 200px">Description</th>
                                                         <th style="width: 200px">Location</th>
                                                         <th style="width: 200px">Detail / Other</th>
                                                         <th style="width: 90px">Length (mm)</th>
                                                         <th style="width: 90px">Width (mm)</th>
                                                         <th style="width: 90px">Thick (mm)</th>
+                                                        <th style="width: 90px">Qty</th>
                                                         <th style="width: 90px">Amount</th>
                                                         <th style="width: 90px">Unit</th>
-                                                        <th style="width: 90px">Qty</th>
                                                         <th style="width: 90px">Vendor Prices</th>
                                                         <th style="width: 90px">Customer Prices</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="clone">
+                                                    <input type="hidden" name="kode_unik" value="{{ $kode_unik ?? null }}">
                                                     @foreach ($pekerjaan as $keys => $p)
                                                     <input type="hidden" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
+
 
                                                     @if ($p->activity() && $p->activity()->status === 2)
                                                         <tr class="draggable-row parent-clone">
@@ -85,8 +87,8 @@
                                                             <td>
                                                                 <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
                                                                     <option selected disabled>Pilih Pekerjaan</option>
-                                                                    @foreach ($settingPekerjaan as $sp)
-                                                                        <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id_pekerjaan ? 'selected' : '') : '' }} value="{{ $sp->id_pekerjaan }}">{{ $sp->pekerjaan->name }}</option>
+                                                                    @foreach ($pekerjaans as $sp)
+                                                                        <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id ? 'selected' : '') : '' }} value="{{ $sp->id }}">{{ $sp->name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
@@ -110,13 +112,13 @@
                                                                 <input type="number" class="form-control {{ $p->thick !== $p->activity()->thick ? 'bg-danger text-white opacity-50' : '' }}" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
                                                             </td>
                                                             <td>
+                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white opacity-50' : '' }}" name="qty[]" style="width: 50px" value="{{ $p->qty }}">
+                                                            </td>
+                                                            <td>
                                                                 <input type="text" class="form-control {{ $p->amount !== $p->activity()->amount ? 'bg-danger text-white opacity-50' : '' }}" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control {{ $p->unit !== $p->activity()->unit ? 'bg-danger text-white opacity-50' : '' }}" name="unit[]" style="width: 50px" id="unit" value="{{ $p->unit }}">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" class="form-control {{ $p->qty !== $p->activity()->qty ? 'bg-danger text-white opacity-50' : '' }}" name="qty[]" style="width: 50px" value="{{ $p->qty }}">
+                                                                <input type="text" class="form-control {{ $p->unit !== $p->activity()->unit ? 'bg-danger text-white opacity-50' : '' }}" name="unit[]" style="width: 60px" id="unit" value="{{ $p->unit }}">
                                                             </td>
                                                             @hasrole('Project Admin')
                                                                 <td>
@@ -150,8 +152,8 @@
                                                             <td>
                                                                 <select name="pekerjaan[]" id="pekerjaan-{{ $keys }}" class="form-select pekerjaan-{{ $keys }}">
                                                                     <option selected disabled>Pilih Pekerjaan</option>
-                                                                    @foreach ($settingPekerjaan as $sp)
-                                                                        <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id_pekerjaan ? 'selected' : '') : '' }} value="{{ $sp->id_pekerjaan }}">{{ $sp->pekerjaan->name }}</option>
+                                                                    @foreach ($pekerjaans as $sp)
+                                                                        <option {{ $p->id_pekerjaan ? ($p->id_pekerjaan === $sp->id ? 'selected' : '') : '' }} value="{{ $sp->id }}">{{ $sp->name }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </td>
@@ -175,17 +177,17 @@
                                                                 <input type="number" class="form-control" name="thick[]" style="width: 70px" value="{{ $p->thick }}">
                                                             </td>
                                                             <td>
+                                                                <input type="text" class="form-control" name="qty[]" style="width: 50px" value="{{ $p->qty }}">
+                                                            </td>
+                                                            <td>
                                                                 <input type="text" class="form-control" name="amount[]" style="width: 70px" value="{{ $p->amount }}">
                                                             </td>
                                                             <td>
-                                                                <input type="text" class="form-control" name="unit[]" style="width: 45px" id="unit" value="{{ $p->unit }}">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" class="form-control" name="qty[]" style="width: 50px" value="{{ $p->qty }}">
+                                                                <input type="text" class="form-control" name="unit[]" style="width: 60px" id="unit" value="{{ $p->unit }}">
                                                             </td>
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" readonly>
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole(['Staff Finance','SPV Finance'])
@@ -195,7 +197,7 @@
                                                             @endhasrole
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" readonly>
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole(['Staff Finance','SPV Finance'])
@@ -227,7 +229,7 @@
             </div>
 
             <div class="row">
-                <h4>Aktivitas Terakhir</h4>
+                <h4>Recent Activity</h4>
             </div>
 
             <div class="row">
@@ -238,7 +240,7 @@
                                 <table class="table" id="tableActivity">
                                     <thead style="background-color:#194BFB;color:#FFFFFF;">
                                         <tr>
-                                            <th style="width: 200px">Work</th>
+                                            <th style="width: 200px">Job</th>
                                             <th style="width: 200px">Date</th>
                                             <th style="width: 200px">Status</th>
                                             <th style="width: 90px">Length (mm)</th>
@@ -316,14 +318,15 @@
                         <input type="number" class="form-control" name="thick[]" style="width: 70px">
                     </td>
                     <td>
+                        <input type="text" class="form-control" name="qty[]" style="width: 50px" >
+                    </td>
+                    <td>
                         <input type="text" class="form-control" name="amount[]" style="width: 70px" >
                     </td>
                     <td>
                         <input type="text" class="form-control" id="unit${count}" name="unit[]" style="width: 70px">
                     </td>
-                    <td>
-                        <input type="text" class="form-control" name="qty[]" style="width: 50px" >
-                    </td>
+
                     <td>
                         <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'disabled' : ''}>
                     </td>
@@ -348,7 +351,7 @@
                 var harga_customer = $(`#harga_customer${count}`);
                 var konversi = $(`#convertion${count}`);
 
-                getSelect(id,select);
+                getSelect(select);
 
                 $(`#pekerjaan${count}`).on('change',function(){
                     let id = $(this).val();
@@ -465,7 +468,8 @@
                     url : '{{ route('ajax.recent-activity') }}',
                     data : function (d) {
                         d.id =  id_project,
-                        d.id_kategori = '{{ $kategori }}'
+                        d.id_kategori = '{{ $kategori }}',
+                        d.id_subkategori = '{{ $subKategori }}'
                     }
                 },
                 columns : [
@@ -544,12 +548,9 @@
                 getSelect(id,select);
             })
 
-            const getSelect = (id,select) => {
-                let url = '{{ route('on_progres.pekerjaan',':id') }}'
-                let urlReplace = url.replace(':id',id);
-
+            const getSelect = (select) => {
                 $.ajax({
-                    url : urlReplace,
+                    url : '{{ route('on_progres.pekerjaan') }}',
                     method : 'GET'
                 }).then(ress => {
                     if(ress.data.length != null){
@@ -559,7 +560,7 @@
                         `)
                         ress.data.forEach(item => {
                             select.append(`
-                                <option value="${item.pekerjaan.id}">${item.pekerjaan.name}</option>
+                                <option value="${item.id}">${item.name}</option>
                             `)
                         })
                     }else{

@@ -161,6 +161,7 @@
 
             let table = $("#example1").DataTable({
                 fixedHeader:true,
+                ordering : false,
                 scrollX: false,
                 processing: true,
                 serverSide: true,

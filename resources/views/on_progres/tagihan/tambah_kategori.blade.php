@@ -12,11 +12,11 @@
                             <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Kategori Pekerjaan Vendor</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Job Category</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <div class="btn btn-secondary" id="btn-plus">
-                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Tambah Kategori
+                                <span><i class="mdi mdi-plus"></i></span> &nbsp; Add Category
                             </div>
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
@@ -32,7 +32,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Kategori</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Category</h4>
                             <div>
 
                             </div>
@@ -42,8 +42,8 @@
                             <table class="table w-100" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Kategori</th>
-                                        <th style="color:#929EAE">Sub Kategori</th>
+                                        <th style="color:#929EAE">Category</th>
+                                        <th style="color:#929EAE">Subcategory</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>

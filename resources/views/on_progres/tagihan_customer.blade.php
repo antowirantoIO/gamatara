@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Tagihan Customer</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Customer Bills</h4>
                         </div>
                     </div>
                 </div>
@@ -55,8 +55,8 @@
                                             <table class="table w-100" id="tableData{{ $key }}">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;">Pekerjaan</th>
-                                                        <th style="color:#929EAE">Lokasi</th>
+                                                        <th style="color:#929EAE;">Job</th>
+                                                        <th style="color:#929EAE">Location</th>
                                                         <th style="color:#929EAE">Detail / Other</th>
                                                         <th style="color:#929EAE">Length (mm)</th>
                                                         <th style="color:#929EAE">Width (mm)</th>
@@ -64,8 +64,8 @@
                                                         <th style="color:#929EAE">Qty</th>
                                                         <th style="color:#929EAE">Amount</th>
                                                         <th style="color:#929EAE">Unit</th>
-                                                        <th style="color:#929EAE">Total Harga</th>
-                                                        <th style="color:#929EAE">Total Tagihan</th>
+                                                        <th style="color:#929EAE">Total Price</th>
+                                                        <th style="color:#929EAE">Total Bill</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -82,7 +82,7 @@
                                                 </tbody>
                                             </table>
                                             <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
-                                                <strong>Total Tagihan</strong> :
+                                                <strong>Total Bill</strong> :
                                                 <strong class="tagihan-{{ $key }} {{ $loop->first ? 'active' : '' }}"></strong>
                                             </div>
                                         </div>

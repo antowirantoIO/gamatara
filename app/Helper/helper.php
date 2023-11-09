@@ -79,7 +79,7 @@ function getProgresProject($id)
 
 function groupDataPekerjaan($request)
 {
-    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","LAIN-LAIN"];
+    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","PIPA-PIPA","INTERIOR KAPAL","LAIN-LAIN"];
     $kategori = Kategori::orderByRaw("FIELD(name, '" . implode("','", $customOrder) . "')")->get();
     $data = collect();
     $kategori->each(function($item) use ($data,&$request){
@@ -150,4 +150,18 @@ function formatTanggal ($tanggal = null)
 
     $formattedDate = strtr($formattedDate, $bulan);
     return $formattedDate;
+}
+
+function generateBarcodeNumber() {
+    $number = mt_rand(1000000000, 9999999999);
+
+    if (barcodeNumberExists($number)) {
+        return generateBarcodeNumber();
+    }
+
+    return $number;
+}
+
+function barcodeNumberExists($number) {
+    return ProjectPekerjaan::where('kode_unik',$number)->exists();
 }

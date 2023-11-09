@@ -12,7 +12,7 @@
                             <a href="{{route('on_progress.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Tagihan Vendor</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Bills</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-danger" id="export-button">
@@ -33,10 +33,10 @@
                                 <table class="table w-100" id="example1">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Kode Project</th>
-                                            <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Nama Customer</th>
-                                            <th style="color:#929EAE">Nama Vendor</th>
+                                            <th style="color:#929EAE">Project Code</th>
+                                            <th style="color:#929EAE">Project Name</th>
+                                            <th style="color:#929EAE">Customer Name</th>
+                                            <th style="color:#929EAE">Vendor Name</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>

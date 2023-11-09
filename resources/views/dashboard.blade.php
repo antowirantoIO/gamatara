@@ -193,7 +193,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 380px;">
                             <div class="table-responsive">
                                 <table class="table" id="example1">
                                     <thead class="table-light">

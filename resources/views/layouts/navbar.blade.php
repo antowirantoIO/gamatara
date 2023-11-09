@@ -17,7 +17,7 @@
     </div>
 
     <div id="scrollbar">
-        <div class="container-fluid">
+        <div class="container-fluid" style="height: 100%">
             <div id="two-column-menu"></div>
             <ul class="navbar-nav" id="navbar-nav">
                 @can('dashboard')
@@ -89,11 +89,11 @@
                                 <a href="{{ route('sub_kategori') }}" class="nav-link {{ request()->is('sub_kategori*') ? 'active' : ''}}" data-key="t-analytics"> Sub Category</a>
                             </li>
                             @endcan
-                            @can('setting_pekerjaan-view')
+                            <!-- @can('setting_pekerjaan-view')
                             <li class="nav-item">
                                 <a href="{{ route('setting_pekerjaan') }}" class="nav-link {{ request()->is('setting_pekerjaan*') ? 'active' : ''}}" data-key="t-analytics"> Job Setting</a>
                             </li>
-                            @endcan
+                            @endcan -->
                             @can('vendor-view')
                             <li class="nav-item">
                                 <a href="{{ route('vendor') }}" class="nav-link {{ request()->is('vendor*') ? 'active' : ''}}" data-key="t-crypto"> Vendor </a>
@@ -151,12 +151,12 @@
                             <li class="nav-item">
                                 <a href="{{ route('laporan_project_manager') }}" class="nav-link {{ request()->is('laporan_project_manager*') ? 'active' : ''}}" data-key="t-ecommerce"> Report Project Manager </a>
                             </li>
-                            @can('satisfaction_note-view')
                             @endcan
+                            <!-- @can('satisfaction_note-view')
                             <li class="nav-item">
                                 <a href="{{ route('satisfaction_note') }}" class="nav-link {{  request()->is('satisfaction_note') }}" data-key="t-crypto"> Satisfaction Note</a>
                             </li>
-                            @endcan
+                            @endcan -->
                         </ul>
                     </div>
                 </li>

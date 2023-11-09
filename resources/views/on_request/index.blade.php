@@ -46,12 +46,13 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Kode Project</th>
-                                        <th style="color:#929EAE">Nama Project</th>
-                                        <th style="color:#929EAE">Nama Customer</th>
-                                        <th style="color:#929EAE">Tanggal Request</th>
-                                        <th style="color:#929EAE">Displacement Kapal</th>
-                                        <th style="color:#929EAE">Jenis Kapal</th>
+                                        <th style="color:#929EAE">Code Project</th>
+                                        <th style="color:#929EAE">Status Survey</th>
+                                        <th style="color:#929EAE">Project Name</th>
+                                        <th style="color:#929EAE">Customer Name</th>
+                                        <th style="color:#929EAE">Request Date</th>
+                                        <th style="color:#929EAE">Displacement Ship</th>
+                                        <th style="color:#929EAE">Ship Type</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -82,21 +83,32 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="code" class="form-label">Code Project</label>
+                                <label for="code">Code Project</label>
                                 <input type="text" name="code" class="form-control" id="code">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama_project" class="form-label">Nama Project</label>
+                                <label for="survey">Status Survey</label>
+                                <select name="survey" id="survey" class="form-control">
+                                    <option value="">Choose Status Survey</option>
+                                    @foreach($status as $k)
+                                    <option value="{{ $k->id }}">{{ $k->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="nama_project">Project Name</label>
                                 <input type="text" name="nama_project" id="nama_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama_customer" class="form-label">Nama Customer</label>
+                                <label for="nama_customer">Customer Name</label>
                                 <select name="nama_customer" id="nama_customer" class="form-control">
-                                    <option value="">Pilih Nama Customer</option>
+                                    <option value="">Choose Customer Name</option>
                                     @foreach($customer as $k)
                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                     @endforeach
@@ -106,32 +118,32 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <div>
-                                    <label for="displacement" class="form-label">Displacement Kapal</label>
+                                    <label for="displacement">Displacement Ship</label>
                                     <input name="displacement" id="displacement" class="form-control form-control-icon">
                                 </div>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="npwp" class="form-label">Jenis Kapal</label>
+                                <label for="npwp">Ship Type</label>
                                 <select name="jenis_kapal" id="jenis_kapal" class="form-control">
-                                    <option value="">Pilih Jenis Kapal</option>
+                                    <option value="">Choose Ship Type</option>
                                     @foreach($jenis_kapal as $k)
                                     <option value="{{ $k->id }}">{{ $k->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <label for="Tanggal Request">Tanggal Request</label>
+                        <label for="Tanggal Request">Request Date</label>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="start_date" class="form-label">Dari </label>
+                                <label for="start_date">From </label>
                                 <input type="date" name="start_date" id="start_date" class="form-control" >
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="to_date" class="form-label">Sampai</label>
+                                <label for="to_date">To</label>
                                 <input type="date" name="to_date" id="to_date" class="form-control" >
                             </div>
                         </div>
@@ -181,6 +193,7 @@
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
+                    d.survey            = $('#survey').val();
                     d.nama_project      = $('#nama_project').val();
                     d.nama_customer     = $('#nama_customer').val();
                     d.tanggal_request   = $('#tanggal_request').val();
@@ -190,7 +203,8 @@
                 }
             },
             columns: [
-                {data: 'code', code: 'name'},
+                {data: 'code', name: 'code'},
+                {data: 'survey',name: 'survey'},
                 {data: 'nama_project', name: 'nama_project'},
                 {data: 'nama_customer', name: 'nama_customer'},
                 {data: 'tanggal_request', name: 'tanggal_request'},
@@ -220,6 +234,7 @@
             event.preventDefault();
 
             var code            = $('#code').val();
+            var survey          = $('#survey').val();
             var nama_project    = $('#nama_project').val();
             var nama_customer   = $('#nama_customer').val();
             var displacement    = $('#displacement').val();
@@ -229,6 +244,7 @@
 
             var url = '{{ route("on_request.export") }}?' + $.param({
                 code            : code,
+                survey          : survey,
                 nama_project    : nama_project,
                 nama_customer   : nama_customer,
                 displacement    : displacement,

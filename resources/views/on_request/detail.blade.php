@@ -48,6 +48,17 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
+                                                <label>Status Survey</label>
+                                                <select name="status_survey" id="status_survey" class="form-control select2">
+                                                    <option value="">Choose Status Survey</option>
+                                                    @foreach($status as $p)
+                                                    <option value="{{$p->id}}" {{ $p->id == $data->status_survey ? 'selected' : '' }}>{{$p->name ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
                                                 <label>Project Manajer</label>
                                                 <input type="text" value="{{ $data->pm->karyawan->name ?? '' }}" class="form-control" readonly>
                                             </div>
@@ -55,7 +66,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Engineer</label>
-                                                <select name="pe_id" id="pe_id" class="form-control">
+                                                <select name="pe_id" id="pe_id" class="form-control select2">
                                                     <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
                                                     <option value="{{$p->id}}" {{ $p->id == $data->pe_id ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
@@ -73,7 +84,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Location</label>
-                                                <select name="lokasi_project" id="lokasi_project" class="form-control">
+                                                <select name="lokasi_project" id="lokasi_project" class="form-control select2">
                                                     <option value="">Choose Lokasi Project</option>
                                                     @foreach($lokasi as $l)
                                                     <option value="{{$l->id}}" {{ $l->id == $data->id_lokasi_project ? 'selected' : '' }}>{{$l->name}}</option>
@@ -114,7 +125,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Ship Type</label>
-                                                    <select name="jenis_kapal" name="jenis_kapal" id="jenis_kapal" class="form-control">
+                                                    <select name="jenis_kapal" name="jenis_kapal" id="jenis_kapal" class="form-control select2">
                                                         <option value="">Choose Ship Type</option>
                                                         @foreach($jenis_kapal as $l)
                                                         <option value="{{$l->id}}" {{ $l->id == $data->id_jenis_kapal ? 'selected' : '' }}>{{$l->name}}</option>
@@ -122,9 +133,6 @@
                                                     </select>
                                             </div>
                                         </div> 
-
-                                        <div class="col-xxl-6 col-md-6"></div>
-
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">
@@ -133,7 +141,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Vendor</label>
-                                                <select name="vendor" id="vendor" class="form-control">
+                                                <select name="vendor" id="vendor" class="form-control select2">
                                                     <option value="">Choose Vendor</option>
                                                     @foreach($vendor as $v)
                                                     <option value="{{$v->id}}">{{ $v->name }}</option>
@@ -171,7 +179,7 @@
             <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalgridLabel">Tambah Customer</h5>
+                    <h5 class="modal-title" id="exampleModalgridLabel">Add Customer</h5>
                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                             <button class="btn btn-primary" style="margin-right: 10px;" id="saveCustomerButton">Save</button>
                             <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
@@ -182,8 +190,8 @@
                         <div class="row gy-4">
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label>Nama Customer</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Enter Nama Customer">
+                                    <label>Customer Name</label>
+                                    <input type="text" name="name" class="form-control" placeholder="Enter Customer Name">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
@@ -194,14 +202,14 @@
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label>Alamat</label>
-                                    <input type="text" name="alamat" class="form-control" placeholder="Enter Nomor Contact Person">
+                                    <label>Address</label>
+                                    <input type="text" name="alamat" class="form-control" placeholder="Enter Address">
                                 </div>
                             </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
-                                    <label>Nomor Contact Person</label>
-                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Enter Nomor Contact Person" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
+                                    <label>Contact Person Phone</label>
+                                    <input type="number" name="nomor_contact_person" class="form-control" placeholder="Enter Contact Person Phone" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
                             </div>                    
                             <div class="col-xxl-6 col-md-6">
@@ -296,6 +304,7 @@
     }
     getTableData(idData);
 
+    //Edit Data
     function setEditData(id, vendorId) {
         var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -312,7 +321,7 @@
                 getTableData(idData);
                 return response.json();
             } else {
-                throw new Error('Gagal mengambil data keluhan');
+                throw new Error('Failed to retrieve complaint data');
             }
         })
         .then(function (data) {
@@ -343,6 +352,7 @@
         }
     }
 
+    //tambah keluhan
     function tambahKeluhan() {
         var keluhanInput = document.getElementById("keluhan").value;
         var vendorSelect = document.getElementById("vendor");
@@ -377,6 +387,9 @@
 
                         document.getElementById("keluhan").value = "";
                         $("#vendor").val('').trigger('change');
+
+                        var saveButton = document.getElementById("tambahKeluhan");
+                        saveButton.setAttribute("data-id-keluhan", '');
                         // return response.json();
                     } else if(data.status === 500) {
                         Swal.fire({
@@ -624,7 +637,7 @@
 
     //untuk semua select menggunakan select2
     $(function () {
-        $("select").select2();
+        $(".select2").select2();
     });
     </script>
 @endsection

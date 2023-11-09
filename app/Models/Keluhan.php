@@ -15,5 +15,10 @@ class Keluhan extends Model
     {
         return $this->belongsTo(Vendor::class,'id_vendor','id');
     }
+
+    public function projects()
+    {
+        return $this->belongsTo(OnRequest::class,'on_request_id','id');
+    }
     
 }

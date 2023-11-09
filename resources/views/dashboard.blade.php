@@ -184,7 +184,7 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Project</h4>
                             <div>
-                                <a href="" style="color: #194BFB;">View All</a>
+                                <a href="{{ route('on_request') }}" style="color: #194BFB;">View All</a>
                                 <!-- <button type="button" class="btn btn-soft-secondary btn-sm">
                                     View ALL
                                 </button> -->
@@ -197,24 +197,26 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th style="color:#929EAE">No.</th>
-                                            <th style="color:#929EAE">Kode Project</th>
-                                            <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Nama Customer</th>
+                                            <th style="color:#929EAE">Code Project</th>
+                                            <th style="color:#929EAE">Project Name</th>
+                                            <th style="color:#929EAE">Customer Name</th>
                                             <th style="color:#929EAE">Project Manajer</th>
-                                            <th style="color:#929EAE">Tanggal Mulai</th>
-                                            <th style="color:#929EAE">Actual Selesai</th>
+                                            <th style="color:#929EAE">Start Date</th>
+                                            <th style="color:#929EAE">Actual Complete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($data as $key => $d)
                                         <tr>
-                                            <td>1.</td>
-                                            <td>P210823-001</td>
-                                            <td>Nama Project</td>
-                                            <td>PT Bomas Tiga</td>
-                                            <td>Bagus Ampito</td>
-                                            <td>28 Ags 2023</td>
-                                            <td>28 Sept 2023</td>
+                                            <td>{{ $key + 1}}</td>
+                                            <td>{{ $d->code }}</td>
+                                            <td>{{ $d->nama_project }}</td>
+                                            <td>{{ $d->customer->name ?? ''}}</td>
+                                            <td>{{ $d->pm->karyawan->name ?? ''}}</td>
+                                            <td>{{ $d->start_project }}</td>
+                                            <td>{{ $d->actual_selesai }}</td>
                                         </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -230,7 +232,7 @@
                             <h4 class="card-title mb-0 flex-grow-1">Top Project Manajer</h4>
                             <div class="flex-shrink-0">
                                 <div class="dropdown card-header-dropdown">
-                                    <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="text-reset dropdown-btn" href="{{ route('laporan_project_manager') }}">
                                         <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All
                                         <!-- </span><span class="text-muted">Today<i class="mdi mdi-chevron-down ms-1"></i></span> -->
                                     </a>
@@ -278,7 +280,7 @@
                             <h4 class="card-title mb-0 flex-grow-1">Top Vendor</h4>
                             <div class="flex-shrink-0">
                                 <div class="dropdown card-header-dropdown">
-                                    <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="text-reset dropdown-btn" href="{{ route('laporan_vendor') }}">
                                         <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All
                                         <!-- </span><span class="text-muted">Today<i class="mdi mdi-chevron-down ms-1"></i></span> -->
                                     </a>
@@ -297,21 +299,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($vendors as $v)
                                         <tr>
-                                            <td><center>Bagus Ampito</center></td>
-                                            <td><Center>2</Center></td>
-                                            <td><center>25</center></td>
+                                            <td><center>{{ $v->name }}</center></td>
+                                            <td><Center>{{ $v->onProgressCount }}</Center></td>
+                                            <td><Center>{{ $v->completeCount }}</Center></td>
                                         </tr>
-                                        <tr>
-                                            <td><center>Fina G Bastian</center></td>
-                                            <td><center>1</center></td>
-                                            <td><center>25</center></td>
-                                        </tr>
-                                        <tr>
-                                            <td><center>Adam Makmur</center></td>
-                                            <td><center>3</center></td>
-                                            <td><center>25</center></td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -329,14 +323,17 @@
     $(function() {
             $("#example1").DataTable({
                 fixedHeader:true,
+                lengthMenu: [5, 10, 15]
             });
 
             $("#example2").DataTable({
                 fixedHeader:true,
+                lengthMenu: [5, 10, 15]
             });
 
             $("#example3").DataTable({
                 fixedHeader:true,
+                lengthMenu: [5, 10, 15]
             });
         })
 </script>

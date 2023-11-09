@@ -13,14 +13,17 @@ File: Custom Css File
     background-color: #F4F6F9;
     border:none;
 }
+
 .form-control:focus{
     border-width: 1px;
     border-style: solid;
 }
+
 .cust-checkbox {
     width: 15px;
     height: 12px;
 }
+
 .label-color{
     color: #696969;
 }
@@ -125,18 +128,13 @@ body{
 }
 
 .simplebar-mask {
-    direction: inherit;
-    position: absolute;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    left: 0;
     width: auto !important;
-    height: 550px!important;
-    z-index: 0;
+    height:  100% !important;
+    padding-bottom: 100vh;
+}
+
+.simplebar-content-wrapper .navbar-nav {
+    padding-bottom: 40vh !important;
 }
 
 /* #tabelKeluhanWrapper {
@@ -171,8 +169,6 @@ body{
     border-color: none!important;
 } */
 
-
-
 .card-rad{
     border-radius: 10px;
 }
@@ -191,7 +187,6 @@ body{
     width: 100%;
     overflow-x: auto;
 }
-
 
 #tablePekerjaan select {
     width: 200px;

@@ -9,6 +9,7 @@ use App\Exports\ExportLaporanCustomer;
 use App\Models\Customer;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
+use App\Exports\ExportReportCustomer;
 use DB;
 
 class LaporanCustomerController extends Controller
@@ -189,11 +190,34 @@ class LaporanCustomerController extends Controller
 
     public function export(Request $request)
     {
-        $data = Kategori::orderBy('name','desc')
-                ->filter($request)
-                ->get();
+        $data = Customer::has('projects')->with('projects','projects.progress')->get();
+        
+        foreach($data as $value){
+            if($value->projects)
+            {
+                $value['total_project'] = $value->projects->count();
+            }else{
+                $value['total_project'] = 0;
+            }
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+            $totalHargaCustomer = 0;
+        
+            if ($value->projects) {
+                foreach($value->projects as $values){
+                    foreach ($values->progress as $project) {
+                        $progress = $project ?? null;
+            
+                        if ($progress) {
+                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                        }
+                    }
+                }
+            }
+        
+            $value['totalHargaCustomer'] = 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
+        }
+
+        return Excel::download(new ExportReportCustomer($data), 'List Report Customer.xlsx');
     }
     
 }

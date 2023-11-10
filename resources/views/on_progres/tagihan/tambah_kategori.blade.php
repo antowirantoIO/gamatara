@@ -109,7 +109,6 @@
         let modalInput = $('#modalFillter');
 
         $('.form-select').select2({
-            theme : "bootstrap-5",
             search: true,
             dropdownParent: $("#modalFillter")
         });

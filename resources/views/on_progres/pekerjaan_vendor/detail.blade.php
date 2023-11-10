@@ -62,6 +62,39 @@
                 </div>
             </div>
 
+            <div class="row">
+                <h4>Recent Activity</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="live-preview">
+                                <table class="table" id="tableActivity">
+                                    <thead style="background-color:#194BFB;color:#FFFFFF;">
+                                        <tr>
+                                            <th style="width: 200px">Job</th>
+                                            <th style="width: 200px">Date</th>
+                                            <th style="width: 200px">Status</th>
+                                            <th style="width: 90px">Length (mm)</th>
+                                            <th style="width: 90px">Width (mm)</th>
+                                            <th style="width: 90px">Thick (mm)</th>
+                                            <th style="width: 90px">Unit</th>
+                                            <th style="width: 90px">Qty</th>
+                                            <th style="width: 90px">Amount</th>
+                                            <th style="width: 90px">Vendor Price</th>
+                                            <th style="width: 90px">Customer Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -255,6 +288,83 @@
                 ]
 
             });
+
+            let tableActivity = $('#tableActivity').DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                ordering : false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                autoWidth : true,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
+                ajax : {
+                    url : '{{ route('ajax.recent-activity') }}',
+                    data : function (d) {
+                        d.id =  '{{ $idProject }}',
+                        d.id_kategori = '{{ $kategori }}',
+                        d.id_subkategori = '{{ $subKategori }}'
+                    }
+                },
+                columns : [
+                    { data : 'pekerjaan.name', name : 'id_pekerjaan'},
+                    {
+                        data : function(data) {
+                            let status = data.status || '-';
+                            if(status === 1) {
+                                let date = moment(data.created_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }else if ( status === 2 ){
+                                let date = moment(data.updated_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }else{
+                                let date = moment(data.deleted_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }
+                        }
+                    },
+                    {
+                        data : function(data) {
+                            let status = data.status;
+                            if(status === 1) {
+                                return `<div class="text-primary">${data.description} </div>`
+                            }else if(status === 2){
+                                return `<div class="text-info">${data.description} </div>`
+                            }else{
+                                return `<div class="text-danger">${data.description} </div>`
+                            }
+                        }
+                    },
+                    { data : 'length', name : 'length' },
+                    { data : 'width', name : 'width' },
+                    { data : 'thick', name : 'thick' },
+                    { data : 'unit', name : 'unit' },
+                    { data : 'qty', name : 'qty' },
+                    { data : 'amount', name : 'amount' },
+                    { data : 'harga_vendor', name : 'harga_vendor' },
+                    { data : 'harga_customer', name : 'harga_customer' },
+                ]
+            })
 
             table.on('click','.btn-edit',function(){
                 let id =$(this).data('id');

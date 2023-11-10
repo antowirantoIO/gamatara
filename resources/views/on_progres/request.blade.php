@@ -469,7 +469,8 @@
                     data : function (d) {
                         d.id =  id_project,
                         d.id_kategori = '{{ $kategori }}',
-                        d.id_subkategori = '{{ $subKategori }}'
+                        d.id_subkategori = '{{ $subKategori }}',
+                        d.id_vendor = '{{ $vendor }}'
                     }
                 },
                 columns : [

@@ -20,14 +20,14 @@ class JenisKapalController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if($this->authorize('jenis_kapal-edit')) {
+                if(Can('jenis_kapal-edit')) {
                     $btnEdit = '<a href="'.route('jenis_kapal.edit', $data->id).'" class="btn btn-success btn-sm">
                                 <span>
                                     <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                 </span>
                             </a>';
                 }
-                if($this->authorize('jenis_kapal-delete')) {
+                if(Can('jenis_kapal-delete')) {
                     $btnDelete = '<a data-id="'.$data->id.'" data-name="Jenis Kapal '.$data->name.'" data-form="form-jenis_kapal" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

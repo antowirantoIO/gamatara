@@ -184,8 +184,9 @@
                                 let id_vendor = data.id_vendor;
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
-                                let url = '{{ route('on_progres.vendor-worker',[':id',':project',':subkategori']) }}';
-                                let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori);
+                                let id_kategori = data.id_kategori;
+                                let url = '{{ route('on_progres.vendor-worker',[':id',':project',':subkategori',':idKategori']) }}';
+                                let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':idKategori',id_kategori);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>
                                         <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>

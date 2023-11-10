@@ -126,41 +126,6 @@
 
 @section('scripts')
 <script>
-    //chart
-    let chartData = JSON.parse($('#tot').val());
-
-    var options = {
-    chart: {
-        type: 'bar',
-        height: 600,
-    },
-    plotOptions: {
-        bar: {
-        horizontal: true,
-        borderRadius: 5,
-        },
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    series: [
-        {
-            name: 'Nominal Project',
-            data: chartData
-        }
-    ],
-    xaxis: {
-            labels:{
-                show:false,
-            },
-            categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        },
-        colors: ['#194BFB'],
-    };
-
-    var chart = new ApexCharts(document.querySelector("#bar"), options);
-    chart.render();
-
     //datatable
      $(document).ready(function () {
         let filterSearch = '';
@@ -243,11 +208,42 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const yearDropdown = document.getElementById('yearDropdown');
-        const yearDropdownButton = document.getElementById('yearDropdownButton');
-        
-        let chart;
+    $(function() {
+        const yearDropdown = $('#yearDropdown');
+        const yearDropdownButton = $('#yearDropdownButton');
+
+        let chartData = JSON.parse('{{$totalHargaData}}');
+        var options = {
+        chart: {
+            type: 'bar',
+            height: 600,
+        },
+        plotOptions: {
+            bar: {
+            horizontal: true,
+            borderRadius: 5,
+            },
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        series: [
+            {
+                name: 'Nominal Project',
+                data: chartData
+            }
+        ],
+        xaxis: {
+                labels:{
+                    show:false,
+                },
+                categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            },
+            colors: ['#194BFB'],
+        };
+
+        let chart = new ApexCharts(document.querySelector("#bar"), options);
+        chart.render();
 
         const currentYear = (new Date()).getFullYear();
         const years = [];
@@ -255,76 +251,102 @@
             years.push(i);
         }
 
+        let dropdownList = [];
         years.forEach(function (year) {
-            const listItem = document.createElement('li');
-            const anchor = document.createElement('a');
-            anchor.classList.add('dropdown-item');
-            anchor.href = '#';
-            anchor.textContent = year;
+            dropdownList += `<li class="dropdown-item" data-year="${year}">
+                                ${year}
+                            </li>`
+            // const listItem = document.createElement('li');
+            // const anchor = document.createElement('a');
+            // anchor.classList.add('dropdown-item');
+            // anchor.href = '#';
+            // anchor.textContent = year;
         
-            anchor.addEventListener('click', function () {
-                yearDropdownButton.textContent = year;
-                $.ajax({
-                    url: '{{ route('laporan_customer.chart') }}',
-                    method: 'get',
-                    data: {
-                        year: year
-                    },
-                    success: function(response) {
-                        console.log(response.totalHargaData);
-                        const chartData = JSON.parse(response.totalHargaData);
+            // anchor.addEventListener('click', function () {
+            //     yearDropdownButton.textContent = year;
+            //     $.ajax({
+            //         url: '{{ route('laporan_customer.chart') }}',
+            //         method: 'get',
+            //         data: {
+            //             year: year
+            //         },
+            //         success: function(response) {
+            //             console.log(response.totalHargaData);
+            //             const chartData = JSON.parse(response.totalHargaData);
                         
-                        if (chart) {
-                            chart.updateOptions({
-                                series: [{
-                                    data: chartData
-                                }]
-                            });
-                        } else {
-                            const options = {
-                                chart: {
-                                    type: 'bar',
-                                    height: 600,
-                                },
-                                plotOptions: {
-                                    bar: {
-                                        horizontal: true,
-                                        borderRadius: 5,
-                                    },
-                                },
-                                dataLabels: {
-                                    enabled: false,
-                                },
-                                series: [{
-                                    name: 'Nominal Project',
-                                    data: chartData
-                                }],
-                                xaxis: {
-                                    labels: {
-                                        show: false,
-                                    },
-                                    categories: [
-                                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-                                    ],
-                                },
-                                colors: ['#194BFB'],
-                            };
+            //             if (chart) {
+            //                 chart.updateOptions({
+            //                     series: [{
+            //                         data: chartData
+            //                     }]
+            //                 });
+            //             } else {
+            //                 const options = {
+            //                     chart: {
+            //                         type: 'bar',
+            //                         height: 600,
+            //                     },
+            //                     plotOptions: {
+            //                         bar: {
+            //                             horizontal: true,
+            //                             borderRadius: 5,
+            //                         },
+            //                     },
+            //                     dataLabels: {
+            //                         enabled: false,
+            //                     },
+            //                     series: [{
+            //                         name: 'Nominal Project',
+            //                         data: chartData
+            //                     }],
+            //                     xaxis: {
+            //                         labels: {
+            //                             show: false,
+            //                         },
+            //                         categories: [
+            //                             'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            //                             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            //                         ],
+            //                     },
+            //                     colors: ['#194BFB'],
+            //                 };
                             
-                            chart = new ApexCharts(document.querySelector("#bar"), options);
-                            chart.render();
-                        }
-                    },
-                    error: function(error) {
-                        console.error(error);
-                    }
-                });
-            });
+            //                 chart = new ApexCharts(document.querySelector("#bar"), options);
+            //                 chart.render();
+            //             }
+            //         },
+            //         error: function(error) {
+            //             console.error(error);
+            //         }
+            //     });
+            // });
         
-            listItem.appendChild(anchor);
-            yearDropdown.appendChild(listItem);
+            // listItem.appendChild(anchor);
         });
-    });
+        yearDropdown.html(dropdownList);
+
+        yearDropdown.on('click', '.dropdown-item', function() {
+            const year = $(this).data('year');
+            yearDropdownButton.text(year);
+            $.ajax({
+                url: '{{ route('laporan_customer.chart') }}',
+                method: 'get',
+                data: {
+                    year: year
+                },
+                success: function(response) {
+                    chartData = JSON.parse(response.totalHargaData);
+                    chart.updateSeries([{
+                        data: chartData
+                    }]);
+                    chart.update();
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        })
+    })
 
  
 //     document.addEventListener('DOMContentLoaded', function () {

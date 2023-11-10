@@ -9,6 +9,9 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
 
+    <link rel="stylesheet" href="{{asset('assets/assets/libs/@simonwep/pickr/themes/classic.min.css')}}" /> <!-- 'classic' theme -->
+    <link rel="stylesheet" href="{{asset('assets/assets/libs/@simonwep/pickr/themes/monolith.min.css')}}" /> <!-- 'monolith' theme -->
+    <link rel="stylesheet" href="{{asset('assets/assets/libs/@simonwep/pickr/themes/nano.min.css')}}" /> <!-- 'nano' theme -->
     <!-- keitwood signature pad Js -->
     <link rel="stylesheet" type="text/css" href="{{asset('css/keithwood.css')}}">
     <!-- jsvectormap css -->
@@ -140,6 +143,8 @@
 
     <!-- Dashboard init -->
     <script src="{{asset('assets/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
+
+    <script src="{{('assets/assets/libs/@simonwep/pickr/pickr.min.js')}}"></script>
 
     <!--jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

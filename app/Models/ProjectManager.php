@@ -26,6 +26,11 @@ class ProjectManager extends Model
         return $this->hasMany(ProjectAdmin::class, 'id_pm');
     }
 
+    public function projects()
+    {
+        return $this->HasMany(OnRequest::class, 'pm_id','id');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->pm ?? false, function($query) use ($filter) {

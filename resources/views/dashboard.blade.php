@@ -257,25 +257,17 @@
                                         <tr>
                                             <td>
                                                 <center>
-                                                    {{ $v->projects->pm->karyawan->name ?? ''}}
+                                                    {{ $v->karyawan->name ?? ''}}
                                                 </center>
                                             </td>
                                             <td>
                                                 <Center>
-                                                @isset($progress[$keys])
-                                                    {{ $progress[$keys]->onprogress }}
-                                                @else
-                                                    0
-                                                @endisset
+                                                    {{ $v->onprogress ?? '' }}
                                                 </Center>
                                             </td>
                                             <td>
                                                 <center>
-                                                @isset($progress[$keys])
-                                                    {{ $progress[$keys]->complete }}
-                                                @else
-                                                    0
-                                                @endisset
+                                                    {{ $v->complete ?? '' }}
                                                 </center>
                                             </td>
                                         </tr>

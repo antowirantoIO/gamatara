@@ -58,10 +58,10 @@ class OnProgressController extends Controller
                 return getProgresProject($data->id) . ' / ' . getCompleteProject($data->id);
             })
             ->addColumn('start', function($data){
-                return $data->tanggal_mulai ? $data->tanggal_mulai->format('d-m-Y H:i') : '';
+                return $data->created_at ? $data->created_at->format('d F Y H:i') : '';
             })
             ->addColumn('end', function($data){
-                return $data->actual_selesai ? $data->actual_selesai->format('d-m-Y H:i') : '';
+                return $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->format('d F Y H:i') : '';
             })
             ->make(true);
         }
@@ -451,7 +451,7 @@ class OnProgressController extends Controller
         $subWorker = groupSubWorker($workers);
         $vendor = Vendor::all();
         $subKategori = SubKategori::all();
-        return view('on_progres.pekerjaan_vendor.index',compact('project','kategori','subWorker','vendor','subKategori'));
+        return view('on_progres.pekerjaan_vendor.index',compact('project','kategori','subWorker','vendor','subKategori','id'));
     }
 
     public function vendorWorker(Request $request, $id, $project,$subkategori)
@@ -571,6 +571,7 @@ class OnProgressController extends Controller
         if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project',$request->id_project)
                                     ->where('id_kategori', $request->id_kategori)
+                                    // ->where('id_vendor',$request->id_vendor)
                                     ->with(['subKategori', 'vendors'])
                                     ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
                                     ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
@@ -605,6 +606,49 @@ class OnProgressController extends Controller
             ->make(true);
         }
     }
+
+    public function ajaxProgresPekerjaanVendor(Request $request)
+    {
+
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project',$request->id_project)
+                                    ->where('id_kategori', $request->id_kategori)
+                                    ->where('id_vendor',$request->id_vendor)
+                                    ->with(['subKategori', 'vendors'])
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                    ->distinct();
+
+            if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+                $data->where('id_subkategori',$request->sub_kategori);
+            }
+
+            if($request->has('nama_vendor') && !empty($request->nama_vendor)){
+                $vendor = $request->nama_vendor;
+                $data->whereHas('vendors',function($item) use(&$vendor){
+                    $item->where('id',$vendor);
+                });
+            }
+
+
+            $data = $data->get();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('pekerjaan', function($data) {
+                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->addColumn('progres', function($data){
+                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
+                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+            })
+            ->make(true);
+        }
+    }
+
 
     public function ajaxSettingEstimasi(Request $request)
     {
@@ -757,4 +801,12 @@ class OnProgressController extends Controller
         return response()->json(['status' => 200,'data' => $data]);
     }
 
+    public function updateEstimasiProject(Request $request)
+    {
+        OnRequest::where('id',$request->id)->update([
+            'target_selesai' => $request->tanggal
+        ]);
+
+        return response()->json(['status' => 200,'msg' => 'Data Successfuly Updated']);
+    }
 }

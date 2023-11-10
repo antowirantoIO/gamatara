@@ -48,7 +48,9 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
+                                            @hasrole(['Staff Finance','SPV Finance'])
                                             <th style="color:#929EAE">Action</th>
+                                            @endhasrole
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -113,35 +115,6 @@
                         <input type="hidden" name="conversion" id="conversion" class="conversion">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="pekerjaan_id" class="form-label">Work</label>
-                                <select type="text" name="pekerjaan_id" class="form-select form-select-edit" id="pekerjaan_id">
-                                    <option selected disabled>Choose Work</option>
-                                    @foreach ($pekerjaan as $work)
-                                        <option value="{{ $work->id }}">{{ $work->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="description" class="form-label">Description</label>
-                                <input type="text" name="description" id="description" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="location" class="form-label">Location</label>
-                                <input type="text" name="location" id="location" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="detail" class="form-label">Detail / Other</label>
-                                <input type="text" name="detail" id="detail" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
                                 <label for="length" class="form-label">Length</label>
                                 <input type="text" name="length" id="length" class="form-control">
                             </div>
@@ -174,6 +147,18 @@
                             <div>
                                 <label for="amount" class="form-label">Amount</label>
                                 <input type="text" name="amount" id="amount" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="harga_vendor" class="form-label">Vendor Price</label>
+                                <input type="text" name="harga_vendor" id="harga_vendor" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="harga_customer" class="form-label">Customer Price</label>
+                                <input type="text" name="harga_customer" id="harga_customer" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -255,6 +240,7 @@
                     { data : 'qty' },
                     { data : 'amount' },
                     { data : 'unit' },
+                    @hasrole(['Staff Finance','SPV Finance'])
                     {
                         data : function (data) {
                             let id = data.id;
@@ -265,6 +251,7 @@
                             </button>`
                         }
                     }
+                    @endhasrole
                 ]
 
             });
@@ -278,13 +265,7 @@
                     url : urlReplace,
                     method : 'GET'
                 }).then(ress => {
-                    console.log(ress.data.id_pekerjaan);
                     $('#id').val(id);
-                    $('.form-select-edit').val(ress.data.id_pekerjaan).trigger('change');
-                    $("#pekerjaan_id").val(ress.data.id_pekerjaan);
-                    $('#description').val(ress.data.deskripsi_pekerjaan);
-                    $('#location').val(ress.data.id_lokasi);
-                    $('#detail').val(ress.data.detail);
                     $('#length').val(ress.data.length);
                     $('#width').val(ress.data.width);
                     $('#thick').val(ress.data.thick);
@@ -292,6 +273,8 @@
                     $('#qty').val(ress.data.qty);
                     $('#amount').val(ress.data.amount);
                     $('#conversion').val(ress.data.conversion);
+                    $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
+                    $('#harga_customer').val(formatRupiah(ress.data.harga_customer));
                     modalEdit.modal('show');
                 })
             })
@@ -351,6 +334,23 @@
                 console.log(parseInt(parts[0]),length, amountValue);
                 $('#amount').val(0);
                 $("#amount").val(amountValue);
+            }
+
+            function formatRupiah(angka) {
+                var numberString = angka.toString().replace(/[^0-9]/g, '');
+                var rupiah = '';
+                var ribuan = 0;
+
+                for (var i = numberString.length - 1; i >= 0; i--) {
+                    rupiah = numberString[i] + rupiah;
+                    ribuan++;
+                    if (ribuan == 3 && i > 0) {
+                        rupiah = ',' + rupiah;
+                        ribuan = 0;
+                    }
+                }
+
+                return rupiah;
             }
 
             $("#length, #width, #thick, #qty, #conversion").on("input", calculate);

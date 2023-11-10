@@ -237,5 +237,10 @@ body{
     margin: 0 5px; /* Atur margin kiri-kanan antara nomor halaman */
 }
 
+#yearDropdown {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 
 

@@ -9,6 +9,7 @@ use App\Exports\ExportLaporanCustomer;
 use App\Models\Customer;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
+use App\Exports\ExportReportCustomer;
 use DB;
 
 class LaporanCustomerController extends Controller
@@ -16,39 +17,59 @@ class LaporanCustomerController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProjectPekerjaan::with('projects')
-                ->addSelect(['total' => OnRequest::selectRaw('count(*)')
-                    ->whereColumn('project_pekerjaan.id_project', 'project.id')
-                    ->groupBy('id_customer')
-                ])
-                ->get();
+            $data = Customer::has('projects')->with('projects','projects.progress')->get();
         
             return Datatables::of($data)->addIndexColumn()
-            ->addColumn('jumlah_project', function($data){
-                return $data->total;
+            ->addColumn('jumlah_project', function ($customer) {
+                if($customer->projects)
+                {
+                    return $customer->projects->count();
+                }else{
+                    return "0";
+                }
             })
-            ->addColumn('nilai_project', function($data){
-                $harga_customer = $data->harga_customer;
-                    if (is_numeric($harga_customer)) {
-                        return 'Rp' . number_format($harga_customer, 0, ',', '.');
-                    } else {
-                        return 'Rp. 0000';
+            ->addColumn('nilai_project', function ($customer) {
+                $totalHargaCustomer = 0;
+            
+                if ($customer->projects) {
+                    foreach($customer->projects as $value){
+                        foreach ($value->progress as $project) {
+                            $progress = $project ?? null;
+                
+                            if ($progress) {
+                                $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                            }
+                        }
                     }
+                }
+            
+                return 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
             })
             ->addColumn('name', function($data){
-                return $data->projects->customer->name ?? '';
+                return $data->name ?? '';
             })
-            ->addColumn('action', function($data){
-                return '<a href="'.route('laporan_customer.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>';
-            })
+            ->addColumn('action', function ($data) {
+                $btnDetail = '';
+                $id = '';
+
+                if ($data->projects) {
+                    foreach ($data->projects as $project) {
+                        $id = $project->id;
+                    }
+                }
+ 
+                if ($this->authorize('laporan_customer-detail')) {
+                    $btnDetail .= '<a href="' . route('laporan_customer.detail', $id) . '" class="btn btn-warning btn-sm">
+                                        <span>
+                                            <i><img src="' . asset('assets/images/eye.svg') . '" style="width: 15px;"></i>
+                                        </span>
+                                    </a>';
+                }
+            
+                return $btnDetail;
+            })            
             ->rawColumns(['action','jumlah_project','nilai_project'])
             ->make(true);   
-            
-           
         }
 
         $tahun = now()->format('Y');
@@ -68,7 +89,7 @@ class LaporanCustomerController extends Controller
 
         $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
 
-        return view('laporan_customer.index', compact('totalHargaData'));
+        return view('laporan_customer.index', compact('totalHargaData','tahun'));
     }
 
     public function chart(Request $request){
@@ -103,7 +124,7 @@ class LaporanCustomerController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $cek = OnRequest::where('id_customer', $request->id)->get();
+            $cek = OnRequest::where('id', $request->id)->get();
             $cekIds = $cek->pluck('id')->toArray();
             $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                     ->addSelect(['total' => OnRequest::selectRaw('count(*)')
@@ -126,9 +147,9 @@ class LaporanCustomerController extends Controller
             ->addColumn('nilai_project', function($data){
                 $harga_customer = $data->harga_customer;
                 if (is_numeric($harga_customer)) {
-                    return 'Rp' . number_format($harga_customer, 0, ',', '.');
+                    return 'Rp ' . number_format($harga_customer, 0, ',', '.');
                 } else {
-                    return 'Rp. 0000';
+                    return 'Rp 0000';
                 }
             })
             ->addColumn('tanggal_mulai', function($data){
@@ -164,16 +185,39 @@ class LaporanCustomerController extends Controller
 
         $data = OnRequest::where('id',$request->id)->first();
 
-        return view('laporan_customer.detail', Compact('data'));
+        return view('laporan_customer.detail', compact('data'));
     }
 
     public function export(Request $request)
     {
-        $data = Kategori::orderBy('name','desc')
-                ->filter($request)
-                ->get();
+        $data = Customer::has('projects')->with('projects','projects.progress')->get();
+        
+        foreach($data as $value){
+            if($value->projects)
+            {
+                $value['total_project'] = $value->projects->count();
+            }else{
+                $value['total_project'] = 0;
+            }
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+            $totalHargaCustomer = 0;
+        
+            if ($value->projects) {
+                foreach($value->projects as $values){
+                    foreach ($values->progress as $project) {
+                        $progress = $project ?? null;
+            
+                        if ($progress) {
+                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                        }
+                    }
+                }
+            }
+        
+            $value['totalHargaCustomer'] = 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
+        }
+
+        return Excel::download(new ExportReportCustomer($data), 'List Report Customer.xlsx');
     }
     
 }

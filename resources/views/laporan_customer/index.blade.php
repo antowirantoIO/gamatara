@@ -1,12 +1,6 @@
 @extends('index')
 
 @section('content')
-<style>
-    #yearDropdown {
-    max-height: 300px;
-    overflow-y: auto;
-}
-</style>
 <div class="row">
     <div class="col">
         <div class="h-100">
@@ -18,11 +12,11 @@
                         </div>
                         <input type="hidden" id="tot" value="{{$totalHargaData}}">
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
+                            <!-- <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
-                            </button>
+                            </button> -->
                             <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
@@ -43,7 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 670px;">
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
@@ -71,16 +65,15 @@
                             <div class="mt-3 mt-lg-0 ml-lg-auto">
                                 <div class="dropdown" role="group">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
-                                        2023 <!-- Tahun awal yang ditampilkan -->
+                                        {{ $tahun }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="yearDropdown">
-                                        <!-- Daftar tahun akan diisi oleh JavaScript -->
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="height: 660px;">
                             <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                         </div>
 
@@ -160,7 +153,7 @@
             labels:{
                 show:false,
             },
-            categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+            categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         },
         colors: ['#194BFB'],
     };
@@ -258,7 +251,7 @@
 
         const currentYear = (new Date()).getFullYear();
         const years = [];
-        for (let i = currentYear - 20; i <= currentYear; i++) {
+        for (let i = currentYear; i >= currentYear - 20; i--) {
             years.push(i);
         }
 

@@ -68,10 +68,10 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
+                    <div class="card rounded-4">
                         <div class="card-body">
                             <div class="live-preview">
-                                <table class="table" id="tableActivity">
+                                <table class="table w-100" id="tableActivity">
                                     <thead style="background-color:#194BFB;color:#FFFFFF;">
                                         <tr>
                                             <th style="width: 200px">Job</th>
@@ -289,7 +289,30 @@
 
             });
 
-            let tableActivity = $('#tableActivity').DataTable({
+            table.on('click','.btn-edit',function(){
+                let id =$(this).data('id');
+
+                let url = '{{ route('on_progres.request.edit',':id') }}';
+                let urlReplace = url.replace(':id',id);
+                $.ajax({
+                    url : urlReplace,
+                    method : 'GET'
+                }).then(ress => {
+                    $('#id').val(id);
+                    $('#length').val(ress.data.length);
+                    $('#width').val(ress.data.width);
+                    $('#thick').val(ress.data.thick);
+                    $('#unit').val(ress.data.unit);
+                    $('#qty').val(ress.data.qty);
+                    $('#amount').val(ress.data.amount);
+                    $('#conversion').val(ress.data.conversion);
+                    $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
+                    $('#harga_customer').val(formatRupiah(ress.data.harga_customer));
+                    modalEdit.modal('show');
+                })
+            })
+
+            let tableActifity = $('#tableActivity').DataTable({
                 fixedHeader:true,
                 scrollX: false,
                 ordering : false,
@@ -319,8 +342,9 @@
                     url : '{{ route('ajax.recent-activity') }}',
                     data : function (d) {
                         d.id =  '{{ $idProject }}',
-                        d.id_kategori = '{{ $kategori }}',
-                        d.id_subkategori = '{{ $subKategori }}'
+                        d.id_kategori = '{{ $idkategori }}',
+                        d.id_subkategori = '{{ $subkategori }}',
+                        d.id_vendor = '{{ $id }}'
                     }
                 },
                 columns : [
@@ -364,29 +388,6 @@
                     { data : 'harga_vendor', name : 'harga_vendor' },
                     { data : 'harga_customer', name : 'harga_customer' },
                 ]
-            })
-
-            table.on('click','.btn-edit',function(){
-                let id =$(this).data('id');
-
-                let url = '{{ route('on_progres.request.edit',':id') }}';
-                let urlReplace = url.replace(':id',id);
-                $.ajax({
-                    url : urlReplace,
-                    method : 'GET'
-                }).then(ress => {
-                    $('#id').val(id);
-                    $('#length').val(ress.data.length);
-                    $('#width').val(ress.data.width);
-                    $('#thick').val(ress.data.thick);
-                    $('#unit').val(ress.data.unit);
-                    $('#qty').val(ress.data.qty);
-                    $('#amount').val(ress.data.amount);
-                    $('#conversion').val(ress.data.conversion);
-                    $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
-                    $('#harga_customer').val(formatRupiah(ress.data.harga_customer));
-                    modalEdit.modal('show');
-                })
             })
 
             $('#btn-search').click(function(e){

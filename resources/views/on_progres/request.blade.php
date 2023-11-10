@@ -237,7 +237,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <table class="table" id="tableActivity">
+                                <table class="table w-100" id="tableActivity">
                                     <thead style="background-color:#194BFB;color:#FFFFFF;">
                                         <tr>
                                             <th style="width: 200px">Job</th>
@@ -278,7 +278,6 @@
 
             $('#sub_kategori').trigger('change');
             $('.form-select').select2({
-                theme : "bootstrap-5",
                 search: true
             });
 
@@ -341,7 +340,6 @@
                     </td>
                 </tr>`)
                 let select = $(`#pekerjaan${count}`).select2({
-                    theme : "bootstrap-5",
                     search: true
                 })
 
@@ -470,7 +468,7 @@
                         d.id =  id_project,
                         d.id_kategori = '{{ $kategori }}',
                         d.id_subkategori = '{{ $subKategori }}',
-                        d.id_vendor = '{{ $vendor }}'
+                        d.id_vendor = '{{ $vendor->id }}'
                     }
                 },
                 columns : [

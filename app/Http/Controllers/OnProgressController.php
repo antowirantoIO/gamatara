@@ -457,14 +457,14 @@ class OnProgressController extends Controller
         return view('on_progres.pekerjaan_vendor.index',compact('project','kategori','subWorker','vendor','subKategori','id'));
     }
 
-    public function vendorWorker(Request $request, $id, $project,$subkategori)
+    public function vendorWorker(Request $request, $id, $project,$subkategori,$idkategori)
     {
         $idProject = $project;
         $nama_project = OnRequest::where('id',$project)->pluck('nama_project')->first();
         $nama_vendor = Vendor::where('id',$id)->pluck('name')->first();
         $pekerjaan = Pekerjaan::all();
         $lokasi = LokasiProject::all();
-        return view('on_progres.pekerjaan_vendor.detail',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi','subkategori'));
+        return view('on_progres.pekerjaan_vendor.detail',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi','subkategori','idkategori'));
     }
 
     public function updateVendorWork(Request $request)
@@ -781,6 +781,7 @@ class OnProgressController extends Controller
             $data = RecentActivity::where('id_project',$request->id)
                                 ->where('id_kategori',$request->id_kategori)
                                 ->where('id_subkategori',$request->id_subkategori)
+                                ->where('id_vendor',$request->id_vendor)
                                 ->with(['pekerjaan'])
                                 ->orderBy('created_at','desc')
                                 ->orderBy('updated_at','desc')

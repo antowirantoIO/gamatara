@@ -164,12 +164,13 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('ajax.progres-pekerjaan') }}',
+                        url : '{{ route('ajax.progres-pekerjaan-vendor') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';
                             d.id_kategori = id_kategori;
                             d.id_project = id_project;
+                            d.id_vendor = '{{ $id }}';
                             d.sub_kategori = $('#sub_kategori').val();
                             d.nama_vendor = $('#nama_vendor').val();
                         }
@@ -183,8 +184,9 @@
                                 let id_vendor = data.id_vendor;
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
-                                let url = '{{ route('on_progres.vendor-worker',[':id',':project',':subkategori']) }}';
-                                let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori);
+                                let id_kategori = data.id_kategori;
+                                let url = '{{ route('on_progres.vendor-worker',[':id',':project',':subkategori',':idKategori']) }}';
+                                let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':idKategori',id_kategori);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>
                                         <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>

@@ -122,7 +122,7 @@
                                                             </td>
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_vendor {{ intval($p->harga_vendor) !== intval($p->activity()->harga_vendor) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_vendor {{ intval($p->harga_vendor) !== intval($p->activity()->harga_vendor) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}" readonly>
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole(['Staff Finance','SPV Finance'])
@@ -132,7 +132,7 @@
                                                             @endhasrole
                                                             @hasrole('Project Admin')
                                                                 <td>
-                                                                    <input type="text" class="form-control harga_customer {{ intval($p->harga_customer) !== intval($p->activity()->harga_customer) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" disabled>
+                                                                    <input type="text" class="form-control harga_customer {{ intval($p->harga_customer) !== intval($p->activity()->harga_customer) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" readonly>
                                                                 </td>
                                                             @endhasrole
                                                             @hasrole(['Staff Finance','SPV Finance'])
@@ -237,7 +237,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <table class="table" id="tableActivity">
+                                <table class="table w-100" id="tableActivity">
                                     <thead style="background-color:#194BFB;color:#FFFFFF;">
                                         <tr>
                                             <th style="width: 200px">Job</th>
@@ -278,7 +278,6 @@
 
             $('#sub_kategori').trigger('change');
             $('.form-select').select2({
-                theme : "bootstrap-5",
                 search: true
             });
 
@@ -328,10 +327,10 @@
                     </td>
 
                     <td>
-                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'disabled' : ''}>
+                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'readonly' : ''}>
                     </td>
                     <td>
-                        <input type="text" class="form-control harga_customer" name="harga_customer[]" style="width: 100px" id="harga_customer${count}" ${userRole === 'admin' ? 'disabled' : ''}>
+                        <input type="text" class="form-control harga_customer" name="harga_customer[]" style="width: 100px" id="harga_customer${count}" ${userRole === 'admin' ? 'readonly' : ''}>
                     </td>
 
                     <td>
@@ -341,7 +340,6 @@
                     </td>
                 </tr>`)
                 let select = $(`#pekerjaan${count}`).select2({
-                    theme : "bootstrap-5",
                     search: true
                 })
 
@@ -469,7 +467,8 @@
                     data : function (d) {
                         d.id =  id_project,
                         d.id_kategori = '{{ $kategori }}',
-                        d.id_subkategori = '{{ $subKategori }}'
+                        d.id_subkategori = '{{ $subKategori }}',
+                        d.id_vendor = '{{ $vendor->id }}'
                     }
                 },
                 columns : [

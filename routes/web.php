@@ -235,7 +235,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('pekerjaan-vendor')->group(function(){
             Route::get('all-data/{id}/{idProject}',[OnProgressController::class,'allPekerjaanVendor'])->name('on_progress.pekerjaan-vendor.all');
-            Route::get('vendor-worker/{id}/{idProject}/{subKategori}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
+            Route::get('vendor-worker/{id}/{idProject}/{subKategori}/{idKategori}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
             Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
             Route::post('update',[OnProgressController::class,'updateVendorWork'])->name('on_progress.pekerjaan-vendor.update');
         });
@@ -265,6 +265,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('ajax')->group(function(){
             Route::get('pekerjaan-vendor',[OnProgressController::class,'ajaxPekerjaanVendor'])->name('ajax.vendor');
             Route::get('progres-pekerjaan',[OnProgressController::class,'ajaxProgresPekerjaan'])->name('ajax.progres-pekerjaan');
+            Route::get('progres-pekerjaan-vendor',[OnProgressController::class,'ajaxProgresPekerjaanVendor'])->name('ajax.progres-pekerjaan-vendor');
             Route::get('setting-estimasi',[OnProgressController::class,'ajaxSettingEstimasi'])->name('ajax.setting-estimasi');
             Route::get('tagihan-vendor',[OnProgressController::class,'ajaxTagihanVendor'])->name('ajax.tagihan-vendor');
             Route::get('tagihan-customer',[OnProgressController::class,'ajaxTagihanCustomer'])->name('ajax.tagihan-customer');
@@ -275,6 +276,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('unit/{id}',[OnProgressController::class,'ajaxUnitPekerjaan'])->name('ajax.unit-pekerjaan');
             Route::get('recent-activity',[OnProgressController::class,'ajaxActivityRecent'])->name('ajax.recent-activity');
             Route::get('edit/request/{id}',[OnProgressController::class,'editRequestPekerjaan'])->name('on_progres.request.edit');
+            Route::post('update/estimasi',[OnProgressController::class,'updateEstimasiProject'])->name('ajax.update-estimasi-project');
         });
 
         Route::prefix('export')->group(function(){

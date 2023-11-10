@@ -27,7 +27,7 @@
                                         {{-- <a href="{{ route('on_progres.work',$data->id) }}" class="btn btn-request btn-primary border-0">Input Pekerjaan</a> --}}
                                         {{-- <a href="{{ route('on_progres.setting',$data->id) }}"class="btn btn-primary border-0" id="btn-setting"><i><img src="{{asset('assets/images/setting-2.svg')}}" style="width: 15px;margin-right: 5px;"></i>Setting</a> --}}
                                     </div>
-
+                                    <input type="hidden" class="id" id="id" value="{{$data->id}}">
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="nama_project" class="form-label">Project Name</label>
@@ -66,6 +66,12 @@
                                             <input type="text" class="form-control" id="alamat" value="{{ $data->pm->karyawan->name ?? '-' }}" disabled>
                                         </div>
                                     </div>
+                                    <div class="col-xxl-6 col-md-6">
+                                        <div>
+                                            <label for="estimasi" class="form-label">Estimation</label>
+                                            <input type="date" class="form-control" id="estimasi" value="{{ $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->toDateString() : '' }}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -85,11 +91,14 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($projects as $keys => $project)
+                                            @php
+                                                $progress = getProgressPekerjaan($project->id_vendor,$data->id);
+                                            @endphp
                                             <tr>
                                                 <td>{{ $project->vendors->name }}</td>
 
-                                                @isset($progress[$keys])
-                                                    <td>{{ $progress[$keys]->total_status_2 }} / {{ $progress[$keys]->total_status_1 }}</td>
+                                                @isset($progress->total_status_2)
+                                                    <td>{{ $progress->total_status_2 }} / {{ $progress->total_status_1 }}</td>
                                                 @else
                                                     <td>
                                                         0 / 0
@@ -230,6 +239,45 @@
     <script>
         $(document).ready(function(){
             let modalInput = $('#modalInput');
+
+            $('#estimasi').on('change',function(){
+                let id = $('#id').val();
+                let tanggal = $(this).val();
+                $.ajax({
+                    url : '{{ route('ajax.update-estimasi-project') }}',
+                    method : 'POST',
+                    data : {
+                        _token : '{{ csrf_token() }}',
+                        id : id,
+                        tanggal : tanggal
+                    }
+                }).then(ress => {
+                    if(ress.status === 200){
+                        alertToast('success',ress.msg);
+                    }
+                }).catch(err => {
+                    alertToast('error', err.message);
+                })
+            })
+
+            const alertToast = (icon,message) => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: icon,
+                    title: message
+                })
+            }
         })
     </script>
 @endsection

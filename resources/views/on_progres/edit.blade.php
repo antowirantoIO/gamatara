@@ -69,7 +69,7 @@
                                     <div class="col-xxl-6 col-md-6">
                                         <div>
                                             <label for="estimasi" class="form-label">Estimation</label>
-                                            <input type="date" class="form-control" id="estimasi" value="{{ \Carbon\Carbon::parse($data->target_selesai)->toDateString() }}">
+                                            <input type="date" class="form-control" id="estimasi" value="{{ $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->toDateString() : '' }}">
                                         </div>
                                     </div>
                                 </div>

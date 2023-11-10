@@ -48,11 +48,46 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
+                                            @hasrole(['Staff Finance','SPV Finance'])
                                             <th style="color:#929EAE">Action</th>
+                                            @endhasrole
                                         </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <h4>Recent Activity</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="live-preview">
+                                <table class="table" id="tableActivity">
+                                    <thead style="background-color:#194BFB;color:#FFFFFF;">
+                                        <tr>
+                                            <th style="width: 200px">Job</th>
+                                            <th style="width: 200px">Date</th>
+                                            <th style="width: 200px">Status</th>
+                                            <th style="width: 90px">Length (mm)</th>
+                                            <th style="width: 90px">Width (mm)</th>
+                                            <th style="width: 90px">Thick (mm)</th>
+                                            <th style="width: 90px">Unit</th>
+                                            <th style="width: 90px">Qty</th>
+                                            <th style="width: 90px">Amount</th>
+                                            <th style="width: 90px">Vendor Price</th>
+                                            <th style="width: 90px">Customer Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -113,35 +148,6 @@
                         <input type="hidden" name="conversion" id="conversion" class="conversion">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="pekerjaan_id" class="form-label">Work</label>
-                                <select type="text" name="pekerjaan_id" class="form-select form-select-edit" id="pekerjaan_id">
-                                    <option selected disabled>Choose Work</option>
-                                    @foreach ($pekerjaan as $work)
-                                        <option value="{{ $work->id }}">{{ $work->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="description" class="form-label">Description</label>
-                                <input type="text" name="description" id="description" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="location" class="form-label">Location</label>
-                                <input type="text" name="location" id="location" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="detail" class="form-label">Detail / Other</label>
-                                <input type="text" name="detail" id="detail" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
                                 <label for="length" class="form-label">Length</label>
                                 <input type="text" name="length" id="length" class="form-control">
                             </div>
@@ -174,6 +180,18 @@
                             <div>
                                 <label for="amount" class="form-label">Amount</label>
                                 <input type="text" name="amount" id="amount" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="harga_vendor" class="form-label">Vendor Price</label>
+                                <input type="text" name="harga_vendor" id="harga_vendor" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="harga_customer" class="form-label">Customer Price</label>
+                                <input type="text" name="harga_customer" id="harga_customer" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -255,6 +273,7 @@
                     { data : 'qty' },
                     { data : 'amount' },
                     { data : 'unit' },
+                    @hasrole(['Staff Finance','SPV Finance'])
                     {
                         data : function (data) {
                             let id = data.id;
@@ -265,9 +284,87 @@
                             </button>`
                         }
                     }
+                    @endhasrole
                 ]
 
             });
+
+            let tableActivity = $('#tableActivity').DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                ordering : false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                autoWidth : true,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
+                ajax : {
+                    url : '{{ route('ajax.recent-activity') }}',
+                    data : function (d) {
+                        d.id =  '{{ $idProject }}',
+                        d.id_kategori = '{{ $kategori }}',
+                        d.id_subkategori = '{{ $subKategori }}'
+                    }
+                },
+                columns : [
+                    { data : 'pekerjaan.name', name : 'id_pekerjaan'},
+                    {
+                        data : function(data) {
+                            let status = data.status || '-';
+                            if(status === 1) {
+                                let date = moment(data.created_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }else if ( status === 2 ){
+                                let date = moment(data.updated_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }else{
+                                let date = moment(data.deleted_at);
+                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                return formated
+                            }
+                        }
+                    },
+                    {
+                        data : function(data) {
+                            let status = data.status;
+                            if(status === 1) {
+                                return `<div class="text-primary">${data.description} </div>`
+                            }else if(status === 2){
+                                return `<div class="text-info">${data.description} </div>`
+                            }else{
+                                return `<div class="text-danger">${data.description} </div>`
+                            }
+                        }
+                    },
+                    { data : 'length', name : 'length' },
+                    { data : 'width', name : 'width' },
+                    { data : 'thick', name : 'thick' },
+                    { data : 'unit', name : 'unit' },
+                    { data : 'qty', name : 'qty' },
+                    { data : 'amount', name : 'amount' },
+                    { data : 'harga_vendor', name : 'harga_vendor' },
+                    { data : 'harga_customer', name : 'harga_customer' },
+                ]
+            })
 
             table.on('click','.btn-edit',function(){
                 let id =$(this).data('id');
@@ -278,13 +375,7 @@
                     url : urlReplace,
                     method : 'GET'
                 }).then(ress => {
-                    console.log(ress.data.id_pekerjaan);
                     $('#id').val(id);
-                    $('.form-select-edit').val(ress.data.id_pekerjaan).trigger('change');
-                    $("#pekerjaan_id").val(ress.data.id_pekerjaan);
-                    $('#description').val(ress.data.deskripsi_pekerjaan);
-                    $('#location').val(ress.data.id_lokasi);
-                    $('#detail').val(ress.data.detail);
                     $('#length').val(ress.data.length);
                     $('#width').val(ress.data.width);
                     $('#thick').val(ress.data.thick);
@@ -292,6 +383,8 @@
                     $('#qty').val(ress.data.qty);
                     $('#amount').val(ress.data.amount);
                     $('#conversion').val(ress.data.conversion);
+                    $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
+                    $('#harga_customer').val(formatRupiah(ress.data.harga_customer));
                     modalEdit.modal('show');
                 })
             })
@@ -351,6 +444,23 @@
                 console.log(parseInt(parts[0]),length, amountValue);
                 $('#amount').val(0);
                 $("#amount").val(amountValue);
+            }
+
+            function formatRupiah(angka) {
+                var numberString = angka.toString().replace(/[^0-9]/g, '');
+                var rupiah = '';
+                var ribuan = 0;
+
+                for (var i = numberString.length - 1; i >= 0; i--) {
+                    rupiah = numberString[i] + rupiah;
+                    ribuan++;
+                    if (ribuan == 3 && i > 0) {
+                        rupiah = ',' + rupiah;
+                        ribuan = 0;
+                    }
+                }
+
+                return rupiah;
             }
 
             $("#length, #width, #thick, #qty, #conversion").on("input", calculate);

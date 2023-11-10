@@ -164,12 +164,13 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('ajax.progres-pekerjaan') }}',
+                        url : '{{ route('ajax.progres-pekerjaan-vendor') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';
                             d.id_kategori = id_kategori;
                             d.id_project = id_project;
+                            d.id_vendor = '{{ $id }}';
                             d.sub_kategori = $('#sub_kategori').val();
                             d.nama_vendor = $('#nama_vendor').val();
                         }

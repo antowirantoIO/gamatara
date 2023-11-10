@@ -165,3 +165,16 @@ function generateBarcodeNumber() {
 function barcodeNumberExists($number) {
     return ProjectPekerjaan::where('kode_unik',$number)->exists();
 }
+
+function getProgressPekerjaan($id_vendor, $id)
+{
+    $progress = ProjectPekerjaan::where('id_project',$id)
+    ->where('id_vendor',$id_vendor)
+    ->whereNotNull('id_pekerjaan')
+    ->select('id_vendor')
+    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+    ->groupBy('id_vendor')
+    ->first();
+    return $progress;
+}

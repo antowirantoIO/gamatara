@@ -29,14 +29,14 @@ class UserController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if($this->authorize('user-edit')) {
+                if(Can('user-edit')) {
                     $btnEdit = '<a href="'.route('user.edit', $data->id).'" class="btn btn-success btn-sm">
                     <span>
                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                     </span>
                 </a>';
                 }
-                if($this->authorize('user-delete')){
+                if(Can('user-delete')){
                     $btnDelete = '<a data-id="'.$data->id.'" data-name="User '.$data->karyawan->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

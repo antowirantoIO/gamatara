@@ -21,14 +21,14 @@ class KaryawanController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if($this->authorize('karyawan-edit')) {
+                if(Can('karyawan-edit')) {
                     $btnEdit = '<a href="'.route('karyawan.edit', $data->id).'" class="btn btn-success btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                     </span>
                                 </a>';
                 }
-                if($this->authorize('karyawan-delete')){
+                if(Can('karyawan-delete')){
                     $btnDelete = '<a data-id="'.$data->id.'" data-name="Employee '.$data->name.'" data-form="form-karyawan" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

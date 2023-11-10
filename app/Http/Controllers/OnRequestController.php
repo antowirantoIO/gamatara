@@ -59,7 +59,7 @@ class OnRequestController extends Controller
                     })
                     ->addColumn('action', function($data){
                         $btnDetail = '';
-                        if($this->authorize('on_request-detail')) {
+                        if(Can('on_request-detail')) {
                             $btnDetail = '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
                                             <span>
                                                 <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>

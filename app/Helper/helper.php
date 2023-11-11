@@ -203,3 +203,8 @@ function getProgressPekerjaan($id_vendor, $id)
     ->first();
     return $progress;
 }
+
+function Can($permission)
+{
+    return Auth::user()->can($permission);
+}

@@ -24,14 +24,14 @@ class VendorController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if($this->authorize('vendor-edit')) {
+                if(Can('vendor-edit')) {
                     $btnEdit = '<a href="'.route('vendor.edit', $data->id).'" class="btn btn-success btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                     </span>
                                 </a>';
                 }
-                if($this->authorize('vendor-delete')){
+                if(Can('vendor-delete')){
                     $btnDelete = '<a data-id="'.$data->id.'" data-name="Vendor '.$data->name.'" data-form="form-vendor" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

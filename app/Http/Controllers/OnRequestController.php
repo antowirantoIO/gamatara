@@ -58,16 +58,18 @@ class OnRequestController extends Controller
                         return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
                     })
                     ->addColumn('action', function($data){
-                        return '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
-                            <span>
-                                <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                            </span>
-                        </a>';
+                        $btnDetail = '';
+                        if(Can('on_request-detail')) {
+                            $btnDetail = '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
+                                            <span>
+                                                <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
+                                            </span>
+                                        </a>';
+                        }
+                        return $btnDetail;
                     })
                     ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
-                    ->make(true); 
-                
-                           
+                    ->make(true);     
         }
 
         $customer   = Customer::get();

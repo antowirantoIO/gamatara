@@ -58,7 +58,7 @@ class LaporanCustomerController extends Controller
                     }
                 }
  
-                if ($this->authorize('laporan_customer-detail')) {
+                if (Can('laporan_customer-detail')) {
                     $btnDetail .= '<a href="' . route('laporan_customer.detail', $id) . '" class="btn btn-warning btn-sm">
                                         <span>
                                             <i><img src="' . asset('assets/images/eye.svg') . '" style="width: 15px;"></i>

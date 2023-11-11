@@ -29,14 +29,14 @@ class PekerjaanController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if($this->authorize('lokasi_project-edit')) {
+                if(Can('lokasi_project-edit')) {
                     $btnEdit = '<a href="'.route('pekerjaan.edit', $data->id).'" class="btn btn-success btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                     </span>
                                 </a>';
                 }
-                if($this->authorize('lokasi_project-delete')){
+                if(Can('lokasi_project-delete')){
                     $btnDelete = '<a data-id="'.$data->id.'" data-name="Pekerjaan '.$data->name.'" data-form="form-pekerjaan" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

@@ -25,14 +25,14 @@ class ProjectManagerController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if($this->authorize('project_manager-edit')) {
+                if(Can('project_manager-edit')) {
                     $btnEdit = '<a href="'.route('project_manager.edit', $data->id).'" class="btn btn-success btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                     </span>
                                 </a>';
                 }
-                if($this->authorize('project_manager-delete')){
+                if(Can('project_manager-delete')){
                     $btnDelete = '<a data-id="'.$data->id.'" data-name="project_manager '.$data->name.'" data-form="form-project_manager" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

@@ -37,8 +37,6 @@
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
                                             <th style="color:#929EAE">Vendor</th>
-                                            <th style="color:#929EAE">Status</th>
-                                            <th style="color:#929EAE">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -54,25 +52,42 @@
                                                 <td>{{ $item->amount }}</td>
                                                 <td>{{ $item->unit }}</td>
                                                 <td>{{ $item->vendors->name }}</td>
-                                                <td>
-                                                    @if ($item->status == 1)
-                                                        <span class="text-warning">Progres</span>
-                                                    @else
-                                                        <span an class="text-success">Complete</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <div class="btn btn-warning btn-sm btn-modal">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </div>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="row gy-4">
+                    <div class="col-xxl-12 col-md-12">
+                        <p class="fs-4">Foto Sebelum</p>
+                        <div class="d-flex justify-content-around align-items-center">
+                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
+                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
+                            </a>
+                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
+                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
+                            </a>
+                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
+                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
+                            </a>
+                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
+                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-xxl-12 col-md-12 mt-5">
+                        <p class="fs-4">Foto Sesudah</p>
+                        <div class="d-flex justify-content-around align-items-center">
+                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
+                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
+                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
+                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
                         </div>
                     </div>
                 </div>
@@ -94,36 +109,7 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="row gy-4">
-                            <div class="col-xxl-12 col-md-12">
-                                <p class="fs-4">Foto Sebelum</p>
-                                <div class="d-flex justify-content-around align-items-center">
-                                    <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                        <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                                    </a>
-                                    <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                        <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                                    </a>
-                                    <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                        <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                                    </a>
-                                    <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                        <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-xxl-12 col-md-12 mt-5">
-                                <p class="fs-4">Foto Sebelum</p>
-                                <div class="d-flex justify-content-around align-items-center">
-                                    <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                                    <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                                    <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                                    <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </form>
         </div>

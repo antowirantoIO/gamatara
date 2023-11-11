@@ -64,7 +64,7 @@
                                                             <th style="color:#929EAE">Qty</th>
                                                             <th style="color:#929EAE">Amount</th>
                                                             <th style="color:#929EAE">Unit</th>
-                                                            <th style="color:#929EAE">Total Price</th>
+                                                            <th style="color:#929EAE">Unit Price</th>
                                                             <th style="color:#929EAE">Total Bills</th>
                                                         </tr>
                                                     </thead>
@@ -187,7 +187,7 @@
                             let data = d.responseJSON.data;
                             console.log(data);
                             let amount = data.reduce((accumulator, currentValue) => {
-                                return accumulator + currentValue.harga_vendor;
+                                return accumulator + (currentValue.harga_vendor * currentValue.amount);
                             }, 0);
                             console.log(amount);
                             $('.tagihan-{{ $key }}').text(rupiah(amount))
@@ -216,8 +216,10 @@
                         {
                             data : function(data){
                                 if(data.harga_vendor !== null){
-                                    let amount = data.harga_vendor || '-';
-                                    return rupiah(amount);
+                                    let harga = data.harga_vendor || '-';
+                                    let amount = data.amount;
+                                    let total = amount * harga;
+                                    return rupiah(total);
                                 }else{
                                     return 0;
                                 }

@@ -81,7 +81,7 @@
                                                     <input type="hidden" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
 
 
-                                                    @if ($p->activity() && $p->activity()->status === 2)
+                                                    @if ($p->activity())
                                                         <tr class="draggable-row parent-clone">
                                                             <input type="hidden" id="convertion-{{ $keys }}" value="{{ $p->conversion }}" name="convertion[]">
                                                             <td>

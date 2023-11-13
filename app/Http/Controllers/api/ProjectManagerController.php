@@ -19,23 +19,44 @@ class ProjectManagerController extends Controller
     public function index(Request $request)
     {
         try{
-            $project = OnRequest::filter($request)
-                        ->where('pm_id',$request->pm_id)
-                        ->where('status',1)
-                        ->get();
+            // $project = OnRequest::filter($request)
+            //             ->where('pm_id',$request->pm_id)
+            //             ->where('status',1)
+            //             ->get();
 
-            $projectIds[] = '';
-            foreach ($project as $projectItem) {
-                $projectIds[] = $projectItem->id;
-            }
+            // $projectIds[] = '';
+            // foreach ($project as $projectItem) {
+            //     $projectIds[] = $projectItem->id;
+            // }
 
-            $data = ProjectPekerjaan::with(['vendors:id,name'])->select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
+            // $data = ProjectPekerjaan::with(['vendors:id,name'])->select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
 
+            // foreach ($data as $item) {
+            //     $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
+            //     $item['nama_project'] = $item->projects->nama_project ?? '-';
+            //     $item['nama_vendor'] = $item->vendors->name ?? '-';
+            //     $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
+            // }
+
+            $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
+                    ->select('id','nama_project','created_at','id_customer')
+                    ->where('pm_id',$request->pm_id)
+                    ->get();
             foreach ($data as $item) {
-                $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
-                $item['nama_project'] = $item->projects->nama_project ?? '-';
-                $item['nama_vendor'] = $item->vendors->name ?? '-';
-                $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
+                $item['ids'] = $item->progress->first()->id ?? null;
+                $item['nama_customer'] = $item->customer->name ?? '';
+                $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
+                $item['progress_pekerjaan'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
+
+                if ($item->complaint->isEmpty()) {
+                    $status = 1;
+                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
+                    $status = 2;
+                } else {
+                    $status = 3;
+                }
+
+                $item->status_project = $status;
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
@@ -47,9 +68,13 @@ class ProjectManagerController extends Controller
     public function detailPM(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_vendor','id_project')->where('id',$request->id)->first();
+            $data = ProjectPekerjaan::with([
+                    'vendors:id,name','projects.pm.karyawan:id,name','projects.pa.karyawan:id,name',
+                    'projects.pe.karyawan:id,name','projects.pe2.karyawan:id,name'
+                    ])
+                    ->select('id','id_vendor','id_project')->where('id',$request->id)->first();
                   
-            $requests = OnRequest::with(['complaint','complaint.vendors:id,name','pm','pa','pe'])
+            $requests = OnRequest::with(['complaint','complaint.vendors:id,name'])
                         ->where('id',$data->id_project)
                         ->first();
 
@@ -77,8 +102,6 @@ class ProjectManagerController extends Controller
                     'total_status_2' => "0"
                     ];
             }
-
-            $data['projects'] = $data->projects ?? '';
              
             if ($requests) {
                 $data['request'] = $requests->complaint;

@@ -121,6 +121,7 @@ class OnRequestController extends Controller
         if($getPM == null){
             return redirect()->back()->with('error', 'Untuk Akun ini, Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
         }
+        $pa = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
 
         $data                       = New OnRequest();
         $data->code                 = $code.$randInt;
@@ -131,7 +132,7 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
-        $data->pa_id                = Auth::user()->id;
+        $data->pa_id                = $pa->id ?? '';
         $data->pm_id                = $getPM->id_pm ?? '';
         $data->status_survey        = $request->input('status_survey');
         $data->save();

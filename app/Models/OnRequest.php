@@ -43,7 +43,7 @@ class OnRequest extends Model
 
     public function pa()
     {
-        return $this->hasOne(user::class,'id','pa_id');
+        return $this->hasOne(ProjectAdmin::class,'id','pa_id');
     }
 
     public function complaint()

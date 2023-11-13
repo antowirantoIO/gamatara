@@ -142,6 +142,46 @@ class ProjectEngineerController extends Controller
         }
     }
 
+    public function pekerjaanPE(Request $request)
+    {
+        try{
+            $beforePhoto = BeforePhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
+                            ->get();
+            $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
+                            ->get();
+
+            $kategori = SubKategori::find($request->id_subkategori);   
+
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->orderBy('created_at','desc')
+                    ->get();
+
+            foreach ($data as $item) {
+
+                if ($item->status == 1) {
+                    $item->status = '';
+                } elseif ($item->status == 2) {
+                    $item->status = 'Prosess';
+                }elseif ($item->status == 3) {
+                    $item->status = 'Done';
+                }
+
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
+                $item['nama_vendor'] = $item->vendors->name ?? '';
+                $item['ukuran'] = $item->length ." ". $item->unit;
+            }
+         
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
     public function addPhoto(Request $request){
         $status_pekerjaan = $request->status_pekerjaan;
         $beforeFiles = $request->file('before');

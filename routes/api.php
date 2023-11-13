@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         Route::get('subkategori-pm', [ProjectManagerController::class, 'subkategoriPM']);
         Route::get('pekerjaan-pm', [ProjectManagerController::class, 'pekerjaanPM']);
         Route::get('detailpekerjaan-pm', [ProjectManagerController::class, 'detailpekerjaanPM']);
+        Route::post('approve', [ProjectManagerController::class, 'approve']);
     });
 
      //pe

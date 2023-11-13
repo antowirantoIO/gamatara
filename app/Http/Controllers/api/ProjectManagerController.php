@@ -12,6 +12,7 @@ use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use App\Models\Keluhan;
 
 class ProjectManagerController extends Controller
 {
@@ -100,14 +101,30 @@ class ProjectManagerController extends Controller
         }
     }
 
-    public function approvePM(Request $request)
+    public function approve(Request $request)
     {
+        $data   = Keluhan::find($request->id);     
 
-    }
+        if($request->type == 'PM')
+        {
+            if($data->id_pm_approval == null)
+            {
+                $data->id_pm_approval   = $request->id_user;
+            }else{
+                return response()->json(['status' => 500, 'message' => 'PM Sudah Approve']);
+            }
+        }
+        else{
+            if($data->id_bod_approval == null)
+            {
+                $data->id_bod_approval  = $request->id_user;
+            }else{
+                return response()->json(['status' => 500, 'message' => 'BOD Sudah Approve']);
+            }
+        }
+        $data->save();
 
-    public function approveBOD(Request $request)
-    {
-        
+        return response()->json(['status' => 200, 'message' => 'Berhasil Di Approve']);
     }
 
     public function navbarPM(Request $request)

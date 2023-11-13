@@ -90,7 +90,7 @@
                                
                             </tr>
                             <tr >
-                                <td style="width:30%;border-style: none;">PEngineer 1 - PEngineer 1 - PAdmin</td>
+                                <td style="width:30%;border-style: none;">PEngineer 1 - PEngineer 2 - PAdmin</td>
                                 <td style="width:30%;border-style: none;">:</td>
                                 <td style="width:30%;border-style: none;">{{ $data->pe->karyawan->name ?? '' }} - {{ $data->pe2->karyawan->name ??'' }} - {{ $data->pa->karyawan->name ?? '' }}</td>
                                 <td style="width:30%;border-style: none;"></td>

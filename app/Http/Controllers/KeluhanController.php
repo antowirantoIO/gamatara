@@ -127,7 +127,7 @@ class KeluhanController extends Controller
         $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
-        $pa = User::find($data->user_id);
+        $pa = User::find($data->pa_id);
         $vendor = Vendor::find($keluhan->id_vendor);
         $total = count(OnRequest::get());
         $total = str_pad($total, 3, '0', STR_PAD_LEFT);

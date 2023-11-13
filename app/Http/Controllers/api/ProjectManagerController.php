@@ -43,7 +43,7 @@ class ProjectManagerController extends Controller
                     ->where('pm_id',$request->pm_id)
                     ->get();
             foreach ($data as $item) {
-                $item['ids'] = $item->progress->first()->id ?? null;
+                // $item['ids'] = $item->progress->first()->id ?? null;
                 $item['nama_customer'] = $item->customer->name ?? '';
                 $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
                 $item['progress_pekerjaan'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
@@ -67,56 +67,10 @@ class ProjectManagerController extends Controller
 
     public function detailPM(Request $request)
     {
-        try{
-            $data = ProjectPekerjaan::with([
-                    'vendors:id,name','projects.pm.karyawan:id,name','projects.pa.karyawan:id,name',
-                    'projects.pe.karyawan:id,name','projects.pe2.karyawan:id,name'
-                    ])
-                    ->select('id','id_vendor','id_project')->where('id',$request->id)->first();
-                  
-            $requests = OnRequest::with(['complaint','complaint.vendors:id,name'])
-                        ->where('id',$data->id_project)
+        try{                  
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name'])
+                        ->where('id',$request->id)
                         ->first();
-
-            $pekerjaan = ProjectPekerjaan::where('id_project',$data->id_project)
-                        ->whereNotNull('id_pekerjaan')
-                        ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                        ->first();
-
-            $vendor = ProjectPekerjaan::where('id_project',$data->id_project)
-                    ->select('id_vendor')
-                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                    ->groupBy('status', 'id_vendor')
-                    ->get();
-
-            if($pekerjaan){
-                $pekerjaan = [
-                'total_status_1' => $pekerjaan->total_status_1,
-                'total_status_2' => $pekerjaan->total_status_2
-                ];
-            }else{
-                $pekerjaan = [
-                    'total_status_1' => "0",
-                    'total_status_2' => "0"
-                    ];
-            }
-             
-            if ($requests) {
-                $data['request'] = $requests->complaint;
-                // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
-                // $data['project_admin'] = $data->projects->pa->karyawan->name ?? null;
-                // $data['project_engineer_1'] = $data->projects->pe->karyawan->name ?? null;
-                // $data['project_engineer_2'] = $data->projects->pe2->karyawan->name ?? null;
-                // $data['lokasi_project'] = $data->projects->lokasi->name ?? '';
-            } else {
-                $data['request'] = null;
-            }
-
-            $data['nama_vendor'] = $data->vendors->name ?? '-';
-            $data['pekerjaan'] = $pekerjaan;
-            $data['total_vendor'] = count($vendor);
          
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -153,20 +107,16 @@ class ProjectManagerController extends Controller
     public function navbarPM(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::select('id','id_project','id_vendor','id_kategori','status')
-                    ->with(['projects'])->where('id',$request->id)
+            $data = ProjectPekerjaan::select('id','id_project','id_kategori','status')
+                    ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 
-            $vendor = ProjectPekerjaan::where('id',$request->id)
-                    ->select('id_vendor')
-                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                    ->groupBy('status', 'id_vendor')
+            $vendor = ProjectPekerjaan::where('id_project',$request->id)
                     ->get();
 
             $kategori = Kategori::get();
 
-            $progress = ProjectPekerjaan::where('id', $request->id)
+            $progress = ProjectPekerjaan::where('id_project', $request->id)
                         ->select('id_kategori')
                         ->selectRaw('COUNT(id) as total_status_1')
                         ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
@@ -243,25 +193,36 @@ class ProjectManagerController extends Controller
         try{
             // $pekerjaan = SettingPekerjaan::where('id_sub_kategori', $request->id)->get();
             // $subkategori = $pekerjaan->first()->subkategori->name ?? '';
-            $kategori = SubKategori::find($request->id_subkategori);   
-            $pekerjaan = [];
 
-            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status')
+            $beforePhoto = BeforePhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_subkategori)
+                            ->get();
+            $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_subkategori)
+                            ->get();
+
+            $kategori = SubKategori::find($request->id_subkategori);   
+
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
                     ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->get();
 
             foreach ($data as $item) {
                 if ($item->status == 1) {
-                    $item->status = 'proses';
+                    $item->status = '';
                 } elseif ($item->status == 2) {
-                    $item->status = 'done';
+                    $item->status = 'Prosess';
+                }elseif ($item->status == 3) {
+                    $item->status = 'Done';
                 }
-                $item['nama_pekerjaan'] = $item->pekerjaan->name ?? '';
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
          
-            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data]);
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

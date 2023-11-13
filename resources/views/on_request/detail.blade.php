@@ -1,6 +1,12 @@
 @extends('index')
 
 @section('content')
+<style>
+    th {
+        height: 1px;
+        padding: 5px;
+    }
+</style>
 <div class="row">
     <div class="col">
         <div class="h-100">
@@ -65,11 +71,22 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Project Engineer</label>
-                                                <select name="pe_id" id="pe_id" class="form-control select2">
+                                                <label>Project Engineer 1</label>
+                                                <select name="pe_id_1" id="pe_id_1" class="form-control selects">
                                                     <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
-                                                    <option value="{{$p->id}}" {{ $p->id == $data->pe_id ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                    <option value="{{$p->id}}" {{ $p->id == $data->pe_id_1 ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label>Project Engineer 2</label>
+                                                <select name="pe_id_2" id="pe_id_2" class="form-control selects">
+                                                    <option value="">Choose Project Engineer</option>
+                                                    @foreach($pe as $p)
+                                                    <option value="{{$p->id}}" {{ $p->id == $data->pe_id_2 ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -78,7 +95,9 @@
                                             <label>Customer Name</label>
                                             <div class="input-group">
                                                 <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
-                                                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
+                                                @can('on_request-add')
+                                                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
+                                                @endcan
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -133,6 +152,7 @@
                                                     </select>
                                             </div>
                                         </div> 
+                                        <div class="col-xxl-6 col-md-6"></div>
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">
@@ -638,6 +658,39 @@
     //untuk semua select menggunakan select2
     $(function () {
         $(".select2").select2();
+    });
+
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.selects').select2();
+
+        var selectedOptions = [];
+
+        function updateDisabledOptions() {
+            // Menonaktifkan opsi yang telah dipilih pada Select2 lainnya
+            $('.selects').find('option').prop('disabled', false);
+            for (var i = 0; i < selectedOptions.length; i++) {
+                var selectedValue = selectedOptions[i];
+                $('.selects').not(':eq(' + i + ')').find('option[value="' + selectedValue + '"]').prop('disabled', true);
+            }
+        }
+
+        // Memuat data pada Select2
+        selectedOptions[0] = $('#pe_id_1').val();
+        selectedOptions[1] = $('#pe_id_2').val();
+        updateDisabledOptions();
+
+        $('.selects').change(function() {
+            // Mendapatkan nilai terpilih pada Select2 yang saat ini
+            var selectedValue = $(this).val();
+
+            // Memperbarui array selectedOptions
+            var currentIndex = $(this).index('.selects');
+            selectedOptions[currentIndex] = selectedValue;
+
+            // Memperbarui status nonaktif opsi pada Select2 lainnya
+            updateDisabledOptions();
+        });
     });
     </script>
 @endsection

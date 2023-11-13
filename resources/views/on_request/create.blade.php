@@ -37,7 +37,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Status Survey</label>
-                                                <select name="status_survey" id="status_survey" class="form-control">
+                                                <select name="status_survey" id="status_survey" class="form-control select2">
                                                     <option value="">Choose Status Survey</option>
                                                     @foreach($status as $p)
                                                     <option value="{{$p->id}}" {{ $p->id == old('status_survey') ? 'selected' : '' }}>{{$p->name ?? ''}}</option>
@@ -58,7 +58,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="lokasi_project">Project Location</label>
-                                                <select name="lokasi_project" id="lokasi_project" class="form-control" value="{{ old('lokasi_project') }}" >
+                                                <select name="lokasi_project" id="lokasi_project" class="form-control select2" value="{{ old('lokasi_project') }}" >
                                                     <option value="">Choose Project Location</option>
                                                     @foreach($lokasi as $l)
                                                     <option value="{{$l->id}}" {{ $l->id == old('lokasi_project') ? 'selected' : '' }}>{{$l->name}}</option>
@@ -111,7 +111,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="Jenis Kapal">Ship Type</label>
-                                                <select name="jenis_kapal" id="jenis_kapal" class="form-control">
+                                                <select name="jenis_kapal" id="jenis_kapal" class="form-control select2">
                                                     <option value="">Choose Ship Type</option>
                                                     @foreach($jenis_kapal as $l)
                                                     <option value="{{$l->id}}" {{ $l->id == old('jenis_kapal') ? 'selected' : '' }}>{{$l->name}}</option>
@@ -408,7 +408,7 @@
 
     //untuk semua select menggunakan select2
     $(function () {
-        $("select").select2();
+        $(".select2").select2();
     });
     </script>
 @endsection

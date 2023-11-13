@@ -164,7 +164,7 @@ class ProjectManagerController extends Controller
     public function subkategoriPM(Request $request)
     {
         try{
-            $subkategori = SubKategori::where('id_kategori', $request->id)->get();
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $subkategori->first()->kategori->name ?? '';            
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)->where('id_kategori', $request->id_kategori)
@@ -201,11 +201,12 @@ class ProjectManagerController extends Controller
     public function pekerjaanPM(Request $request)
     {
         try{
-            $pekerjaan = SettingPekerjaan::where('id_sub_kategori', $request->id)->get();
-            $subkategori = $pekerjaan->first()->subkategori->name ?? '';
-            $kategori = SubKategori::find($request->id);   
+            // $pekerjaan = SettingPekerjaan::where('id_sub_kategori', $request->id)->get();
+            // $subkategori = $pekerjaan->first()->subkategori->name ?? '';
+            $kategori = SubKategori::find($request->id_subkategori);   
+            $pekerjaan = [];
 
-            $data = ProjectPekerjaan::select('id','id_pekerjaan','id_vendor','length','unit','status')
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status')
                     ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->get();
 
@@ -220,7 +221,7 @@ class ProjectManagerController extends Controller
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
          
-            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $subkategori , 'data' => $data]);
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

@@ -13,8 +13,8 @@ class UserGamataraController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            // $user = $user->select('id','email','id_karyawan','id_role','nomor_telpon','status')->get();
-            $user['role'] = Roles::find($user->id_role);
+            $user = $user->only(['id', 'email', 'id_karyawan', 'id_role', 'nomor_telpon', 'status']);
+            $user['role'] = Roles::find($user['id_role']);
             $user['nama_pm'] = $user->karyawan->name ?? '';
 
             $token = auth()->user()->createToken('API Token')->accessToken;     

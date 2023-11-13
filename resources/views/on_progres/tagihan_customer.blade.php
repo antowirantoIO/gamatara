@@ -36,7 +36,7 @@
                                 <div class="col-md-12">
                                     @foreach ($workers as $key => $worker)
                                     <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show {{ $loop->first ? 'active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                        <div class="tab-pane {{ $loop->first ? 'fade show active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
                                                 <div>
@@ -192,7 +192,7 @@
                         complete : function(d){
                             let data = d.responseJSON.data;
                             let amount = data.reduce((accumulator, currentValue) => {
-                                return accumulator + currentValue.harga_customer;
+                                return accumulator + (currentValue.harga_customer * currentValue.amount);
                             }, 0);
                             $('.tagihan-{{ $key }}').text(rupiah(amount))
                         }
@@ -210,7 +210,7 @@
                         {
                             data : function(data){
                                 if(data.harga_vendor !== null){
-                                    let amount = data.pekerjaan.harga_customer || '-';
+                                    let amount = data.harga_customer || '-';
                                     return rupiah(amount);
                                 }else{
                                     return 0;
@@ -220,8 +220,10 @@
                         {
                             data : function(data){
                                 if(data.harga_vendor !== null){
-                                    let amount = data.pekerjaan.harga_customer || '-';
-                                    return rupiah(amount);
+                                    let harga = data.harga_customer || 0;
+                                    let amount = data.amount || 0;
+                                    let total = harga * amount;
+                                    return rupiah(total);
                                 }else{
                                     return 0;
                                 }

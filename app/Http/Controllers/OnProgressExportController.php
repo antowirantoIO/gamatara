@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportAllTagihanVendor;
 use App\Exports\ExportDataOnProgress;
 use App\Exports\ExportDataPekerjaan;
 use App\Exports\ExportPekerjaanVendor;
@@ -77,8 +78,10 @@ class OnProgressExportController extends Controller
 
     public function allTagihanVendor (Request $request)
     {
-        $data = groupDataPekerjaanVendor($request);
-        $project = OnRequest::where('id',$request->id_project)->first();
+        $project = ProjectPekerjaan::with('vendors')
+                                    ->where('id_project',$request->id_project)->get();
+        $project= $project->groupBy('vendors.name');
+        return Excel::download(new ExportAllTagihanVendor($project,$request),'Tagihan_Vendor.xlsx');
         return view('export.ExportTagihanVendor',compact('data'));
     }
 }

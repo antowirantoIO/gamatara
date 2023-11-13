@@ -167,7 +167,7 @@ class ProjectManagerController extends Controller
             $subkategori = SubKategori::where('id_kategori', $request->id)->get();
             $namakategori = $subkategori->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::where('id_project', $request->id)
+            $progress = ProjectPekerjaan::where('id_project', $request->id_project)->where('id_kategori', $request->id_kategori)
                 ->select('id_subkategori')
                 ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                 ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
@@ -206,7 +206,7 @@ class ProjectManagerController extends Controller
             $kategori = SubKategori::find($request->id);   
 
             $data = ProjectPekerjaan::select('id','id_pekerjaan','id_vendor','length','unit','status')
-                    ->where('id_subkategori', $request->id)
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->get();
 
             foreach ($data as $item) {

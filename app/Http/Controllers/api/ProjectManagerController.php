@@ -82,7 +82,9 @@ class ProjectManagerController extends Controller
             if ($requests) {
                 $data['request'] = $requests->complaint;
                 $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
-                $data['project_engineer'] = $data->projects->pe->karyawan->name ?? null;
+                $data['project_admin'] = $data->projects->pa->karyawan->name ?? null;
+                $data['project_engineer_1'] = $data->projects->pe->karyawan->name ?? null;
+                $data['project_engineer_2'] = $data->projects->pe2->karyawan->name ?? null;
                 $data['lokasi_project'] = $data->projects->lokasi->name ?? '';
             } else {
                 $data['request'] = null;
@@ -96,6 +98,16 @@ class ProjectManagerController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function approvePM(Request $request)
+    {
+
+    }
+
+    public function approveBOD(Request $request)
+    {
+        
     }
 
     public function navbarPM(Request $request)

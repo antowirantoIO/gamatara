@@ -24,73 +24,63 @@ class OnRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-
             $cekRole = Auth::user()->role->name;
-        
-                    $cekId = Auth::user()->id_karyawan;
-                    $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
-                    $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $cekId = Auth::user()->id_karyawan;
+            $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+            $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $result = ProjectManager::get()->toArray();
 
-                    $data = OnRequest::with(['kapal', 'customer']);
+            $data = OnRequest::with(['kapal', 'customer']);
+         
+            if ($cekRole == 'Project Manager') {
+                $data->where('pm_id', $cekPa->id);
+            }else if ($cekRole == 'Project Admin') {
+                if($cekPm){
+                    $data->where('pm_id', $cekPm->id_pm);
+                }
+            }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
+                if($result){
+                    $data->whereIn('pm_id', array_column($result, 'id'));
+                }
+            }else{
+                $data->where('pm_id', '');
+            }
+            
+            $data = $data->filter($request)->orderBy('created_at', 'desc')->get();
 
-                    if ($cekRole == 'Project Manager') {
-                        $data->where('pm_id', $cekPa->id);
-                    }
-                    if ($cekRole == 'Project Admin') {
-                       if($cekPm){
-                            $data->where('pm_id', $cekPm->id_pm);
-                       }
-                    }
-                    
-                    $data = $data->filter($request)->orderBy('created_at', 'desc')->get();
-
-                    return Datatables::of($data)->addIndexColumn()
-                    ->addColumn('survey', function($data){
-                        return $data->survey->name ?? '';
-                    })
-                    ->addColumn('nama_customer', function($data){
-                        return $data->customer->name ?? '';
-                    })
-                    ->addColumn('jenis_kapal', function($data){
-                        return $data->kapal->name ?? '';
-                    })
-                    ->addColumn('tanggal_request', function($data){
-                        return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
-                    })
-                    ->addColumn('action', function($data){
-                        $btnDetail = '';
-                        if(Can('on_request-detail')) {
-                            $btnDetail = '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
-                                            <span>
-                                                <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                                            </span>
-                                        </a>';
-                        }
-                        return $btnDetail;
-                    })
-                    ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
-                    ->make(true);     
+            return Datatables::of($data)->addIndexColumn()
+            ->addColumn('survey', function($data){
+                return $data->survey->name ?? '';
+            })
+            ->addColumn('nama_customer', function($data){
+                return $data->customer->name ?? '';
+            })
+            ->addColumn('jenis_kapal', function($data){
+                return $data->kapal->name ?? '';
+            })
+            ->addColumn('tanggal_request', function($data){
+                return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
+            })
+            ->addColumn('action', function($data){
+                $btnDetail = '';
+                if(Can('on_request-detail')) {
+                    $btnDetail = '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>';
+                }
+                return $btnDetail;
+            })
+            ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
+            ->make(true);     
         }
 
         $customer   = Customer::get();
         $jenis_kapal= JenisKapal::get();
-        $auth       = Auth::user()->role->name ?? '';
-        if($auth == 'Project Admin'){
-            $cekId      = Auth::user()->id_karyawan;
-            $cekPm      = ProjectAdmin::where('id_karyawan',$cekId)->get();
-            $cek        = count($cekPm);
-        }elseif($auth == 'Project Manager'){
-            $cek        = 0;
-        }elseif($auth == 'BOD'){
-            $cek        = 0;
-        }elseif($auth == 'Administator'){
-            $cek        = 1;
-        }else{
-            $cek = 0;
-        }
         $status     = StatusSurvey::get();
 
-        return view('on_request.index',compact('customer','jenis_kapal','auth','cek','status'));
+        return view('on_request.index',compact('customer','jenis_kapal','status'));
     }
 
     public function create()
@@ -127,6 +117,10 @@ class OnRequestController extends Controller
 
         $getCustomer = Customer::where('name',$request->input('nama_customer'))->first();
         $getPM = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
+        
+        if($getPM == null){
+            return redirect()->back()->with('error', 'Untuk Akun ini, Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
+        }
 
         $data                       = New OnRequest();
         $data->code                 = $code.$randInt;
@@ -137,22 +131,10 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
-        $data->user_id              = Auth::user()->id;
+        $data->pa_id                = Auth::user()->id;
         $data->pm_id                = $getPM->id_pm ?? '';
         $data->status_survey        = $request->input('status_survey');
         $data->save();
-
-        // $keluhanJson = $request->input('keluhan');
-        // $keluhanArray = json_decode($keluhanJson);
-        
-        // if (!empty($keluhanArray)) {
-        //     foreach ($keluhanArray as $keluhanText) {
-        //         $keluhan = new Keluhan();
-        //         $keluhan->keluhan = $keluhanText;
-        //         $keluhan->on_request_id = $data->id;
-        //         $keluhan->save();
-        //     }
-        // }
 
         return redirect()->route('on_request.detail', ['id' => $data->id])
                         ->with('success', 'Data berhasil disimpan');
@@ -189,7 +171,10 @@ class OnRequestController extends Controller
     public function updated(Request $request)
     {
         $request->validate([
-            'nama_project'   => 'required',
+            'nama_project'  => 'required',
+            'id_customer'   => 'required',
+            'pe_id_1'       => 'required',
+            'pe_id_2'       => 'required'
         ]);
 
         $getCustomer = Customer::where('name',$request->input('id_customer'))->first();
@@ -202,9 +187,10 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
-        $data->pe_id                = $request->input('pe_id');
+        $data->pe_id_1              = $request->input('pe_id_1');
+        $data->pe_id_2              = $request->input('pe_id_2');
         $data->status_survey        = $request->input('status_survey');
-        if($request->input('pe_id')){
+        if($request->input('pe_id_1') && $request->input('pe_id_2')){
             $data->status = 1;
         }
         $data->save();

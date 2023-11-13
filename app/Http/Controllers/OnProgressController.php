@@ -430,6 +430,7 @@ class OnProgressController extends Controller
                                     ->where('id_vendor',$vendor)
                                     ->get();
         $workers = $allData->groupBy('id_kategori','id_subkategori');
+
         return view('on_progres.tagihan_vendor',compact('id','kategori','workers','subKategori','lokasi','vendor'));
     }
 
@@ -470,13 +471,9 @@ class OnProgressController extends Controller
     public function updateVendorWork(Request $request)
     {
         $validasi = Validator::make($request->all(),[
-            'pekerjaan_id' => 'required',
-            'description' => 'required',
-            'location' => 'required',
             'length' => 'required',
             'width' => 'required',
             'thick' => 'required',
-            'detail' => 'required',
             'unit' => 'required',
             'qty' => 'required',
             'amount' => 'required',
@@ -487,27 +484,28 @@ class OnProgressController extends Controller
         }
 
         ProjectPekerjaan::where('id',$request->id)->update([
-            'id_pekerjaan' => $request->pekerjaan_id,
-            'deskripsi_pekerjaan' => $request->description,
-            'id_lokasi' => $request->location,
-            'detail' => $request->detail,
             'length' => $request->length,
             'width' => $request->width,
             'thick' => $request->thick,
             'unit' => $request->unit,
             'qty' => $request->qty,
-            'amount' => $request->amount
+            'amount' => str_replace(",", ".", $request->amount),
+            'harga_vendor' => $request->harga_vendor,
+            'harga_vendor' => str_replace(",", "", $request->harga_vendor),
+            'harga_customer' =>  str_replace(",", "", $request->harga_customer)
         ]);
 
         $data = ProjectPekerjaan::where('id',$request->id)->first();
 
         RecentActivity::create([
             'project_pekerjaan_id' => $data->id,
+            'id_vendor' => $data->id_vendor,
             'id_project' => $data->id_project,
             'id_pekerjaan' => $data->id_pekerjaan,
             'id_kategori' => $data->id_kategori,
-            'deskripsi_pekerjaan' => $data->deskripsi,
-            'id_lokasi' => $data->lokasi,
+            'id_subkategori' => $data->id_subkategori,
+            'deskripsi_pekerjaan' => $data->deskripsi_pekerjaan,
+            'id_lokasi' => $data->id_lokasi,
             'detail' => $data->detail,
             'length' => $data->length,
             'width' => $data->width,
@@ -517,7 +515,7 @@ class OnProgressController extends Controller
             'amount' => str_replace(",", ".", $data->amount),
             'harga_vendor' => str_replace(",", "", $data->harga_vendor) ,
             'harga_customer' =>  str_replace(",", "", $data->harga_customer),
-            'description' => 'Data Di Delete',
+            'description' => 'Data Di Update',
             'status' => 2,
             'deleted_at' => date('Y-m-d H:i:s')
         ]);

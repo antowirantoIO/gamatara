@@ -18,15 +18,26 @@ class ProjectEngineerController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::with(['kapal','customer'])
-                        ->filter($request)
-                        ->where('pe_id_1',$request->pe_id)
-                        ->where('status',1)
-                        ->get();
-
+            $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
+                    ->select('id','nama_project','created_at','id_customer')
+                    ->where('pe_id_1',$request->pe_id_1)
+                    ->orWhere('pe_id_2',$request->pe_id_2)
+                    ->get();
             foreach ($data as $item) {
-                $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
-            }     
+                $item['nama_customer'] = $item->customer->name ?? '';
+                $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
+                $item['progress_pekerjaan'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
+
+                if ($item->complaint->isEmpty()) {
+                    $status = 1;
+                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
+                    $status = 2;
+                } else {
+                    $status = 3;
+                }
+
+                $item->status_project = $status;
+            }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
@@ -36,41 +47,172 @@ class ProjectEngineerController extends Controller
 
     public function detailPE(Request $request)
     {
-        try{
-            $data = OnRequest::with(['complaint'])->where('id',$request->id)
-                    ->first();
-
-            $pekerjaan = ProjectPekerjaan::where('id_project',$request->id)
-                            ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                            ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                            ->first();
-
-            $vendor = ProjectPekerjaan::where('id_project',$request->id)
-                ->select('id_vendor')
-                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                ->groupBy('status', 'id_vendor')
-                ->get();
-
-            if($pekerjaan->total_status_1){
-                $pekerjaan = $pekerjaan->total_status_2 / $pekerjaan->total_status_1;
-            }else{
-                $pekerjaan = '0 / 0';
-            }
-
-            $data['lokasi_project'] = $data->lokasi->name ?? null;
-            $data['project_manajer'] = $data->pm->karyawan->name ?? null;
-            $data['pekerjaan'] = $pekerjaan;
-            $data['nama_vendor'] = $data->vendor->name ?? null;
-            $data['vendor'] = count($vendor);
-
-            foreach($data->pm->pe as $value){
-                $value['nama_karyawan'] =  $value->karyawan->name;
-            } 
+        try{                  
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm','pa','pe','pe2'])
+                        ->where('id',$request->id)
+                        ->first();
          
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function navbarPE(Request $request)
+    {
+        try{
+            $data = ProjectPekerjaan::select('id','id_project','id_kategori','status')
+                    ->with(['projects'])->where('id_project',$request->id)
+                    ->first();
+
+            $vendor = ProjectPekerjaan::where('id_project',$request->id)
+                    ->get();
+
+            $kategori = Kategori::get();
+
+            $progress = ProjectPekerjaan::where('id_project', $request->id)
+                        ->select('id_kategori')
+                        ->selectRaw('COUNT(id) as total_status_1')
+                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                        ->groupBy('id_kategori')
+                        ->get();
+            
+            $progressByKategori = [];
+            
+            foreach ($progress as $item) {
+                $progressByKategori[$item->id_kategori] = [
+                    'total_status_1' => $item->total_status_1,
+                    'total_status_2' => $item->total_status_2,
+                ];
+            }
+            
+            foreach ($kategori as $item) {
+                $kategoriProgress = $progressByKategori[$item->id] ?? [
+                    'total_status_1' => 0,
+                    'total_status_2' => 0,
+                ];
+            
+                $item->progress = $kategoriProgress['total_status_2'] . ' / ' . $kategoriProgress['total_status_1'];
+            }
+                    
+            $data['name'] = $data->projects->nama_project ?? '';
+            $data['vendor'] = count($vendor);
+            $data['kategori'] = $kategori;
+
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function subkategoriPE(Request $request)
+    {
+        try{
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $namakategori = $subkategori->first()->kategori->name ?? '';            
+
+            $progress = ProjectPekerjaan::where('id_project', $request->id_project)->where('id_kategori', $request->id_kategori)
+                ->select('id_subkategori')
+                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
+                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                ->groupBy('id_subkategori')
+                ->get();
+            
+            $progressBySubkategori = [];
+            
+            foreach ($progress as $item) {
+                $progressBySubkategori[$item->id_subkategori] = [
+                    'total_status_1' => $item->total_status_1,
+                    'total_status_2' => $item->total_status_2,
+                ];
+            }
+            
+            foreach ($subkategori as $item) {
+                $subkategoriProgress = $progressBySubkategori[$item->id] ?? [
+                    'total_status_1' => 0,
+                    'total_status_2' => 0,
+                ];
+            
+                $item->progress = $subkategoriProgress['total_status_2'] . ' / ' . $subkategoriProgress['total_status_1'];
+            }
+         
+            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function pekerjaanPE(Request $request)
+    {
+        try{
+            $beforePhoto = BeforePhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
+                            ->get();
+            $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
+                            ->get();
+
+            $kategori = SubKategori::find($request->id_subkategori);   
+
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->orderBy('created_at','desc')
+                    ->get();
+
+            foreach ($data as $item) {
+
+                if ($item->status == 1) {
+                    $item->status = '';
+                } elseif ($item->status == 2) {
+                    $item->status = 'Prosess';
+                }elseif ($item->status == 3) {
+                    $item->status = 'Done';
+                }
+
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
+                $item['nama_vendor'] = $item->vendors->name ?? '';
+                $item['ukuran'] = $item->length ." ". $item->unit;
+            }
+         
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function addPhoto(Request $request){
+        $status_pekerjaan = $request->status_pekerjaan;
+        $beforeFiles = $request->file('before');
+        $afterFiles = $request->file('after');
+
+        $projectPekerjaan = ProjectPekerjaan::find($request->id);
+        $projectPekerjaan->status = $status_pekerjaan;
+        $projectPekerjaan->save();
+    
+        foreach ($beforeFiles as $before) {
+            $befores = new BeforePhoto();
+            $befores->id_kategori = $request->id_kategori;
+            $befores->id_subkategori = $request->id_subkategori;
+            $befores->id_project = $request->id_project;
+
+            $beforePath = $before->store('public/storage/images');
+            $befores->photo = $beforePath;
+            $befores->save();
+        }
+    
+        foreach ($afterFiles as $after) {
+            $afters = new AfterPhoto();
+            $afters->id_kategori = $request->id_kategori;
+            $afters->id_subkategori = $request->id_subkategori;
+            $afters->id_project = $request->id_project;
+
+            $afterPath = $after->store('public/storage/images');
+            $afters->photo = $afterPath;
+            $afters->save();
+        }
+
+        return response()->json(['success' => true, 'message' => 'success']);
     }
 }

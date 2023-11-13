@@ -34,7 +34,7 @@
     <table id="tabelKeluhan" class="table table-bordered">
         <thead style="background-color:#194BFB;color:#FFFFFF">
             <tr>
-                <th>No.</th>
+                <th width="10px">No.</th>
                 <th>Request</th>
                 <th>Vendor</th>
                 <th>PM</th>

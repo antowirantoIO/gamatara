@@ -144,7 +144,7 @@
     <!-- Dashboard init -->
     <script src="{{asset('assets/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
 
-    <script src="{{('assets/assets/libs/@simonwep/pickr/pickr.min.js')}}"></script>
+    <!-- <script src="{{('assets/assets/libs/@simonwep/pickr/pickr.min.js')}}"></script> -->
 
     <!--jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

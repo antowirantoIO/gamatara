@@ -33,12 +33,17 @@ class OnRequest extends Model
 
     public function pe()
     {
-        return $this->hasOne(ProjectEngineer::class,'id','pe_id');
+        return $this->hasOne(ProjectEngineer::class,'id','pe_id_1');
+    }
+
+    public function pe2()
+    {
+        return $this->hasOne(ProjectEngineer::class,'id','pe_id_2');
     }
 
     public function pa()
     {
-        return $this->hasOne(user::class,'id','user_id');
+        return $this->hasOne(ProjectAdmin::class,'id','pa_id');
     }
 
     public function complaint()

@@ -6,16 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Roles;
 use App\Models\Karyawan;
+use App\Models\User;
 
 class UserGamataraController extends Controller
 {
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-            $user = $user->only(['id', 'email', 'id_karyawan', 'id_role', 'nomor_telpon', 'status']);
-            $user['role'] = Roles::find($user['id_role']);
-            $user['nama_pm'] = $user->karyawan->name ?? '';
+            $user = Auth::user()->id;
+            $user = User::select('id', 'id_karyawan', 'id_role')
+                    ->with(['role:id,name','karyawan:id,name'])->where('id',$user)
+                    ->first();
+            $user['name'] = $user->karyawan->name ?? '';
 
             $token = auth()->user()->createToken('API Token')->accessToken;     
 

@@ -191,16 +191,13 @@ class ProjectManagerController extends Controller
     public function pekerjaanPM(Request $request)
     {
         try{
-            // $pekerjaan = SettingPekerjaan::where('id_sub_kategori', $request->id)->get();
-            // $subkategori = $pekerjaan->first()->subkategori->name ?? '';
-
             $beforePhoto = BeforePhoto::where('id_project',$request->id_project)
                             ->where('id_subkategori',$request->id_subkategori)
-                            ->where('id_kategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
                             ->get();
             $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
                             ->where('id_subkategori',$request->id_subkategori)
-                            ->where('id_kategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
                             ->get();
 
             $kategori = SubKategori::find($request->id_subkategori);   
@@ -210,6 +207,7 @@ class ProjectManagerController extends Controller
                     ->get();
 
             foreach ($data as $item) {
+
                 if ($item->status == 1) {
                     $item->status = '';
                 } elseif ($item->status == 2) {
@@ -217,6 +215,7 @@ class ProjectManagerController extends Controller
                 }elseif ($item->status == 3) {
                     $item->status = 'Done';
                 }
+
                 $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;

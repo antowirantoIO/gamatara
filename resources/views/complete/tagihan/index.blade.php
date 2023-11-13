@@ -218,18 +218,10 @@
             $('#export-button').on('click', function(event) {
                 event.preventDefault();
 
-                var code            = $('#code').val();
-                var nama_project    = $('#nama_project').val();
-                var nama_customer   = $('#nama_customer').val();
-                var nama_pm         = $('#nama_pm').val();
-                var date            = $('#date').val();
+                var id_project      = '{{ $id }}';
 
-                var url = '{{ route("on_progres.export-data") }}?' + $.param({
-                    code: code,
-                    nama_project: nama_project,
-                    nama_customer: nama_customer,
-                    nama_pm: nama_pm,
-                    date: date
+                var url = '{{ route("on_progres.export.all-tagihan-vendor") }}?' + $.param({
+                    id_project: id_project,
                 });
 
                 $('.loading-overlay').show();

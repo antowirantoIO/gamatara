@@ -137,7 +137,7 @@
                                             <a href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-primary btn-block w-100 rounded-3 border-0">
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
-                                                        Work Progress<br>
+                                                        Job Progress<br>
                                                         @if (!$pekerjaan->total_status_1)
                                                             0 / 0
                                                         @else
@@ -209,20 +209,9 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <table id="tabelKeluhan" class="table table-bordered">
-                                    <thead style="background-color:#194BFB;color:#FFFFFF">
-                                        <tr>
-                                            <th>Request</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($data->keluhan as $item)
-                                            <tr>
-                                                <td>{!! $item->keluhan !!}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                <div id="tabelKeluhanWrapper">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -239,6 +228,20 @@
     <script>
         $(document).ready(function(){
             let modalInput = $('#modalInput');
+
+            let idData = "{{$data->id}}";
+            console.log(idData);
+            function getTableData(id) {
+                let url = "{{route('on_progres.table-data', ':id')}}";
+                url = url.replace(':id', id);
+                $.ajax({
+                    url: url,
+                    success: function(data) {
+                        $('#tabelKeluhanWrapper').html(data)
+                    }
+                })
+            }
+            getTableData(idData);
 
             $('#estimasi').on('change',function(){
                 let id = $('#id').val();

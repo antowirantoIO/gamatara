@@ -231,6 +231,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/delete/{id}', [OnProgressController::class, 'delete'])->name('on_progress.delete');
         Route::get('sub-detail/{id}/{idProject}/{idSub}',[OnProgressController::class,'subDetailWorker'])->name('on_progres.sub-detail');
         Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
+        Route::get('table-data/{id}',[OnProgressController::class,'tableData'])->name('on_progres.table-data');
 
 
         Route::prefix('pekerjaan-vendor')->group(function(){
@@ -284,6 +285,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('pekerjaan-vendor',[OnProgressExportController::class,'pekerjaanVendor'])->name('on_progres.export-pekrjaan-vendor');
             Route::get('pekerjaan-onprogres',[OnProgressExportController::class,'dataPekerjaan'])->name('on_progress.export-pekerjaan');
             Route::get('all/tagihan-vendor',[OnProgressExportController::class,'allTagihanVendor'])->name('on_progres.export.all-tagihan-vendor');
+            Route::get('tagihan-customer',[OnProgressExportController::class,'tagihanCustomer'])->name('on_progres.export.tagihan_customer');
         });
 
 
@@ -331,7 +333,8 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('pekerjaan-vendor')->group(function(){
-            Route::get('detail/{id}/{idProject}',[CompleteController::class,'pekerjaanVendor'])->name('complete.pekerjaan-vendor');
+            Route::get('all-data/{id}/{idProject}',[CompleteController::class,'allPekerjaanVendor'])->name('complete.pekerjaan-vendor.all');
+            Route::get('detail/{id}/{idProject}/{subKategori}/{idKategori}',[CompleteController::class,'pekerjaanVendor'])->name('complete.pekerjaan-vendor');
         });
     });
 

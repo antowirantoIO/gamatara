@@ -19,11 +19,11 @@
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
                             </button>
-                            <button class="btn btn-danger" id="export-button">
+                            {{-- <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
                 </div>

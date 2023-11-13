@@ -21,7 +21,6 @@ class ExportAllTagihanVendor implements WithMultipleSheets
         $sheets = [];
 
         foreach ($this->project as $vendorId => $vendorProjects) {
-            // Menentukan nama sheet sesuai dengan vendorId atau nama lain yang sesuai
             $sheetName = $vendorId;
             $sheets[$sheetName] = new ExportTagihanVendor($this->request, $vendorId,$vendorProjects->first()->id_vendor);
         }

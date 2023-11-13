@@ -45,13 +45,13 @@
                                 <table class="table w-100" id="example1">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Kode Project</th>
-                                            <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Tanggal Mulai</th>
-                                            <th style="color:#929EAE">Tanggal Selesai</th>
-                                            <th style="color:#929EAE">Nilai Project</th>
+                                            <th style="color:#929EAE">Project Code</th>
+                                            <th style="color:#929EAE">Project Name</th>
+                                            <th style="color:#929EAE">Start Date</th>
+                                            <th style="color:#929EAE">End Date</th>
+                                            <th style="color:#929EAE">Project Value</th>
                                             <th style="color:#929EAE">Status Project</th>
-                                            <th style="color:#929EAE">Action</th>
+                                            {{-- <th style="color:#929EAE">Action</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -203,12 +203,40 @@
                 columns : [
                     { data : 'code', name : 'code'},
                     { data : 'nama_project', name : 'nama_project'},
-                    { data : 'start_project', name : 'start_project'},
-                    { data : 'actual_selesai', name : 'actual_selesai'},
+                    {
+                        data : function(data) {
+                            let start = data.created_at || '';
+
+                            if (start) {
+                                let startDate = moment(start);
+
+                                let formattedStartDate = startDate.format('DD MMMM YYYY');
+
+                                return formattedStartDate ;
+                            }
+
+                            return '';
+                        }
+                        , name : 'created_at'},
+                    {
+                        data : function(data) {
+                            let end = data.target_selesai || '';
+
+                            if (end) {
+                                let endDate = moment(end);
+
+                                let formattedEndDate = endDate.format('DD MMMM YYYY');
+
+                                return formattedEndDate ;
+                            }
+
+                            return '';
+                        },
+                        name : 'target_selesai'},
                     {
                         data : function(data) {
                             let harga = data.progress.reduce((accumulator, currentValue) => {
-                                return accumulator + currentValue.harga_customer;
+                                return accumulator + (currentValue.harga_customer * currentValue.amount);
                             }, 0);
 
                             return rupiah(harga);
@@ -227,18 +255,18 @@
                             }
                         }, name : 'status'
                     },
-                    {
-                        data : function(data) {
-                            let id = data.id;
-                            let url = '{{ route('on_progress.edit',':id') }}';
-                            let urlReplace = url.replace(':id',id);
-                            return ` <a href="#" class="btn btn-warning btn-sm">
-                                <span>
-                                    <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                </span>
-                            </a>`
-                        }
-                    }
+                    // {
+                    //     data : function(data) {
+                    //         let id = data.id;
+                    //         let url = '{{ route('on_progress.edit',':id') }}';
+                    //         let urlReplace = url.replace(':id',id);
+                    //         return ` <a href="#" class="btn btn-warning btn-sm">
+                    //             <span>
+                    //                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                    //             </span>
+                    //         </a>`
+                    //     }
+                    // }
                 ]
             });
 

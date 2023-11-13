@@ -8,16 +8,14 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('complete.edit',$id)}}">
+                            <a href="{{route('complete.edit',$project)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Tagihan Vendor</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Works</h4>
                         </div>
                     </div>
                 </div>
             </div>
-
-
 
             <div class="row">
                 <div class="col-lg-12">
@@ -33,50 +31,43 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <div class="live-preview">
-                                <div class="col-md-12">
-                                    @foreach ($workers as $key => $worker)
-                                        <div class="tab-content" id="myTabContent">
-                                            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                                    <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
-                                                    <div>
-                                                        <button class="btn btn-secondary" id="btn-fillter-{{ $key }}">
-                                                            <span>
-                                                                <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                                            </span> &nbsp; Filter
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <table class="table w-100" id="tableData{{ $key }}">
-                                                    <thead class="table-light">
-                                                        <tr>
-                                                            <th style="color:#929EAE;">Pekerjaan</th>
-                                                            <th style="color:#929EAE">Lokasi</th>
-                                                            <th style="color:#929EAE">Detail / Other</th>
-                                                            <th style="color:#929EAE">Length (mm)</th>
-                                                            <th style="color:#929EAE">Width (mm)</th>
-                                                            <th style="color:#929EAE">Thick (mm)</th>
-                                                            <th style="color:#929EAE">Qty</th>
-                                                            <th style="color:#929EAE">Amount</th>
-                                                            <th style="color:#929EAE">Unit</th>
-                                                            <th style="color:#929EAE">Total Harga</th>
-                                                            <th style="color:#929EAE">Total Tagihan</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($worker as $value)
-                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                                <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
-                                                    <strong>Total Tagihan</strong> :
-                                                    <strong class="tagihan-{{ $key }} {{ $loop->first ? 'active' : '' }}"></strong>
+                                @foreach ($subWorker as $key => $worker)
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
+                                                <div>
+                                                    <button class="btn btn-secondary" id="btn-fillter-{{ $key }}">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
+                                                        </span> &nbsp; Filter
+                                                    </button>
+                                                    <button class="btn btn-danger export-button" id="export-button">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                                        </span> &nbsp; Export
+                                                    </button>
                                                 </div>
                                             </div>
+                                            <table class="table w-100" id="tableData{{ $key }}">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="color:#929EAE;width:600px;">Worker</th>
+                                                        <th style="color:#929EAE">Progress</th>
+                                                        <th style="color:#929EAE">Vendor</th>
+                                                        <th style="color:#929EAE">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($worker as $value)
+                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                        <input type="text" class="d-none id_project {{ $loop->first ? 'active' : '' }}" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    @endforeach
-                                </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -86,6 +77,8 @@
         </div>
     </div>
 </div>
+
+{{-- modal --}}
 
 <div id="modalFillter" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-top-right">
@@ -109,11 +102,11 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="id_lokasi" class="form-label">Nama Vendor</label>
-                            <select name="id_lokasi" id="id_lokasi" class="form-select">
-                                <option value="">Pilih Lokasi</option>
-                                @foreach($lokasi as $l)
-                                <option value="{{$l->id}}">{{$l->name}}</option>
+                            <label for="nama_vendor" class="form-label">Nama Vendor</label>
+                            <select name="nama_vendor" id="nama_vendor" class="form-select">
+                                <option value="">Pilih Vendor</option>
+                                @foreach($vendor as $v)
+                                <option value="{{$v->id}}">{{$v->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -131,18 +124,21 @@
 @endsection
 
 @section('scripts')
+
     <script>
         $(document).ready(function(){
             let modalInput = $('#modalFillter');
-
 
             $('.form-select').select2({
                 theme : "bootstrap-5",
                 search: true
             });
 
-            @foreach ( $workers as $key => $worker )
+            @foreach ($subWorker as $key => $worker)
+
                 var id_kategori = $('#id_kategori-{{ $key }}').val();
+                var id_project = $('#id_project-{{ $key }}').val();
+
                 var table{{ $key }} = $('#tableData{{ $key }}').DataTable({
                     fixedHeader:true,
                     scrollX: false,
@@ -168,59 +164,39 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('complete.ajax.tagihan-vendor') }}',
+                        url : '{{ route('ajax.progres-pekerjaan-vendor') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';
-                            d.id_project = '{{ $id }}';
                             d.id_kategori = id_kategori;
+                            d.id_project = id_project;
+                            d.id_vendor = '{{ $id }}';
                             d.sub_kategori = $('#sub_kategori').val();
-                            d.id_lokasi = $('#id_lokasi').val();
-                            d.id_vendor = '{{ $vendor }}'
-                        },
-                        complete : function(d){
-                            let data = d.responseJSON.data;
-                            let amount = data.reduce((accumulator, currentValue) => {
-                                return accumulator + (currentValue.harga_vendor * currentValue.amount);
-                            }, 0);
-                            console.log(amount);
-                            $('.tagihan-{{ $key }}').text(rupiah(amount))
+                            d.nama_vendor = $('#nama_vendor').val();
                         }
                     },
                     columns : [
-                        { data : 'subKategori', name : 'pekerjaan' },
-                        { data : 'id_lokasi', name : 'id_lokasi' },
-                        { data : 'detail', name : 'detail' },
-                        { data : 'length', name : 'length' },
-                        { data : 'width', name : 'width' },
-                        { data : 'thick', name : 'thick' },
-                        { data : 'qty', name : 'qty' },
-                        { data : 'amount', name : 'amount' },
-                        { data : 'unit', name : 'unit' },
+                        { data : 'pekerjaan'},
+                        { data : 'progres'},
+                        { data : 'vendors.name'},
                         {
                             data : function(data){
-                                if(data.harga_vendor !== null){
-                                    let amount = data.harga_vendor || '-';
-                                    return rupiah(amount);
-                                }else{
-                                    return 0;
-                                }
-                            }
-                        },
-                        {
-                            data : function(data){
-                                if(data.harga_vendor !== null){
-                                    let harga = data.harga_vendor || '-';
-                                    let amount = data.amount;
-                                    let total = amount * harga;
-                                    return rupiah(total);
-                                }else{
-                                    return 0;
-                                }
+                                let id_vendor = data.id_vendor;
+                                let id_project = data.id_project;
+                                let id_subkategori = data.id_subkategori;
+                                let id_kategori = data.id_kategori;
+                                let url = '{{ route('complete.pekerjaan-vendor',[':id',':project',':subkategori',':idKategori']) }}';
+                                let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':idKategori',id_kategori);
+                                return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
+                                    <span>
+                                        <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                    </span>
+                                </a>`
                             }
                         }
                     ]
-                })
+                });
+
                 $('#btn-fillter-{{ $key }}').click(function(){
                     modalInput.modal('show');
                 })
@@ -229,8 +205,9 @@
                     modalInput.modal('hide');
                     var active = $('#myTabContent .tab-pane.active');
                     id_kategori = active.find('.id_kategori.active').val();
+                    id_project = active.find('.id_project.active').val();
+
                     var activeTabId = $('#myTab .nav-link.active').attr('id');
-                    console.log(id_kategori,activeTabId);
                     if (activeTabId === '{{ $key }}-tab') {
                         table{{ $key }}.draw();
                     }
@@ -247,12 +224,25 @@
                     }
                 })
             @endforeach
-            const rupiah = (number)=>{
-                var	reverse = number.toString().split('').reverse().join(''),
-                ribuan 	= reverse.match(/\d{1,3}/g);
-                ribuan	= ribuan.join('.').split('').reverse().join('');
-                return ribuan;
+            function hideOverlay() {
+                $('.loading-overlay').fadeOut('slow', function() {
+                    $(this).remove();
+                });
             }
+
+            $('.export-button').on('click', function(event) {
+                event.preventDefault();
+                var id_project      = '{{ $project }}';
+                var url = '{{ route("on_progress.export-pekerjaan") }}?' + $.param({
+                    id_project: id_project,
+                });
+
+                $('.loading-overlay').show();
+
+                window.location.href = url;
+
+                setTimeout(hideOverlay, 2000);
+            });
         })
     </script>
 @endsection

@@ -6,6 +6,7 @@ use App\Exports\ExportAllTagihanVendor;
 use App\Exports\ExportDataOnProgress;
 use App\Exports\ExportDataPekerjaan;
 use App\Exports\ExportPekerjaanVendor;
+use App\Exports\ExportTagihanCustomer;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Models\Vendor;
@@ -83,5 +84,13 @@ class OnProgressExportController extends Controller
         $project= $project->groupBy('vendors.name');
         return Excel::download(new ExportAllTagihanVendor($project,$request),'Tagihan_Vendor.xlsx');
         return view('export.ExportTagihanVendor',compact('data'));
+    }
+
+    public function tagihanCustomer (Request $request)
+    {
+        $data = groupDataPekerjaanVendor($request);
+        $name = OnRequest::where('id',$request->id_project)->first();
+        return Excel::download(new ExportTagihanCustomer($data,$name),'Tagihan_Customer.xlsx');
+        // return view('export.ExportTagihanCustomer',compact('data','name'));
     }
 }

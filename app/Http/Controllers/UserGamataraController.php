@@ -12,7 +12,8 @@ class UserGamataraController extends Controller
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user()->select('id','email','id_karyawan','id_role','nomor_telpon','status')->first();
+            $user = Auth::user();
+            // $user = $user->select('id','email','id_karyawan','id_role','nomor_telpon','status')->get();
             $user['role'] = Roles::find($user->id_role);
             $user['nama_pm'] = $user->karyawan->name ?? '';
 

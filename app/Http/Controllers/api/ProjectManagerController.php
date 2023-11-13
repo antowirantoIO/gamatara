@@ -48,7 +48,7 @@ class ProjectManagerController extends Controller
         try{
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_vendor','id_project')->where('id',$request->id)->first();
                   
-            $requests = OnRequest::with(['complaint','complaint.vendors:id,name'])
+            $requests = OnRequest::with(['complaint','complaint.vendors:id,name','pm','pa','pe'])
                         ->where('id',$data->id_project)
                         ->first();
 
@@ -81,6 +81,11 @@ class ProjectManagerController extends Controller
              
             if ($requests) {
                 $data['request'] = $requests->complaint;
+                // $data['project_manajer'] = $data->projects->pm->karyawan->name ?? null;
+                // $data['project_admin'] = $data->projects->pa->karyawan->name ?? null;
+                // $data['project_engineer_1'] = $data->projects->pe->karyawan->name ?? null;
+                // $data['project_engineer_2'] = $data->projects->pe2->karyawan->name ?? null;
+                // $data['lokasi_project'] = $data->projects->lokasi->name ?? '';
             } else {
                 $data['request'] = null;
             }

@@ -11,13 +11,13 @@ class ProjectEngineer extends Model
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 
-    public function pm()
-    {
-        return $this->belongsTo(ProjectManager::class, 'id_pm');
-    }
-
     public function karyawan()
     {
         return $this->hasOne(Karyawan::class, 'id','id_karyawan');
+    }
+    
+    public function pm()
+    {
+        return $this->belongsTo(ProjectManager::class, 'id_pm');
     }
 }

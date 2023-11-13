@@ -19,31 +19,11 @@ class ProjectManagerController extends Controller
     public function index(Request $request)
     {
         try{
-            // $project = OnRequest::filter($request)
-            //             ->where('pm_id',$request->pm_id)
-            //             ->where('status',1)
-            //             ->get();
-
-            // $projectIds[] = '';
-            // foreach ($project as $projectItem) {
-            //     $projectIds[] = $projectItem->id;
-            // }
-
-            // $data = ProjectPekerjaan::with(['vendors:id,name'])->select('id','id_project','id_vendor')->whereIn('id_project', $projectIds)->get();
-
-            // foreach ($data as $item) {
-            //     $item['progress'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
-            //     $item['nama_project'] = $item->projects->nama_project ?? '-';
-            //     $item['nama_vendor'] = $item->vendors->name ?? '-';
-            //     $item['tanggal'] = $item->projects->created_at ? date('d M Y', strtotime($item->projects->created_at)) : '-';
-            // }
-
             $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
                     ->where('pm_id',$request->pm_id)
                     ->get();
             foreach ($data as $item) {
-                // $item['ids'] = $item->progress->first()->id ?? null;
                 $item['nama_customer'] = $item->customer->name ?? '';
                 $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
                 $item['progress_pekerjaan'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);

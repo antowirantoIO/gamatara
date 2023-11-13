@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         Route::get('subkategori-pe', [ProjectEngineerController::class, 'subkategoriPE']);
         Route::get('pekerjaan-pe', [ProjectEngineerController::class, 'pekerjaanPE']);
         Route::get('detailpekerjaan-pe', [ProjectEngineerController::class, 'detailpekerjaanPE']);
+        Route::post('addPhoto', [ProjectEngineerController::class, 'addPhoto']);
     });
 });
 

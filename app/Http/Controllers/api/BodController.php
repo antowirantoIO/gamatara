@@ -14,7 +14,7 @@ use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
-use App\Models\ProjecManager;
+use App\Models\ProjectManager;
 use DB;
 
 class BodController extends Controller

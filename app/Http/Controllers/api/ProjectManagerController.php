@@ -13,6 +13,7 @@ use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Keluhan;
+use DB;
 
 class ProjectManagerController extends Controller
 {
@@ -48,7 +49,7 @@ class ProjectManagerController extends Controller
     public function detailPM(Request $request)
     {
         try{                  
-            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm','pa','pe','pe2'])
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pa.karyawan:id,name,nomor_telpon','pe.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
          
@@ -137,29 +138,30 @@ class ProjectManagerController extends Controller
             $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $subkategori->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::where('id_project', $request->id_project)->where('id_kategori', $request->id_kategori)
-                ->select('id_subkategori')
-                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                ->groupBy('id_subkategori')
-                ->get();
-            
-            $progressBySubkategori = [];
-            
-            foreach ($progress as $item) {
-                $progressBySubkategori[$item->id_subkategori] = [
-                    'total_status_1' => $item->total_status_1,
-                    'total_status_2' => $item->total_status_2,
-                ];
-            }
+            $progress = ProjectPekerjaan::where('id_project', $request->id_project)
+                        ->where('id_kategori', $request->id_kategori)
+                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                        ->groupBy('id_subkategori')
+                        ->get();
             
             foreach ($subkategori as $item) {
-                $subkategoriProgress = $progressBySubkategori[$item->id] ?? [
-                    'total_status_1' => 0,
-                    'total_status_2' => 0,
-                ];
+                $status = ''; 
+
+                $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
             
-                $item->progress = $subkategoriProgress['total_status_2'] . ' / ' . $subkategoriProgress['total_status_1'];
+                if ($matchingProgress) {
+                    $maxStatus = $matchingProgress->max_status;
+            
+                    if ($maxStatus == 1) {
+                        $status = '';
+                    } elseif ($maxStatus == 2) {
+                        $status = 'Proses';
+                    } elseif ($maxStatus == 3) {
+                        $status = 'Done';
+                    }
+                }
+            
+                $item->status = $status;
             }
          
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);
@@ -185,18 +187,10 @@ class ProjectManagerController extends Controller
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
                     ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->orderBy('created_at','desc')
+                    ->limit(3)
                     ->get();
 
             foreach ($data as $item) {
-
-                if ($item->status == 1) {
-                    $item->status = '';
-                } elseif ($item->status == 2) {
-                    $item->status = 'Prosess';
-                }elseif ($item->status == 3) {
-                    $item->status = 'Done';
-                }
-
                 $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
@@ -210,22 +204,40 @@ class ProjectManagerController extends Controller
 
     public function detailpekerjaanPM(Request $request)
     {
-        try{           
-            $data = ProjectPekerjaan::find($request->id);
-            $pekerjaan = Pekerjaan::find($data->id_pekerjaan);
-            $subkategori = SubKategori::find($data->id_subkategori);
-            $kategori = Kategori::find($data->id_kategori);
-            $beforePhoto = BeforePhoto::where('id_project_pekerjaan',$request->id)->get();
-            $afterPhoto = AfterPhoto::where('id_project_pekerjaan',$request->id)->get();
+        try{
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->orderBy('created_at','desc')
+                    ->get();
 
-            $data['nama_pekerjaan'] = $data->pekerjaan->name ?? '';
-            $data['nama_vendor'] = $data->vendors->name ?? '';
-            $data['ukuran'] = $data->length ." ". $data->unit;
-         
-            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+            foreach($data as $value){
+                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '');
+            }
+
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+    // public function detailpekerjaanPM(Request $request)
+    // {
+    //     try{           
+    //         $data = ProjectPekerjaan::find($request->id);
+    //         $pekerjaan = Pekerjaan::find($data->id_pekerjaan);
+    //         $subkategori = SubKategori::find($data->id_subkategori);
+    //         $kategori = Kategori::find($data->id_kategori);
+    //         $beforePhoto = BeforePhoto::where('id_project_pekerjaan',$request->id)->get();
+    //         $afterPhoto = AfterPhoto::where('id_project_pekerjaan',$request->id)->get();
+
+    //         $data['nama_pekerjaan'] = $data->pekerjaan->name ?? '';
+    //         $data['nama_vendor'] = $data->vendors->name ?? '';
+    //         $data['ukuran'] = $data->length ." ". $data->unit;
+         
+    //         return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    //     }
+    // }
 }
 

@@ -50,6 +50,33 @@ class ExportDataPekerjaan implements FromView,ShouldAutoSize,WithStyles,WithColu
         ];
     }
 
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+
+                $event->sheet->getDelegate()->getStyle('A7:D7')
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('95B3D7');
+                $event->sheet->getDelegate()->getStyle('A9:J9')
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('95B3D7');
+
+                $event->sheet->getDelegate()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_PORTRAIT);
+                $event->sheet->getDelegate()->getPageSetup()->setPaperSize(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_LEGAL);
+                // Set area cetak
+                $event->sheet->getDelegate()->getPageMargins()->setTop(0.79);
+                $event->sheet->getDelegate()->getPageMargins()->setRight(0.59);
+                $event->sheet->getDelegate()->getPageMargins()->setLeft(0.79);
+                $event->sheet->getDelegate()->getPageMargins()->setBottom(0.79);
+
+            },
+        ];
+    }
 
     public function view(): View
     {
@@ -59,6 +86,13 @@ class ExportDataPekerjaan implements FromView,ShouldAutoSize,WithStyles,WithColu
     public function styles(Worksheet $sheet)
     {
         return [
+            'A:L' => ['alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+                'font' => [
+                            'name' => 'Times New Roman'
+                ]
+            ],
             'A9:K9' => ['alignment' => [
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -193,26 +227,6 @@ class ExportDataPekerjaan implements FromView,ShouldAutoSize,WithStyles,WithColu
             'I' => 7,
             'J' => 5,
             'K' => 5
-        ];
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function(AfterSheet $event) {
-
-                $event->sheet->getDelegate()->getStyle('A7:D7')
-                        ->getFill()
-                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                        ->getStartColor()
-                        ->setARGB('95B3D7');
-                $event->sheet->getDelegate()->getStyle('A9:J9')
-                        ->getFill()
-                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                        ->getStartColor()
-                        ->setARGB('95B3D7');
-
-            },
         ];
     }
 

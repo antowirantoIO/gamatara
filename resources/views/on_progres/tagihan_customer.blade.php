@@ -45,7 +45,7 @@
                                                             <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Filter
                                                     </button>
-                                                    <button class="btn btn-danger">
+                                                    <button class="btn btn-danger" id="export-button">
                                                         <span>
                                                             <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Export
@@ -74,7 +74,7 @@
                                                     @endphp
                                                     @foreach ($worker as $value)
                                                         @php
-                                                            $harga_customer = $value->pekerjaan->harga_customer;
+                                                            $harga_customer = $value->harga_customer ?? 0;
                                                             $total += $harga_customer;
                                                         @endphp
                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
@@ -257,6 +257,23 @@
                     }
                 })
             @endforeach
+
+            $('#export-button').on('click', function(event) {
+                event.preventDefault();
+
+                var id_project      = '{{ $id }}';
+
+                var url = '{{ route("on_progres.export.tagihan_customer") }}?' + $.param({
+                    id_project: id_project,
+                });
+
+                $('.loading-overlay').show();
+
+                window.location.href = url;
+
+                setTimeout(hideOverlay, 2000);
+            });
+
             const rupiah = (number)=>{
                 var	reverse = number.toString().split('').reverse().join(''),
                 ribuan 	= reverse.match(/\d{1,3}/g);

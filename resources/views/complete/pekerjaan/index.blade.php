@@ -11,7 +11,7 @@
                             <a href="{{route('complete.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Progress Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Progress Job</h4>
                         </div>
                     </div>
                 </div>
@@ -52,8 +52,8 @@
                                             <table class="table w-100" id="tableData{{ $key }}">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;width:600px;">Pekerjaan</th>
-                                                        <th style="color:#929EAE">Progres</th>
+                                                        <th style="color:#929EAE;width:600px;">Job</th>
+                                                        <th style="color:#929EAE">Progress</th>
                                                         <th style="color:#929EAE">Vendor</th>
                                                         <th style="color:#929EAE">Action</th>
                                                     </tr>
@@ -91,9 +91,9 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Nama Pekerjaan</label>
+                            <label for="sub_kategori" class="form-label">Job Name</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
-                                <option value="">Pilih Nama Pekerjaan</option>
+                                <option value="">Choose Job Name</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
                                 @endforeach
@@ -102,9 +102,9 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_vendor" class="form-label">Nama Vendor</label>
+                            <label for="nama_vendor" class="form-label">Vendor Name</label>
                             <select name="nama_vendor" id="nama_vendor" class="form-select">
-                                <option value="">Pilih Vendor</option>
+                                <option value="">Choose Vendor</option>
                                 @foreach($vendor as $v)
                                 <option value="{{$v->id}}">{{$v->name}}</option>
                                 @endforeach
@@ -183,7 +183,7 @@
                                 let id_kategori = data.id_kategori;
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
-                                let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori']) }}';
+                                let url = '{{ route('complete.sub-detail-pekerjaan',[':id',':project',':subkategori']) }}';
                                 let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>

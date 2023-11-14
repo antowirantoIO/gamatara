@@ -45,11 +45,6 @@
                                                                 <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                                             </span> &nbsp; Filter
                                                         </button>
-                                                        <button class="btn btn-danger">
-                                                            <span>
-                                                                <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
-                                                            </span> &nbsp; Export
-                                                        </button>
                                                     </div>
                                                 </div>
                                                 <table class="table w-100" id="tableData{{ $key }}">
@@ -185,7 +180,6 @@
                         },
                         complete : function(d){
                             let data = d.responseJSON.data;
-                            console.log(data);
                             let amount = data.reduce((accumulator, currentValue) => {
                                 return accumulator + (currentValue.harga_vendor * currentValue.amount);
                             }, 0);
@@ -236,7 +230,6 @@
                     var active = $('#myTabContent .tab-pane.active');
                     id_kategori = active.find('.id_kategori.active').val();
                     var activeTabId = $('#myTab .nav-link.active').attr('id');
-                    console.log(id_kategori,activeTabId);
                     if (activeTabId === '{{ $key }}-tab') {
                         table{{ $key }}.draw();
                     }

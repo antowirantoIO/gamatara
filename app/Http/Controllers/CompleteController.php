@@ -21,7 +21,7 @@ class CompleteController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = OnRequest::with(['pm','pm.karyawan','customer'])->where('status',1);
+            $data = OnRequest::with(['pm','pm.karyawan','customer'])->where('status',2);
             if($request->has('code') && !empty($request->code)){
                 $data->where('code','like','%'.$request->code.'%');
             }
@@ -132,14 +132,28 @@ class CompleteController extends Controller
         return view('complete.tagihan.vendor',compact('id','kategori','workers','vendor','subKategori','lokasi'));
     }
 
-    public function pekerjaanVendor(Request $request, $id, $project)
+    public function allPekerjaanVendor(Request $request, $id, $project)
+    {
+        $kategori = Kategori::all();
+        $workers = ProjectPekerjaan::where('id_vendor',$id)
+                                    ->where('id_project',$project)
+                                    ->select('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
+                                    ->groupBy('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
+                                    ->get();
+        $subWorker = groupSubWorker($workers);
+        $vendor = Vendor::all();
+        $subKategori = SubKategori::all();
+        return view('complete.pekerjaan_vendor.index',compact('project','kategori','subWorker','vendor','subKategori','id'));
+    }
+
+    public function pekerjaanVendor(Request $request, $id, $project,$subkategori,$idkategori)
     {
         $idProject = $project;
         $nama_project = OnRequest::where('id',$project)->pluck('nama_project')->first();
         $nama_vendor = Vendor::where('id',$id)->pluck('name')->first();
         $pekerjaan = Pekerjaan::all();
         $lokasi = LokasiProject::all();
-        return view('complete.pekerjaan_vendor.detail',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi'));
+        return view('complete.pekerjaan_vendor.detail',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi','subkategori','idkategori'));
     }
 
     public function setting($id)

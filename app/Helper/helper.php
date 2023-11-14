@@ -100,7 +100,7 @@ function groupDataPekerjaan($request)
 
 function groupDataPekerjaanVendor($request)
 {
-    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","LAIN-LAIN"];
+    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","PIPA-PIPA","INTERIOR KAPAL","LAIN-LAIN"];
     $kategori = Kategori::orderByRaw("FIELD(name, '" . implode("','", $customOrder) . "')")->get();
     $data = collect();
     $kategori->each(function($item) use ($data,&$request){
@@ -125,7 +125,7 @@ function groupDataPekerjaanVendor($request)
 
 function groupExportTagihanVendor($request,$id_vendor)
 {
-    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","LAIN-LAIN"];
+    $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL","PERMESINAN","PIPA-PIPA","INTERIOR KAPAL","LAIN-LAIN"];
     $kategori = Kategori::orderByRaw("FIELD(name, '" . implode("','", $customOrder) . "')")->get();
     $data = collect();
     $kategori->each(function($item) use ($data,&$request, $id_vendor){
@@ -141,9 +141,9 @@ function groupExportTagihanVendor($request,$id_vendor)
             $datas->where('id_vendor',$request->nama_vendor);
         }
         $datas = $datas->get();
-        if ($datas->isNotEmpty()) {
+        // if ($datas->isNotEmpty()) {
             $data[$item->name] = $datas;
-        }
+        // }
     });
     return $data;
 }

@@ -1,19 +1,30 @@
 <table>
     <thead>
         <tr>
-            <th align="center" colspan="12" height="40">REKAPITULASI TAGIHAN SUB. KONTRAKTOR</th>
+            <th colspan="12" height="100"></th>
         </tr>
         <tr>
-            <th align="center" colspan="12" height="40">PT. SAMUDRA AMERTA KONSTRUKSI</th>
+            <th colspan="12" height="20"><strong>PT. GAMATARA TRANS OCEAN SHIPYARD</strong></th>
         </tr>
-        {!! str_repeat('<tr></tr>', 1) !!}
         <tr>
-            <th colspan="4" height="30" align="left">
-                PROJECT : {{ $name->nama_project }}
-            </th>
+            <th colspan="12" height="20">Kantor : Jl Tanjung Tengah No 1B</th>
         </tr>
-        {!! str_repeat('<tr></tr>', 1) !!}
-        <tr style="font-size: 8px;">
+        <tr>
+            <th colspan="12" height="20">Telp (0231) 226435 Fax (0231) 226436</th>
+        </tr>
+        <tr>
+            <th colspan="12" height="20">Pelabuhan Cirebon 45122 - Jawa Barat</th>
+        </tr>
+        <tr>
+            <th colspan="12" height="30" style="border: 20px medium black;"><strong>TAGIHAN BIAYA DOCKING</strong></th>
+        </tr>
+        <tr>
+            <th colspan="12" height="30" style="border: 20px medium black;"><strong>{{ $name->nama_project }}</strong></th>
+        </tr>
+        <tr>
+            <th colspan="12" height="20"></th>
+        </tr>
+        <tr>
             <th height="40" style="border:20px medium black;">No.</th>
             <th height="40" style="border:20px medium black;" align="center">Pekerjaan</th>
             <th height="40" style="border:20px medium black;">Location</th>
@@ -24,7 +35,7 @@
             <th height="40" style="border:20px medium black;">Qty/Days/%</th>
             <th height="40" style="border:20px medium black;">Amount</th>
             <th height="40" style="border:20px medium black;">Unit</th>
-            <th colspan="2" align="center" height="40" style="border:20px medium black;">Tagihan Subcont</th>
+            <th colspan="2" align="center" height="40" style="border:20px medium black;">Tagihan Customers</th>
         </tr>
     </thead>
     <tbody>
@@ -33,11 +44,12 @@
              $subCount = 1;
              $count = 0;
              $prevIndex = '';
+            //  dd($data);
         @endphp
         @foreach ($data as $key => $item)
             @if($item->count() > 0)
                 <tr style="font-size: 8px;">
-                    <td align="center" style="border-right: 20px medium black;border-left: 20px medium black;" height="30"><strong>{{ $letters[$count] }}</strong></td>
+                    <td align="center" style="border: 20px medium black;" height="30"><strong>{{ $letters[$count] }}</strong></td>
                     <td colspan="9" style="border: 20px medium black;font-size: 8px;" height="30"><strong>{{ $key }}</strong></td>
                     <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                     <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -56,7 +68,7 @@
                 $subkategori = $value->subKategori->name;
                 $kodeUnik = $value->kode_unik;
             @endphp
-                @if ($prevKodeUnik !== $kodeUnik)
+                @if ($prevKodeUnik != $kodeUnik)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -68,12 +80,12 @@
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td style="border: 20px medium black;"></td>
+                        <td style="border: 20px medium black;"></td>
                     </tr>
                     <tr>
-                        <td height="30" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $subCount }}</td>
-                        <td height="30" style="font-size: 8px;">
+                        <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $subCount }}</td>
+                        <td height="20" style="font-size: 8px;">
                             @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
                                 <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
                             @else
@@ -88,8 +100,8 @@
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td style="border: 20px medium black;"></td>
+                        <td style="border: 20px medium black;"></td>
                     </tr>
                     @php
                         if ($value->kategori->name !== $key) {
@@ -100,25 +112,25 @@
                     @endphp
                 @endif
                 <tr>
-                    <td align="center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
-                    <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan->name ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->id_lokasi ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->detail ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->width ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->thick ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->qty ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->unit ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">
-                       Rp. {{ number_format($value->harga_vendor, 0, ',', '.') }}
+                    <td align="center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
+                    <td height="20" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan->name ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->id_lokasi ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->detail ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->width ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->thick ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->qty ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ?? ' ' }}</td>
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->unit ?? ' ' }}</td>
+                    <td height="20" style="border: 20px medium black;" >
+                       Rp. {{ number_format($value->harga_customer, 0, ',', '.') }}
                     </td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">
-                        Rp. {{ number_format(($value->amount * $value->harga_vendor), 0, ',', '.') }}
+                    <td height="20" style="border: 20px medium black;">
+                        Rp. {{ number_format(($value->amount * $value->harga_customer), 0, ',', '.') }}
                     </td>
                 </tr>
                 @php
-                    $prevTotal = $value->amount * $value->harga_vendor;
+                    $prevTotal = $value->amount * $value->harga_customer;
                     $prevIndex = $key;
                     $total = $total + $prevTotal;
                     $prevSub = $subKategori;
@@ -140,53 +152,54 @@
     <tfoot>
         <tr>
             <td></td>
-            <td align="center">Dibuat Oleh,</td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="3">Diperiksa / Disetujui oleh,</td>
-            <td></td>
-        </tr>
-        {!! str_repeat('<tr></tr>', 4) !!}
-        <tr>
-            <td></td>
-            <td align="center">Makrumah</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td colspan="3">Hanafi Santoso</td>
-            <td></td>
-        </tr>
-        {!! str_repeat('<tr></tr>', 2) !!}
-        <tr height="30">
-            <td>Catatan : </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr height="30">
-            <td></td>
-            <td colspan="11">Pengajuan Komplain Selambat - lambatnya 2 hari setelah Tanggal ACC (penyetujuan) oleh Pak Hanafi, Jika melebihi waktu yang ditentukan maka dianggap Setuju dengan Nilai di Atas.</td>
-        </tr>
-        <tr height="30">
-            <td></td>
-            <td colspan="11">Subcont Wajib Mengembalikan File yang Asli Selambat - lambatnya 2 hari setelah tanggal ACC (Penyetujuan) oleh Pak Hanafi.</td>
+            <td colspan="5"><strong>Hormat Kami</strong></td>
         </tr>
         <tr>
             <td></td>
-            <td colspan="11">Jika File Asli Tidak Kembali maka Subcont Dianggap Tidak Menagih.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="5"><strong>Cirebon, {{ formatTanggal() }}</strong></td>
+        </tr>
+        {!! str_repeat('<tr></tr>', 5) !!}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="5"><strong>HANAFI SANTOSO, ST</strong></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="5">DIREKTUR</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="5">PT. GAMATARA TRANS OCEAN SHIPYARD</td>
         </tr>
     </tfoot>
 </table>

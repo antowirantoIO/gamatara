@@ -9,8 +9,8 @@ class ProjectManager extends Model
 {
     protected $table = 'pm';
     protected $guarded = [];
-    protected $primaryKey = 'id'; 
-    
+    protected $primaryKey = 'id';
+
     public function karyawan()
     {
         return $this->hasOne(Karyawan::class, 'id','id_karyawan');

@@ -421,6 +421,14 @@ class OnProgressController extends Controller
         return view('on_progres.tagihan.index',compact('id','kategori','workers','subKategori','lokasi'));
     }
 
+
+    public function tableData($id)
+    {
+        $keluhans        = Keluhan::where('on_request_id',$id)->get();
+
+        return view('on_progres.tableData', compact('keluhans'));
+    }
+
     public function tagihanVendor(Request $request, $id,$vendor)
     {
         $kategori = Kategori::all();
@@ -704,7 +712,7 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
                     return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
                 } else {
                     return $data->subKategori->name;
@@ -734,7 +742,7 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
                     return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
                 } else {
                     return $data->subKategori->name;

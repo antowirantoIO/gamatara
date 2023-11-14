@@ -155,7 +155,7 @@ class ProjectManagerController extends Controller
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
-                        $status = 'Prosess';
+                        $status = 'Proses';
                     } elseif ($maxStatus == 3) {
                         $status = 'Done';
                     }

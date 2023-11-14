@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\BodController;
+use App\Http\Controllers\api\OtpController;
 use App\Http\Controllers\UserGamataraController;
 use App\Http\Controllers\api\ProjectManagerController;
 use App\Http\Controllers\api\ProjectEngineerController;
@@ -24,8 +25,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //login
 Route::post('login', [UserGamataraController::class, 'login']);
-
+Route::post('reset',[UserGamataraController::class,'ubahPassword']);
+Route::prefix('otp')->group(function(){
+    Route::post('send',[OtpController::class,'send']);
+    Route::post('validation',[OtpController::class,'validationOtp']);
+});
 Route::group(['middleware' => 'auth:api'], function() {
+
 
     //pm
     Route::prefix('pm')->group(function () {

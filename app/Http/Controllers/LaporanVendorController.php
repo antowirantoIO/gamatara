@@ -34,7 +34,7 @@ class LaporanVendorController extends Controller
                     foreach($vendor->projectPekerjaan as $value){
             
                         if ($value) {
-                            $totalHargaCustomer += $value->harga_vendor ?? '' * $value->qty ?? '';
+                            $totalHargaCustomer += $value->harga_vendor * $value->qty;
                         }
                         
                     }

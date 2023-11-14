@@ -126,13 +126,14 @@ class BodController extends Controller
                     ->orderByDesc(DB::raw('SUM(B.amount)'))
                     ->get();
 
-            $byVolume = DB::table('vendor as A')
-                        ->join('project_pekerjaan as B', 'A.id', '=', 'B.id_vendor')
-                        ->join('project as C', 'B.id_project', '=', 'C.id')
-                        ->select('A.id', 'A.name', DB::raw('SUM(B.amount) as volume'))
-                        ->whereYear('C.created_at', $tahun)
-                        ->groupBy('A.id')
-                        ->orderByDesc(DB::raw('SUM(B.amount)'))
+            $byVolume = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+                        ->join('project as C', function ($join) use ($tahun) {
+                            $join->on('B.id_project', '=', 'C.id')
+                                ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
+                        })
+                        ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as volume'))
+                        ->groupBy('vendor.id', 'vendor.name')
+                        ->orderByDesc(\DB::raw('SUM(B.amount)'))
                         ->get();
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data, 'byTonase'=> $byTonase , 'byVolume' => $byVolume]);
@@ -267,6 +268,94 @@ class BodController extends Controller
             $data['name'] = $data->projects->nama_project ?? '';
             $data['vendor'] = count($vendor);
             $data['kategori'] = $kategori;
+
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function subkategoriBOD(Request $request)
+    {
+        try{
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $namakategori = $subkategori->first()->kategori->name ?? '';            
+
+            $progress = ProjectPekerjaan::where('id_project', $request->id_project)
+                        ->where('id_kategori', $request->id_kategori)
+                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                        ->groupBy('id_subkategori')
+                        ->get();
+            
+            foreach ($subkategori as $item) {
+                $status = ''; 
+
+                $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
+            
+                if ($matchingProgress) {
+                    $maxStatus = $matchingProgress->max_status;
+            
+                    if ($maxStatus == 1) {
+                        $status = '';
+                    } elseif ($maxStatus == 2) {
+                        $status = 'Proses';
+                    } elseif ($maxStatus == 3) {
+                        $status = 'Done';
+                    }
+                }
+            
+                $item->status = $status;
+            }
+         
+            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function pekerjaanBOD(Request $request)
+    {
+        try{
+            $beforePhoto = BeforePhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
+                            ->get();
+            $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
+                            ->where('id_subkategori',$request->id_subkategori)
+                            ->where('id_kategori',$request->id_kategori)
+                            ->get();
+
+            $kategori = SubKategori::find($request->id_subkategori);   
+
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->orderBy('created_at','desc')
+                    ->limit(3)
+                    ->get();
+
+            foreach ($data as $item) {
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
+                $item['nama_vendor'] = $item->vendors->name ?? '';
+                $item['ukuran'] = $item->length ." ". $item->unit;
+            }
+         
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function detailpekerjaanBOD(Request $request)
+    {
+        try{
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->orderBy('created_at','desc')
+                    ->get();
+
+            foreach($data as $value){
+                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '');
+            }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {

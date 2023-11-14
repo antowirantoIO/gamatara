@@ -155,7 +155,7 @@ class ProjectManagerController extends Controller
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
-                        $status = 'Prosess';
+                        $status = 'Proses';
                     } elseif ($maxStatus == 3) {
                         $status = 'Done';
                     }
@@ -187,6 +187,7 @@ class ProjectManagerController extends Controller
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
                     ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->orderBy('created_at','desc')
+                    ->limit(3)
                     ->get();
 
             foreach ($data as $item) {
@@ -203,22 +204,40 @@ class ProjectManagerController extends Controller
 
     public function detailpekerjaanPM(Request $request)
     {
-        try{           
-            $data = ProjectPekerjaan::find($request->id);
-            $pekerjaan = Pekerjaan::find($data->id_pekerjaan);
-            $subkategori = SubKategori::find($data->id_subkategori);
-            $kategori = Kategori::find($data->id_kategori);
-            $beforePhoto = BeforePhoto::where('id_project_pekerjaan',$request->id)->get();
-            $afterPhoto = AfterPhoto::where('id_project_pekerjaan',$request->id)->get();
+        try{
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->orderBy('created_at','desc')
+                    ->get();
 
-            $data['nama_pekerjaan'] = $data->pekerjaan->name ?? '';
-            $data['nama_vendor'] = $data->vendors->name ?? '';
-            $data['ukuran'] = $data->length ." ". $data->unit;
-         
-            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+            foreach($data as $value){
+                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '');
+            }
+
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+    // public function detailpekerjaanPM(Request $request)
+    // {
+    //     try{           
+    //         $data = ProjectPekerjaan::find($request->id);
+    //         $pekerjaan = Pekerjaan::find($data->id_pekerjaan);
+    //         $subkategori = SubKategori::find($data->id_subkategori);
+    //         $kategori = Kategori::find($data->id_kategori);
+    //         $beforePhoto = BeforePhoto::where('id_project_pekerjaan',$request->id)->get();
+    //         $afterPhoto = AfterPhoto::where('id_project_pekerjaan',$request->id)->get();
+
+    //         $data['nama_pekerjaan'] = $data->pekerjaan->name ?? '';
+    //         $data['nama_vendor'] = $data->vendors->name ?? '';
+    //         $data['ukuran'] = $data->length ." ". $data->unit;
+         
+    //         return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->name, 'subkategori' => $subkategori->name, 'pekerjaan' => $pekerjaan->name, 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    //     }
+    // }
 }
 

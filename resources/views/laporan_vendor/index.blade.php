@@ -57,13 +57,20 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">
-                                <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
+                            <h7 class="mb-0 flex-grow-1">
+                                <span style="width: 170px;display: inline-block;">
+                                    <select name="" id="" class="form-control select2">
+                                        <option value="">Choose Type</option>
+                                        <option value="">Volume</option>
+                                        <option value="">Tonase</option>
+                                    </select>
+                                </span>
+                                <!-- <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
                                 &nbsp; Tonase
                                 &nbsp;
                                 <span style="width: 15px;height: 15px;background-color:#194BFB; display: inline-block;"></span>
-                                &nbsp; Volume
-                            </h4>
+                                &nbsp; Volume -->
+                            </h7>
                             <div class="mt-3 mt-lg-0 ml-lg-auto">
                                 <div class="dropdown" role="group">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
@@ -127,16 +134,12 @@
 
 @section('scripts')
 <script>
+     $(function () {
+        $(".select2").select2();
+    });
     //datatable
-    $.ajax({
-        url : '{{ route('laporan_vendor.charts') }}',
-        success : function(data){
-            charts(data);
-        }
-
-    })
-
     $(document).ready(function () {
+        let filterSearch = '';
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             lengthChange: false,
@@ -165,14 +168,14 @@
                 url: "{{ route('laporan_vendor') }}",
                 data: function (d) {
                     d.name              = $('#name').val();
-                    d.nilai_project     = $('#nilai_project').val();
                     d.jumlah_project    = $('#jumlah_project').val();
+                    d.nilai_project     = $('#nilai_project').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'nilai_project', name: 'nilai_project'},
                 {data: 'jumlah_project', name: 'jumlah_project'},
+                {data: 'nilai_project', name: 'nilai_project'},
                 {data: 'action', name: 'action'}
             ]
         });
@@ -207,63 +210,118 @@
             setTimeout(hideOverlay, 2000);
         });
 
-        $('.form-control').on('change', function() {
-            table.draw();
+        $(document).ready(function() {
+            $('.loading-overlay').hide();
         });
+    });
 
-        const charts = (data) => {
-            var chartData = Object.values(data).map(item => ({
-                name: item.Employee,
-                data: [item['name'], item['name']],
-            }));
+    $(function() {
+        const yearDropdown = $('#yearDropdown');
+        const yearDropdownButton = $('#yearDropdownButton');
 
-            var options = {
-                chart: {
-                    type: 'bar',
-                    height: 600,
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                        borderRadius: 5,
-                        barHeight:10
-                    },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                series: [
-                    {
-                        name: 'On Progress',
-                        data: chartData.map(item => parseInt(item.data[0])),
-                    },
-                    {
-                        name: 'Complete',
-                        data: chartData.map(item => parseInt(item.data[1])),
-                    }
-                ],
-                xaxis: {
-                        labels:{
-                            show:false,
-                        },
-                        categories: chartData.map(item => item.name),
-                    },
-                    colors: ['#90BDFF','#194BFB'],
-                    legend: {
-                    show: false,
-                }
-            };
+        let jsonData = @json($result);
+        let chartData = jsonData.map(item => ({
+            name: item.name,
+            tonase: item.tonase,
+        }));
 
-            // Periksa jumlah data, jika hanya ada satu data, atur tinggi chart sesuai dengan data tersebut
-            if (chartData.length === 1) {
-                var dataValue = chartData[0].data[0]; // Misalnya, mengambil nilai 'On Progress'
-                options.chart.height = 150; // Atur tinggi chart sesuai dengan data (misalnya, gandakan nilai data)
+        const namevolume = chartData.map(item => item.tonase);
+        const volume = chartData.map(item => item.name);
+
+        var options = {
+        chart: {
+            type: 'bar',
+            height: 600,
+        },
+        plotOptions: {
+            bar: {
+            horizontal: true,
+            borderRadius: 5,
+            },
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        series: [
+            {
+                name: 'value',
+                data: namevolume
             }
+        ],
+        xaxis: {
+                labels:{
+                    show:false,
+                },
+                categories: volume
+            },
+            colors: ['#194BFB'],
+        };
 
-            var chart = new ApexCharts(document.querySelector("#bar"), options);
-            chart.render();
+        if (chartData && chartData.length > 0) {
+            var dataValue = chartData[0].name;
+            options.chart.height = 150;
+        } else {
+            console.error('chartData is null or empty');
         }
 
+        var chart = new ApexCharts(document.querySelector("#bar"), options);
+        chart.render();
+
+        const currentYear = (new Date()).getFullYear();
+        const years = [];
+        for (let i = currentYear; i >= currentYear - 20; i--) {
+            years.push(i);
+        }
+
+        let dropdownList = [];
+        years.forEach(function (year) {
+            dropdownList += `<li class="dropdown-item" data-year="${year}">
+                                ${year}
+                            </li>`
         });
+        yearDropdown.html(dropdownList);
+
+        yearDropdown.on('click', '.dropdown-item', function() {
+            const year = $(this).data('year');
+            yearDropdownButton.text(year);
+            $.ajax({
+                url: '{{ route('laporan_vendor.charts') }}',
+                method: 'get',
+                data: {
+                    year: year
+                },
+                success: function(response) {
+
+                    let jsonData = response;
+                    let chartData = jsonData.map(item => ({
+                        name: item.name,
+                        tonase: item.tonase,
+                    }));
+
+                    const namevolume = chartData.map(item => item.tonase);
+                    const volume = chartData.map(item => item.name);
+
+                    if(volume == null){
+                        const volume = 0;
+                    }
+                    
+                    chart.updateSeries([{
+                        data: namevolume
+                    }]);
+
+                    chart.updateOptions({
+                        xaxis: {
+                            categories: volume
+                        }
+                    });
+
+                    chart.update();
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        })
+    })
 </script>
 @endsection

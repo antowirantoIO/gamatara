@@ -118,7 +118,7 @@ class BodController extends Controller
             }
 
             $byTonase = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
-                        ->join('projects as C', function ($join) use ($tahun) {
+                        ->join('project as C', function ($join) use ($tahun) {
                             $join->on('B.id_project', '=', 'C.id')
                                 ->whereYear('C.created_at', '=', $tahun);
                         })

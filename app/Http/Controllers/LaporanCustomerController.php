@@ -75,7 +75,7 @@ class LaporanCustomerController extends Controller
         $tahun = now()->format('Y');
         $totalHargaPerBulan = array_fill(0, 12, 0);
 
-        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer) as total_harga')
+        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer * qty) as total_harga')
             ->whereYear('created_at', $tahun)
             ->groupBy('month')
             ->orderBy('month')

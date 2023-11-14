@@ -191,7 +191,7 @@ class ProjectEngineerController extends Controller
                 $befores->id_subkategori = $request->id_subkategori;
                 $befores->id_project = $request->id_project;
     
-                $beforePath = $before->store();
+                $beforePath = $before->store("/");
                 $befores->photo = $beforePath;
                 $befores->save();
             }
@@ -204,7 +204,7 @@ class ProjectEngineerController extends Controller
                 $afters->id_subkategori = $request->id_subkategori;
                 $afters->id_project = $request->id_project;
     
-                $afterPath = $after->store();
+                $afterPath = $after->store("/");
                 $afters->photo = $afterPath;
                 $afters->save();
             }

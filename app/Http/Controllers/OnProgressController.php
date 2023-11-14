@@ -13,6 +13,8 @@ use App\Models\LokasiProject;
 use App\Models\ProjectPekerjaan;
 use App\Models\RecentActivity;
 use App\Models\SettingPekerjaan;
+use App\Models\BeforePhoto;
+use App\Models\AfterPhoto;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -387,7 +389,16 @@ class OnProgressController extends Controller
                                 ->where('id_kategori',$id)
                                 ->where('id_subkategori',$subKategori)
                                 ->get();
-        return view('on_progres.detail-work',compact('data','idProject'));
+        $before = BeforePhoto::where('id_project',$idProject)
+                            ->where('id_kategori',$id)
+                            ->where('id_subkategori',$subKategori)
+                            ->get();
+        $after = AfterPhoto::where('id_project',$idProject)
+                            ->where('id_kategori',$id)
+                            ->where('id_subkategori',$subKategori)
+                            ->get();
+        // dd($before,$after);
+        return view('on_progres.detail-work',compact('data','idProject','before','after'));
     }
 
     public function setting($id)

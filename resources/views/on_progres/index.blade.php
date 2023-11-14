@@ -42,12 +42,12 @@
                                 <table class="table w-100" id="example1">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Kode Project</th>
-                                            <th style="color:#929EAE">Nama Project</th>
-                                            <th style="color:#929EAE">Nama Customer</th>
+                                            <th style="color:#929EAE">Project Code</th>
+                                            <th style="color:#929EAE">Project Name</th>
+                                            <th style="color:#929EAE">Customer Name</th>
                                             <th style="color:#929EAE">Project Manager</th>
-                                            <th style="color:#929EAE">Tanggal Mulai</th>
-                                            <th style="color:#929EAE">Tanggal Selesai</th>
+                                            <th style="color:#929EAE">Start Date</th>
+                                            <th style="color:#929EAE">End Date</th>
                                             <th style="color:#929EAE">Progres</th>
                                             <th style="color:#929EAE">Action</th>
                                         </tr>

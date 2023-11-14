@@ -200,7 +200,7 @@
                 { data : 'customer.nomor_contact_person', name : 'cp'},
                 {
                     data : function(data) {
-                        let start = data.start_project || '';
+                        let start = data.created_at || '';
                         let end = data.target_selesai || '';
 
                         if (start && end) {

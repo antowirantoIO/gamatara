@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Roles;
 use App\Models\Karyawan;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserGamataraController extends Controller
 {
@@ -19,7 +21,7 @@ class UserGamataraController extends Controller
                     ->first();
             $user['name'] = $user->karyawan->name ?? '';
 
-            $token = auth()->user()->createToken('API Token')->accessToken;     
+            $token = auth()->user()->createToken('API Token')->accessToken;
 
             return response([
                 'message' => 'success',
@@ -32,5 +34,34 @@ class UserGamataraController extends Controller
                 ], 200
             );
         }
+    }
+
+    public function ubahPassword(Request $request)
+    {
+        $validasi = Validator::make($request->only(['email','password','password_konfirmasi']),[
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+            'password_konfirmasi' => 'required|min:8'
+        ]);
+
+        if($validasi->fails()){
+            return response()->json(['status' => 500,'message' => $validasi->errors()->first()]);
+        }
+
+        if($request->password !== $request->password_konfirmasi){
+            return response()->json(['statis' => 500,'message' => 'Password dan Password Konfirmasi Tidak Sama !'],500);
+        }
+
+        $user = User::where('email',$request->email)->first();
+        if(!$user){
+            return response()->json(['status' => 500,'message' => 'User Tidak Terdaftar!']);
+        }
+
+        User::where('email',$request->email)->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return response()->json(['status' => 200,'message' => 'Password Berhasil Di Ubah'],200);
+
     }
 }

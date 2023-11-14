@@ -151,7 +151,7 @@
                                             </a>
                                             @hasrole('BOD')
                                                 @if ($status > 0)
-                                                    <button href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-block w-100 rounded-3 border-0 text-white" style="background: grey;" disabled>
+                                                    <button class="btn btn-block w-100 rounded-3 border-0 text-white" style="background: grey;" disabled>
                                                         <div class="d-flex justify-content-between align-items-end">
                                                             <div class="fs-5 text-start">
                                                                 Approval Complete<br>
@@ -162,7 +162,7 @@
                                                         </div>
                                                     </button>
                                                 @else
-                                                    <button href="{{ route('on_progres.detail-worker',$data->id) }}" class="btn btn-success btn-block w-100 rounded-3 border-0">
+                                                    <button class="btn btn-success btn-block w-100 rounded-3 border-0" id="btn-approval">
                                                         <div class="d-flex justify-content-between align-items-end">
                                                             <div class="fs-5 text-start">
                                                                 Approval Complete<br>
@@ -230,7 +230,6 @@
             let modalInput = $('#modalInput');
 
             let idData = "{{$data->id}}";
-            console.log(idData);
             function getTableData(id) {
                 let url = "{{route('on_progres.table-data', ':id')}}";
                 url = url.replace(':id', id);
@@ -242,6 +241,33 @@
                 })
             }
             getTableData(idData);
+
+            $('#btn-approval').on('click',function(){
+                let id = '{{ $data->id }}';
+                let url = '{{ route('on_progres.approval-project',':id') }}';
+                let urlReplace = url.replace(':id',id);
+                Swal.fire({
+                    title: "Are you sure?",
+                    // text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, approved it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                       $.ajax({
+                            url : urlReplace,
+                            method : 'GET'
+                       }).then(ress => {
+                            if(ress.status === 200){
+                                alertToast('success',ress.msg)
+                                location.href = '{{ route('complete') }}'
+                            }
+                       })
+                    }
+                });
+            });
 
             $('#estimasi').on('change',function(){
                 let id = $('#id').val();

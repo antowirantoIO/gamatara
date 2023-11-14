@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendOtp;
 
 class OnProgressController extends Controller
 {
@@ -73,7 +75,8 @@ class OnProgressController extends Controller
     public function edit($id)
     {
         $data = OnRequest::find($id);
-        $status = ProjectPekerjaan::where('status',1)->count();
+        $status = ProjectPekerjaan::where('id_project',$id)
+                                ->where('status',1)->count();
         $projects = Keluhan::where('on_request_id',$id)
                                     ->whereNotNull(['id_pm_approval','id_bod_approval'])
                                     ->select('id_vendor')
@@ -452,6 +455,12 @@ class OnProgressController extends Controller
         return view('on_progres.tagihan_customer',compact('id','kategori','workers','subKategori','lokasi'));
     }
 
+    public function approvalProject($id)
+    {
+        OnRequest::where('id',$id)->update(['status' => 2]);
+        return response()->json(['status' => 200,'msg' => 'success']);
+    }
+
     public function allPekerjaanVendor(Request $request, $id, $project)
     {
         $kategori = Kategori::all();
@@ -819,4 +828,5 @@ class OnProgressController extends Controller
 
         return response()->json(['status' => 200,'msg' => 'Data Successfuly Updated']);
     }
+
 }

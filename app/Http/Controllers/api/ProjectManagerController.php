@@ -154,12 +154,21 @@ class ProjectManagerController extends Controller
             }
             
             foreach ($subkategori as $item) {
-                $subkategoriProgress = $progressBySubkategori[$item->id] ?? [
-                    'total_status_1' => 0,
-                    'total_status_2' => 0,
-                ];
+                
+                if ($item->status == 1) {
+                    $item->status = '';
+                } elseif ($item->status == 2) {
+                    $item->status = 'Prosess';
+                }elseif ($item->status == 3) {
+                    $item->status = 'Done';
+                }
+
+                // $subkategoriProgress = $progressBySubkategori[$item->id] ?? [
+                //     'total_status_1' => 0,
+                //     'total_status_2' => 0,
+                // ];
             
-                $item->progress = $subkategoriProgress['total_status_2'] . ' / ' . $subkategoriProgress['total_status_1'];
+                // $item->progress = $subkategoriProgress['total_status_2'] . ' / ' . $subkategoriProgress['total_status_1'];
             }
          
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);
@@ -188,15 +197,6 @@ class ProjectManagerController extends Controller
                     ->get();
 
             foreach ($data as $item) {
-
-                if ($item->status == 1) {
-                    $item->status = '';
-                } elseif ($item->status == 2) {
-                    $item->status = 'Prosess';
-                }elseif ($item->status == 3) {
-                    $item->status = 'Done';
-                }
-
                 $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;

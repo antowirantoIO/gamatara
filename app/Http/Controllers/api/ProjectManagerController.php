@@ -13,6 +13,7 @@ use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Keluhan;
+use DB;
 
 class ProjectManagerController extends Controller
 {

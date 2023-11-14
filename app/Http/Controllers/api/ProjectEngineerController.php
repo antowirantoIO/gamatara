@@ -184,27 +184,27 @@ class ProjectEngineerController extends Controller
         $projectPekerjaan->status = $status_pekerjaan;
         $projectPekerjaan->save();
     
-        if($beforeFiles){
+        if($request->file('before')){
             foreach ($beforeFiles as $before) {
                 $befores = new BeforePhoto();
                 $befores->id_kategori = $request->id_kategori;
                 $befores->id_subkategori = $request->id_subkategori;
                 $befores->id_project = $request->id_project;
     
-                $beforePath = $before->store('public/storage/images');
+                $beforePath = $before->store();
                 $befores->photo = $beforePath;
                 $befores->save();
             }
         }
     
-        if($afterFiles){
+        if($request->file('after')){
             foreach ($afterFiles as $after) {
                 $afters = new AfterPhoto();
                 $afters->id_kategori = $request->id_kategori;
                 $afters->id_subkategori = $request->id_subkategori;
                 $afters->id_project = $request->id_project;
     
-                $afterPath = $after->store('public/storage/images');
+                $afterPath = $after->store();
                 $afters->photo = $afterPath;
                 $afters->save();
             }

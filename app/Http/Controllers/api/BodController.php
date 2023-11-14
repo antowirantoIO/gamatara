@@ -117,14 +117,15 @@ class BodController extends Controller
                 $tahun = now()->format('Y');
             }
 
-            $byTonase = DB::table('vendor as A')
-                    ->join('project_pekerjaan as B', 'A.id', '=', 'B.id_vendor')
-                    ->join('Project as C', 'B.id_project', '=', 'C.id')
-                    ->select('A.id', 'A.name', DB::raw('SUM(B.amount) as tonase'))
-                    ->whereYear('C.created_at', $tahun)
-                    ->groupBy('A.id')
-                    ->orderByDesc(DB::raw('SUM(B.amount)'))
-                    ->get();
+            $byTonase = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+                        ->join('projects as C', function ($join) use ($tahun) {
+                            $join->on('B.id_project', '=', 'C.id')
+                                ->whereYear('C.created_at', '=', $tahun);
+                        })
+                        ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
+                        ->groupBy('vendor.id', 'vendor.name')
+                        ->orderByDesc(DB::raw('SUM(B.amount)'))
+                        ->get();
 
             $byVolume = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                         ->join('project as C', function ($join) use ($tahun) {

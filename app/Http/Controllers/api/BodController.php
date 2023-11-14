@@ -150,26 +150,31 @@ class BodController extends Controller
                 $tahun = now()->format('Y');
             }
 
-            $data = OnRequest::select('pm_id', 'status','created_at')
+            $data = ProjectManager::with(['karyawan'])->get();
+            $data['name'] = $data->karyawan->name ?? '';
+            $data['onprogress'] = $data->projects->where('status', 1)->count();
+            $data['complete'] = $data->projects->where('status', 2)->count();
+      
+            $chart = OnRequest::select('pm_id', 'status','created_at')
                     ->with(['pm','pm.karyawan'])
                     ->whereYear('created_at',$tahun)
                     ->get();
 
-            $chartData = $data->groupBy('pm_id')->map(function (&$groupedData) {
+            $chartData = $chart->groupBy('pm_id')->map(function (&$groupedData) {
                 $onProgressCount = $groupedData->where('status', 1)->count();
                 $completeCount = $groupedData->where('status', 2)->count();
 
                 $employeeName = $groupedData->first()->pm->karyawan->name;
 
                 return [
-                    'nama_pm' => $employeeName,
+                    'name' => $employeeName,
                     'on_progress' => $onProgressCount,
                     'complete' => $completeCount,
                 ];
 
             });
 
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $chartData]);
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart' => $chartData]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

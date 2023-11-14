@@ -151,10 +151,13 @@ class BodController extends Controller
                 $tahun = now()->format('Y');
             }
 
-            $data = ProjectManager::with(['karyawan'])->get();
-            $data['name'] = $data->karyawan->name ?? '';
-            $data['onprogress'] = $data->projects->where('status', 1)->count();
-            $data['complete'] = $data->projects->where('status', 2)->count();
+            $data = ProjectManager::get();
+            foreach($data as $item)
+            {
+                $item['name'] = $item->karyawan->name ?? '';
+                $item['onprogress'] = $item->projects->where('status', 1)->count();
+                $item['complete'] = $item->projects->where('status', 2)->count();
+            }
       
             $chart = OnRequest::select('pm_id', 'status','created_at')
                     ->with(['pm','pm.karyawan'])

@@ -189,7 +189,7 @@ class ProjectEngineerController extends Controller
             foreach ($beforeFiles as $before) {
                 if ($before && $before->isValid()) {
                     $filename = 'before' . time() . rand(1, 9999) . '.' . $before->getClientOriginalExtension();
-                    $destinationPath = 'uploads/images/';
+                    $destinationPath = 'uploads/images';
             
                     if (!File::isDirectory($destinationPath)) {
                         File::makeDirectory($destinationPath, 0755, true, true);

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Exports\ExportLaporanVendor;
 use App\Models\Vendor;
 use App\Models\ProjectPekerjaan;
+use App\Models\OnRequest;
 use DB;
 
 class LaporanVendorController extends Controller
@@ -54,16 +55,15 @@ class LaporanVendorController extends Controller
 
         $tahun = now()->format('Y');
 
-        return view('laporan_vendor.index',compact('tahun'));
-    }
+        if($request->by != null){
+            $by = $request->by;
+        }else{
+            $by = "Tonase";
+        }
 
-    public function chart(Request $request)
-    {
-        // $data = OnRequest::select('pm_id', 'status')->with(['pm','pm.karyawan'])->get();
-
-        $tahun = now()->format('Y');
-
-        $byTonase = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+        if($by == 'Tonase' )
+        {
+            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                         ->join('project as C', function ($join) use ($tahun) {
                             $join->on('B.id_project', '=', 'C.id')
                                 ->whereYear('C.created_at', '=', $tahun);
@@ -72,31 +72,59 @@ class LaporanVendorController extends Controller
                         ->groupBy('vendor.id', 'vendor.name')
                         ->orderByDesc(DB::raw('SUM(B.amount)'))
                         ->get();
+        }else{
+            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+                    ->join('project as C', function ($join) use ($tahun) {
+                        $join->on('B.id_project', '=', 'C.id')
+                            ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
+                    })
+                    ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as tonase'))
+                    ->groupBy('vendor.id', 'vendor.name')
+                    ->orderByDesc(\DB::raw('SUM(B.amount)'))
+                    ->get();
+        }
 
-            $byVolume = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+        return view('laporan_vendor.index',compact('tahun','result'));
+    }
+
+    public function chart(Request $request)
+    {
+        if($request->year)
+        {
+            $tahun = $request->year;
+        }else{
+            $tahun = now()->format('Y');
+        }
+
+        if($request->by != null){
+            $by = $request->by;
+        }else{
+            $by = "Tonase";
+        }
+
+        if($by == 'Tonase' )
+        {
+            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                         ->join('project as C', function ($join) use ($tahun) {
                             $join->on('B.id_project', '=', 'C.id')
-                                ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
+                                ->whereYear('C.created_at', '=', $tahun);
                         })
-                        ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as volume'))
+                        ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
                         ->groupBy('vendor.id', 'vendor.name')
-                        ->orderByDesc(\DB::raw('SUM(B.amount)'))
+                        ->orderByDesc(DB::raw('SUM(B.amount)'))
                         ->get();
+        }else{
+            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+                    ->join('project as C', function ($join) use ($tahun) {
+                        $join->on('B.id_project', '=', 'C.id')
+                            ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
+                    })
+                    ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as tonase'))
+                    ->groupBy('vendor.id', 'vendor.name')
+                    ->orderByDesc(\DB::raw('SUM(B.amount)'))
+                    ->get();
+        }
 
-        // $chartData = $byTonase->groupBy('pm_id')->map(function (&$groupedData) {
-        //     $onProgressCount = $groupedData->where('status', 1)->count();
-        //     $completeCount = $groupedData->where('status', 2)->count();
-
-        //     $employeeName = $groupedData->first()->pm->karyawan->name;
-
-        //     return [
-        //         'Employee' => $employeeName,
-        //         'On Progress' => $onProgressCount,
-        //         'Complete' => $completeCount,
-        //     ];
-
-        // });
-
-        return response()->json($byTonase);
+        return response()->json($result);
     }
 }

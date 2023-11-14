@@ -184,26 +184,30 @@ class ProjectEngineerController extends Controller
         $projectPekerjaan->status = $status_pekerjaan;
         $projectPekerjaan->save();
     
-        foreach ($beforeFiles as $before) {
-            $befores = new BeforePhoto();
-            $befores->id_kategori = $request->id_kategori;
-            $befores->id_subkategori = $request->id_subkategori;
-            $befores->id_project = $request->id_project;
-
-            $beforePath = $before->store('public/storage/images');
-            $befores->photo = $beforePath;
-            $befores->save();
+        if($beforeFiles){
+            foreach ($beforeFiles as $before) {
+                $befores = new BeforePhoto();
+                $befores->id_kategori = $request->id_kategori;
+                $befores->id_subkategori = $request->id_subkategori;
+                $befores->id_project = $request->id_project;
+    
+                $beforePath = $before->store('public/storage/images');
+                $befores->photo = $beforePath;
+                $befores->save();
+            }
         }
     
-        foreach ($afterFiles as $after) {
-            $afters = new AfterPhoto();
-            $afters->id_kategori = $request->id_kategori;
-            $afters->id_subkategori = $request->id_subkategori;
-            $afters->id_project = $request->id_project;
-
-            $afterPath = $after->store('public/storage/images');
-            $afters->photo = $afterPath;
-            $afters->save();
+        if($afterFiles){
+            foreach ($afterFiles as $after) {
+                $afters = new AfterPhoto();
+                $afters->id_kategori = $request->id_kategori;
+                $afters->id_subkategori = $request->id_subkategori;
+                $afters->id_project = $request->id_project;
+    
+                $afterPath = $after->store('public/storage/images');
+                $afters->photo = $afterPath;
+                $afters->save();
+            }
         }
 
         return response()->json(['success' => true, 'message' => 'success']);

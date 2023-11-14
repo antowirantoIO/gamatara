@@ -18,7 +18,7 @@ class Vendor extends Model
 
     public function projectPekerjaan()
     {
-        return $this->belongsTo(ProjectPekerjaan::class, 'id','id_vendor');
+        return $this->hasMany(ProjectPekerjaan::class, 'id_vendor','id');
     }
 
     public function requests()

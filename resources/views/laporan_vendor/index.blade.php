@@ -59,7 +59,7 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">
                                 <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
-                                &nbsp; Number Of Ships
+                                &nbsp; Tonase
                                 &nbsp;
                                 <span style="width: 15px;height: 15px;background-color:#194BFB; display: inline-block;"></span>
                                 &nbsp; Volume
@@ -67,7 +67,7 @@
                             <div class="mt-3 mt-lg-0 ml-lg-auto">
                                 <div class="dropdown" role="group">
                                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
-                                        2023
+                                        {{ $tahun }}
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="yearDropdown">
                                     </ul>
@@ -78,7 +78,6 @@
                         <div class="card-body" style="height: 660px;">
                             <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -128,48 +127,16 @@
 
 @section('scripts')
 <script>
-    //chart
-    var options = {
-    chart: {
-        type: 'bar',
-        height: 600,
-    },
-    plotOptions: {
-        bar: {
-        horizontal: true,
-        borderRadius: 5,
-        },
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    series: [
-        {
-            name: 'Jumlah Kapal',
-            data: [150, 220, 350, 280, 420, 310, 260, 380, 420, 330, 280, 200],
-        },
-        {
-            name: 'Volume',
-            data: [200, 270, 380, 310, 450, 350, 280, 420, 460, 350, 300, 220],
-        }
-    ],
-    xaxis: {
-            labels:{
-                show:false,
-            },
-            categories: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-        },
-        colors: ['#90BDFF','#194BFB'],
-        legend: {
-        show: false,
-    }
-    };
-
-    var chart = new ApexCharts(document.querySelector("#bar"), options);
-    chart.render();
-
     //datatable
-     $(document).ready(function () {
+    $.ajax({
+        url : '{{ route('laporan_vendor.charts') }}',
+        success : function(data){
+            charts(data);
+        }
+
+    })
+
+    $(document).ready(function () {
         var table = $('#tableData').DataTable({
             fixedHeader:true,
             lengthChange: false,
@@ -240,92 +207,63 @@
             setTimeout(hideOverlay, 2000);
         });
 
-        $(document).ready(function() {
-            $('.loading-overlay').hide();
+        $('.form-control').on('change', function() {
+            table.draw();
         });
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const yearDropdown = document.getElementById('yearDropdown');
-        const yearDropdownButton = document.getElementById('yearDropdownButton');
-        
-        let chart;
+        const charts = (data) => {
+            var chartData = Object.values(data).map(item => ({
+                name: item.Employee,
+                data: [item['name'], item['name']],
+            }));
 
-        const currentYear = (new Date()).getFullYear();
-        const years = [];
-        for (let i = currentYear; i >= currentYear - 20; i--) {
-            years.push(i);
+            var options = {
+                chart: {
+                    type: 'bar',
+                    height: 600,
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        borderRadius: 5,
+                        barHeight:10
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                series: [
+                    {
+                        name: 'On Progress',
+                        data: chartData.map(item => parseInt(item.data[0])),
+                    },
+                    {
+                        name: 'Complete',
+                        data: chartData.map(item => parseInt(item.data[1])),
+                    }
+                ],
+                xaxis: {
+                        labels:{
+                            show:false,
+                        },
+                        categories: chartData.map(item => item.name),
+                    },
+                    colors: ['#90BDFF','#194BFB'],
+                    legend: {
+                    show: false,
+                }
+            };
+
+            // Periksa jumlah data, jika hanya ada satu data, atur tinggi chart sesuai dengan data tersebut
+            if (chartData.length === 1) {
+                var dataValue = chartData[0].data[0]; // Misalnya, mengambil nilai 'On Progress'
+                options.chart.height = 150; // Atur tinggi chart sesuai dengan data (misalnya, gandakan nilai data)
+            }
+
+            var chart = new ApexCharts(document.querySelector("#bar"), options);
+            chart.render();
         }
 
-        years.forEach(function (year) {
-            const listItem = document.createElement('li');
-            const anchor = document.createElement('a');
-            anchor.classList.add('dropdown-item');
-            anchor.href = '#';
-            anchor.textContent = year;
-        
-            anchor.addEventListener('click', function () {
-                yearDropdownButton.textContent = year;
-                $.ajax({
-                    url: '{{ route('laporan_customer.chart') }}',
-                    method: 'get',
-                    data: {
-                        year: year
-                    },
-                    success: function(response) {
-                        console.log(response.totalHargaData);
-                        const chartData = JSON.parse(response.totalHargaData);
-                        
-                        if (chart) {
-                            chart.updateOptions({
-                                series: [{
-                                    data: chartData
-                                }]
-                            });
-                        } else {
-                            const options = {
-                                chart: {
-                                    type: 'bar',
-                                    height: 600,
-                                },
-                                plotOptions: {
-                                    bar: {
-                                        horizontal: true,
-                                        borderRadius: 5,
-                                    },
-                                },
-                                dataLabels: {
-                                    enabled: false,
-                                },
-                                series: [{
-                                    name: 'Nominal Project',
-                                    data: chartData
-                                }],
-                                xaxis: {
-                                    labels: {
-                                        show: false,
-                                    },
-                                    categories: [
-                                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-                                    ],
-                                },
-                                colors: ['#194BFB'],
-                            };
-                            
-                            chart = new ApexCharts(document.querySelector("#bar"), options);
-                            chart.render();
-                        }
-                    },
-                    error: function(error) {
-                        console.error(error);
-                    }
-                });
-            });
-        
-            listItem.appendChild(anchor);
-            yearDropdown.appendChild(listItem);
         });
-    });
 </script>
 @endsection

@@ -137,38 +137,30 @@ class ProjectManagerController extends Controller
             $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $subkategori->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::where('id_project', $request->id_project)->where('id_kategori', $request->id_kategori)
-                ->select('id_subkategori')
-                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                ->groupBy('id_subkategori')
-                ->get();
-            
-            $progressBySubkategori = [];
-            
-            foreach ($progress as $item) {
-                $progressBySubkategori[$item->id_subkategori] = [
-                    'total_status_1' => $item->total_status_1,
-                    'total_status_2' => $item->total_status_2,
-                ];
-            }
+            $progress = ProjectPekerjaan::where('id_project', $request->id_project)
+                        ->where('id_kategori', $request->id_kategori)
+                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                        ->groupBy('id_subkategori')
+                        ->get();
             
             foreach ($subkategori as $item) {
-                
-                if ($item->status == 1) {
-                    $item->status = '';
-                } elseif ($item->status == 2) {
-                    $item->status = 'Prosess';
-                }elseif ($item->status == 3) {
-                    $item->status = 'Done';
-                }
+                $status = ''; 
 
-                // $subkategoriProgress = $progressBySubkategori[$item->id] ?? [
-                //     'total_status_1' => 0,
-                //     'total_status_2' => 0,
-                // ];
+                $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
             
-                // $item->progress = $subkategoriProgress['total_status_2'] . ' / ' . $subkategoriProgress['total_status_1'];
+                if ($matchingProgress) {
+                    $maxStatus = $matchingProgress->max_status;
+            
+                    if ($maxStatus == 1) {
+                        $status = '';
+                    } elseif ($maxStatus == 2) {
+                        $status = 'Prosess';
+                    } elseif ($maxStatus == 3) {
+                        $status = 'Done';
+                    }
+                }
+            
+                $item->status = $status;
             }
          
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);

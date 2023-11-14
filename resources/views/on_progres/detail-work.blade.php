@@ -17,8 +17,6 @@
                 </div>
             </div>
 
-
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card mt-3">
@@ -67,27 +65,21 @@
                     <div class="col-xxl-12 col-md-12">
                         <p class="fs-4">Foto Sebelum</p>
                         <div class="d-flex justify-content-around align-items-center">
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
+                            @foreach ($before as $b)
+                                <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                    <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture">
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                     <div class="col-xxl-12 col-md-12 mt-5">
                         <p class="fs-4">Foto Sesudah</p>
                         <div class="d-flex justify-content-around align-items-center">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
+                            @foreach ($after as $a)
+                                <a href="{{ asset($a->photo) }}" data-lightbox="{{ asset($a->photo) }}">
+                                    <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture">
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </div>

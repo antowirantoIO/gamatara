@@ -278,6 +278,7 @@
 
             $('#sub_kategori').trigger('change');
             $('.form-select').select2({
+                theme : "bootstrap-5",
                 search: true
             });
 

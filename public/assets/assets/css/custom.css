@@ -99,6 +99,11 @@ body{
     font-style: italic;
 }
 
+.select2-results__options {
+    overflow: auto;
+    height: 200px;
+}
+
 .select2-results__option:hover {
     background-color: #0968E5;
     color: white;

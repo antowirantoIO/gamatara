@@ -48,7 +48,7 @@ class ProjectEngineerController extends Controller
     public function detailPE(Request $request)
     {
         try{                  
-            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name','pa.karyawan:id,name','pe.karyawan:id,name','pe2.karyawan:id,name','lokasi:id,name'])
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pa.karyawan:id,name,nomor_telpon','pe.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
          

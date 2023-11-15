@@ -202,6 +202,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [LaporanVendorController::class, 'index'])->name('laporan_vendor');
         Route::get('/detail/{id}', [LaporanVendorController::class, 'detail'])->name('laporan_vendor.detail');
         Route::get('/export', [LaporanVendorController::class, 'export'])->name('laporan_vendor.export');
+        Route::get('/exportDetail', [LaporanVendorController::class, 'exportDetail'])->name('laporan_vendor.exportDetail');
         Route::prefix('chart')->group(function(){
             Route::get('data',[LaporanVendorController::class,'chart'])->name('laporan_vendor.charts');
         });

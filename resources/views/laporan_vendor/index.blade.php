@@ -42,7 +42,7 @@
                                     <tr>
                                         <th style="color:#929EAE">Vendor Name</th>
                                         <th style="color:#929EAE">Project Total</th>
-                                        <th style="color:#929EAE">Project Value</th>
+                                        <th style="color:#929EAE">Bill Value</th>
                                         <th style="color:#929EAE">Action</th>
                                     </tr>
                                 </thead>
@@ -107,20 +107,20 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama Customer</label>
+                                <label for="customer" class="form-label">Vendor Name</label>
                                 <input type="text" name="nama_customer" class="form-control" id="nama_customer">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nilai_project" class="form-label">Nilai Project</label>
-                                <input type="text" name="nilai_project" id="nilai_project" class="form-control">
+                                <label for="jumlah_project" class="form-label">Project Totak</label>
+                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="jumlah_project" class="form-label">Jumlah Project</label>
-                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
+                                <label for="nilai_tagihan" class="form-label">Bill Value</label>
+                                <input type="text" name="nilai_tagihan" id="nilai_tagihan" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -169,13 +169,13 @@
                 data: function (d) {
                     d.name              = $('#name').val();
                     d.jumlah_project    = $('#jumlah_project').val();
-                    d.nilai_project     = $('#nilai_project').val();
+                    d.nilai_tagihan     = $('#nilai_tagihan').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
                 {data: 'jumlah_project', name: 'jumlah_project'},
-                {data: 'nilai_project', name: 'nilai_project'},
+                {data: 'nilai_tagihan', name: 'nilai_tagihan'},
                 {data: 'action', name: 'action'}
             ]
         });
@@ -194,12 +194,12 @@
             event.preventDefault(); 
 
             var name   = $('#name').val();
-            var nilai_project   = $('#nilai_project').val();
+            var nilai_tagihan   = $('#nilai_tagihan').val();
             var jumlah_project  = $('#jumlah_project').val();
 
             var url = '{{ route("laporan_vendor.export") }}?' + $.param({
                 name: name,
-                nilai_project: nilai_project,
+                nilai_tagihan: nilai_tagihan,
                 jumlah_project: jumlah_project,
             });
 

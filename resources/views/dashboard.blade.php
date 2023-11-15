@@ -253,24 +253,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($pm as $keys => $v)
-                                        <tr>
-                                            <td>
-                                                <center>
-                                                    {{ $v->karyawan->name ?? ''}}
-                                                </center>
-                                            </td>
-                                            <td>
-                                                <Center>
-                                                    {{ $v->onprogress ?? '' }}
-                                                </Center>
-                                            </td>
-                                            <td>
-                                                <center>
-                                                    {{ $v->complete ?? '' }}
-                                                </center>
-                                            </td>
-                                        </tr>
+                                        @foreach ($pm as $key => $v)
+                                            <tr>
+                                                <td>
+                                                    <center>
+                                                        {{ $v->karyawan->name ?? '' }}
+                                                    </center>
+                                                </td>
+                                                <td>
+                                                    <center>
+                                                        @foreach ($v->projects as $project)
+                                                            {{ $project->onprogress ?? '' }}
+                                                        @endforeach
+                                                    </center>
+                                                </td>
+                                                <td>
+                                                    <center>
+                                                        @foreach ($v->projects as $project)
+                                                            {{ $project->complete ?? '' }}
+                                                        @endforeach
+                                                    </center>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

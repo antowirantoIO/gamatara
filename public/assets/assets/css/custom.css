@@ -101,7 +101,7 @@ body{
 
 .select2-results__options {
     overflow: auto;
-    height: 200px;
+    /* height: 200px; */
 }
 
 .select2-results__option:hover {

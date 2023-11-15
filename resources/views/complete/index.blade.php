@@ -36,22 +36,24 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table w-100" id="example1">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Project Code</th>
-                                            <th style="color:#929EAE">Project Manager</th>
-                                            <th style="color:#929EAE">Customer</th>
-                                            <th style="color:#929EAE">Contact Person</th>
-                                            <th style="color:#929EAE">Number Contact Person</th>
-                                            <th style="color:#929EAE">Range Project</th>
-                                            <th style="color:#929EAE">Deadline</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                <div class="row">
+                                    <table class="table w-100" id="example1">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="color:#929EAE">Project Code</th>
+                                                <th style="color:#929EAE">Project Manager</th>
+                                                <th style="color:#929EAE">Customer</th>
+                                                <th style="color:#929EAE">Contact Person</th>
+                                                <th style="color:#929EAE">Number Contact Person</th>
+                                                <th style="color:#929EAE">Range Project</th>
+                                                <th style="color:#929EAE">Deadline</th>
+                                                <th style="color:#929EAE">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

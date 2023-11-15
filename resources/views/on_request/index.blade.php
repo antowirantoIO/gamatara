@@ -44,23 +44,25 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table" id="tableData">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Code Project</th>
-                                            <th style="color:#929EAE">Status Survey</th>
-                                            <th style="color:#929EAE">Project Name</th>
-                                            <th style="color:#929EAE">Customer Name</th>
-                                            <th style="color:#929EAE">Request Date</th>
-                                            <th style="color:#929EAE">Displacement Ship</th>
-                                            <th style="color:#929EAE">Ship Type</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <div class="row">
+                                    <table class="table" id="tableData">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="color:#929EAE">Code Project</th>
+                                                <th style="color:#929EAE">Status Survey</th>
+                                                <th style="color:#929EAE">Project Name</th>
+                                                <th style="color:#929EAE">Customer Name</th>
+                                                <th style="color:#929EAE">Request Date</th>
+                                                <th style="color:#929EAE">Displacement Ship</th>
+                                                <th style="color:#929EAE">Ship Type</th>
+                                                <th style="color:#929EAE">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

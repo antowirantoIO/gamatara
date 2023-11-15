@@ -110,6 +110,18 @@ class LaporanVendorController extends Controller
                     ->get();
         }
 
+        if(count($result) === 0){
+            $result = [
+                [
+                    'id' => 0,
+                    'name' => 'Not Available',
+                    'tonase' => '0.00'
+                ]
+            ];
+        }else{
+            $result = $result;
+        }
+
         return response()->json($result);
     }
 

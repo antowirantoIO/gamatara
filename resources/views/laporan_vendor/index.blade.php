@@ -61,7 +61,7 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h7 class="mb-0 flex-grow-1">
                                 <span style="width: 170px;display: inline-block;">
-                                    <select name="type" id="type" class="form-control select2">
+                                    <select name="type" id="type" class="form-control">
                                         <option value="">Choose Type</option>
                                         <option value="Volume">Volume</option>
                                         <option value="Tonase">Tonase</option>
@@ -222,6 +222,7 @@
     $(function() {
         const yearDropdown          = $('#yearDropdown');
         const yearDropdownButton    = $('#yearDropdownButton');
+        const typeDropdown          = $('#type'); 
 
         let jsonData = @json($result);
         let chartData = jsonData.map(item => ({
@@ -286,8 +287,16 @@
         yearDropdown.html(dropdownList);
 
         yearDropdown.on('click', '.dropdown-item', function() {
-            const type = $('#type').val();
-            const year = $(this).data('year');
+            updateChart();
+        });
+
+        typeDropdown.on('change', function() {
+            updateChart();
+        });
+
+        function updateChart() {
+            const type = typeDropdown.val();
+            const year = yearDropdownButton.text();
             yearDropdownButton.text(year);
             $.ajax({
                 url: '{{ route('laporan_vendor.charts') }}',
@@ -327,7 +336,7 @@
                     console.error(error);
                 }
             });
-        })
+        }
     })
 </script>
 @endsection

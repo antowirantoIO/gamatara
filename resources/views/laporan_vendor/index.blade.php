@@ -61,10 +61,10 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h7 class="mb-0 flex-grow-1">
                                 <span style="width: 170px;display: inline-block;">
-                                    <select name="" id="" class="form-control select2">
+                                    <select name="type" id="type" class="form-control select2">
                                         <option value="">Choose Type</option>
-                                        <option value="">Volume</option>
-                                        <option value="">Tonase</option>
+                                        <option value="Volume">Volume</option>
+                                        <option value="Tonase">Tonase</option>
                                     </select>
                                 </span>
                                 <!-- <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
@@ -139,6 +139,7 @@
      $(function () {
         $(".select2").select2();
     });
+
     //datatable
     $(document).ready(function () {
         let filterSearch = '';
@@ -219,8 +220,8 @@
     });
 
     $(function() {
-        const yearDropdown = $('#yearDropdown');
-        const yearDropdownButton = $('#yearDropdownButton');
+        const yearDropdown          = $('#yearDropdown');
+        const yearDropdownButton    = $('#yearDropdownButton');
 
         let jsonData = @json($result);
         let chartData = jsonData.map(item => ({
@@ -285,13 +286,15 @@
         yearDropdown.html(dropdownList);
 
         yearDropdown.on('click', '.dropdown-item', function() {
+            const type = $('#type').val();
             const year = $(this).data('year');
             yearDropdownButton.text(year);
             $.ajax({
                 url: '{{ route('laporan_vendor.charts') }}',
                 method: 'get',
                 data: {
-                    year: year
+                    year: year,
+                    type : type
                 },
                 success: function(response) {
 

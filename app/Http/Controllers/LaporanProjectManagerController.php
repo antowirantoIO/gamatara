@@ -21,10 +21,10 @@ class LaporanProjectManagerController extends Controller
                 return $data->karyawan->name ?? '';
             })
             ->addColumn('on_progress', function($data){
-                return $data->projects->where('status', 1)->count();
+                return $data->projects->where('status', 2)->count();
             })
             ->addColumn('complete', function($data){
-                return $data->projects->where('status', 2)->count();
+                return $data->projects->where('status', 3)->count();
             })
             ->addColumn('action', function($data){
                 return '<a href="'.route('laporan_project_manager.detail', $data->id).'" class="btn btn-warning btn-sm">

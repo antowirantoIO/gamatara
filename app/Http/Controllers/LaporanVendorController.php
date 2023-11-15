@@ -56,34 +56,16 @@ class LaporanVendorController extends Controller
 
         $tahun = now()->format('Y');
 
-        if($request->by != null){
-            $by = $request->by;
-        }else{
-            $by = "Tonase";
-        }
-
-        if($by == 'Tonase' )
-        {
-            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
-                        ->join('project as C', function ($join) use ($tahun) {
-                            $join->on('B.id_project', '=', 'C.id')
-                                ->whereYear('C.created_at', '=', $tahun);
-                        })
-                        ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
-                        ->groupBy('vendor.id', 'vendor.name')
-                        ->orderByDesc(DB::raw('SUM(B.amount)'))
-                        ->get();
-        }else{
-            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+        $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                     ->join('project as C', function ($join) use ($tahun) {
                         $join->on('B.id_project', '=', 'C.id')
-                            ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
+                            ->where('B.id_kategori', '=', 3)
+                            ->whereYear('C.created_at', '=', $tahun);
                     })
-                    ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as tonase'))
+                    ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
                     ->groupBy('vendor.id', 'vendor.name')
-                    ->orderByDesc(\DB::raw('SUM(B.amount)'))
+                    ->orderByDesc(DB::raw('SUM(B.amount)'))
                     ->get();
-        }
 
         return view('laporan_vendor.index',compact('tahun','result'));
     }
@@ -97,17 +79,18 @@ class LaporanVendorController extends Controller
             $tahun = now()->format('Y');
         }
 
-        if($request->by != null){
-            $by = $request->by;
+        if($request->type != null){
+            $type = $request->type;
         }else{
-            $by = "Tonase";
+            $type = "Tonase";
         }
 
-        if($by == 'Tonase' )
+        if($type == 'Tonase' )
         {
             $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                         ->join('project as C', function ($join) use ($tahun) {
                             $join->on('B.id_project', '=', 'C.id')
+                                ->where('B.id_kategori', '=', 3)
                                 ->whereYear('C.created_at', '=', $tahun);
                         })
                         ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
@@ -118,6 +101,7 @@ class LaporanVendorController extends Controller
             $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                     ->join('project as C', function ($join) use ($tahun) {
                         $join->on('B.id_project', '=', 'C.id')
+                            ->where('B.id_kategori', '=', 2)
                             ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
                     })
                     ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as tonase'))

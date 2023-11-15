@@ -35,6 +35,8 @@ class ProjectManager extends Model
     {
         return $query->when($filter->pm ?? false, function($query) use ($filter) {
             return $query->where('id_karyawan',$filter->pm);
+        })->when($filter->name ?? false, function($query) use($filter) {
+            // $query->whereHas()
         });
     }
 }

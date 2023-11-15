@@ -67,6 +67,18 @@ class LaporanVendorController extends Controller
                     ->orderByDesc(DB::raw('SUM(B.amount)'))
                     ->get();
 
+        if(count($result) === 0){
+            $result = [
+                [
+                    'id' => 0,
+                    'name' => 'Not Available',
+                    'tonase' => '0.00'
+                ]
+            ];
+        }else{
+            $result = $result;
+        }
+
         return view('laporan_vendor.index',compact('tahun','result'));
     }
 

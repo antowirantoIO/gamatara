@@ -12,6 +12,7 @@ use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use Illuminate\Support\Facades\File;
 
 class ProjectEngineerController extends Controller
 {
@@ -186,26 +187,45 @@ class ProjectEngineerController extends Controller
     
         if($request->file('before')){
             foreach ($beforeFiles as $before) {
+                if ($before && $before->isValid()) {
+                    $filename = 'before' . time() . rand(1, 9999) . '.' . $before->getClientOriginalExtension();
+                    $destinationPath = 'uploads/images';
+            
+                    if (!File::isDirectory($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0755, true, true);
+                    }
+            
+                    $before->move($destinationPath, $filename);
+                    $destination =  $destinationPath . '/' . $filename;
+                }
+
                 $befores = new BeforePhoto();
                 $befores->id_kategori = $request->id_kategori;
                 $befores->id_subkategori = $request->id_subkategori;
                 $befores->id_project = $request->id_project;
-    
-                $beforePath = $before->store("/");
-                $befores->photo = $beforePath;
+                $befores->photo = $destinationPath . '/' . $filename;
                 $befores->save();
             }
         }
     
         if($request->file('after')){
             foreach ($afterFiles as $after) {
+                if ($after && $after->isValid()) {
+                    $filename = 'after' . time() . rand(1, 9999) . '.' . $after->getClientOriginalExtension();
+                    $destinationPath = 'uploads/images';
+            
+                    if (!File::isDirectory($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0755, true, true);
+                    }
+            
+                    $after->move($destinationPath, $filename);
+                    $destination =  $destinationPath . '/' . $filename;
+                }
                 $afters = new AfterPhoto();
                 $afters->id_kategori = $request->id_kategori;
                 $afters->id_subkategori = $request->id_subkategori;
                 $afters->id_project = $request->id_project;
-    
-                $afterPath = $after->store("/");
-                $afters->photo = $afterPath;
+                $afters->photo = $destinationPath . '/' . $filename;
                 $afters->save();
             }
         }

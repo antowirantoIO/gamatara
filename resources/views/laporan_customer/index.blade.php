@@ -256,72 +256,6 @@
             dropdownList += `<li class="dropdown-item" data-year="${year}">
                                 ${year}
                             </li>`
-            // const listItem = document.createElement('li');
-            // const anchor = document.createElement('a');
-            // anchor.classList.add('dropdown-item');
-            // anchor.href = '#';
-            // anchor.textContent = year;
-        
-            // anchor.addEventListener('click', function () {
-            //     yearDropdownButton.textContent = year;
-            //     $.ajax({
-            //         url: '{{ route('laporan_customer.chart') }}',
-            //         method: 'get',
-            //         data: {
-            //             year: year
-            //         },
-            //         success: function(response) {
-            //             console.log(response.totalHargaData);
-            //             const chartData = JSON.parse(response.totalHargaData);
-                        
-            //             if (chart) {
-            //                 chart.updateOptions({
-            //                     series: [{
-            //                         data: chartData
-            //                     }]
-            //                 });
-            //             } else {
-            //                 const options = {
-            //                     chart: {
-            //                         type: 'bar',
-            //                         height: 600,
-            //                     },
-            //                     plotOptions: {
-            //                         bar: {
-            //                             horizontal: true,
-            //                             borderRadius: 5,
-            //                         },
-            //                     },
-            //                     dataLabels: {
-            //                         enabled: false,
-            //                     },
-            //                     series: [{
-            //                         name: 'Nominal Project',
-            //                         data: chartData
-            //                     }],
-            //                     xaxis: {
-            //                         labels: {
-            //                             show: false,
-            //                         },
-            //                         categories: [
-            //                             'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-            //                             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-            //                         ],
-            //                     },
-            //                     colors: ['#194BFB'],
-            //                 };
-                            
-            //                 chart = new ApexCharts(document.querySelector("#bar"), options);
-            //                 chart.render();
-            //             }
-            //         },
-            //         error: function(error) {
-            //             console.error(error);
-            //         }
-            //     });
-            // });
-        
-            // listItem.appendChild(anchor);
         });
         yearDropdown.html(dropdownList);
 
@@ -347,48 +281,5 @@
             });
         })
     })
-
- 
-//     document.addEventListener('DOMContentLoaded', function () {
-//         const yearDropdown = document.getElementById('yearDropdown');
-//         const yearDropdownButton = document.getElementById('yearDropdownButton');
-        
-//         let chart; // Inisialisasi objek grafik di sini
-
-//         const years = [2021, 2022, 2023, 2024, 2025];
-
-    
-//         years.forEach(function (year) {
-//             const listItem = document.createElement('li');
-//             const anchor = document.createElement('a');
-//             anchor.classList.add('dropdown-item');
-//             anchor.href = '#';
-//             anchor.textContent = year;
-        
-//             anchor.addEventListener('click', function () {
-//                 yearDropdownButton.textContent = year;
-//                 $.ajax({
-//                     url: '{{ route('laporan_customer.chart') }}',
-//                     method: 'get',
-//                     data: {
-//                         year: year
-//                     },
-//                     success: function(response) {
-//                         console.log(response.totalHargaData);
-//                         const chartData = JSON.parse(response.totalHargaData); // Konversi ke array
-//                         $('#tot').val(response.totalHargaData);
-                
-//                     },
-//                     error: function(error) {
-//                         console.error(error);
-//                     }
-//                 });
-//             });
-        
-//             listItem.appendChild(anchor);
-//             yearDropdown.appendChild(listItem);
-//     });
-// });
-
 </script>
 @endsection

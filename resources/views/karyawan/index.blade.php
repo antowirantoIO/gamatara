@@ -135,7 +135,6 @@
             ordering: false,
             fixedHeader:true,
             scrollX: false,
-            scrollY: false,
             processing: true,
             serverSide: true,
             searching: true,

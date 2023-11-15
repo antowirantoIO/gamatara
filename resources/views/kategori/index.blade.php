@@ -44,17 +44,19 @@
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table" id="tableDataLight">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Category</th>
-                                            <th style="color:#929EAE">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    
-                                    </tbody>
-                                </table>
+                                <div class="row">
+                                    <table class="table" id="tableDataLight">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="color:#929EAE">Category</th>
+                                                <th style="color:#929EAE">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

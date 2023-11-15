@@ -36,7 +36,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 670px;">
+                        <div class="card-body" style="height: 700px;">
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
@@ -82,7 +82,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 660px;">
+                        <div class="card-body" style="height: 690px;">
                             <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                         </div>
                     </div>

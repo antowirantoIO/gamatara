@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Exports\ExportReportCustomer;
+use App\Exports\ExportReportCustomerDetail;
 use DB;
 
 class LaporanCustomerController extends Controller
@@ -162,11 +163,9 @@ class LaporanCustomerController extends Controller
                 if($data->projects->status == 1){
                     $status = '<span style="color: blue;">Request</span>';
                 }else if($data->projects->status == 2){
-                    $status = '<span style="color: yellow;">Proses</span>';
+                    $status = '<span style="color: yellow;">Progress</span>';
                 }else if($data->projects->status == 3){
                     $status = '<span style="color: green;">Complete</span>';
-                }else if($data->projects->status == 99){
-                    $status = '<span style="color: red;">Cancel</span>';
                 }else{
                     $status = '-';
                 }
@@ -223,5 +222,37 @@ class LaporanCustomerController extends Controller
         }
 
         return Excel::download(new ExportReportCustomer($data), 'List Report Customer.xlsx');
+    }
+
+    public function exportDetail(Request $request)
+    {
+        $data = ProjectPekerjaan::with('projects')->where('id_project',$request->id)
+                ->addSelect(['total' => OnRequest::selectRaw('count(*)')
+                    ->whereColumn('project_pekerjaan.id_project', 'project.id')
+                    ->groupBy('id_customer')
+                ])
+                ->filter($request)
+                ->get();
+
+        foreach($data as $value){
+            $harga_customer = $value->harga_customer;
+            if (is_numeric($harga_customer)) {
+                 $value['nilai_project'] = 'Rp ' . number_format($harga_customer, 0, ',', '.');
+            } else {
+                 $value['nilai_project'] = 'Rp 0000';
+            }
+
+            if($value->projects->status == 1){
+                $value['status'] = 'Request';
+            }else if($value->projects->status == 2){
+                $value['status'] = 'Progress';
+            }else if($value->projects->status == 3){
+                $value['status'] = 'Complete';
+            }else{
+                $value['status'] = '-';
+            }
+        }
+
+        return Excel::download(new ExportReportCustomerDetail($data), 'List Report Customer Detail.xlsx');
     }
 }

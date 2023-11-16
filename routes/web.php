@@ -216,6 +216,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('chart')->group(function(){
             Route::get('data',[LaporanProjectManagerController::class,'chart'])->name('laporan_project_manager.charts');
         });
+
+        Route::get('export',[LaporanProjectManager::class,'export'])->name('laporan_project_manager.export');
     });
 
     //laporan Satisfaction note

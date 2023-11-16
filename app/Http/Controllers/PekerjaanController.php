@@ -80,7 +80,7 @@ class PekerjaanController extends Controller
         $data->save();
 
         return redirect(route('pekerjaan'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function edit(Request $request)
@@ -109,7 +109,7 @@ class PekerjaanController extends Controller
         $data->save();
 
         return redirect(route('pekerjaan'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function delete($id)
@@ -118,7 +118,7 @@ class PekerjaanController extends Controller
         $data->delete();
 
         return redirect(route('pekerjaan'))
-                    ->with('success', 'Data berhasil dihapus');
+                    ->with('success', 'Data successfully deleted');
     }
 
     public function export(Request $request)

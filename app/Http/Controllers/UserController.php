@@ -90,7 +90,7 @@ class UserController extends Controller
         $data->assignRole($request->input('role'));
 
         return redirect(route('user'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function edit(Request $request)
@@ -134,7 +134,7 @@ class UserController extends Controller
         $data->assignRole($request->input('role'));
 
         return redirect(route('user'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function delete($id)
@@ -144,7 +144,7 @@ class UserController extends Controller
         $data->save();
 
         return redirect(route('user'))
-                    ->with('success', 'Data berhasil dihapus');
+                    ->with('success', 'Data successfully deleted');
     }
 
     public function export(Request $request)

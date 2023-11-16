@@ -95,7 +95,7 @@ class ProjectManagerController extends Controller
         }
 
         return redirect(route('project_manager'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function edit(Request $request)
@@ -161,7 +161,7 @@ class ProjectManagerController extends Controller
         }
 
         return redirect(route('project_manager'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
     
     public function delete($id)
@@ -170,7 +170,7 @@ class ProjectManagerController extends Controller
         $data->delete();
 
         return redirect(route('project_manager'))
-                    ->with('success', 'Data berhasil dihapus');
+                    ->with('success', 'Data successfully deleted');
     }
 
     public function export(Request $request)

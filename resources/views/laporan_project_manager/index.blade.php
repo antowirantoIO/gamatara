@@ -66,12 +66,10 @@
                             </h4>
                             <div class="mt-3 mt-lg-0 ml-lg-auto">
                                 <div class="dropdown" role="group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        2023
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
+                                        {{ $tahun }}
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
-                                        <li><a class="dropdown-item" href="#">Dropdown link</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="yearDropdown">
                                     </ul>
                                 </div>
                             </div>
@@ -133,11 +131,14 @@
 
     //datatable
      $(document).ready(function () {
+        const yearDropdown = $('#yearDropdown');
+        const yearDropdownButton = $('#yearDropdownButton');
+        var apexChart;
 
         $.ajax({
             url : '{{ route('laporan_project_manager.charts') }}',
             success : function(data){
-                charts(data);
+                charts(data,false);
             }
 
         })
@@ -169,7 +170,7 @@
             ajax: {
                 url: "{{ route('laporan_project_manager') }}",
                 data: function (d) {
-                    d.name          = $('#name').val();
+                    d.name          = $('#nama_project_manager').val();
                     d.on_progress   = $('#on_progress').val();
                     d.complete      = $('#complete').val();
                 }
@@ -215,13 +216,15 @@
         $(document).ready(function() {
             $('.loading-overlay').hide();
         });
-
-        const charts = (data) => {
-
-            var chartData = Object.values(data).map(item => ({
-                name: item.Employee,
-                data: [item['On Progress'], item['Complete']],
-            }));
+        var chart = null;
+        var charts = (data, isUpdate) => {
+            console.log(data,isUpdate);
+            if (data.length > 0) {
+                var chartData = Object.values(data).map(item => ({
+                    name: item.Employee,
+                    data: [item['On Progress'], item['Complete']],
+                }));
+            }
 
             var options = {
                 chart: {
@@ -241,18 +244,18 @@
                 series: [
                     {
                         name: 'On Progress',
-                        data: chartData.map(item => parseInt(item.data[0])),
+                        data: chartData ? chartData.map(item => parseInt(item.data[0])) : [0],
                     },
                     {
                         name: 'Complete',
-                        data: chartData.map(item => parseInt(item.data[1])),
+                        data: chartData ? chartData.map(item => parseInt(item.data[1])) : [0],
                     }
                 ],
                 xaxis: {
                         labels:{
                             show:false,
                         },
-                        categories: chartData.map(item => item.name),
+                        categories: chartData ? chartData.map(item => item.name) : [],
                     },
                     colors: ['#90BDFF','#194BFB'],
                     legend: {
@@ -262,14 +265,49 @@
 
             // Periksa jumlah data, jika hanya ada satu data, atur tinggi chart sesuai dengan data tersebut
             if (chartData.length === 1) {
-                var dataValue = chartData[0].data[0]; // Misalnya, mengambil nilai 'On Progress'
-                options.chart.height = 150; // Atur tinggi chart sesuai dengan data (misalnya, gandakan nilai data)
+                var dataValue = chartData[0]?.data[0];
+                options.chart.height = 150;
             }
 
-            var chart = new ApexCharts(document.querySelector("#bar"), options);
-            chart.render();
+            if(isUpdate){
+                var chart = new ApexCharts(document.querySelector("#bar"), options);
+                chart.update()
+            }else{
+                var chart = new ApexCharts(document.querySelector("#bar"), options);
+                chart.render();
+            }
+
+        }
+        const currentYear = (new Date()).getFullYear();
+        const years = [];
+        for (let i = currentYear; i >= currentYear - 20; i--) {
+            years.push(i);
         }
 
+        let dropdownList = [];
+        years.forEach(function (year) {
+            dropdownList += `<li class="dropdown-item" data-year="${year}">
+                                ${year}
+                            </li>`
+        });
+        $('#yearDropdown').html(dropdownList);
+        yearDropdown.on('click', '.dropdown-item', function() {
+            const year = $(this).data('year');
+            yearDropdownButton.text(year);
+            $.ajax({
+                url: '{{ route('laporan_project_manager.charts') }}',
+                method: 'get',
+                data: {
+                    year: year
+                },
+                success: function(data) {
+                    charts(data,true);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        })
     });
 </script>
 @endsection

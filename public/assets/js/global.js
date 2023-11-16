@@ -1,17 +1,18 @@
 $(".logout").click(function () {
+    let url = $(this).attr('action');
     const nama = $(this).data("nama");
     Swal.fire({
-        title: "Apakah yakin?",
-        text: `Anda akan keluar dari Web Absensi LJR`,
+        title: "Are You Sure?",
+        text: `Are You Sure Want to Exit the Gamatara Web`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#6492b8da",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Keluar",
-        cancelButtonText: "Batal",
+        confirmButtonText: "Logout",
+        cancelButtonText: "Cancel",
     }).then((result) => {
         if (result.isConfirmed) {
-            const logout = `${url}/logout`;
+            const logout = `logout`;
             const formLogout = $('#logoutForm');
             formLogout.attr('action', logout);
             formLogout.submit();

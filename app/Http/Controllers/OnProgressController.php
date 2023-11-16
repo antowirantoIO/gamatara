@@ -20,8 +20,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\SendOtp;
 
 class OnProgressController extends Controller
 {

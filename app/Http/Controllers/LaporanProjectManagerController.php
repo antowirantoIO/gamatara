@@ -33,11 +33,28 @@ class LaporanProjectManagerController extends Controller
                     </span>
                 </a>';
             })
+            ->filter(function ($query) use ($request) {
+                // Menambahkan filter untuk kolom 'on_progress' berdasarkan jumlah yang diinputkan user
+                if (!empty($request->input('on_progress'))) {
+                    $query->whereHas('projects', function ($subQuery) use ($request) {
+                        $subQuery->where('status', 1)
+                            ->havingRaw('COUNT(*) = ?', [$request->input('on_progress')]);
+                    });
+                }
+
+                if (!empty($request->input('complete'))) {
+                    $query->whereHas('projects', function ($subQuery) use ($request) {
+                        $subQuery->where('status', 2)
+                            ->havingRaw('COUNT(*) = ?', [$request->input('complete')]);
+                    });
+                }
+
+            })
             ->rawColumns(['action'])
             ->make(true);
         }
-
-        return view('laporan_project_manager.index');
+        $tahun = now()->format('Y');
+        return view('laporan_project_manager.index',compact('tahun'));
     }
 
     public function detail(Request $request, $id)
@@ -56,7 +73,17 @@ class LaporanProjectManagerController extends Controller
 
     public function chart(Request $request)
     {
-        $data = OnRequest::select('pm_id', 'status')->with(['pm','pm.karyawan'])->get();
+        if($request->year)
+        {
+            $tahun = $request->year;
+        }else{
+            $tahun = now()->format('Y');
+        }
+
+        $data = OnRequest::select('pm_id', 'status')
+                        ->with(['pm','pm.karyawan'])
+                        ->whereYear('created_at',$tahun)
+                        ->get();
 
         $chartData = $data->groupBy('pm_id')->map(function (&$groupedData) {
             $onProgressCount = $groupedData->where('status', 1)->count();
@@ -73,5 +100,10 @@ class LaporanProjectManagerController extends Controller
         });
 
         return response()->json($chartData);
+    }
+
+    public function export(Request $request)
+    {
+
     }
 }

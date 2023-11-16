@@ -33,7 +33,7 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Customer</h4>
                             <div>
-                          
+
                             </div>
                         </div>
 
@@ -48,11 +48,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div class="col-xl-6">
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-        </div> 
+        </div>
     </div>
 </div>
 
@@ -182,12 +182,12 @@
         }
 
         $('#export-button').on('click', function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
 
             var name            = $('#name').val();
             var jumlah_project  = $('#jumlah_project').val();
             var nilai_project   = $('#nilai_project').val();
-          
+
 
             var url = '{{ route("laporan_customer.export") }}?' + $.param({
                 name            : name,

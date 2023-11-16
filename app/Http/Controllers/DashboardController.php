@@ -26,10 +26,6 @@ class DashboardController extends Controller
         
         if ($cekRole == 'Project Manager') {
             $spkrequest->where('pm_id', $cekPa->id);
-        }else if ($cekRole == 'Project Admin') {
-            if($cekPm){
-                $spkrequest->where('pm_id', '');
-            }
         }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
             if($result){
                 $spkrequest->whereIn('pm_id', array_column($result, 'id'));
@@ -38,20 +34,24 @@ class DashboardController extends Controller
             $spkrequest->where('pm_id', '');
         }
         
-        $spkrequest = $spkrequest->whereHas('complaint', function ($query) {
-                        $query->whereNull(['id_pm_approval', 'id_bod_approval']);
-                    })
-                    ->get();
-
-        $keluhan = collect([]);
-        foreach ($spkrequest as $item) {
-            $keluhan = $keluhan->merge(
-                Keluhan::whereIn('on_request_id', [$item->id])
-                    ->orderBy('created_at', 'desc')
-                    ->get()
-            );
-        }
-
+        $spkrequest = $spkrequest->whereHas('complaint', function ($query) use ($cekRole) {
+                            if ($cekRole == 'Project Manager') {
+                                $query->whereNull('id_pm_approval')->whereNull('id_bod_approval');
+                            } elseif ($cekRole == 'BOD') {
+                                $query->whereNull('id_bod_approval')->whereNotNull('id_pm_approval');
+                            }
+                        })
+                        ->get();
+                    
+        $keluhan = $spkrequest->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'code' => $item->code,
+                'nama_project' => $item->nama_project,
+                'jumlah' => $item->complaint->count(),
+            ];
+        })->toArray();
+            
         $spkrequest = count($spkrequest);
 
         $onprogress = OnRequest::whereHas('complaint',function($query){

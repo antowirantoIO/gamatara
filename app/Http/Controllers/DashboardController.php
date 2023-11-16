@@ -20,6 +20,7 @@ class DashboardController extends Controller
         $cekId = Auth::user()->id_karyawan;
         $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
         $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+        $result = ProjectManager::get()->toArray();
 
         $spkrequest = OnRequest::with(['kapal', 'customer']);
         

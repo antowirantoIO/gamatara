@@ -43,17 +43,21 @@
                         </div>
 
                         <div class="card-body">
-                            <table class="table" id="tableDataLight">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="color:#929EAE">Ship Type</th>
-                                        <th style="color:#929EAE">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <div class="row">
+                                    <table class="table" id="tableDataLight">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="color:#929EAE">Ship Type</th>
+                                                <th style="color:#929EAE">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

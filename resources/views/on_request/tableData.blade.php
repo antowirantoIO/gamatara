@@ -191,6 +191,7 @@
     <script>
         $(document).ready(function () {
         var table = $('#tabelKeluhan').DataTable({
+            ordering: false,
             fixedHeader:true,
             scrollX: false,
             searching: false,

@@ -192,8 +192,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/detail/{id}', [LaporanCustomerController::class, 'detail'])->name('laporan_customer.detail');
         Route::get('/detail_customer/{id}', [LaporanCustomerController::class, 'detailCustomer'])->name('laporan_customer_detail.detail');
         Route::get('/export', [LaporanCustomerController::class, 'export'])->name('laporan_customer.export');
-        Route::get('/detail_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_customer.export');
-        Route::get('/detail_project_export', [LaporanCustomerController::class, 'export'])->name('laporan_detail_project_customer.export');
+        Route::get('/exportDetail', [LaporanCustomerController::class, 'exportDetail'])->name('laporan_customer.exportDetail');
         Route::get('/chart', [LaporanCustomerController::class, 'chart'])->name('laporan_customer.chart');
     });
 
@@ -202,6 +201,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [LaporanVendorController::class, 'index'])->name('laporan_vendor');
         Route::get('/detail/{id}', [LaporanVendorController::class, 'detail'])->name('laporan_vendor.detail');
         Route::get('/export', [LaporanVendorController::class, 'export'])->name('laporan_vendor.export');
+        Route::get('/exportDetail', [LaporanVendorController::class, 'exportDetail'])->name('laporan_vendor.exportDetail');
         Route::prefix('chart')->group(function(){
             Route::get('data',[LaporanVendorController::class,'chart'])->name('laporan_vendor.charts');
         });

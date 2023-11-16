@@ -219,5 +219,4 @@ class LaporanCustomerController extends Controller
 
         return Excel::download(new ExportReportCustomer($data), 'List Report Customer.xlsx');
     }
-    
 }

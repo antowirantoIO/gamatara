@@ -36,20 +36,22 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 670px;">
-                            <table class="table" id="tableData">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="color:#929EAE">Vendor Name</th>
-                                        <th style="color:#929EAE">Project Total</th>
-                                        <th style="color:#929EAE">Project Value</th>
-                                        <th style="color:#929EAE">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                </tbody>
-                            </table>
+                        <div class="card-body" style="height: 700px;">
+                            <div class="table-responsive">
+                                <table class="table" id="tableData">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="color:#929EAE">Vendor Name</th>
+                                            <th style="color:#929EAE">Project Total</th>
+                                            <th style="color:#929EAE">Bill Value</th>
+                                            <th style="color:#929EAE">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                     </div>
@@ -59,10 +61,10 @@
                         <div class="card-header border-0 align-items-center d-flex">
                             <h7 class="mb-0 flex-grow-1">
                                 <span style="width: 170px;display: inline-block;">
-                                    <select name="" id="" class="form-control select2">
+                                    <select name="type" id="type" class="form-control">
                                         <option value="">Choose Type</option>
-                                        <option value="">Volume</option>
-                                        <option value="">Tonase</option>
+                                        <option value="Volume">Volume</option>
+                                        <option value="Tonase">Tonase</option>
                                     </select>
                                 </span>
                                 <!-- <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
@@ -82,7 +84,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 660px;">
+                        <div class="card-body" style="height: 690px;">
                             <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                         </div>
                     </div>
@@ -107,20 +109,20 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama Customer</label>
+                                <label for="customer" class="form-label">Vendor Name</label>
                                 <input type="text" name="nama_customer" class="form-control" id="nama_customer">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nilai_project" class="form-label">Nilai Project</label>
-                                <input type="text" name="nilai_project" id="nilai_project" class="form-control">
+                                <label for="jumlah_project" class="form-label">Project Totak</label>
+                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="jumlah_project" class="form-label">Jumlah Project</label>
-                                <input type="text" name="jumlah_project" id="jumlah_project" class="form-control">
+                                <label for="nilai_tagihan" class="form-label">Bill Value</label>
+                                <input type="text" name="nilai_tagihan" id="nilai_tagihan" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -137,6 +139,7 @@
      $(function () {
         $(".select2").select2();
     });
+
     //datatable
     $(document).ready(function () {
         let filterSearch = '';
@@ -144,6 +147,7 @@
             fixedHeader:true,
             lengthChange: false,
             scrollX: false,
+            scrollY: false,
             processing: true,
             serverSide: true,
             searching: false,
@@ -169,13 +173,13 @@
                 data: function (d) {
                     d.name              = $('#name').val();
                     d.jumlah_project    = $('#jumlah_project').val();
-                    d.nilai_project     = $('#nilai_project').val();
+                    d.nilai_tagihan     = $('#nilai_tagihan').val();
                 }
             },
             columns: [
                 {data: 'name', name: 'name'},
                 {data: 'jumlah_project', name: 'jumlah_project'},
-                {data: 'nilai_project', name: 'nilai_project'},
+                {data: 'nilai_tagihan', name: 'nilai_tagihan'},
                 {data: 'action', name: 'action'}
             ]
         });
@@ -194,12 +198,12 @@
             event.preventDefault(); 
 
             var name   = $('#name').val();
-            var nilai_project   = $('#nilai_project').val();
+            var nilai_tagihan   = $('#nilai_tagihan').val();
             var jumlah_project  = $('#jumlah_project').val();
 
             var url = '{{ route("laporan_vendor.export") }}?' + $.param({
                 name: name,
-                nilai_project: nilai_project,
+                nilai_tagihan: nilai_tagihan,
                 jumlah_project: jumlah_project,
             });
 
@@ -216,8 +220,9 @@
     });
 
     $(function() {
-        const yearDropdown = $('#yearDropdown');
-        const yearDropdownButton = $('#yearDropdownButton');
+        const yearDropdown          = $('#yearDropdown');
+        const yearDropdownButton    = $('#yearDropdownButton');
+        const typeDropdown          = $('#type'); 
 
         let jsonData = @json($result);
         let chartData = jsonData.map(item => ({
@@ -282,13 +287,23 @@
         yearDropdown.html(dropdownList);
 
         yearDropdown.on('click', '.dropdown-item', function() {
-            const year = $(this).data('year');
+            updateChart();
+        });
+
+        typeDropdown.on('change', function() {
+            updateChart();
+        });
+
+        function updateChart() {
+            const type = typeDropdown.val();
+            const year = yearDropdownButton.text();
             yearDropdownButton.text(year);
             $.ajax({
                 url: '{{ route('laporan_vendor.charts') }}',
                 method: 'get',
                 data: {
-                    year: year
+                    year: year,
+                    type : type
                 },
                 success: function(response) {
 
@@ -321,7 +336,7 @@
                     console.error(error);
                 }
             });
-        })
+        }
     })
 </script>
 @endsection

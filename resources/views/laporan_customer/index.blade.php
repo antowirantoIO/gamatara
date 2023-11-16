@@ -37,20 +37,22 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 670px;">
-                            <table class="table" id="tableData">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="color:#929EAE">Customer Name</th>
-                                        <th style="color:#929EAE">Project Total</th>
-                                        <th style="color:#929EAE">Project Value</th>
-                                        <th style="color:#929EAE">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <div class="card-body" style="height: 700px;">
+                            <div class="table-responsive">
+                                <table class="table" id="tableData">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="color:#929EAE">Customer Name</th>
+                                            <th style="color:#929EAE">Project Total</th>
+                                            <th style="color:#929EAE">Project Value</th>
+                                            <th style="color:#929EAE">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                     </div>
@@ -73,7 +75,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 660px;">
+                        <div class="card-body" style="height: 690px;">
                             <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
                         </div>
 
@@ -133,6 +135,7 @@
             fixedHeader:true,
             lengthChange: false,
             scrollX: false,
+            scrollY: false,
             processing: true,
             serverSide: true,
             searching: true,

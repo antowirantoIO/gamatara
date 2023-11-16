@@ -42,22 +42,26 @@
                         </div>
 
                         <div class="card-body">
-                            <table class="table" id="tableData">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="color:#929EAE">Customer Name</th>
-                                        <th style="color:#929EAE">Address</th>
-                                        <th style="color:#929EAE">Contact Person</th>
-                                        <th style="color:#929EAE">Contact Person Name</th>
-                                        <th style="color:#929EAE">Email</th>
-                                        <th style="color:#929EAE">Npwp</th>
-                                        <th style="color:#929EAE">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <div class="row">
+                                    <table class="table" id="tableData">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="color:#929EAE">Customer Name</th>
+                                                <th style="color:#929EAE">Address</th>
+                                                <th style="color:#929EAE">Contact Person</th>
+                                                <th style="color:#929EAE">Contact Person Name</th>
+                                                <th style="color:#929EAE">Email</th>
+                                                <th style="color:#929EAE">Npwp</th>
+                                                <th style="color:#929EAE">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

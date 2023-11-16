@@ -71,7 +71,7 @@
 
                                 <div class="mb-3 form-icon">
                                     <div class="position-relative auth-pass-inputgroup mb-3" style="display: flex; align-items: center;">
-                                        <input type="password" id="password" name="password" placeholder="Password" class="form-control pe-5 password-input form-control-icon box-login">
+                                        <input type="password" id="password" name="password" placeholder="Password" class="form-control form-control-icon box-login">
                                         <i><img src="{{ asset('assets/images/lock.svg')}}" width="15px"></i>
                                         <span toggle="#password" class="eye-toggle" onclick="togglePasswordVisibility()">
                                             <i class="mdi mdi-eye-off-outline" aria-hidden="true"></i>

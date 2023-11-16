@@ -38,7 +38,7 @@ class DashboardController extends Controller
                             if ($cekRole == 'Project Manager') {
                                 $query->whereNull('id_pm_approval')->whereNull('id_bod_approval');
                             } elseif ($cekRole == 'BOD') {
-                                $query->whereNull('id_bod_approval')->whereNotNull('id_pm_approval');
+                                $query->whereNotNull('id_pm_approval')->whereNull('id_bod_approval');
                             }
                         })
                         ->get();
@@ -57,12 +57,12 @@ class DashboardController extends Controller
         $onprogress = OnRequest::whereHas('complaint',function($query){
                             $query->whereNotNull(['id_pm_approval','id_bod_approval']);
                         })
-                        ->where('status',1)
+                        ->where('status',2)
                         ->get();
         $onprogress = count($onprogress);
         $complete = OnRequest::whereHas('progress', function ($query) {
-            $query->whereNotNull('id_pekerjaan')->where('status', 2);
-        })->count();
+                        $query->whereNotNull('id_pekerjaan')->where('status', 3);
+                    })->count();
         
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());

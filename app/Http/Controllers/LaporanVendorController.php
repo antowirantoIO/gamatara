@@ -44,11 +44,16 @@ class LaporanVendorController extends Controller
                 return 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
             })
             ->addColumn('action', function($data){
-                return '<a href="'.route('laporan_vendor.detail', $data->id).'" class="btn btn-warning btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>';
+                $btnDetail = '';
+                if(Can('laporan_vendor-detail')) {
+                    $btnDetail = '<a href="'.route('laporan_vendor.detail', $data->id).'" class="btn btn-warning btn-sm">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>';
+                }
+
+                return $btnDetail;
             })
             ->rawColumns(['action'])
             ->make(true);                    

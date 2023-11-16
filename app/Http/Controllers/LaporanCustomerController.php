@@ -173,11 +173,16 @@ class LaporanCustomerController extends Controller
                 return $status;
             })
             ->addColumn('action', function($data){
-                return '<a href="'.route('laporan_customer_detail.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>';
+                $btnDetail = '';
+                if(Can('laporan_customer-detail')) {
+                    $btnDetail = '<a href="'.route('laporan_customer_detail.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
+                                    <span>
+                                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
+                                    </span>
+                                </a>';
+                }
+
+                return $btnDetail;
             })
             ->rawColumns(['action','status_project','tanggal_mulai','jumlah_project','nilai_project'])
             ->make(true);                    

@@ -34,7 +34,7 @@ class KeluhanController extends Controller
                 $keluhan->save();
 
                 return response()->json([
-                        'message' => 'Keluhan berhasil ditambahkan',
+                        'message' => 'Request successfully added',
                         'status' => 200, 
                         'id' => $keluhan->id, 
                         'id_vendor' => $keluhan->id_vendor
@@ -49,7 +49,7 @@ class KeluhanController extends Controller
 
             return response()->json([
                 'keluhan' => $keluhan->keluhan,
-                'message' => 'Keluhan berhasil diubah',
+                'message' => 'Request successfully modified',
                 'status' => 200
             ]);
         }       
@@ -75,7 +75,7 @@ class KeluhanController extends Controller
         }
         $data->save();
 
-        return response()->json(['status' => 200, 'message' => 'Berhasil Di Approve']);
+        return response()->json(['status' => 200, 'message' => 'Successfully Approved']);
     }
 
     public function delete(Request $request)
@@ -84,9 +84,9 @@ class KeluhanController extends Controller
             $keluhan = Keluhan::findOrFail($request->id);
             $keluhan->delete();
      
-            return response()->json(['message' => 'Keluhan berhasil dihapus','status' => 200]);
+            return response()->json(['message' => 'Request Deleted Successfully','status' => 200]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Gagal menghapus keluhan'], 500);
+            return response()->json(['message' => 'Failed to delete request'], 500);
         }
     }
 

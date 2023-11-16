@@ -9,13 +9,50 @@ use App\Models\Vendor;
 use App\Models\Keluhan;
 use App\Models\ProjectPekerjaan;
 use App\Models\ProjectManager;
+use App\Models\ProjectAdmin;
+use Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $spkrequest = Keluhan::whereNull(['id_pm_approval','id_bod_approval'])->get();
+        $cekRole = Auth::user()->role->name;
+        $cekId = Auth::user()->id_karyawan;
+        $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+        $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+
+        $spkrequest = OnRequest::with(['kapal', 'customer']);
+        
+        if ($cekRole == 'Project Manager') {
+            $spkrequest->where('pm_id', $cekPa->id);
+        }else if ($cekRole == 'Project Admin') {
+            if($cekPm){
+                $spkrequest->where('pm_id', '');
+            }
+        }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
+            if($result){
+                $spkrequest->whereIn('pm_id', array_column($result, 'id'));
+            }
+        }else{
+            $spkrequest->where('pm_id', '');
+        }
+        
+        $spkrequest = $spkrequest->whereHas('complaint', function ($query) {
+                        $query->whereNull(['id_pm_approval', 'id_bod_approval']);
+                    })
+                    ->get();
+
+        $keluhan = collect([]);
+        foreach ($spkrequest as $item) {
+            $keluhan = $keluhan->merge(
+                Keluhan::whereIn('on_request_id', [$item->id])
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+            );
+        }
+
         $spkrequest = count($spkrequest);
+
         $onprogress = OnRequest::whereHas('complaint',function($query){
                             $query->whereNotNull(['id_pm_approval','id_bod_approval']);
                         })
@@ -48,8 +85,8 @@ class DashboardController extends Controller
                 ->groupBy('pm_id');
         }])->get();                                        
 
-        $data = OnRequest::get();
+        $data       = OnRequest::get();
 
-        return view('dashboard',compact('spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors','progress','pm'));
+        return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors','progress','pm'));
     }
 }

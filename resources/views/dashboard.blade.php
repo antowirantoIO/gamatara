@@ -8,42 +8,58 @@
             <div class="row mb-3 pb-1">
                 <div class="col-12">
                     <div class="d-flex align-items-lg-center flex-lg-row flex-column">
-                        <!-- <div class="flex-grow-1">
-                            <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>
-                            <p class="text-muted mb-0">Here's what's happening with your store today.</p>
-                        </div> -->
-                        <!-- <div class="mt-3 mt-lg-0">
-                            <form action="javascript:void(0);">
-                                <div class="row g-3 mb-0 align-items-center">
-                                    <div class="col-sm-auto">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control border-0 dash-filter-picker shadow" data-provider="flatpickr" data-range-date="true" data-date-format="d M, Y" data-deafult-date="01 Jan 2022 to 31 Jan 2022">
-                                            <div class="input-group-text bg-primary border-primary text-white">
-                                                <i class="ri-calendar-2-line"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-soft-success"><i class="ri-add-circle-line align-middle me-1"></i> Add Product</button>
-                                    </div>
-
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-soft-info btn-icon waves-effect waves-light layout-rightside-btn"><i class="ri-pulse-line"></i></button>
-                                    </div>
-
-                                </div>
-                            </form>
-                        </div> -->
-                    </div><!-- end card header -->
+                    </div>
                 </div>
-                <!--end col-->
             </div>
-            <!--end row-->
 
+            <!--modal-->
+            <div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+                        @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="zoomInModalLabel">SPK Request</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row gy-4">
+                                    <table id="tabelKeluhan" class="table table-bordered">
+                                        <thead style="background-color:#194BFB;color:#FFFFFF">
+                                            <tr>
+                                                <th width="10px">No.</th>
+                                                <th>Request</th>
+                                                <th>Vendor</th>
+                                                <th>Approval</th>
+                                            </tr>
+                                        </thead>  
+                                        <tbody>
+                                            @foreach($keluhan as $key => $k)
+                                               <tr>
+                                                    <td>{{ $key+1 }}</td>
+                                                    <td>{{ explode('<br>', $k->keluhan)[0] ?? '' }}</td>
+                                                    <td>{{ $k->vendors->name ?? ''}}</td>
+                                                    <td>
+                                                        <a href="{{ route('on_request.detail',$k->on_request_id) }}" type="button" class="btn btn-primary">Approve</a>
+                                                    </td>
+                                               </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- <div class="modal-footer">
+                                <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                                <button class="btn btn-primary">Search</button>
+                            </div> -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--end modal-->
             <div class="row">
 
-                <div class="col-md-3" style="flex:1;">
+                <div class="col-md-3" style="flex:1;" data-bs-toggle="modal" data-bs-target="#advance">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -55,7 +71,7 @@
                                     </span>
                                 </div>
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
-                                    <a href="{{ route('on_request') }}">
+                                    <a>
                                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> SPK Request</p>
                                         <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$spkrequest}}"></span></h4>
                                     </a>
@@ -346,72 +362,100 @@
 @endsection
 @section('scripts')
 <script>
+    $(document).ready(function () {
+        var table = $('#tabelKeluhan').DataTable({
+            ordering: false,
+            fixedHeader:true,
+            scrollX: false,
+            searching: false,
+            lengthMenu: [5, 10, 15],
+            pageLength: 5,
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
+                },
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+        });
+    });
+
     $(function() {
-            $("#example1").DataTable({
-                fixedHeader:true,
-                lengthMenu: [5, 10, 15],
-                language: {
-                    processing:
-                        '<div class="spinner-border text-info" role="status">' +
-                        '<span class="sr-only">Loading...</span>' +
-                        "</div>",
-                    paginate: {
-                        Search: '<i class="icon-search"></i>',
-                        first: "<i class='fas fa-angle-double-left'></i>",
-                        next: "Next <span class='mdi mdi-chevron-right'></span>",
-                        last: "<i class='fas fa-angle-double-right'></i>",
-                    },
-                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+        $("#example1").DataTable({
+            fixedHeader:true,
+            lengthMenu: [5, 10, 15],
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
                 },
-                drawCallback: function() {
-                    var previousButton = $('.paginate_button.previous');
-                    previousButton.css('display', 'none');
-                },
-            });
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+        });
 
-            $("#example2").DataTable({
-                fixedHeader:true,
-                lengthMenu: [5, 10, 15],
-                language: {
-                    processing:
-                        '<div class="spinner-border text-info" role="status">' +
-                        '<span class="sr-only">Loading...</span>' +
-                        "</div>",
-                    paginate: {
-                        Search: '<i class="icon-search"></i>',
-                        first: "<i class='fas fa-angle-double-left'></i>",
-                        next: "Next <span class='mdi mdi-chevron-right'></span>",
-                        last: "<i class='fas fa-angle-double-right'></i>",
-                    },
-                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+        $("#example2").DataTable({
+            fixedHeader:true,
+            lengthMenu: [5, 10, 15],
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
                 },
-                drawCallback: function() {
-                    var previousButton = $('.paginate_button.previous');
-                    previousButton.css('display', 'none');
-                },
-            });
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+        });
 
-            $("#example3").DataTable({
-                fixedHeader:true,
-                lengthMenu: [5, 10, 15],
-                language: {
-                    processing:
-                        '<div class="spinner-border text-info" role="status">' +
-                        '<span class="sr-only">Loading...</span>' +
-                        "</div>",
-                    paginate: {
-                        Search: '<i class="icon-search"></i>',
-                        first: "<i class='fas fa-angle-double-left'></i>",
-                        next: "Next <span class='mdi mdi-chevron-right'></span>",
-                        last: "<i class='fas fa-angle-double-right'></i>",
-                    },
-                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+        $("#example3").DataTable({
+            fixedHeader:true,
+            lengthMenu: [5, 10, 15],
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
                 },
-                drawCallback: function() {
-                    var previousButton = $('.paginate_button.previous');
-                    previousButton.css('display', 'none');
-                },
-            });
-        })
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+        });
+    })
 </script>
 @endsection

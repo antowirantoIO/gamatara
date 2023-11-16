@@ -261,11 +261,11 @@
     function approve(id, type) {
         Swal.fire({
             title: 'Konfirmasi',
-            text: 'Anda yakin ingin menyetujui ini?',
+            text: 'Are You Sure ?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Batal',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel',
         }).then((result) => {
             if (result.isConfirmed) {
                 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -293,14 +293,14 @@
                             getTableData(idData);       
                             return response.json();
                         } else {
-                            throw new Error('Gagal melakukan persetujuan');
+                            throw new Error('Failed approval');
                         }
                     })
                     .then(function(data) {
-                        console.log('Persetujuan berhasil:', data);
+                        console.log('Successful approval:', data);
                     })
                     .catch(function(error) {
-                        console.error('Kesalahan saat melakukan persetujuan:', error);
+                        console.error('Mistakes during approval:', error);
                     });
             }
         });

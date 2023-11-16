@@ -12,54 +12,12 @@
                 </div>
             </div>
 
-            <!--modal-->
-            <div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <form  id="formOnRequest" method="get" enctype="multipart/form-data">
-                        @csrf
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="zoomInModalLabel">SPK Request</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row gy-4">
-                                    <table id="tabelKeluhan" class="table table-bordered">
-                                        <thead style="background-color:#194BFB;color:#FFFFFF">
-                                            <tr>
-                                                <th width="10px">No.</th>
-                                                <th>Request</th>
-                                                <th>Vendor</th>
-                                                <th>Approval</th>
-                                            </tr>
-                                        </thead>  
-                                        <tbody>
-                                            @foreach($keluhan as $key => $k)
-                                               <tr>
-                                                    <td>{{ $key+1 }}</td>
-                                                    <td>{{ explode('<br>', $k->keluhan)[0] ?? '' }}</td>
-                                                    <td>{{ $k->vendors->name ?? ''}}</td>
-                                                    <td>
-                                                        <a href="{{ route('on_request.detail',$k->on_request_id) }}" type="button" class="btn btn-primary">Approve</a>
-                                                    </td>
-                                               </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- <div class="modal-footer">
-                                <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
-                                <button class="btn btn-primary">Search</button>
-                            </div> -->
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!--end modal-->
             <div class="row">
 
-                <div class="col-md-3" style="flex:1;" data-bs-toggle="modal" data-bs-target="#advance">
+                <div class="col-md-3" style="flex:1;" 
+                        @if(auth()->user()->role->name == 'Project Manager' || auth()->user()->role->name == 'BOD')
+                            data-bs-toggle="modal" data-bs-target="#advance"
+                        @endif>
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -203,9 +161,6 @@
                                 <a href="{{ route('on_request') }}" style="color: #194BFB;" class="text-reset dropdown-btn">
                                     <span class="fw-semibold text-uppercase fs-12" style="color: #194BFB;">View All
                                 </a>
-                                <!-- <button type="button" class="btn btn-soft-secondary btn-sm">
-                                    View ALL
-                                </button> -->
                             </div>
                         </div>
 
@@ -359,6 +314,55 @@
         </div>
     </div>
 </div>
+
+<!--modal-->
+<div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+            @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="zoomInModalLabel">SPK Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-4">
+                        <table id="tabelKeluhan" class="table table-bordered">
+                            <thead style="background-color:#194BFB;color:#FFFFFF">
+                                <tr>
+                                    <th width="10px">No.</th>
+                                    <th>Code</th>
+                                    <th>Project Name</th>
+                                    <th>Requiring Approval</th>
+                                    <th>Approval</th>
+                                </tr>
+                            </thead>  
+                            <tbody>
+                                @foreach($keluhan as $key => $k)
+                                    <tr>
+                                        <td>{{ $key+1 }}</td>
+                                        <td>{{ $k['code'] }}</td>
+                                        <td>{{ $k['nama_project'] }}</td>
+                                        <td>{{ $k['jumlah'] }}</td>
+                                        <td>
+                                            <a href="{{ route('on_request.detail',$k['id']) }}" type="button" class="btn btn-primary">Approve</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                    <button class="btn btn-primary">Search</button>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</div>
+<!--end modal-->
+
 @endsection
 @section('scripts')
 <script>

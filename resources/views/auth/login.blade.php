@@ -65,8 +65,10 @@
                                 @csrf
 
                                 <div class="mb-3 form-icon">
-                                    <input type="text" name="email" class="form-control form-control-icon box-login" id="username" placeholder="Username">
-                                    <i><img src="{{ asset('assets/images/profile.svg')}}" width="15px"></i>
+                                    <div class="position-relative auth-pass-inputgroup mb-3" style="display: flex; align-items: center;">
+                                        <input type="text" name="email" class="form-control form-control-icon box-login" id="username" placeholder="Username">
+                                        <i><img src="{{ asset('assets/images/profile.svg')}}" width="15px"></i>
+                                    </div>
                                 </div>
 
                                 <div class="mb-3 form-icon">

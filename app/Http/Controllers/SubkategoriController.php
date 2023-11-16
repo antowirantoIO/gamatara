@@ -24,14 +24,14 @@ class SubkategoriController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if(Can('lokasi_project-edit')) {
+                if(Can('sub_kategori-edit')) {
                     $btnEdit = '<a href="'.route('sub_kategori.edit', $data->id).'" class="btn btn-success btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                     </span>
                                 </a>';
                 }
-                if(Can('lokasi_project-delete')){
+                if(Can('sub_kategori-delete')){
                     $btnDelete = ' <a data-id="'.$data->id.'" data-name="Sub Kategori '.$data->name.'" data-form="form-sub_kategori" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>

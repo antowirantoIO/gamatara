@@ -20,14 +20,14 @@ class KategoriController extends Controller
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
-                if(Can('lokasi_project-edit')) {
+                if(Can('kategori-edit')) {
                     $btnEdit = '<a href="'.route('kategori.edit', $data->id).'" class="btn btn-success btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                     </span>
                                 </a>';
                 }
-                if(Can('lokasi_project-delete')){
+                if(Can('kategori-delete')){
                     $btnDelete = ' <a data-id="'.$data->id.'" data-name="Kategori '.$data->name.'" data-form="form-kategori" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
@@ -63,7 +63,7 @@ class KategoriController extends Controller
         $data->save();
 
         return redirect(route('kategori'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function edit(Request $request)
@@ -84,7 +84,7 @@ class KategoriController extends Controller
         $data->save();
 
         return redirect(route('kategori'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function delete($id)
@@ -93,7 +93,7 @@ class KategoriController extends Controller
         $data->delete();
 
         return redirect(route('kategori'))
-                    ->with('success', 'Data berhasil dihapus');
+                    ->with('success', 'Data successfully deleted');
     }
     
     public function export(Request $request)

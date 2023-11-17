@@ -138,7 +138,7 @@ class OnRequestController extends Controller
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $data->id])
-                        ->with('success', 'Data berhasil disimpan');
+                        ->with('success', 'Data saved successfully');
     }
 
     public function tableData($id) 
@@ -197,7 +197,7 @@ class OnRequestController extends Controller
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $request->id])
-                        ->with('success', 'Data berhasil disimpan');
+                        ->with('success', 'Data saved successfully');
     }
 
     public function export(Request $request)

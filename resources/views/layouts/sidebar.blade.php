@@ -45,13 +45,16 @@
                     <!-- item-->
                     <h6 class="dropdown-header">Welcome, {{ Auth::user()->karyawan->name ?? '' }}</h6>
                     <div class="dropdown-divider"></div>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="dropdown-item">
+                        <!-- <form action="{{ route('logout') }}" method="POST">
+                            @csrf -->
+                            <button type="submit" class="dropdown-item logout">
                                 <i class="mdi mdi-logout text-muted fs-16 align-middle me-1 logout"></i>
                                 <span class="align-middle" data-key="t-logout">Logout</span>
                             </button>
-                        </form>
+                        <!-- </form> -->
+                        <form id="logoutForm" method="POST">
+                        @csrf
+                    </form>
                 </div>
         </div>
     </div>

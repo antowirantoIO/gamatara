@@ -63,7 +63,7 @@ class LokasiProjectController extends Controller
         $data->save();
 
         return redirect(route('lokasi_project'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function edit(Request $request)
@@ -84,7 +84,7 @@ class LokasiProjectController extends Controller
         $data->save();
 
         return redirect(route('lokasi_project'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function delete($id)
@@ -93,7 +93,7 @@ class LokasiProjectController extends Controller
         $data->delete();
 
         return redirect(route('lokasi_project'))
-                    ->with('success', 'Data berhasil dihapus');
+                    ->with('success', 'Data successfully deleted');
     }
     
     public function export(Request $request)

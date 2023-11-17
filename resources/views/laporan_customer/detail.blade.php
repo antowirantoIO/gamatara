@@ -213,7 +213,8 @@
             var nilai_project   = $('#nilai_project').val();
             var status_project  = $('#status_project').val();
 
-            var url = '{{ route("laporan_detail_customer.export") }}?' + $.param({
+            var url = '{{ route("laporan_customer.exportDetail") }}?' + $.param({
+                id              : {{$data->id}},
                 code            : code,
                 nama_project    : nama_project,
                 tanggal_mulai   : tanggal_mulai,

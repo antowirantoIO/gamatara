@@ -77,7 +77,7 @@ class RoleController extends Controller
         $role->syncPermissions($request->input('permission'));
 
         return redirect(route('role'))
-                    ->with('success', 'Data berhasil disimpan');
+                    ->with('success', 'Data saved successfully');
     }
 
     public function edit(Request $request)
@@ -114,7 +114,7 @@ class RoleController extends Controller
         $role->syncPermissions($request->input('permission'));
 
         return redirect(route('role'))
-                        ->with('success', 'Data berhasil disimpan');
+                        ->with('success', 'Data saved successfully');
     }
 
     public function delete($id)
@@ -131,7 +131,7 @@ class RoleController extends Controller
         $data->delete();
 
         return redirect(route('role'))
-                    ->with('success', 'Data berhasil dihapus');
+                    ->with('success', 'Data successfully deleted');
     }
 
     public function export(Request $request)

@@ -9,22 +9,60 @@ use App\Models\Vendor;
 use App\Models\Keluhan;
 use App\Models\ProjectPekerjaan;
 use App\Models\ProjectManager;
+use App\Models\ProjectAdmin;
+use Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $spkrequest = Keluhan::whereNull(['id_pm_approval','id_bod_approval'])->get();
+        $cekRole = Auth::user()->role->name;
+        $cekId = Auth::user()->id_karyawan;
+        $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+        $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+        $result = ProjectManager::get()->toArray();
+
+        $spkrequest = OnRequest::with(['kapal', 'customer']);
+        
+        if ($cekRole == 'Project Manager') {
+            $spkrequest->where('pm_id', $cekPa->id);
+        }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
+            if($result){
+                $spkrequest->whereIn('pm_id', array_column($result, 'id'));
+            }
+        }else{
+            $spkrequest->where('pm_id', '');
+        }
+        
+        $spkrequest = $spkrequest->whereHas('complaint', function ($query) use ($cekRole) {
+                            if ($cekRole == 'Project Manager') {
+                                $query->whereNull('id_pm_approval')->whereNull('id_bod_approval');
+                            } elseif ($cekRole == 'BOD') {
+                                $query->whereNotNull('id_pm_approval')->whereNull('id_bod_approval');
+                            }
+                        })
+                        ->get();
+                    
+        $keluhan = $spkrequest->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'code' => $item->code,
+                'nama_project' => $item->nama_project,
+                'jumlah' => $item->complaint->count(),
+            ];
+        })->toArray();
+            
         $spkrequest = count($spkrequest);
+
         $onprogress = OnRequest::whereHas('complaint',function($query){
                             $query->whereNotNull(['id_pm_approval','id_bod_approval']);
                         })
-                        ->where('status',1)
+                        ->where('status',2)
                         ->get();
         $onprogress = count($onprogress);
         $complete = OnRequest::whereHas('progress', function ($query) {
-            $query->whereNotNull('id_pekerjaan')->where('status', 2);
-        })->count();
+                        $query->whereNotNull('id_pekerjaan')->where('status', 3);
+                    })->count();
         
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
@@ -48,8 +86,8 @@ class DashboardController extends Controller
                 ->groupBy('pm_id');
         }])->get();                                        
 
-        $data = OnRequest::get();
+        $data       = OnRequest::get();
 
-        return view('dashboard',compact('spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors','progress','pm'));
+        return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors','progress','pm'));
     }
 }

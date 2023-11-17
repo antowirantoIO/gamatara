@@ -1,4 +1,5 @@
-$(".logout").click(function () {
+$(".logout").click(function (e) {
+    e.preventDefault();
     let url = $(this).attr('action');
     const nama = $(this).data("nama");
     Swal.fire({

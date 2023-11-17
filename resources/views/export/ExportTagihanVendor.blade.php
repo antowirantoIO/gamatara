@@ -4,7 +4,7 @@
             <th align="center" colspan="12" height="40">REKAPITULASI TAGIHAN SUB. KONTRAKTOR</th>
         </tr>
         <tr>
-            <th align="center" colspan="12" height="40">PT. SAMUDRA AMERTA KONSTRUKSI</th>
+            <th align="center" colspan="12" height="40">{{ $name->customer->name }}</th>
         </tr>
         {!! str_repeat('<tr></tr>', 1) !!}
         <tr>

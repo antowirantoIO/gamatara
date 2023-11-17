@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportLaporanProjectManager;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -104,6 +105,8 @@ class LaporanProjectManagerController extends Controller
 
     public function export(Request $request)
     {
-
+        $data = ProjectManager::all();
+        return Excel::download(new ExportLaporanProjectManager($data),'Laporan Pekerjaan PM.xlsx');
+        return view('export.ExportLaporanManager',compact('data'));
     }
 }

@@ -291,6 +291,7 @@
                             </li>`
         });
         $('#yearDropdown').html(dropdownList);
+
         yearDropdown.on('click', '.dropdown-item', function() {
             const year = $(this).data('year');
             yearDropdownButton.text(year);
@@ -308,6 +309,18 @@
                 }
             });
         })
+
+        $('#export-button').on('click', function(event) {
+            event.preventDefault();
+
+            var url = '{{ route("laporan_project_manager.export") }}'
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
     });
 </script>
 @endsection

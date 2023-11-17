@@ -208,3 +208,4 @@ function Can($permission)
 {
     return Auth::user()->can($permission);
 }
+

@@ -40,11 +40,13 @@
     </thead>
     <tbody>
         @php
-             $letters = range('A', 'Z');
-             $subCount = 1;
-             $count = 0;
-             $prevIndex = '';
-            //  dd($data);
+            $letters = range('A', 'Z');
+            $subCount = 1;
+            $count = 0;
+            $prevIndex = '';
+            $total = 0;
+            $prevTotal = 0;
+            $totalNow = 0;
         @endphp
         @foreach ($data as $key => $item)
             @if($item->count() > 0)
@@ -56,15 +58,18 @@
                 </tr>
             @endif
             @php
-                $total = 0;
-                $prevTotal = 0;
                 $subKategori = '';
                 $prevSub = '';
                 $prevKodeUnik = '';
             @endphp
             @foreach ($item as $value)
             @php
-                $prevTotal = $value->amount * $value->harga_vendor;
+                $totalNow = $value->amount * $value->harga_customer;
+                if ($value->amount && $value->harga_customer) {
+                    $totalNow = $value->amount * $value->harga_customer;
+                } else {
+                    $totalNow = 0;
+                }
                 $subkategori = $value->subKategori->name;
                 $kodeUnik = $value->kode_unik;
             @endphp
@@ -130,9 +135,9 @@
                     </td>
                 </tr>
                 @php
-                    $prevTotal = $value->amount * $value->harga_customer;
+                    $prevTotal = $totalNow;
                     $prevIndex = $key;
-                    $total = $total + $prevTotal;
+                    $total += $prevTotal;
                     $prevSub = $subKategori;
                     $prevKodeUnik = $kodeUnik;
                 @endphp

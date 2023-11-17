@@ -123,7 +123,7 @@ class ExportTagihanVendor implements FromView, WithTitle, WithStyles, WithColumn
             'I' => 7,
             'J' => 5,
             'K' => 15,
-            'L' => 15
+            'L' => 20
         ];
     }
 

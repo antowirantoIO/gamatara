@@ -45,7 +45,7 @@
                                                             <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Filter
                                                     </button>
-                                                    <button class="btn btn-danger" id="export-button">
+                                                    <button class="btn btn-danger export-button" id="export-button">
                                                         <span>
                                                             <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Export
@@ -258,7 +258,7 @@
                 })
             @endforeach
 
-            $('#export-button').on('click', function(event) {
+            $('.export-button').on('click', function(event) {
                 event.preventDefault();
 
                 var id_project      = '{{ $id }}';

@@ -18,11 +18,6 @@
                             <div class="btn btn-secondary" id="btn-plus">
                                 <span><i class="mdi mdi-plus"></i></span> &nbsp; Add Category
                             </div>
-                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
-                                <span>
-                                    <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                </span> &nbsp; Filter
-                            </button>
                         </div>
                     </div>
                 </div>

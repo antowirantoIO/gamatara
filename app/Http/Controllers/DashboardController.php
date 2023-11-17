@@ -26,7 +26,7 @@ class DashboardController extends Controller
         
         if ($cekRole == 'Project Manager') {
             $spkrequest->where('pm_id', $cekPa->id);
-        }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
+        }else if ($cekRole == 'BOD') {
             if($result){
                 $spkrequest->whereIn('pm_id', array_column($result, 'id'));
             }

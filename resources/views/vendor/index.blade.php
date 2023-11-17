@@ -258,9 +258,9 @@
                 text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#6492b8da",
+                confirmButtonColor: "#3577f1",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Delete",
+                confirmButtonText: "Yes, delete it!",
                 cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {

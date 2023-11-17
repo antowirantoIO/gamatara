@@ -130,7 +130,6 @@ class ExportTagihanVendor implements FromView, WithTitle, WithStyles, WithColumn
     public function view(): View
     {
         $data = groupExportTagihanVendor($this->request, $this->project);
-        // dd($data);
         $name = OnRequest::where('id',$this->request->id_project)->first();
         return view('export.ExportTagihanVendor',['data' => $data,'name' => $name]);
     }

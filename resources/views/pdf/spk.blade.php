@@ -94,7 +94,7 @@
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td>
                 <td style="text-transform: uppercase;padding-left: 100px;">
-                    <span style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
+                    <span style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
                     <span style="font-size: 18px; font-weight: bold;color:maroon;">Rekap SPK {{$data->nama_project}}</span><br>
                     <span style="font-size: 12px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$data->created_ats}} To {{$data->target_selesai ?? '-'}}</span>
                 </td>
@@ -126,7 +126,7 @@
             <thead>
                 <th>Vendor</th>
                 <th>No SPK</th>
-                <th>Start Project</th>
+                <th>SPK Date</th>
                 <th>Description</th>
             </thead>
             <tbody>

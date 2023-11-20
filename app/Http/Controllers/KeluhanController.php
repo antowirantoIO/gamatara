@@ -137,6 +137,7 @@ class KeluhanController extends Controller
     {
         $keluhan = Keluhan::find($request->id);
         $data = OnRequest::find($keluhan->on_request_id); 
+        $data['created_ats'] =  Carbon::parse($data->created_at)->format('d M Y');
         $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);

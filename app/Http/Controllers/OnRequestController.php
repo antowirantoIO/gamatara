@@ -174,8 +174,7 @@ class OnRequestController extends Controller
         $request->validate([
             'nama_project'  => 'required',
             'id_customer'   => 'required',
-            'pe_id_1'       => 'required',
-            'pe_id_2'       => 'required'
+            'pe_id_1'       => 'required'
         ]);
 
         $getCustomer = Customer::where('name',$request->input('id_customer'))->first();
@@ -189,9 +188,8 @@ class OnRequestController extends Controller
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pe_id_1              = $request->input('pe_id_1');
-        $data->pe_id_2              = $request->input('pe_id_2');
         $data->status_survey        = $request->input('status_survey');
-        if($request->input('pe_id_1') && $request->input('pe_id_2')){
+        if($request->input('pe_id_1')){
             $data->status = 1;
         }
         $data->save();

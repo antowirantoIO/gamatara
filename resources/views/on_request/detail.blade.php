@@ -80,7 +80,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-xxl-6 col-md-6">
+                                        <!-- <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Engineer 2</label>
                                                 <select name="pe_id_2" id="pe_id_2" class="form-control selects">
@@ -90,7 +90,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Customer Name</label>
                                             <div class="input-group">
@@ -152,7 +152,7 @@
                                                     </select>
                                             </div>
                                         </div> 
-                                        <div class="col-xxl-6 col-md-6"></div>
+                                        <!-- <div class="col-xxl-6 col-md-6"></div> -->
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">

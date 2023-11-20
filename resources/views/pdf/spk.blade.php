@@ -95,8 +95,8 @@
                 </td>
                 <td style="text-transform: uppercase;padding-left: 100px;">
                     <span style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
-                    <span style="font-size: 20px; font-weight: bold;color:maroon;">Rekap SPK {{$data->nama_project}} - {{$data->code}}</span><br>
-                    <span style="font-size: 12px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
+                    <span style="font-size: 18px; font-weight: bold;color:maroon;">Rekap SPK {{$data->nama_project}}</span><br>
+                    <span style="font-size: 12px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$data->created_at}} To {{$data->target_selesai}}</span>
                 </td>
                 <br><br>
             </tr>
@@ -132,13 +132,11 @@
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td><center>{{ $item->vendors->name }}</center></td>
-                    <td><center>{{ $item->created_ats }} </center></td>
-                    <td><center>{{ $item->no_spk }} </center></td>
+                    <td>{{ $item->vendors->name }}</td>
+                    <td>{{ $item->no_spk }} </td>
+                    <td>{{ $item->created_ats }} </td>
                     <td>  
-                        <center>
-                            {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
-                        </center>
+                        {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
                     </td>
                 </tr>
                 @endforeach

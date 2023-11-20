@@ -107,6 +107,8 @@ class KeluhanController extends Controller
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
         $cetak = "Rekap SPK.pdf";
 
+        $data['created_ats'] = Carbon::parse($data->created_at)->format('d M Y');
+
         foreach($keluhan as $value)
         {
             $value['created_ats'] = Carbon::parse($value->created_at)->format('d M Y');

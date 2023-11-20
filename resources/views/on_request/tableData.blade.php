@@ -1,34 +1,12 @@
     @can('on_request-request-printrekapan')
-        @if($keluhan == 0)
-            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
-                    <span>
-                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                    </span>
-                    Rekap SPK
-                </button>
-            </div>
-        @else
-            @if($keluhan != null && $count == $keluhan) 
-            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
-                    <span>
-                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                    </span>
-                    Rekap SPK
-                </button>
-            </div>
-            @elseif($count != $keluhan)
-            <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                <button type="button" id="printSPK" data-id-keluhan="" class="btn" style="background-color:grey;" disabled>
-                    <span>
-                        <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                    </span>
-                    Rekap SPK
-                </button>
-            </div>
-            @endif
-        @endif
+        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+            <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
+                <span>
+                    <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+                </span>
+                Rekap SPK
+            </button>
+        </div>
     @endcan
 
     <table id="tabelKeluhan" class="table table-bordered">

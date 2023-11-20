@@ -27,10 +27,21 @@ class KeluhanController extends Controller
             //         ]
             //     );
             // }else{
+
+                $code = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/';
+                $projectCode = Keluhan::where('no_spk', 'LIKE', '%'.$code.'%')->count();
+                $randInt = '0001';
+                if ($projectCode >= 1) {
+                    $count = $projectCode+1;
+                    $randInt = '000'.(string)$count;
+                }
+                $randInt = substr($randInt, -5);
+
                 $keluhan                = new Keluhan();
                 $keluhan->on_request_id = $request->id;
                 $keluhan->id_vendor     = $request->vendor;
                 $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+                $keluhan->no_spk        = $code.$randInt;
                 $keluhan->save();
 
                 return response()->json([
@@ -139,7 +150,7 @@ class KeluhanController extends Controller
         $data['approvalBOD'] = $bod->karyawan->name ?? '';
         $data['ttdBOD'] = $bod->ttd ?? '';
         $data['ttdVendor'] = $vendor->ttd ?? '';
-        $data['po_no'] = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
+        $data['po_no'] = $keluhan->no_spk ?? '';
 
         if($data->pm)
         {

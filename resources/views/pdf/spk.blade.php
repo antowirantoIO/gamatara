@@ -95,7 +95,7 @@
                 </td>
                 <td style="text-transform: uppercase;padding-left: 100px;">
                     <span style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
-                    <span style="font-size: 20px; font-weight: bold;color:maroon;">Rekap SPK KTM - 1001, TK - 2023</span><br>
+                    <span style="font-size: 20px; font-weight: bold;color:maroon;">Rekap SPK {{data->nama_project}} - {{$data->code}}</span><br>
                     <span style="font-size: 12px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
                 </td>
                 <br><br>
@@ -124,8 +124,9 @@
         <br>
         <table class="table-body font-size-11">
             <thead>
-                <th>PO No.</th>
-                <th>PO Date</th>
+                <th>Vendor</th>
+                <th>No SPK</th>
+                <th>Start Project</th>
                 <th>Description</th>
             </thead>
             <tbody>
@@ -133,6 +134,7 @@
                 <tr>
                     <td><center>{{ $item->vendors->name }}</center></td>
                     <td><center>{{ $item->created_ats }} </center></td>
+                    <td><center>{{ $item->no_spk }} </center></td>
                     <td>  
                         <center>
                             {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}

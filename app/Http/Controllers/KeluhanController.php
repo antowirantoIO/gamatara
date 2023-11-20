@@ -80,9 +80,11 @@ class KeluhanController extends Controller
         if($request->type == 'PM')
         {
             $data->id_pm_approval   = Auth::user()->id;
+            $data->pm_date_approval = Carbon::now();
         }
         else{
-            $data->id_bod_approval  = Auth::user()->id;
+            $data->id_bod_approval      = Auth::user()->id;
+            $data->bod_date_approval    = Carbon::now();
         }
         $data->save();
 
@@ -111,7 +113,7 @@ class KeluhanController extends Controller
 
         foreach($keluhan as $value)
         {
-            $value['created_ats'] = Carbon::parse($value->created_at)->format('d M Y');
+            $value['created_ats'] = Carbon::parse($value->bod_date_approval)->format('d M Y');
         }
         
         if ($keluhan->isNotEmpty()) {

@@ -62,7 +62,7 @@
             }
 
             .logo-container {
-                margin-right: 10px; /* Tambahkan margin kanan sesuai kebutuhan */
+                margin-right: 100px; /* Tambahkan margin kanan sesuai kebutuhan */
             }
 
             .header {

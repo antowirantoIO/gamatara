@@ -181,9 +181,25 @@ class ProjectEngineerController extends Controller
         $beforeFiles = $request->file('before');
         $afterFiles = $request->file('after');
 
-        $projectPekerjaan = ProjectPekerjaan::find($request->id);
-        $projectPekerjaan->status = $status_pekerjaan;
-        $projectPekerjaan->save();
+        // $projectPekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
+        //                     ->where('id_subkategori', $request->id_subkategori)->where('id_kategori', $request->id_kategori)
+        //                     ->get();
+        // $projectPekerjaan->status = $status_pekerjaan;
+        // $projectPekerjaan->save();
+
+            // Memastikan $projectPekerjaan bukanlah koleksi kosong
+    if ($projectPekerjaan->isNotEmpty()) {
+        // Loop melalui setiap baris dan mengupdate status
+        foreach ($projectPekerjaan as $pekerjaan) {
+            $pekerjaan->status = $status_pekerjaan;
+            $pekerjaan->save();
+        }
+    } else {
+        // Handle jika tidak ada baris yang ditemukan
+        // Misalnya, Anda bisa melemparkan exception atau memberikan pesan kesalahan
+        // tergantung pada kebutuhan aplikasi Anda.
+    }
+
     
         if($request->file('before')){
             foreach ($beforeFiles as $before) {

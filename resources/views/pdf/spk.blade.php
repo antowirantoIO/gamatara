@@ -91,7 +91,7 @@
                 <td class="text-container">
                     <div class="header">PT. Gamatara Trans Ocean Shipyard</div>
                     <div class="project-name">Rekap SPK {{$data->nama_project}}</div>
-                    <div class="date-range">From {{$data->created_ats}} To {{$data->target_selesai ?? '-'}}</div>
+                    <div class="date-range">From {{$data->created_ats}} To {{$data->target_selesais ?? '-'}}</div>
                 </td>
             </tr>
         </table>

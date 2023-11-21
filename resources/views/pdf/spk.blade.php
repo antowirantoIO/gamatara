@@ -82,7 +82,7 @@
         <table class="container">
             <tr>
                 <td>
-                    <!-- <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo"> -->
+                    <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
                 </td>
                 <td class="text-container">
                     <div class="header">PT. Gamatara Trans Ocean Shipyard</div>

@@ -28,7 +28,7 @@
                                     <div class="row gy-4">
                                         <div class="col-xxl-12">
                                             <label for="pm">Project Manager Name</label>
-                                            <select name="pm" id="pm" class="form-control">
+                                            <select name="pm" id="pm" class="form-control select2">
                                                 <option value="">Choose Project Manager</option>
                                                 @foreach($karyawan as $k)
                                                 <option value="{{$k->id}}">{{$k->name}}</option>
@@ -57,7 +57,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Admin Name</label>&nbsp;
-                                                <select name="pa[]" id="pa" class="form-control js-example-basic-multiple" multiple="multiple">
+                                                <select name="pa[]" id="pa" class="form-control js-example-basic-multiple select2" multiple="multiple">
                                                     <option value="">Choose Project Admin</option>
                                                     @foreach($karyawan as $k)
                                                     <option value="{{$k->id}}">{{$k->name}}</option>
@@ -89,9 +89,8 @@
 @endsection
 
 @section('scripts')
-    <script>   $(function () {
-        $("select").select2();
-    });
+    <script>   
+    $(".select2").select2();
 
     const pmSelect = $('#pm');
     const peSelect = $('#pe');

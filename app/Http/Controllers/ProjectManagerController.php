@@ -166,8 +166,12 @@ class ProjectManagerController extends Controller
     
     public function delete($id)
     {
-        $data           = ProjectManager::findOrFail($id);
+        $data   = ProjectManager::findOrFail($id);
         $data->delete();
+        $datas  = ProjectEngineer::where('id_pm',$id)->get();
+        $datas->delete();
+        $datass = ProjectAdmin::where('id_pm',$id)->get();
+        $datass->delete();
 
         return redirect(route('project_manager'))
                     ->with('success', 'Data successfully deleted');

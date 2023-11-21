@@ -28,7 +28,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="karyawan">Employee</label>
-                                                <select name="karyawan" id="karyawan" class="form-control">
+                                                <select name="karyawan" id="karyawan" class="form-control select2" >
                                                     <option value="">Choose Employee</option>
                                                     @foreach($karyawan as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == old('karyawan') ? 'selected' : '' }} data-email="{{$r->email}}" data-nomor-telepon="{{$r->nomor_telpon}}">{{ $r->name }}</option>
@@ -60,7 +60,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="role" class="form-label">Role</label>
-                                                <select name="role" id="role" class="form-control">
+                                                <select name="role" id="role" class="form-control select2">
                                                     <option value="">Choose Role</option>
                                                     @foreach($role as $r)
                                                         <option value="{{$r->id}}" {{ $r->id == old('role') ? 'selected' : '' }}>{{ $r->name }}</option>
@@ -230,9 +230,7 @@
     document.getElementById('password').addEventListener('input', checkPasswordLength);
 
     //untuk semua select menggunakan select2
-    $(function () {
-        $("select").select2();
-    });
+    $(".select2").select2();
 </script>
 @endsection
 

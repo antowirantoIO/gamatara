@@ -102,7 +102,7 @@ class JenisKapalController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportJenisKapal($data), 'List Jenis Kapal.xlsx');
+        return Excel::download(new ExportJenisKapal($data), 'List Ship Type.xlsx');
     }
 
 }

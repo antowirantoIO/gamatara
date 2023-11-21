@@ -102,6 +102,6 @@ class KategoriController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+        return Excel::download(new ExportKategori($data), 'List Categori.xlsx');
     }
 }

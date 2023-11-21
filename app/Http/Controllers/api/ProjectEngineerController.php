@@ -181,9 +181,9 @@ class ProjectEngineerController extends Controller
         $beforeFiles = $request->file('before');
         $afterFiles = $request->file('after');
 
-        // $projectPekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
-        //                     ->where('id_subkategori', $request->id_subkategori)->where('id_kategori', $request->id_kategori)
-        //                     ->get();
+        $projectPekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
+                            ->where('id_subkategori', $request->id_subkategori)->where('id_kategori', $request->id_kategori)
+                            ->get();
         // $projectPekerjaan->status = $status_pekerjaan;
         // $projectPekerjaan->save();
 

@@ -115,6 +115,6 @@ class SubkategoriController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportSubKategori($data), 'List Sub Kategori.xlsx');
+        return Excel::download(new ExportSubKategori($data), 'List Sub Categori.xlsx');
     }
 }

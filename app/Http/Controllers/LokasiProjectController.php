@@ -102,6 +102,6 @@ class LokasiProjectController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportLokasiProject($data), 'List Lokasi Project.xlsx');
+        return Excel::download(new ExportLokasiProject($data), 'List Project Location.xlsx');
     }
 }

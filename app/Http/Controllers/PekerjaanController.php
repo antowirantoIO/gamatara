@@ -127,7 +127,7 @@ class PekerjaanController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportPekerjaan($data), 'List Pekerjaan.xlsx');
+        return Excel::download(new ExportPekerjaan($data), 'List Job.xlsx');
     }
     
 }

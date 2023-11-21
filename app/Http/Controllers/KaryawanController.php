@@ -123,6 +123,6 @@ class KaryawanController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportKaryawan($data), 'List Karyawan.xlsx');
+        return Excel::download(new ExportKaryawan($data), 'List Employee.xlsx');
     }
 }

@@ -101,7 +101,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="customer" class="form-label">Nama Project Manager</label>
+                                <label for="customer" class="form-label">Project Manager Name</label>
                                 <input type="text" name="nama_project_manager" class="form-control" id="nama_project_manager">
                             </div>
                         </div>

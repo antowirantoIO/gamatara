@@ -84,7 +84,7 @@
                             <div>
                                 <label for="nama" class="form-label">Project Manager Name</label>
                                 <select name="pm" id="pm" class="form-control">
-                                    <option value="">Pilih Project Manager</option>
+                                    <option value="">Choose Project Manager</option>
                                     @foreach($karyawan as $k)
                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                     @endforeach

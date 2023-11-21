@@ -110,6 +110,7 @@ class KeluhanController extends Controller
         $cetak = "Rekap SPK.pdf";
 
         $data['created_ats'] = Carbon::parse($data->created_at)->format('d M Y');
+        $data['target_selesais'] = Carbon::parse($data->target_selesai)->format('d M Y');
 
         foreach($keluhan as $value)
         {

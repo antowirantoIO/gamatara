@@ -205,7 +205,7 @@ class BodController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
+            $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
                     ->where('status',1)
                     ->get();

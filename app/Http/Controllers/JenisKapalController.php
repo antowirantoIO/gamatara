@@ -28,7 +28,7 @@ class JenisKapalController extends Controller
                             </a>';
                 }
                 if(Can('jenis_kapal-delete')) {
-                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Jenis Kapal '.$data->name.'" data-form="form-jenis_kapal" class="btn btn-danger btn-sm deleteData">
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Ship Type '.$data->name.'" data-form="form-jenis_kapal" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                                     </span>

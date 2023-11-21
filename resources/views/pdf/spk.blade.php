@@ -58,7 +58,7 @@
                 flex-grow: 1;
                 text-align: center;
                 text-transform: uppercase;
-                padding-left: 20px; /* Sesuaikan sesuai kebutuhan */
+                padding-left: 200px; /* Sesuaikan sesuai kebutuhan */
             }
 
             .logo-container {

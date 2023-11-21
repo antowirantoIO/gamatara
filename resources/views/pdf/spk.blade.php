@@ -61,6 +61,10 @@
                 padding-left: 20px; /* Sesuaikan sesuai kebutuhan */
             }
 
+            .logo-container {
+                margin-right: 10px; /* Tambahkan margin kanan sesuai kebutuhan */
+            }
+
             .header {
                 font-size: 15px;
                 font-weight: bold;
@@ -81,7 +85,7 @@
     <body>
         <table class="container">
             <tr>
-                <td>
+                <td class="logo-container">
                     <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
                 </td>
                 <td class="text-container">

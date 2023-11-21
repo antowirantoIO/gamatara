@@ -396,6 +396,7 @@
 
     $(function() {
         $("#example1").DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthMenu: [5, 10, 15],
             language: {
@@ -418,6 +419,7 @@
         });
 
         $("#example2").DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthMenu: [5, 10, 15],
             language: {
@@ -440,6 +442,7 @@
         });
 
         $("#example3").DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthMenu: [5, 10, 15],
             language: {

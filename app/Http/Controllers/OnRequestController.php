@@ -59,7 +59,7 @@ class OnRequestController extends Controller
                 return $data->kapal->name ?? '';
             })
             ->addColumn('tanggal_request', function($data){
-                return $data->created_at ? $data->created_at->format('d-m-Y H:i') : '';
+                return $data->created_at ? $data->created_at->format('d M Y') : '';
             })
             ->addColumn('action', function($data){
                 $btnDetail = '';

@@ -11,11 +11,11 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Vendor</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
+                            <!-- <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
                                 <span>
                                     <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Filter
-                            </button>
+                            </button> -->
                             <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>

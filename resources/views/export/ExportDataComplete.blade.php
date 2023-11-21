@@ -9,13 +9,13 @@
             </th>
         </tr>
         <tr>
-            <th style="height: 30px;">Kode Project</th>
-            <th style="height: 30px;">Nama Project</th>
-            <th style="height: 30px;">Nama Customer</th>
+            <th style="height: 30px;">Code</th>
+            <th style="height: 30px;">Project Name</th>
+            <th style="height: 30px;">Customer Name</th>
             <th style="height: 30px;">Project Manager</th>
-            <th style="height: 30px;">No Kontak Person</th>
-            <th style="height: 30px;">Rentang Project</th>
-            <th style="height: 30px;">Tengat Waktu</th>
+            <th style="height: 30px;">Contact Person Phone</th>
+            <th style="height: 30px;">Project Range</th>
+            <th style="height: 30px;">Deadline</th>
         </tr>
     </thead>
     <tbody>

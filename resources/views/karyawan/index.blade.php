@@ -86,7 +86,7 @@
                     <div class="row gy-4">
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nama" class="form-label">Nama</label>
+                                <label for="nama" class="form-label">Employee Name</label>
                                 <input type="text" name="name" class="form-control" id="name">
                             </div>
                         </div>
@@ -98,21 +98,21 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="alamat" class="form-label">Alamat</label>
+                                <label for="alamat" class="form-label">Address</label>
                                 <input type="text" name="alamat" id="alamat" class="form-control">
                             </div>
                         </div>                  
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <div>
-                                    <label for="nomor_telpon" class="form-label">Nomor Telpon</label>
+                                    <label for="nomor_telpon" class="form-label">Phone</label>
                                     <input type="email" name="nomor_telpon" id="nomor_telpon" class="form-control">
                                 </div>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <label for="jabatan" class="form-label">Job Title</label>
                                 <input type="email" name="jabatan" id="jabatan" class="form-control">
                             </div>
                         </div>

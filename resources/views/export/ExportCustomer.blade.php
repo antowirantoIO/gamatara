@@ -2,10 +2,10 @@
 <table border="1">
     <thead>
         <tr>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Nama Customer</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Alamat</th>
+            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Customer Name</th>
+            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Address</th>
             <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Contact Person</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Nomor Contact Person</th>
+            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Contact Person Phone</th>
             <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">Email</th>
             <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="150px">NPWP</th>
         </tr>

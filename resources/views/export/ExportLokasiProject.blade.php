@@ -1,8 +1,8 @@
-<h3>List Lokasi Project</h3>
+<h3>List Project Location</h3>
 <table border="1">
     <thead>
         <tr>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Nama Lokasi Project</th>
+            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Project Location Name</th>
         </tr>
     </thead>
     <tbody>

@@ -60,10 +60,10 @@ class OnProgressController extends Controller
                 return getProgresProject($data->id) . ' / ' . getCompleteProject($data->id);
             })
             ->addColumn('start', function($data){
-                return $data->created_at ? $data->created_at->format('d F Y H:i') : '';
+                return $data->created_at ? $data->created_at->format('d F Y') : '';
             })
             ->addColumn('end', function($data){
-                return $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->format('d F Y H:i') : '';
+                return $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->format('d F Y') : '';
             })
             ->make(true);
         }

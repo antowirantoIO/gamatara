@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Roles;
 use App\Models\Karyawan;
 use App\Models\User;
+use App\Models\ProjectEngineer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,7 +23,12 @@ class UserGamataraController extends Controller
             $user['name'] = $user->karyawan->name ?? '';
 
             if ($user->role->name == 'Project Enginer') {    
-                $user['id_karyawan'] = optional($user->karyawan->pm)->pe->id ?? '';
+                $PE = ProjectEngineer::where('id_karyawan',$user->id_karyawan)->first();
+                if($PE){
+                    $user['id_karyawan'] = $PE->id;
+                }else {
+                    $user['id_karyawan'] = '';
+                }
                 
             } elseif ($user->role->name == 'Project Manager') {
                 $user['id_karyawan'] = optional($user->karyawan)->pm->id;

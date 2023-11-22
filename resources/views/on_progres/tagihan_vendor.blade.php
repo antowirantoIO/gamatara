@@ -51,6 +51,7 @@
                                                     <thead class="table-light">
                                                         <tr>
                                                             <th style="color:#929EAE;">Job</th>
+                                                            <th style="color:#929EAE;">Kategori</th>
                                                             <th style="color:#929EAE">Location</th>
                                                             <th style="color:#929EAE">Detail / Other</th>
                                                             <th style="color:#929EAE">Length (mm)</th>
@@ -98,9 +99,9 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Nama Pekerjaan</label>
+                            <label for="sub_kategori" class="form-label">Job Name</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
-                                <option value="">Pilih Nama Pekerjaan</option>
+                                <option value="">Choose Job Name</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
                                 @endforeach
@@ -109,13 +110,8 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="id_lokasi" class="form-label">Nama Vendor</label>
-                            <select name="id_lokasi" id="id_lokasi" class="form-select">
-                                <option value="">Pilih Lokasi</option>
-                                @foreach($lokasi as $l)
-                                <option value="{{$l->id}}">{{$l->name}}</option>
-                                @endforeach
-                            </select>
+                            <label for="id_lokasi" class="form-label">Location Name</label>
+                            <input name="id_lokasi" id="id_lokasi" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -138,14 +134,15 @@
 
             $('.form-select').select2({
                 theme : "bootstrap-5",
-                search: true
+                search: true,
+                dropdownParent: $("#modalFillter")
             });
 
             @foreach ( $workers as $key => $worker )
                 var id_kategori = $('#id_kategori-{{ $key }}').val();
                 var table{{ $key }} = $('#tableData{{ $key }}').DataTable({
                     fixedHeader:true,
-                    scrollX: false,
+                    scrollX: true,
                     processing: true,
                     serverSide: true,
                     searching: false,
@@ -188,7 +185,8 @@
                         }
                     },
                     columns : [
-                        { data : 'subKategori', name : 'pekerjaan'},
+                        { data : 'pekerjaan.name', name : 'pekerjaan'},
+                        { data : 'subKategori', name : 'subKategori'},
                         { data : 'id_lokasi', name : 'id_lokasi'},
                         {data : 'detail', name : 'detail'},
                         {data : 'length', name : 'length'},

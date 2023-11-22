@@ -105,7 +105,7 @@ body{
 
 .select2-results__options {
     overflow: auto;
-    /* height: 200px; */
+    height: 200px;
 }
 
 .select2-results__option:hover {
@@ -120,6 +120,9 @@ body{
     border-radius: 0.25rem
 }
 
+.draggable-row .select2-container--bootstrap-5 .select2-selection {
+    width: 200px;
+}
 .select2-container--default .select2-results__option[aria-selected=true] {
     background-color: #f4f6f9 !important;
     color: var(--vz-dropdown-link-active-color);
@@ -192,19 +195,18 @@ body{
     max-height: 500px;
 }
 
-.table-container {
-	overflow-y: hidden;
-	overflow-x: auto;
+
+#tablePekerjaan thead th {
+    width: 70%;
 }
 
-#tablePekerjaan {
-    width: 100%;
-    overflow-x: auto;
+#tablePekerjaan .form-control {
+    border: 1px solid black;
 }
-
-#tablePekerjaan select {
-    width: 200px;
-}
+/* #tablePekerjaan tbody {
+    background-color: #1e79f0;
+    opacity: 20;
+} */
 
 .draggable-row {
     cursor: grab;

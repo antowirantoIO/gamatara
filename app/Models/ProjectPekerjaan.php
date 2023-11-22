@@ -51,6 +51,12 @@ class ProjectPekerjaan extends Model
                     ->first();
     }
 
+    public function activitys()
+    {
+        return $this->hasMany(RecentActivity::class,'project_pekerjaan_id','id')
+                    ->orderBy('created_at', 'desc');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->code ?? false, function($query) use ($filter) {

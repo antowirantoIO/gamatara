@@ -209,3 +209,50 @@ function Can($permission)
     return Auth::user()->can($permission);
 }
 
+function getLatters($name)
+{
+    $latter = '';
+
+    switch ($name) {
+        case 'UMUM':
+            $latter = 'A';
+            return $latter;
+            break;
+
+        case 'PERAWATAN BADAN KAPAL':
+            $latter = 'B';
+            return $latter;
+            break;
+
+        case 'KONSTRUKSI KAPAL':
+            $latter = 'C';
+            return $latter;
+            break;
+
+        case 'PIPA-PIA':
+            $latter = 'D';
+            return $latter;
+            break;
+
+        case 'PERMESINAN':
+            $latter = 'E';
+            return $latter;
+            break;
+
+        case 'INTERIOR KAPAL':
+            $latter = 'F';
+            return $latter;
+            break;
+
+        case 'LAIN-LAIN':
+            $latter = 'G';
+            return $latter;
+            break;
+
+        default:
+            $latter = '';
+            return $latter;
+            break;
+    }
+}
+

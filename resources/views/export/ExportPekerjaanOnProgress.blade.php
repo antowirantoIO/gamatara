@@ -22,9 +22,7 @@
         </td>
     </tr>
     <tr style="font-size: 12px;font-weight: bold;">
-        <td height="30" colspan="3">Tanggal 03 Juli 2023</td>
-        <td>Project</td>
-        <td height="30" colspan="6"> &nbsp;TK. PULAU TIGA 3017 - 2023</td>
+        <td height="30" colspan="10" align="center"> &nbsp; {{ $project->nama_project }}</td>
     </tr>
     <tr align="center" style="font-size: 8px;font-weight: bold;">
         <td height="30">No</td>
@@ -61,7 +59,6 @@
                 $subkategori = $value->subKategori->name;
                 $kodeUnik = $value->kode_unik;
             @endphp
-            {{-- @if ($letters[$count] !== 'A') --}}
             @if ($prevKodeUnik !== $kodeUnik)
                 <tr style="font-size: 8px;">
                     <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -78,7 +75,7 @@
                 <tr style="font-size: 8px;">
                     <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $letters[$count] }}.{{ $subCount }}.</td>
                     <td height="20">&nbsp;
-                        @if ($subkategori === 'Telah dilaksanakan pekerjaan')
+                        @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
                             <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
                         @else
                             <strong>{{ $value->subKategori->name }}</strong>
@@ -106,21 +103,20 @@
                 <td height="20"> &nbsp;{{ $value->pekerjaan->name ?? '-' }}</td>
                 <td height="20" align="center">{{ $value->id_lokasi }}</td>
                 <td height="20" align="center">{{ $value->detail }}</td>
-                <td height="20" align="center">{{ $value->length }}</td>
-                <td height="20" align="center">{{ $value->width }}</td>
-                <td height="20" align="center">{{ $value->thick }}</td>
-                <td height="20" align="center">{{ $value->qty }}</td>
+                <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>
+                <td height="20" align="center">{{ number_format($value->width,2, ',','') }}</td>
+                <td height="20" align="center">{{ number_format($value->thick,2, ',','') }}</td>
+                <td height="20" align="center">{{ number_format($value->qty,2, ',','') }}</td>
                 <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
                 <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
                 <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
             </tr>
-            {{-- @endif --}}
             @php
                 $prevIndex = $index;
                 $prevSub = $subkategori;
                 $prevKodeUnik = $kodeUnik;
             @endphp
-        @endforeach
+            @endforeach
             @if($item->count() > 0)
                 <tr style="font-size: 8px;">
                     <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -154,13 +150,12 @@
         <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>{{ $project->pm->karyawan->name }}</strong></span></td>
     </tr>
     <tr align="center">
-        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR</span></td>
-        <td style="font-size: 8px;" colspan="5" align="center"><span class="">KEPALA PROYEK</span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR TEKNIK</span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">MANAGER PROJECT</span></td>
     </tr>
     <tr>
         <td style="font-size: 8px;" colspan="5" align="center"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>
-        <td></td>
-        <td colspan="5"></td>
+        <td style="font-size: 8px;" colspan="5" align="center">PT. GAMATARA TRANS OCEAN SHIPYARD</td>
     </tr>
     {!! str_repeat('<tr></tr>', 6) !!}
     <tr>
@@ -168,8 +163,8 @@
         <td style="font-size: 8px;" colspan="5" align="center"><span class="text-decoration-underline"><strong>SUGIARTO SANTOSO, S.KOM</strong></span></td>
     </tr>
     <tr align="center">
-        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR</span></td>
-        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR</span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR FINANCE &amp; MARKETING</span></td>
+        <td style="font-size: 8px;" colspan="5" align="center"><span class="">DIREKTUR PROJECT</span></td>
     </tr>
     <tr>
         <td style="font-size: 8px;" colspan="5" align="center"><span class="">PT. GAMATARA TRANS OCEAN SHIPYARD</span></td>

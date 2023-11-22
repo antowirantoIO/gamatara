@@ -20,7 +20,7 @@ class UserGamataraController extends Controller
                     ->with(['role:id,name','karyawan:id,name'])->where('id',$user)
                     ->first();
             $user['name'] = $user->karyawan->name ?? '';
-            if($user->role->name == 'Project Engineer')
+            if($user->role->name == 'Project Enginer' || $user->role->name == 'Project Engineer')
             {
                 $user['id_karyawan'] = $user->karyawan->pm->pe->id ?? '';
             }elseif($user->role->name == 'Project Manager'){

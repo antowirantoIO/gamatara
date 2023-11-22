@@ -12,6 +12,7 @@ use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use DB;
 use Illuminate\Support\Facades\File;
 
 class ProjectEngineerController extends Controller
@@ -20,7 +21,7 @@ class ProjectEngineerController extends Controller
     {
         try{
             $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
-                    ->select('id','nama_project','created_at','id_customer')
+                    ->select('id','nama_project','created_at','id_customer','status')
                     ->where('pe_id_1',$request->pe_id)
                     ->get();
 
@@ -74,7 +75,7 @@ class ProjectEngineerController extends Controller
             $progress = ProjectPekerjaan::where('id_project', $request->id)
                         ->select('id_kategori')
                         ->selectRaw('COUNT(id) as total_status_1')
-                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                        ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as total_status_2')
                         ->groupBy('id_kategori')
                         ->get();
             
@@ -109,23 +110,30 @@ class ProjectEngineerController extends Controller
     public function subkategoriPE(Request $request)
     {
         try{
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
-            $namakategori = $subkategori->first()->kategori->name ?? '';            
+            $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $namakategori = $name->first()->kategori->name ?? '';            
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
-                        ->where('id_kategori', $request->id_kategori)
-                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
-                        ->groupBy('id_subkategori')
-                        ->get();
-            
+                ->where('id_kategori', $request->id_kategori)
+                ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                ->groupBy('id_subkategori')
+                ->filter($request)
+                ->get();
+
+            $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
+
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
+                ->whereIn('id', $subkategoriIds)
+                ->get();
+
             foreach ($subkategori as $item) {
-                $status = ''; 
+                $status = '';
 
                 $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-            
+
                 if ($matchingProgress) {
                     $maxStatus = $matchingProgress->max_status;
-            
+
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
@@ -134,7 +142,7 @@ class ProjectEngineerController extends Controller
                         $status = 'Done';
                     }
                 }
-            
+
                 $item->status = $status;
             }
          
@@ -187,20 +195,15 @@ class ProjectEngineerController extends Controller
         // $projectPekerjaan->status = $status_pekerjaan;
         // $projectPekerjaan->save();
 
-            // Memastikan $projectPekerjaan bukanlah koleksi kosong
-    if ($projectPekerjaan->isNotEmpty()) {
-        // Loop melalui setiap baris dan mengupdate status
-        foreach ($projectPekerjaan as $pekerjaan) {
-            $pekerjaan->status = $status_pekerjaan;
-            $pekerjaan->save();
+        if ($projectPekerjaan->isNotEmpty()) {
+            foreach ($projectPekerjaan as $pekerjaan) {
+                $pekerjaan->status = $status_pekerjaan;
+                $pekerjaan->save();
+            }
+        } else {
+ 
         }
-    } else {
-        // Handle jika tidak ada baris yang ditemukan
-        // Misalnya, Anda bisa melemparkan exception atau memberikan pesan kesalahan
-        // tergantung pada kebutuhan aplikasi Anda.
-    }
 
-    
         if($request->file('before')){
             foreach ($beforeFiles as $before) {
                 if ($before && $before->isValid()) {

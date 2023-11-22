@@ -13,6 +13,7 @@ use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Keluhan;
+use Carbon\Carbon;
 use DB;
 
 class ProjectManagerController extends Controller
@@ -21,7 +22,7 @@ class ProjectManagerController extends Controller
     {
         try{
             $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
-                    ->select('id','nama_project','created_at','id_customer')
+                    ->select('id','nama_project','created_at','id_customer','status')
                     ->where('pm_id',$request->pm_id)
                     ->get();
 
@@ -69,6 +70,7 @@ class ProjectManagerController extends Controller
             if($data->id_pm_approval == null)
             {
                 $data->id_pm_approval   = $request->id_user;
+                $data->pm_date_approval = Carbon::now();
             }else{
                 return response()->json(['status' => 500, 'message' => 'PM Sudah Approve']);
             }
@@ -77,6 +79,7 @@ class ProjectManagerController extends Controller
             if($data->id_bod_approval == null)
             {
                 $data->id_bod_approval  = $request->id_user;
+                $data->bod_date_approval    = Carbon::now();
             }else{
                 return response()->json(['status' => 500, 'message' => 'BOD Sudah Approve']);
             }
@@ -101,7 +104,7 @@ class ProjectManagerController extends Controller
             $progress = ProjectPekerjaan::where('id_project', $request->id)
                         ->select('id_kategori')
                         ->selectRaw('COUNT(id) as total_status_1')
-                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                        ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as total_status_2')
                         ->groupBy('id_kategori')
                         ->get();
             
@@ -136,23 +139,30 @@ class ProjectManagerController extends Controller
     public function subkategoriPM(Request $request)
     {
         try{
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
-            $namakategori = $subkategori->first()->kategori->name ?? '';            
+            $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $namakategori = $name->first()->kategori->name ?? '';            
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
-                        ->where('id_kategori', $request->id_kategori)
-                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
-                        ->groupBy('id_subkategori')
-                        ->get();
-            
+                ->where('id_kategori', $request->id_kategori)
+                ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                ->groupBy('id_subkategori')
+                ->filter($request)
+                ->get();
+
+            $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
+
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
+                ->whereIn('id', $subkategoriIds)
+                ->get();
+
             foreach ($subkategori as $item) {
-                $status = ''; 
+                $status = '';
 
                 $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-            
+
                 if ($matchingProgress) {
                     $maxStatus = $matchingProgress->max_status;
-            
+
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
@@ -161,7 +171,7 @@ class ProjectManagerController extends Controller
                         $status = 'Done';
                     }
                 }
-            
+
                 $item->status = $status;
             }
          

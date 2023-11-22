@@ -22,7 +22,9 @@ class BodController extends Controller
     public function laporanCustomer(Request $request)
     {
         try{
-            $data = Customer::select('id','name')->has('projects')->with('projects','projects.progress:harga_customer,qty,id_project')->get();
+            $data = Customer::select('id','name')->has('projects')
+            ->with('projects','projects.progress:harga_customer,qty,id_project')
+            ->get();
         
             foreach($data as $value){
                 if($value->projects)
@@ -206,7 +208,7 @@ class BodController extends Controller
     {
         try{
             $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
-                    ->select('id','nama_project','created_at','id_customer')
+                    ->select('id','nama_project','created_at','id_customer','status')
                     ->where('status',1)
                     ->get();
 
@@ -295,23 +297,30 @@ class BodController extends Controller
     public function subkategoriBOD(Request $request)
     {
         try{
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
-            $namakategori = $subkategori->first()->kategori->name ?? '';            
+            $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $namakategori = $name->first()->kategori->name ?? '';            
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
-                        ->where('id_kategori', $request->id_kategori)
-                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
-                        ->groupBy('id_subkategori')
-                        ->get();
-            
+                ->where('id_kategori', $request->id_kategori)
+                ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                ->groupBy('id_subkategori')
+                ->filter($request)
+                ->get();
+
+            $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
+
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
+                ->whereIn('id', $subkategoriIds)
+                ->get();
+
             foreach ($subkategori as $item) {
-                $status = ''; 
+                $status = '';
 
                 $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-            
+
                 if ($matchingProgress) {
                     $maxStatus = $matchingProgress->max_status;
-            
+
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
@@ -320,7 +329,7 @@ class BodController extends Controller
                         $status = 'Done';
                     }
                 }
-            
+
                 $item->status = $status;
             }
          

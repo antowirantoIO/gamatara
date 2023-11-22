@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
 use App\Models\OnRequest;
+use App\Models\ProjectAdmin;
 use App\Models\User;
 use App\Models\Vendor;
 use Carbon\Carbon;
@@ -144,7 +145,7 @@ class KeluhanController extends Controller
         $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
-        $pa = User::find($data->pa_id);
+        $pa = ProjectAdmin::find($data->pa_id);
         $vendor = Vendor::find($keluhan->id_vendor);
         $total = count(OnRequest::get());
         $total = str_pad($total, 3, '0', STR_PAD_LEFT);

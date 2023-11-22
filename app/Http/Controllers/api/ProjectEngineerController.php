@@ -12,6 +12,7 @@ use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use DB;
 use Illuminate\Support\Facades\File;
 
 class ProjectEngineerController extends Controller

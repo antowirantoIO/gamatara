@@ -95,26 +95,6 @@
                 </td>
             </tr>
         </table>
-        <!-- <table class="font-size-11" style="border-collapse: collapse; width: 100%;" cellpadding="2" cellspacing="0">
-            <tr>
-                <td>Kode Project</td>
-                <td class="w-10">:</td>
-                <td colspan="2">{{ $data->code }}</td>
-
-                <td class="text-left">Nama Project</td>
-                <td class="text-left">:</td>
-                <td class="text-left" colspan="2">{{ $data->nama_project }}</td>
-            </tr>
-            <tr>
-                <td>Project Manajer</td>
-                <td class="w-10">:</td>
-                <td colspan="2">{{ $data->pm->karyawan->name ?? '' }}</td>
-
-                <td class="text-left">Displacement</td>
-                <td class="text-left">:</td>
-                <td class="text-left" colspan="2">{{ $data->displacement }}</td>
-            </tr>
-        </table> -->
         <br>
         <table class="table-body font-size-11 table-horizontal">
             <thead>

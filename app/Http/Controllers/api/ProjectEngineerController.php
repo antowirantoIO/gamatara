@@ -110,24 +110,29 @@ class ProjectEngineerController extends Controller
     public function subkategoriPE(Request $request)
     {
         try{
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
-            $namakategori = $subkategori->first()->kategori->name ?? '';            
+            $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $namakategori = $name->first()->kategori->name ?? '';            
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
-                        ->where('id_kategori', $request->id_kategori)
-                        ->where('id_subkategori', $request->id_subkategori)
-                        ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
-                        ->groupBy('id_subkategori')
-                        ->get();
-            
+                ->where('id_kategori', $request->id_kategori)
+                ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+                ->groupBy('id_subkategori')
+                ->get();
+
+            $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
+
+            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
+                ->whereIn('id', $subkategoriIds)
+                ->get();
+
             foreach ($subkategori as $item) {
-                $status = ''; 
+                $status = '';
 
                 $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-            
+
                 if ($matchingProgress) {
                     $maxStatus = $matchingProgress->max_status;
-            
+
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
@@ -136,7 +141,7 @@ class ProjectEngineerController extends Controller
                         $status = 'Done';
                     }
                 }
-            
+
                 $item->status = $status;
             }
          

@@ -28,7 +28,7 @@ class KategoriController extends Controller
                                 </a>';
                 }
                 if(Can('kategori-delete')){
-                    $btnDelete = ' <a data-id="'.$data->id.'" data-name="Kategori '.$data->name.'" data-form="form-kategori" class="btn btn-danger btn-sm deleteData">
+                    $btnDelete = ' <a data-id="'.$data->id.'" data-name="Categori '.$data->name.'" data-form="form-kategori" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                                     </span>
@@ -102,6 +102,6 @@ class KategoriController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportKategori($data), 'List Kategori.xlsx');
+        return Excel::download(new ExportKategori($data), 'List Categori.xlsx');
     }
 }

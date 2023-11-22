@@ -28,7 +28,7 @@ class LokasiProjectController extends Controller
                                 </a>';
                 }
                 if(Can('lokasi_project-delete')){
-                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Lokasi Project '.$data->name.'" data-form="form-lokasi_project" class="btn btn-danger btn-sm deleteData">
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Project Location '.$data->name.'" data-form="form-lokasi_project" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                                     </span>
@@ -102,6 +102,6 @@ class LokasiProjectController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportLokasiProject($data), 'List Lokasi Project.xlsx');
+        return Excel::download(new ExportLokasiProject($data), 'List Project Location.xlsx');
     }
 }

@@ -19,11 +19,11 @@ class ProjectEngineerController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
+            $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
-                    ->where('pe_id_1',$request->pe_id_1)
-                    ->orWhere('pe_id_2',$request->pe_id_2)
+                    ->where('pe_id_1',$request->pe_id)
                     ->get();
+
             foreach ($data as $item) {
                 $item['nama_customer'] = $item->customer->name ?? '';
                 $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
@@ -181,9 +181,25 @@ class ProjectEngineerController extends Controller
         $beforeFiles = $request->file('before');
         $afterFiles = $request->file('after');
 
-        $projectPekerjaan = ProjectPekerjaan::find($request->id);
-        $projectPekerjaan->status = $status_pekerjaan;
-        $projectPekerjaan->save();
+        $projectPekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
+                            ->where('id_subkategori', $request->id_subkategori)->where('id_kategori', $request->id_kategori)
+                            ->get();
+        // $projectPekerjaan->status = $status_pekerjaan;
+        // $projectPekerjaan->save();
+
+            // Memastikan $projectPekerjaan bukanlah koleksi kosong
+    if ($projectPekerjaan->isNotEmpty()) {
+        // Loop melalui setiap baris dan mengupdate status
+        foreach ($projectPekerjaan as $pekerjaan) {
+            $pekerjaan->status = $status_pekerjaan;
+            $pekerjaan->save();
+        }
+    } else {
+        // Handle jika tidak ada baris yang ditemukan
+        // Misalnya, Anda bisa melemparkan exception atau memberikan pesan kesalahan
+        // tergantung pada kebutuhan aplikasi Anda.
+    }
+
     
         if($request->file('before')){
             foreach ($beforeFiles as $before) {
@@ -237,7 +253,7 @@ class ProjectEngineerController extends Controller
     {
         try{
             $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id',$request->id)->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

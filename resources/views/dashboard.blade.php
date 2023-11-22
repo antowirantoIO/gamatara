@@ -396,6 +396,7 @@
 
     $(function() {
         $("#example1").DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthMenu: [5, 10, 15],
             language: {
@@ -418,6 +419,7 @@
         });
 
         $("#example2").DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthMenu: [5, 10, 15],
             language: {
@@ -440,6 +442,7 @@
         });
 
         $("#example3").DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthMenu: [5, 10, 15],
             language: {
@@ -461,5 +464,20 @@
             },
         });
     })
+
+    // Fungsi untuk mendeteksi apakah halaman memiliki token error
+    function has419Error() {
+        return document.body.innerText.includes('419 Page Expired');
+    }
+
+    // Fungsi untuk me-refresh halaman jika terdeteksi error 419
+    function refreshOn419Error() {
+        if (has419Error()) {
+            location.reload();
+        }
+    }
+
+    // Jalankan fungsi refreshOn419Error setiap beberapa detik (misalnya, setiap 5 detik)
+    setInterval(refreshOn419Error, 5000);
 </script>
 @endsection

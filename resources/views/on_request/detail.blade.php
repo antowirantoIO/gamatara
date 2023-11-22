@@ -37,12 +37,12 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    @can('on_request-add')
+                                    @if($pmAuth == 'Project Admin')
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
                                         </div>
-                                    @endcan
+                                    @endif
 
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
@@ -71,8 +71,8 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Project Engineer 1</label>
-                                                <select name="pe_id_1" id="pe_id_1" class="form-control selects">
+                                                <label>Project Engineer</label>
+                                                <select name="pe_id_1" id="pe_id_1" class="form-control select">
                                                     <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
                                                     <option value="{{$p->id}}" {{ $p->id == $data->pe_id_1 ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
@@ -80,7 +80,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-xxl-6 col-md-6">
+                                        <!-- <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Engineer 2</label>
                                                 <select name="pe_id_2" id="pe_id_2" class="form-control selects">
@@ -90,14 +90,19 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-xxl-6 col-md-6">
-                                            <label>Customer Name</label>
-                                            <div class="input-group">
-                                                <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
-                                                @can('on_request-add')
-                                                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
-                                                @endcan
+                                            <label for="customer_name" class="form-label">Customer Name</label>
+                                            <div class="position-relative">
+                                                <select id="customer_name" name="id_customer" class="form-control select2" aria-label="Customer Name">
+                                                    <option value="">Choose Customer</option>
+                                                    @foreach($customer as $k)
+                                                        <option value="{{$k->id}}" {{ $k->id == $data->id_customer ? 'selected' : '' }}>{{$k->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if($pmAuth == 'Project Admin')
+                                                    <button style="width: 7%; height: 110%;" class="btn btn-primary btn-sm position-absolute top-0 end-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -152,7 +157,7 @@
                                                     </select>
                                             </div>
                                         </div> 
-                                        <div class="col-xxl-6 col-md-6"></div>
+                                        <!-- <div class="col-xxl-6 col-md-6"></div> -->
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">
@@ -168,11 +173,11 @@
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                @can('on_request-request-add')
+                                                @if($pmAuth == 'Project Admin')
                                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                         <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                     </div>
-                                                @endcan
+                                                @endif
                                             </div>
                                         </div>
 
@@ -483,8 +488,8 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
+            confirmButtonText: 'Yes, Delete it!',
+            cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -608,29 +613,72 @@
         });
     });
 
-    //get nama customer dan set ke inputan masing2
-    var route = "{{ url('customer') }}";
-    $('#customer_name').typeahead({
-        source: function (query, process) {
-            return $.get(route, { query: query }, function (data) {
-                return process(data.map(function(customer) {
-                    return customer.name;
-                }));
-            });
-        },
-        updater: function (item) {
-            $.get(route, { query: item }, function (customerData) {
-                if (customerData.length > 0) {
-                    var selectedCustomer = customerData[0];
-                    $('#contact_person').val(selectedCustomer.contact_person);
-                    $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
-                    $('#alamat').val(selectedCustomer.alamat);
-                    $('#npwps').val(selectedCustomer.npwp);
-                }
-            });
-            return item;
+    // Initialize Select2
+    $('#customer_name').select2({
+        placeholder: 'Choose Customer',
+        ajax: {
+            url: "{{ url('customer') }}",
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results: data.map(function (customer) {
+                        return {
+                            id: customer.id,
+                            text: customer.name
+                        };
+                    })
+                };
+            },
+            cache: true
         }
     });
+
+    // Listen for the "select2:select" event when an item is selected
+    $('#customer_name').on('select2:select', function (e) {
+        var selectedCustomer = e.params.data;
+
+        // Use the selected customer data to populate other fields
+        $.ajax({
+            url: "{{ url('on_request/edits') }}/" + selectedCustomer.id,
+            method: 'GET',
+            dataType: 'json',
+            success: function (customerData) {
+                // Populate additional fields with the retrieved data
+                $('#contact_person').val(customerData.contact_person);
+                $('#nomor_contact_person').val(customerData.nomor_contact_person);
+                $('#alamat').val(customerData.alamat);
+                $('#npwps').val(customerData.npwp);
+            },
+            error: function (error) {
+                console.error('Error retrieving customer data:', error);
+            }
+        });
+    });
+
+    //get nama customer dan set ke inputan masing2
+    // var route = "{{ url('customer') }}";
+    // $('#customer_name').typeahead({
+    //     source: function (query, process) {
+    //         return $.get(route, { query: query }, function (data) {
+    //             return process(data.map(function(customer) {
+    //                 return customer.name;
+    //             }));
+    //         });
+    //     },
+    //     updater: function (item) {
+    //         $.get(route, { query: item }, function (customerData) {
+    //             if (customerData.length > 0) {
+    //                 var selectedCustomer = customerData[0];
+    //                 $('#contact_person').val(selectedCustomer.contact_person);
+    //                 $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
+    //                 $('#alamat').val(selectedCustomer.alamat);
+    //                 $('#npwps').val(selectedCustomer.npwp);
+    //             }
+    //         });
+    //         return item;
+    //     }
+    // });
 
     //hapus data yg sudah ada sebelumnya 
     var btnHapus = document.querySelectorAll(".btnHapus");
@@ -660,37 +708,37 @@
         $(".select2").select2();
     });
 
-    $(document).ready(function() {
-        // Inisialisasi Select2
-        $('.selects').select2();
+    // $(document).ready(function() {
+    //     // Inisialisasi Select2
+    //     $('.selects').select2();
 
-        var selectedOptions = [];
+    //     var selectedOptions = [];
 
-        function updateDisabledOptions() {
-            // Menonaktifkan opsi yang telah dipilih pada Select2 lainnya
-            $('.selects').find('option').prop('disabled', false);
-            for (var i = 0; i < selectedOptions.length; i++) {
-                var selectedValue = selectedOptions[i];
-                $('.selects').not(':eq(' + i + ')').find('option[value="' + selectedValue + '"]').prop('disabled', true);
-            }
-        }
+    //     function updateDisabledOptions() {
+    //         // Menonaktifkan opsi yang telah dipilih pada Select2 lainnya
+    //         $('.selects').find('option').prop('disabled', false);
+    //         for (var i = 0; i < selectedOptions.length; i++) {
+    //             var selectedValue = selectedOptions[i];
+    //             $('.selects').not(':eq(' + i + ')').find('option[value="' + selectedValue + '"]').prop('disabled', true);
+    //         }
+    //     }
 
-        // Memuat data pada Select2
-        selectedOptions[0] = $('#pe_id_1').val();
-        selectedOptions[1] = $('#pe_id_2').val();
-        updateDisabledOptions();
+    //     // Memuat data pada Select2
+    //     selectedOptions[0] = $('#pe_id_1').val();
+    //     selectedOptions[1] = $('#pe_id_2').val();
+    //     updateDisabledOptions();
 
-        $('.selects').change(function() {
-            // Mendapatkan nilai terpilih pada Select2 yang saat ini
-            var selectedValue = $(this).val();
+    //     $('.selects').change(function() {
+    //         // Mendapatkan nilai terpilih pada Select2 yang saat ini
+    //         var selectedValue = $(this).val();
 
-            // Memperbarui array selectedOptions
-            var currentIndex = $(this).index('.selects');
-            selectedOptions[currentIndex] = selectedValue;
+    //         // Memperbarui array selectedOptions
+    //         var currentIndex = $(this).index('.selects');
+    //         selectedOptions[currentIndex] = selectedValue;
 
-            // Memperbarui status nonaktif opsi pada Select2 lainnya
-            updateDisabledOptions();
-        });
-    });
+    //         // Memperbarui status nonaktif opsi pada Select2 lainnya
+    //         updateDisabledOptions();
+    //     });
+    // });
     </script>
 @endsection

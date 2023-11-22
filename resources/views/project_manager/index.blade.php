@@ -84,7 +84,7 @@
                             <div>
                                 <label for="nama" class="form-label">Project Manager Name</label>
                                 <select name="pm" id="pm" class="form-control">
-                                    <option value="">Pilih Project Manager</option>
+                                    <option value="">Choose Project Manager</option>
                                     @foreach($karyawan as $k)
                                     <option value="{{$k->id}}">{{$k->name}}</option>
                                     @endforeach
@@ -179,14 +179,14 @@
             let form = $(this).data('form');
 
             Swal.fire({
-                title: "Apakah yakin?",
-                text: `Data ${name} akan Dihapus`,
+                title: "Are you sure?",
+                text: `Data ${name} will be deleted`,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3577f1",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus",
-                cancelButtonText: "Batal",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(`#${form}${id}`).submit();

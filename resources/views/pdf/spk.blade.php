@@ -5,13 +5,10 @@
             * {
                 font-family: 'Arial', sans-serif;
             }
-            .table-header{
-                border-collapse: collapse;
-                width: 100%;
-            }
 
-            .table-header td, .table-header th{
-                /* padding: 10px; */
+            .container {
+                /* display: flex; */
+                align-items: center;
             }
 
             .table-body {
@@ -19,86 +16,83 @@
                 width: 100%;
             }
 
-            table {
-                border-collapse: collapse;
-            }
-
-            table thead th {
-                border-bottom: 1px solid black;
-            }
-
-            table tbody td {
-                border: none;
-            }
-
-            .table-bottom {
+            /* Contoh CSS untuk Tabel Horizontal */
+            .table-horizontal {
                 border-collapse: collapse;
                 width: 100%;
             }
 
-            .table-bottom th {
-                background-color: #B2D2E9;
-                color: black;
-                padding: 5px;
-                width: 20%;
-                font-size: 12px;
-                font-weight: 400
+            .table-horizontal th, .table-horizontal td {
+                border-top: 1px solid #000000; /* Garis horizontal di atas setiap sel */
+                border-bottom: 1px solid #000000; /* Garis horizontal di bawah setiap sel */
+                padding: 8px;
+                text-align: left;
             }
 
-            .table-bottom td {
-                font-size: 11px;
-                font-weight: 400
+            .table-horizontal th:first-child, .table-horizontal td:first-child {
+                border-left: none; /* Hapus garis vertikal di kiri untuk sel pertama */
             }
 
-            .table-bottom td, .table-bottom th{
-                border: 1px solid black;
+            .table-horizontal th:last-child, .table-horizontal td:last-child {
+                border-right: none; /* Hapus garis vertikal di kanan untuk sel terakhir */
             }
 
-            .font-size-12{
-                font-size: 12px;
+            .table-horizontal th {
+                background-color: #fff; /* Atur warna latar belakang header sesuai kebutuhan */
+                border-top: none; /* Hapus garis horizontal di atas header */
+            }
+
+            .table-horizontal thead th:first-child {
+                border-top: 1px solid #fff; /* Sisakan garis horizontal di atas header pertama */
             }
 
             .font-size-11{
                 font-size: 11px;
             }
 
-            .font-size-10{
-                font-size: 10px;
+            .logo {
+                width: 100px;
             }
 
-            .text-blue{
-                color: #4F71BE;
-            }
-
-            .p-20 {
-                padding: 15px;
-            }
-
-            .text-center {
+            .text-container {
+                flex-grow: 1;
                 text-align: center;
+                text-transform: uppercase;
+                padding-left: 100px; /* Sesuaikan sesuai kebutuhan */
             }
 
-            .text-right {
-                text-align: right;
+            .logo-container {
+                margin-right: 100px; /* Tambahkan margin kanan sesuai kebutuhan */
             }
 
-            .text-left {
-                text-align: left;
+            .header {
+                font-size: 15px;
+                font-weight: bold;
+            }
+
+            .project-name {
+                font-size: 18px;
+                font-weight: bold;
+                color: maroon;
+            }
+
+            .date-range {
+                font-size: 12px;
+                font-weight: bold;
             }
         </style>
     </head>
     <body>
-        <table>
+        <table class="container">
             <tr>
-                <td>
-                    <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
+                <td class="logo-container">
+                    <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
                 </td>
-                <td style="text-transform: uppercase;padding-left: 100px;">
-                    <span style="font-size: 15px; font-weight: bold;">&nbsp;&nbsp;&nbsp;PT. Gamatara Trans Ocean Shipyard </span><br> 
-                    <span style="font-size: 20px; font-weight: bold;color:maroon;">Rekap SPK KTM - 1001, TK - 2023</span><br>
-                    <span style="font-size: 12px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From {{$min}} To {{$max}}</span>
+                <td class="text-container">
+                    <div class="header">PT. Gamatara Trans Ocean Shipyard</div>
+                    <div class="project-name">Rekap SPK {{$data->nama_project}}</div>
+                    <div class="date-range">From {{$data->created_ats}} To {{$data->target_selesais ?? '-'}}</div>
                 </td>
-                <br><br>
             </tr>
         </table>
         <!-- <table class="font-size-11" style="border-collapse: collapse; width: 100%;" cellpadding="2" cellspacing="0">
@@ -122,21 +116,21 @@
             </tr>
         </table> -->
         <br>
-        <table class="table-body font-size-11">
+        <table class="table-body font-size-11 table-horizontal">
             <thead>
-                <th>PO No.</th>
-                <th>PO Date</th>
+                <th>Vendor</th>
+                <th>No SPK</th>
+                <th>SPK Date</th>
                 <th>Description</th>
             </thead>
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td><center>{{ $item->vendors->name }}</center></td>
-                    <td><center>{{ $item->created_ats }} </center></td>
+                    <td>&nbsp;{{ $item->vendors->name }}</td>
+                    <td>&nbsp;{{ $item->no_spk }} </td>
+                    <td>&nbsp;{{ $item->created_ats }} </td>
                     <td>  
-                        <center>
-                            {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
-                        </center>
+                        &nbsp;{!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
                     </td>
                 </tr>
                 @endforeach

@@ -1,8 +1,8 @@
-<h3>List Jenis Kapal</h3>
+<h3>List Ship Type</h3>
 <table border="1">
     <thead>
         <tr>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Nama Jenis Kapal</th>
+            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Ship Type Name</th>
         </tr>
     </thead>
     <tbody>

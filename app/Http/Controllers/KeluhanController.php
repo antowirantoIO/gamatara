@@ -27,10 +27,21 @@ class KeluhanController extends Controller
             //         ]
             //     );
             // }else{
+
+                $code = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/';
+                $projectCode = Keluhan::where('no_spk', 'LIKE', '%'.$code.'%')->count();
+                $randInt = '0001';
+                if ($projectCode >= 1) {
+                    $count = $projectCode+1;
+                    $randInt = '000'.(string)$count;
+                }
+                $randInt = substr($randInt, -5);
+
                 $keluhan                = new Keluhan();
                 $keluhan->on_request_id = $request->id;
                 $keluhan->id_vendor     = $request->vendor;
                 $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+                $keluhan->no_spk        = $code.$randInt;
                 $keluhan->save();
 
                 return response()->json([
@@ -69,9 +80,11 @@ class KeluhanController extends Controller
         if($request->type == 'PM')
         {
             $data->id_pm_approval   = Auth::user()->id;
+            $data->pm_date_approval = Carbon::now();
         }
         else{
-            $data->id_bod_approval  = Auth::user()->id;
+            $data->id_bod_approval      = Auth::user()->id;
+            $data->bod_date_approval    = Carbon::now();
         }
         $data->save();
 
@@ -96,9 +109,12 @@ class KeluhanController extends Controller
         $keluhan = Keluhan::where('on_request_id',$request->id)->get();
         $cetak = "Rekap SPK.pdf";
 
+        $data['created_ats'] = Carbon::parse($data->created_at)->format('d M Y');
+        $data['target_selesais'] = Carbon::parse($data->target_selesai)->format('d M Y');
+
         foreach($keluhan as $value)
         {
-            $value['created_ats'] = Carbon::parse($value->created_at)->format('d M Y');
+            $value['created_ats'] = Carbon::parse($value->bod_date_approval)->format('d M Y');
         }
         
         if ($keluhan->isNotEmpty()) {
@@ -124,6 +140,7 @@ class KeluhanController extends Controller
     {
         $keluhan = Keluhan::find($request->id);
         $data = OnRequest::find($keluhan->on_request_id); 
+        $data['created_ats'] =  Carbon::parse($data->created_at)->format('d M Y');
         $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
@@ -139,7 +156,7 @@ class KeluhanController extends Controller
         $data['approvalBOD'] = $bod->karyawan->name ?? '';
         $data['ttdBOD'] = $bod->ttd ?? '';
         $data['ttdVendor'] = $vendor->ttd ?? '';
-        $data['po_no'] = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/'.$total;
+        $data['po_no'] = $keluhan->no_spk ?? '';
 
         if($data->pm)
         {

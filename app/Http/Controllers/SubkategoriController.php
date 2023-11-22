@@ -32,7 +32,7 @@ class SubkategoriController extends Controller
                                 </a>';
                 }
                 if(Can('sub_kategori-delete')){
-                    $btnDelete = ' <a data-id="'.$data->id.'" data-name="Sub Kategori '.$data->name.'" data-form="form-sub_kategori" class="btn btn-danger btn-sm deleteData">
+                    $btnDelete = ' <a data-id="'.$data->id.'" data-name="Sub Categori '.$data->name.'" data-form="form-sub_kategori" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                                     </span>
@@ -115,6 +115,6 @@ class SubkategoriController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportSubKategori($data), 'List Sub Kategori.xlsx');
+        return Excel::download(new ExportSubKategori($data), 'List Sub Categori.xlsx');
     }
 }

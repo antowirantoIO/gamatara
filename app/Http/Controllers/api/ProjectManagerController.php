@@ -20,10 +20,11 @@ class ProjectManagerController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
+            $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
                     ->where('pm_id',$request->pm_id)
                     ->get();
+
             foreach ($data as $item) {
                 $item['nama_customer'] = $item->customer->name ?? '';
                 $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
@@ -206,7 +207,7 @@ class ProjectManagerController extends Controller
     {
         try{
             $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id',$request->id)->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

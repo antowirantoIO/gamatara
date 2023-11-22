@@ -13,7 +13,7 @@ $(".logout").click(function (e) {
         cancelButtonText: "Cancel",
     }).then((result) => {
         if (result.isConfirmed) {
-            const logout = `logout`;
+            const logout = `/logout`;
             const formLogout = $('#logoutForm');
             formLogout.attr('action', logout);
             formLogout.submit();

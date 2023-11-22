@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Roles;
 use App\Models\Karyawan;
 use App\Models\User;
+use App\Models\ProjectEngineer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,9 +18,22 @@ class UserGamataraController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user()->id;
             $user = User::select('id', 'id_karyawan', 'id_role')
-                    ->with(['role:id,name','karyawan:id,name'])->where('id',$user)
+                    ->with(['role:id,name','karyawan:id,name','karyawan.pm:id,id_karyawan','karyawan.pm.pe:id,id_pm,id_karyawan'])->where('id',$user)
                     ->first();
             $user['name'] = $user->karyawan->name ?? '';
+
+            if ($user->role->name == 'Project Enginer') {    
+                $PE = ProjectEngineer::where('id_karyawan',$user->id_karyawan)->first();
+                if($PE){
+                    $user['id_karyawan'] = $PE->id;
+                }else {
+                    $user['id_karyawan'] = '';
+                }
+                
+            } elseif ($user->role->name == 'Project Manager') {
+                $user['id_karyawan'] = optional($user->karyawan)->pm->id;
+            }
+            
 
             $token = auth()->user()->createToken('API Token')->accessToken;
 

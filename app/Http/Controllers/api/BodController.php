@@ -120,6 +120,7 @@ class BodController extends Controller
             $byTonase = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                         ->join('project as C', function ($join) use ($tahun) {
                             $join->on('B.id_project', '=', 'C.id')
+                                ->where('B.id_kategori', '=', 3)
                                 ->whereYear('C.created_at', '=', $tahun);
                         })
                         ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
@@ -130,6 +131,7 @@ class BodController extends Controller
             $byVolume = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
                         ->join('project as C', function ($join) use ($tahun) {
                             $join->on('B.id_project', '=', 'C.id')
+                                ->where('B.id_kategori', '=', 2)
                                 ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
                         })
                         ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as volume'))
@@ -166,19 +168,33 @@ class BodController extends Controller
                     ->whereYear('created_at',$tahun)
                     ->get();
 
-            $chartData = $chart->groupBy('pm_id')->map(function (&$groupedData) {
+            // $chartData = $chart->groupBy('pm_id')->map(function (&$groupedData) {
+            //     $onProgressCount = $groupedData->where('status', 1)->count();
+            //     $completeCount = $groupedData->where('status', 2)->count();
+
+            //     $employeeName = $groupedData->first()->pm->karyawan->name;
+
+            //     return [
+            //         'name' => $employeeName,
+            //         'on_progress' => $onProgressCount,
+            //         'complete' => $completeCount,
+            //     ];
+
+            // });
+
+            $chartData = $chart->groupBy('pm_id')->map(function ($groupedData) {
                 $onProgressCount = $groupedData->where('status', 1)->count();
                 $completeCount = $groupedData->where('status', 2)->count();
-
+            
                 $employeeName = $groupedData->first()->pm->karyawan->name;
-
+            
                 return [
                     'name' => $employeeName,
                     'on_progress' => $onProgressCount,
                     'complete' => $completeCount,
                 ];
-
-            });
+            
+            })->values();
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart' => $chartData]);
         } catch (\Exception $e) {
@@ -189,7 +205,7 @@ class BodController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::has('progress')->with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
+            $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
                     ->where('status',1)
                     ->get();
@@ -350,7 +366,7 @@ class BodController extends Controller
     {
         try{
             $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id',$request->id)->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

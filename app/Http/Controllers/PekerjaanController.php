@@ -37,7 +37,7 @@ class PekerjaanController extends Controller
                                 </a>';
                 }
                 if(Can('pekerjaan-delete')){
-                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Pekerjaan '.$data->name.'" data-form="form-pekerjaan" class="btn btn-danger btn-sm deleteData">
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="Job '.$data->name.'" data-form="form-pekerjaan" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                                     </span>
@@ -127,7 +127,7 @@ class PekerjaanController extends Controller
                 ->filter($request)
                 ->get();
 
-        return Excel::download(new ExportPekerjaan($data), 'List Pekerjaan.xlsx');
+        return Excel::download(new ExportPekerjaan($data), 'List Job.xlsx');
     }
     
 }

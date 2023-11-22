@@ -146,6 +146,7 @@ class ProjectManagerController extends Controller
                 ->where('id_kategori', $request->id_kategori)
                 ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
                 ->groupBy('id_subkategori')
+                ->filter($request)
                 ->get();
 
             $subkategoriIds = $progress->pluck('id_subkategori')->toArray();

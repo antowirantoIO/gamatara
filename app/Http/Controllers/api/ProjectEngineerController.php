@@ -117,6 +117,7 @@ class ProjectEngineerController extends Controller
                 ->where('id_kategori', $request->id_kategori)
                 ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
                 ->groupBy('id_subkategori')
+                ->filter($request)
                 ->get();
 
             $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
@@ -194,20 +195,15 @@ class ProjectEngineerController extends Controller
         // $projectPekerjaan->status = $status_pekerjaan;
         // $projectPekerjaan->save();
 
-            // Memastikan $projectPekerjaan bukanlah koleksi kosong
-    if ($projectPekerjaan->isNotEmpty()) {
-        // Loop melalui setiap baris dan mengupdate status
-        foreach ($projectPekerjaan as $pekerjaan) {
-            $pekerjaan->status = $status_pekerjaan;
-            $pekerjaan->save();
+        if ($projectPekerjaan->isNotEmpty()) {
+            foreach ($projectPekerjaan as $pekerjaan) {
+                $pekerjaan->status = $status_pekerjaan;
+                $pekerjaan->save();
+            }
+        } else {
+ 
         }
-    } else {
-        // Handle jika tidak ada baris yang ditemukan
-        // Misalnya, Anda bisa melemparkan exception atau memberikan pesan kesalahan
-        // tergantung pada kebutuhan aplikasi Anda.
-    }
 
-    
         if($request->file('before')){
             foreach ($beforeFiles as $before) {
                 if ($before && $before->isValid()) {

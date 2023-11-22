@@ -101,6 +101,11 @@ class ExportTagihanVendor implements FromView, WithTitle, WithStyles, WithColumn
             ],
             'C:J' => ['alignment' => [
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+                ],
+            ],
+            'C6:J6' => ['alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                 'wrapText' => true,
                 ],
@@ -131,6 +136,6 @@ class ExportTagihanVendor implements FromView, WithTitle, WithStyles, WithColumn
     {
         $data = groupExportTagihanVendor($this->request, $this->project);
         $name = OnRequest::where('id',$this->request->id_project)->first();
-        return view('export.ExportTagihanVendor',['data' => $data,'name' => $name]);
+        return view('export.ExportTagihanVendor',['data' => $data,'name' => $name,'title' => $this->title]);
     }
 }

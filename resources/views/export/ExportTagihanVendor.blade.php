@@ -4,7 +4,7 @@
             <th align="center" colspan="12" height="40">REKAPITULASI TAGIHAN SUB. KONTRAKTOR</th>
         </tr>
         <tr>
-            <th align="center" colspan="12" height="40">{{ $name->customer->name }}</th>
+            <th align="center" colspan="12" height="40">{{ strtoupper($title) }}</th>
         </tr>
         {!! str_repeat('<tr></tr>', 1) !!}
         <tr>
@@ -40,10 +40,10 @@
         @foreach ($data as $key => $item)
             @if($item->count() > 0)
                 <tr style="font-size: 8px;">
-                    <td align="center" style="border-right: 20px medium black;border-left: 20px medium black;" height="30"><strong>{{ $letters[$count] }}</strong></td>
+                    <td align="center" style="border-right: 20px medium black;border-left: 20px medium black;" height="30"><strong>{{ getLatters($key) }}</strong></td>
                     <td colspan="9" style="border: 20px medium black;font-size: 8px;" height="30"><strong>{{ $key }}</strong></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border: 20px medium black;border-left: 20px medium black; font-size: 8px;" align="center">Harga</td>
+                    <td style="border: 20px medium black;border-left: 20px medium black; font-size: 8px;" align="center">Jumlah</td>
                 </tr>
             @endif
             @php
@@ -108,18 +108,18 @@
                 <tr>
                     <td align="center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
                     <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan->name ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->id_lokasi ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->detail ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->width ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->thick ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->qty ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->unit ?? ' ' }}</td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->id_lokasi ?? ' ' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->detail ?? ' ' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ? number_format($value->length,2, ',','') : '' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->width ? number_format($value->width,2, ',','') : '' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->thick ? number_format($value->thick,2, ',','') : '' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->qty ? number_format($value->qty,2, ',','') : '' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ? number_format($value->amount,2, ',','') : '' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="right">{{ $value->unit ?? ' ' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="right">
                        Rp. {{ number_format($value->harga_vendor, 0, ',', '.') }}
                     </td>
-                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="right">
                         Rp. {{ number_format(($value->amount * $value->harga_vendor), 0, ',', '.') }}
                     </td>
                 </tr>
@@ -139,7 +139,7 @@
             <td style="border: 20px medium black;"></td>
             <td colspan="7" style="border: 20px medium black"></td>
             <td colspan="3" align="center" height="20" style="border: 20px medium black"><strong>TOTAL</strong></td>
-            <td height="30" style="border: 20px medium black;" align="left"><strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong></td>
+            <td height="30" style="border: 20px medium black;" align="rigth"><strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong></td>
         </tr>
         {!! str_repeat('<tr></tr>', 2) !!}
     </tbody>
@@ -171,8 +171,7 @@
         </tr>
         {!! str_repeat('<tr></tr>', 2) !!}
         <tr height="30">
-            <td>Catatan : </td>
-            <td></td>
+            <td colspan="2">Catatan : </td>
             <td></td>
             <td></td>
             <td></td>

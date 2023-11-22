@@ -58,7 +58,7 @@
                                         <div class="col-md-12">
                                            <div class="table-container">
                                             <table class="table" id="tablePekerjaan">
-                                                <thead style="background-color:#194BFB;color:#FFFFFF;">
+                                                <thead style="background-color:#194BFB; color: white;">
                                                     <tr>
                                                         <th style="width: 200px">Job</th>
                                                         <th style="width: 200px">Description</th>
@@ -70,17 +70,18 @@
                                                         <th style="width: 90px">Qty</th>
                                                         <th style="width: 90px">Amount</th>
                                                         <th style="width: 90px">Unit</th>
-                                                        <th style="width: 90px">Vendor Prices</th>
-                                                        <th style="width: 90px">Customer Prices</th>
+                                                        <th style="width: 90px">Unit Prices</th>
+                                                        <th style="width: 90px">Total Prices</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="clone">
-                                                    <input type="hidden" name="kode_unik" value="{{ $kode_unik ?? null }}">
+                                                    <input type="text" class="d-none" name="kode_unik" value="{{ $kode_unik ?? null }}">
+
                                                     @foreach ($pekerjaan as $keys => $p)
-                                                    <input type="hidden" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
+                                                    <input type="text" class="d-none" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
 
-
+{{--
                                                     @if ($p->activity())
                                                         <tr class="draggable-row parent-clone">
                                                             <input type="hidden" id="convertion-{{ $keys }}" value="{{ $p->conversion }}" name="convertion[]">
@@ -130,16 +131,9 @@
                                                                     <input type="text" class="form-control harga_vendor {{ intval($p->harga_vendor) !== intval($p->activity()->harga_vendor) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
                                                                 </td>
                                                             @endhasrole
-                                                            @hasrole('Project Admin')
-                                                                <td>
-                                                                    <input type="text" class="form-control harga_customer {{ intval($p->harga_customer) !== intval($p->activity()->harga_customer) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" readonly>
-                                                                </td>
-                                                            @endhasrole
-                                                            @hasrole(['Staff Finance','SPV Finance'])
                                                             <td>
-                                                                <input type="text" class="form-control harga_customer {{ intval($p->harga_customer) !== intval($p->activity()->harga_customer) ? 'bg-danger text-white opacity-50' : '' }}" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
+                                                                <input type="text" class="form-control"style="width: 100px" >
                                                             </td>
-                                                            @endhasrole
                                                             <td>
                                                                 <div class="btn btn-danger btn-trash" data-id="{{ $p->id }}">
                                                                     <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
@@ -195,23 +189,16 @@
                                                                     <input type="text" class="form-control harga_vendor" name="harga_vendor[]" id="harga_vendor" style="width: 100px" value="{{ number_format($p->harga_vendor , 0, '.', ',') }}">
                                                                 </td>
                                                             @endhasrole
-                                                            @hasrole('Project Admin')
-                                                                <td>
-                                                                    <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}" readonly>
-                                                                </td>
-                                                            @endhasrole
-                                                            @hasrole(['Staff Finance','SPV Finance'])
                                                             <td>
-                                                                <input type="text" class="form-control harga_customer" name="harga_customer[]" id="harga_customer" style="width: 100px" value="{{ number_format($p->harga_customer , 0, '.', ',') }}">
+                                                                <input type="text" class="form-control total" style="width: 100px">
                                                             </td>
-                                                            @endhasrole
                                                             <td>
                                                                 <div class="btn btn-danger btn-trash" data-id="{{ $p->id }}">
                                                                     <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    @endif
+                                                    @endif --}}
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -275,8 +262,44 @@
             let id_kategori = $('#kategori').val();
             let id_subkategori = '{{ $subkategori_id }}';
             let id_project = '{{ $id }}';
+            let id_vendor = '{{ $vendor->id }}';
+
 
             $('#sub_kategori').trigger('change');
+
+            function pekerjaan(id, keys) {
+                var select = `<select name="pekerjaan[]" id="pekerjaan-${keys}" class="form-select pekerjaan pekerjaan-${keys}">
+                <option selected disabled>Pilih Pekerjaan</option>`;
+
+                @foreach ($pekerjaans as $sp)
+                    var pe = {!! json_encode($sp->id) !!};
+                    var selected = `${id ? (id === pe ? 'selected' : '') : ''}`;
+                    select += `<option ${selected} value="${pe}">{{ $sp->name }}</option>`;
+                @endforeach
+
+                select += `</select>`;
+
+                $('.form-select').select2({
+                    theme : "bootstrap-5",
+                    search: true
+                });
+
+                $(`#pekerjaan-${keys}`).on('change',function(){
+                    let id = $(this).val();
+                    let url = '{{ route('ajax.unit-pekerjaan',':id') }}'
+                    let urlReplace = url.replace(':id',id);
+                    $.ajax({
+                        url : urlReplace,
+                    }).then(ress => {
+                        $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
+                        $('#unit').val(ress.data.unit);
+                        $(`#convertion-${keys}`).val(ress.data.konversi);
+                    })
+                });
+
+                return select;
+            }
+
             $('.form-select').select2({
                 theme : "bootstrap-5",
                 search: true
@@ -286,6 +309,192 @@
                 items: '.draggable-row',
                 axis: 'y',
             });
+
+            $('#tablePekerjaan').DataTable({
+                fixedHeader:true,
+                ordering : false,
+                scrollX: true,
+                paging : false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                autoWidth : true,
+                rowCallback : function(row, data, index) {
+                    $(row).addClass('draggable-row');
+                },
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                ajax : {
+                    url : '{{ route('ajax.data-pekerjaan') }}',
+                    method : 'POST',
+                    data : {
+                        _token : '{{ csrf_token() }}',
+                        id_project,
+                        id_kategori,
+                        id_subkategori,
+                        id_vendor
+                    }
+                },
+                columns : [
+                    {
+                        data : function (data) {
+                            let id_pekerjaan = data.id_pekerjaan || '';
+                            var keys = data.DT_RowIndex;
+                            return pekerjaan(id_pekerjaan, keys);
+                        },
+                        width : '200px'
+                    },
+                    {
+                        data : function (data) {
+                            let desc = data.deskripsi_pekerjaan || '';
+                            let konversi = data.conversion || 0;
+                            var keys = data.DT_RowIndex;
+                            let status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.deskripsi_pekerjaan !== item.deskripsi_pekerjaan ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status}" name="deskripsi[]" value="${desc}">
+                            <input type="text" class="d-none" value="${konversi}" id="convertion-${keys}" name="convertion[]">`;
+                        },
+                        width : '100px'
+                    },
+                    {
+                        data : function (data) {
+                            let location = data.id_lokasi || '';
+                            var status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.id_lokasi !== item.id_lokasi ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status}" name="lokasi[]" value="${location}">`;
+                        },
+                        width : '100px'
+                    },
+                    {
+                        data : function (data) {
+                            let detail = data.detail || '';
+                            var status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.detail !== item.detail ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status ? 'bg-danger text-white' : ''}" name="detail[]" value="${detail}">`;
+                        },
+                        width : '100px'
+                    },
+                    {
+                        data : function (data) {
+                            let length = data.length || '';
+                            var status = false;
+                            var items = '';
+                            let recent = data.activitys.map(item =>{
+                                items = item.length ;
+                            })
+                            status = items !== length ? 'bg-danger text-white' : '';
+                            return ` <input type="text" class="form-control ${status}" name="length[]"  value="${length}">`;
+                        },
+                        width : '70px'
+                    },
+                    {
+                        data : function (data) {
+                            let width = data.width || '';
+                            var status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.width !== item.width ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status}" name="width[]" value="${width}">`;
+                        },
+                        width : '70px'
+                    },
+                    {
+                        data : function (data) {
+                            let thick = data.thick || '';
+                            var status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.thick !== item.thick ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status}" name="thick[]" value="${thick}">`;
+                        },
+                        width : '70px'
+                    },
+                    {
+                        data : function (data) {
+                            let qty = data.qty || '';
+                            var status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.qty !== item.qty ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status}" name="qty[]" value="${qty}">`;
+                        },
+                        width : '50px'
+                    },
+                    {
+                        data : function (data) {
+                            let amount = data.amount || '';
+                            var status = false;
+                            let recent = data.activitys.map(item =>{
+                                status = data.amount !== item.amount ? 'bg-danger text-white' : '';
+                            })
+                            return ` <input type="text" class="form-control ${status}" name="amount[]" value="${amount}" readonly>`;
+                        },
+                        width : '70px'
+                    },
+                    {
+                        data : function (data) {
+                            let unit = data.unit || '';
+                            var status = false;
+                            data.activitys.forEach(item => {
+                                if (item.unit !== unit) {
+                                    status = true;
+                                }
+                            });
+                            return ` <input type="text" class="form-control  ${status ? 'bg-danger text-white' : ''}" id="unit" name="unit[]" style="width: 60px;" value="${unit}">`;
+                        },
+                        width : '50px'
+                    },
+                    {
+                        data : function (data) {
+                            var harga_vendor = data.harga_vendor || '';
+                            var status = false;
+                            var items = '';
+                            let recent = data.activitys.map(item =>{
+                                items = item.harga_vendor ;
+                            })
+                            status = items !== harga_vendor ? 'bg-danger text-white' : '';
+                            return ` <input type="text" class="form-control ${status}" name="harga_vendor[]" id="harga_vendor" value="${formatRupiah(harga_vendor)}" readonly>`;
+                        },
+                        width : '150px'
+                    },
+                    {
+                        data : function (data) {
+                            let harga_vendor = parseFloat(data.harga_vendor) || '';
+                            let amount = data.amount || '';
+                            let total = Math.ceil(harga_vendor * amount);
+                            return ` <input type="text" class="form-control ${status}" name="total[]" value="${formatRupiah(parseInt(total))}" readonly>`;
+                        },
+                        width : '150px'
+                    },
+                    {
+                        data : function (data) {
+                            let id = data.id;
+                            return `<div class="btn btn-danger btn-trash" data-id=${id}>
+                                <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                            </div>`;
+                        }
+                    }
+                ]
+
+            })
 
             let count = 1;
             $('.btn-add').click(function(){
@@ -303,35 +512,35 @@
                         <input type="text" class="form-control" name="deskripsi[]">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="lokasi[]" style="width: 100px;">
+                        <input type="text" class="form-control" name="lokasi[]">
                     </td>
                     <td>
                         <input type="text" class="form-control" name="detail[]">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="length[]" style="width: 70px">
+                        <input type="number" class="form-control" name="length[]">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="width[]"style="width: 70px">
+                        <input type="number" class="form-control" name="width[]">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="thick[]" style="width: 70px">
+                        <input type="number" class="form-control" name="thick[]">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="qty[]" style="width: 50px" >
+                        <input type="text" class="form-control" name="qty[]" >
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="amount[]" style="width: 70px" >
+                        <input type="text" class="form-control" name="amount[]" >
                     </td>
                     <td>
-                        <input type="text" class="form-control" id="unit${count}" name="unit[]" style="width: 70px">
+                        <input type="text" class="form-control" id="unit${count}" name="unit[]">
                     </td>
 
                     <td>
-                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]" style="width: 100px" ${userRole === 'admin' ? 'readonly' : ''}>
+                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]"  ${userRole === 'admin' ? 'readonly' : ''}>
                     </td>
                     <td>
-                        <input type="text" class="form-control harga_customer" name="harga_customer[]" style="width: 100px" id="harga_customer${count}" ${userRole === 'admin' ? 'readonly' : ''}>
+                        <input type="text" class="form-control total" id="total${count}" name="total[]"  ${userRole === 'admin' ? 'readonly' : ''}>
                     </td>
 
                     <td>
@@ -341,13 +550,13 @@
                     </td>
                 </tr>`)
                 let select = $(`#pekerjaan${count}`).select2({
+                    theme : "bootstrap-5",
                     search: true
                 })
 
                 let id = $('#sub_kategori').val();
                 var unit = $(`#unit${count}`);
                 var harga_vendor = $(`#harga_vendor${count}`);
-                var harga_customer = $(`#harga_customer${count}`);
                 var konversi = $(`#convertion${count}`);
 
                 getSelect(select);
@@ -360,7 +569,6 @@
                         url : urlReplace,
                     }).then(ress => {
                         harga_vendor.val(formatRupiah(ress.data.harga_vendor));
-                        harga_customer.val(formatRupiah(ress.data.harga_customer));
                         konversi.val(ress.data.konversi)
                         unit.val(ress.data.unit)
                     })
@@ -382,6 +590,7 @@
 
             })
 
+
             $('#clone').on('change', '.draggable-row input[name="length[]"], input[name="width[]"], input[name="thick[]"],input[name="qty[]"]', function() {
                 var lengthValue = parseFloat($(this).closest('tr').find('input[name="length[]"]').val());
                 var widthValue = parseFloat($(this).closest('tr').find('input[name="width[]"]').val());
@@ -390,11 +599,18 @@
                 var konversi = $(this).closest('tr').find('input[name="convertion[]"]').val();
                 var parts = konversi.split('/');
                 var amountValue = (lengthValue * widthValue * thickValue * qtyValue * parseFloat(parts[0])) / parseInt(parts[1]);
-                console.log(parts,lengthValue, amountValue);
+                var harga_vendor = $(this).closest('tr').find('input[name="harga_vendor[]"]').val();
+                harga_vendor = harga_vendor.replace(",", "");
 
+                // Mengonversi string menjadi integer
+                parseInt(harga_vendor, 10);
+
+                var total = harga_vendor * amountValue;
                 amountValue = amountValue.toFixed(2);
 
                 $(this).closest('tr').find('input[name="amount[]"]').val(amountValue);
+                $(this).closest('tr').find('input[name="total[]"]').val(formatRupiah(total));
+
             });
 
             $(document).delegate('.btn-trash','click',function(){
@@ -402,13 +618,13 @@
                 let id = $(this).data('id');
                 if(typeof id !== 'undefined' && id !== null && id !== '' ){
                     Swal.fire({
-                        title: 'Apakah Anda Ingin Menghapus Data Ini?',
-                        text: "Data akan di hapus permanent!",
+                        title: 'Are You Sure Deleted Data?',
+                        text: "Data will be deleted permanently!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, hapus!'
+                        confirmButtonText: 'Ya, Deleted!'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
@@ -496,7 +712,7 @@
                         data : function(data) {
                             let status = data.status;
                             if(status === 1) {
-                                return `<div class="text-primary">${data.description} </div>`
+                                return `<div class="text-success">${data.description} </div>`
                             }else if(status === 2){
                                 return `<div class="text-info">${data.description} </div>`
                             }else{

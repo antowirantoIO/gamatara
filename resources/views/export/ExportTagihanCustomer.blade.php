@@ -4,16 +4,16 @@
             <th colspan="12" height="100"></th>
         </tr>
         <tr>
-            <th colspan="12" height="20"><strong>PT. GAMATARA TRANS OCEAN SHIPYARD</strong></th>
+            <th colspan="12" height="30"><strong>PT. GAMATARA TRANS OCEAN SHIPYARD</strong></th>
         </tr>
         <tr>
-            <th colspan="12" height="20">Kantor : Jl Tanjung Tengah No 1B</th>
+            <th colspan="12" height="30">Kantor : Jl Tanjung Tengah No 1B</th>
         </tr>
         <tr>
-            <th colspan="12" height="20">Telp (0231) 226435 Fax (0231) 226436</th>
+            <th colspan="12" height="30">Telp (0231) 226435 Fax (0231) 226436</th>
         </tr>
         <tr>
-            <th colspan="12" height="20">Pelabuhan Cirebon 45122 - Jawa Barat</th>
+            <th colspan="12" height="30">Pelabuhan Cirebon 45122 - Jawa Barat</th>
         </tr>
         <tr>
             <th colspan="12" height="30" style="border: 20px medium black;"><strong>TAGIHAN BIAYA DOCKING</strong></th>
@@ -22,7 +22,7 @@
             <th colspan="12" height="30" style="border: 20px medium black;"><strong>{{ $name->nama_project }}</strong></th>
         </tr>
         <tr>
-            <th colspan="12" height="20"></th>
+            <th colspan="12" height="30"></th>
         </tr>
         <tr>
             <th height="40" style="border:20px medium black;">No.</th>
@@ -47,14 +47,22 @@
             $total = 0;
             $prevTotal = 0;
             $totalNow = 0;
+            $loops = false;
+            $nowKategori = '';
+            $prevKategori = '';
         @endphp
         @foreach ($data as $key => $item)
             @if($item->count() > 0)
                 <tr style="font-size: 8px;">
-                    <td align="center" style="border: 20px medium black;" height="30"><strong>{{ $letters[$count] }}</strong></td>
+                    <td align="center" style="border: 20px medium black;" height="30"><strong>{{ getLatters($key) }}</strong></td>
                     <td colspan="9" style="border: 20px medium black;font-size: 8px;" height="30"><strong>{{ $key }}</strong></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    @if (!$loops)
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;" align="center">Harga</td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;" align="center">Jumlah</td>
+                    @else
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;" align="center"></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;" align="center"></td>
+                    @endif
                 </tr>
             @endif
             @php
@@ -72,11 +80,12 @@
                 }
                 $subkategori = $value->subKategori->name;
                 $kodeUnik = $value->kode_unik;
+                $nowKategori = $key;
             @endphp
                 @if ($prevKodeUnik != $kodeUnik)
                     <tr style="font-size: 8px;">
-                        <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td class="text-center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -89,8 +98,8 @@
                         <td style="border: 20px medium black;"></td>
                     </tr>
                     <tr>
-                        <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $subCount }}</td>
-                        <td height="20" style="font-size: 8px;">
+                        <td height="30" align="center" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $subCount }}</td>
+                        <td height="30" style="font-size: 8px;">
                             @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
                                 <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
                             @else
@@ -109,30 +118,31 @@
                         <td style="border: 20px medium black;"></td>
                     </tr>
                     @php
-                        if ($value->kategori->name !== $key) {
-                            $subCount = 1;
-                        } else {
-                            $subCount++;
-                        }
+                    if ($prevKategori != $nowKategori) {
+                        $subCount = 1;
+                    } else {
+                        $subCount++;
+                    }
                     @endphp
                 @endif
                 <tr>
-                    <td align="center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
-                    <td height="20" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan->name ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->id_lokasi ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->detail ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->width ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->thick ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->qty ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ?? ' ' }}</td>
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->unit ?? ' ' }}</td>
-                    <td height="20" style="border: 20px medium black;" >
+                    <td align="center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
+                    <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan->name ?? ' ' }}</td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->id_lokasi ?? ' ' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->detail ?? ' ' }}</td>
+                    <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ? number_format($value->length,2, ',','') : '' }}</td>
+                    <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->width ? number_format($value->width,2, ',','') : '' }}</td>
+                    <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->thick ? number_format($value->thick,2, ',','') : '' }}</td>
+                    <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->qty ? number_format($value->qty,2, ',','') : '' }}</td>
+                    <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ? number_format($value->amount,2, ',','') : '' }}</td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="right">{{ $value->unit ?? ' ' }}</td>
+                    <td height="30" style="border: 20px medium black;" align="right">
                        Rp. {{ number_format($value->harga_customer, 0, ',', '.') }}
                     </td>
-                    <td height="20" style="border: 20px medium black;">
+                    <td height="30" style="border: 20px medium black;" align="right">
                         Rp. {{ number_format(($value->amount * $value->harga_customer), 0, ',', '.') }}
                     </td>
+                    <td height="30">{{ $value->vendors->name ?? '-' }}</td>
                 </tr>
                 @php
                     $prevTotal = $totalNow;
@@ -140,17 +150,19 @@
                     $total += $prevTotal;
                     $prevSub = $subKategori;
                     $prevKodeUnik = $kodeUnik;
+                    $prevKategori =  $value->kategori->name;
                 @endphp
             @endforeach
             @php
-                $count++
+                $count++;
+                $loops = true;
             @endphp
         @endforeach
         <tr>
             <td style="border: 20px medium black;"></td>
             <td colspan="7" style="border: 20px medium black"></td>
-            <td colspan="3" align="center" height="20" style="border: 20px medium black"><strong>TOTAL</strong></td>
-            <td height="30" style="border: 20px medium black;" align="left"><strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong></td>
+            <td colspan="3" align="center" height="30" style="border: 20px medium black"><strong>TOTAL</strong></td>
+            <td height="30" style="border: 20px medium black;" align="right"><strong>Rp. {{ number_format($total, 0, ',', '.') }}</strong></td>
         </tr>
         {!! str_repeat('<tr></tr>', 2) !!}
     </tbody>
@@ -163,7 +175,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="5"><strong>Hormat Kami</strong></td>
+            <td colspan="5" align="center"><strong>Hormat Kami</strong></td>
         </tr>
         <tr>
             <td></td>
@@ -173,7 +185,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="5"><strong>Cirebon, {{ formatTanggal() }}</strong></td>
+            <td colspan="5"  align="center"><strong>Cirebon, {{ formatTanggal() }}</strong></td>
         </tr>
         {!! str_repeat('<tr></tr>', 5) !!}
         <tr>
@@ -184,7 +196,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="5"><strong>HANAFI SANTOSO, ST</strong></td>
+            <td colspan="5" align="center"><strong>HANAFI SANTOSO, ST</strong></td>
         </tr>
         <tr>
             <td></td>
@@ -194,7 +206,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="5">DIREKTUR</td>
+            <td colspan="5" align="center">DIREKTUR</td>
         </tr>
         <tr>
             <td></td>
@@ -204,7 +216,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="5">PT. GAMATARA TRANS OCEAN SHIPYARD</td>
+            <td colspan="5" align="center">PT. GAMATARA TRANS OCEAN SHIPYARD</td>
         </tr>
     </tfoot>
 </table>

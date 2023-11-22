@@ -136,7 +136,7 @@ class ProjectManagerController extends Controller
     public function subkategoriPM(Request $request)
     {
         try{
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            $subkategori = SubKategori::where('id', $request->id_subkategori)->where('id_kategori', $request->id_kategori)->get();
             $namakategori = $subkategori->first()->kategori->name ?? '';            
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)

@@ -202,6 +202,7 @@
         $(document).ready(function(){
             let modalInput = $('#modalFillter');
             let modalEdit = $('#modalEdit');
+            let filterSearch = '';
 
             $('.form-select-fillter').select2({
                 theme : "bootstrap-5",
@@ -241,21 +242,25 @@
                     url : '{{ route('ajax.vendor') }}',
                     methdo : 'GET',
                     data : function(d){
-                        d._token = '{{ csrf_token() }}';
-                        d.id_project = '{{ $idProject }}';
-                        d.id_vendor = '{{ $id }}';
-                        d.id_lokasi = $('#id_lokasi').val();
-                        d.id_subkategori = '{{ $subkategori }}'
-                        d.id_pekerjaan = $('#id_pekerjaan').val();
+                        filterSearch        = d.search?.value;
+                        d._token            = '{{ csrf_token() }}';
+                        d.id_project        = '{{ $idProject }}';
+                        d.id_vendor         = '{{ $id }}';
+                        d.id_lokasi         = $('#id_lokasi').val();
+                        d.id_subkategori    = '{{ $subkategori }}'
+                        d.id_pekerjaan      = $('#id_pekerjaan').val();
                     }
                 },
 
                 columns : [
-                    { data : function(data){
-                        let reff = data.pekerjaan || '-';
-                        let name = reff.name || '-';
-                        return name;
-                    } },
+                    {
+                        data : function(data){
+                            let reff = data.pekerjaan || '-';
+                            let name = reff.name || '-';
+                            return name;
+                        },
+                        name : 'pekerjaan'
+                    },
                     { data : 'deskripsi_pekerjaan' },
                     { data : 'id_lokasi' },
                     { data : 'detail' },

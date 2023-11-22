@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Project Manager</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Project Manager</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
@@ -40,7 +40,7 @@
                             <table class="table" id="tableData">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="color:#929EAE">Nama Project Manager</th>
+                                        <th style="color:#929EAE">Project Manager Name</th>
                                         <th style="color:#929EAE">On Progress</th>
                                         <th style="color:#929EAE">Complete</th>
                                         <th style="color:#929EAE">Action</th>

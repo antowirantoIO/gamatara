@@ -21,9 +21,9 @@ class ProjectEngineerController extends Controller
         try{
             $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
-                    ->where('pe_id_1',$request->pe_id_1)
-                    ->orWhere('pe_id_2',$request->pe_id_2)
+                    ->where('pe_id_1',$request->pe_id)
                     ->get();
+
             foreach ($data as $item) {
                 $item['nama_customer'] = $item->customer->name ?? '';
                 $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';

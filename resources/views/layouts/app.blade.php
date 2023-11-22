@@ -6,9 +6,9 @@
     <title>Gamatara Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="PT Gamatara Shipyard" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Gamatara" name="Gamatara" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
 
     <!-- Layout config Js -->
     <script src="{{asset('assets/assets/js/layout.js')}}"></script>

@@ -1,4 +1,4 @@
-    @can('on_request-request-printrekapan')
+    @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
             <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
                 <span>
@@ -7,12 +7,12 @@
                 Rekap SPK
             </button>
         </div>
-    @endcan
+    @endif
 
     <table id="tabelKeluhan" class="table table-bordered">
         <thead style="background-color:#194BFB;color:#FFFFFF">
             <tr>
-                <th width="10px">No.</th>
+                <th>No.</th>
                 <th>Request</th>
                 <th>Vendor</th>
                 <th>PM</th>
@@ -31,7 +31,7 @@
                     </td>
                     <td>{{ $complaint->vendors->name ?? ''}}</td>
                     <td>
-                        @can('on_request-request-approval-pm')
+                        @if($pmAuth == 'Project Manager' || $pmAuth == 'PM')
                             @if($complaint->id_pm_approval == null && $complaint->id_bod_approval == null)
                                 <button type="button" class="btn btn-primary btn-sm" onclick="approve({{$complaint->id}}, 'PM')">
                                     Approve
@@ -41,47 +41,39 @@
                                     Approved
                                 </button>
                             @endif
-                        @endcan
-                        @can('on_request-request-approval-bod')
-                            @if($complaint->id_pm_approval != null)
-                                <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
-                                    Approved
-                                </button>
-                            @endif
-                        @endcan
-                        @can('on_request-request-view-approval')
+                        @elseif($pmAuth == 'BOD')
+                            <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
+                                Approved
+                            </button>
+                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             @if($complaint->id_pm_approval != null)
                                 Approved
                             @endif
-                        @endcan
+                        @endif
                     </td>
                     <td> 
-                        @can('on_request-request-approval-bod')
-                            @if($complaint->id_pm_approval != null && $complaint->id_bod_approval == null)
+                        @if($pmAuth == 'BOD')
+                            @if($complaint->id_bod_approval == null && $complaint->id_pm_approval != null)
                                 <button type="button" class="btn btn-primary btn-sm" data-keluhan-id="{{ $complaint->id }}" onclick="approve({{$complaint->id}}, 'BOD')">
                                     Approve
                                 </button>
-                            @elseif($complaint->id_bod_approval != null && $complaint->id_pm_approval != null)
+                            @elseif($complaint->id_bod_approval == null && $complaint->id_pm_approval == null)
+                                
+                            @else
                                 <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
                                     Approved
                                 </button>
                             @endif
-                        @endcan
-                        @can('on_request-request-approval-pm')
+                        @elseif($pmAuth == 'Project Manager')
+                        
+                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             @if($complaint->id_bod_approval != null)
-                                <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
-                                    Approved
-                                </button>
+                                Approved  
                             @endif
-                        @endcan
-                        @can('on_request-request-view-approval')
-                            @if($complaint->id_bod_approval != null)
-                                Approved
-                            @endif
-                        @endcan
+                        @endif
                     </td>
                     <td>
-                        @can('on_request-request-edit')
+                        @if($pmAuth == 'Project Admin' || $pmAuth == 'PA' || $pmAuth == 'BOD')
                             <button type="button" class="btn btn-sm btnEdit" 
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                     style="background-color:grey; 
@@ -95,8 +87,8 @@
                                     <i><img src="{{asset('assets/images/edit-2.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </button>
-                        @endcan
-                        @can('on_request-request-printspk-pa')
+                        @endif
+                        @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             <a type="button" class="btn btn-sm btnPrint"
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                     style="background-color:blue;" 
@@ -113,22 +105,21 @@
                                     <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </a>
-                        @endcan
-                        @can('on_request-request-printspk-bod')
+                        @endif
+                        @if($pmAuth == 'BOD')
                             <a type="button" class="btn btn-sm btnPrint" id="printSPKsatuan" target="_blank" href="{{route('keluhan.satuan',$complaint->id)}}"" style="background-color:blue;" data-keluhan-id="{{ $complaint->id }}">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </a>
-                        @endcan
-                        @can('on_request-request-delete-pm-bod')
-                            <button type="button" class="btn btn-danger btn-sm btnHapus" data-keluhan-id="{{ $complaint->id }}" onclick="hapusKeluhan({{$complaint->id}})">
+                        @endif
+                        @if($pmAuth == 'Project Manager' || $pmAuth == 'PM' || $pmAuth == 'BOD')
+                            <button type="button" class="btn btn-danger btn-sm" data-keluhan-id="{{ $complaint->id }}" onclick="hapusKeluhan({{$complaint->id}})">
                                 <span>
                                     <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </button>
-                        @endcan
-                        @can('on_request-request-delete-pa')
+                        @else
                             <button type="button" class="btn btn-sm" 
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                     style="background-color:grey; 
@@ -143,7 +134,7 @@
                                     <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </button>
-                        @endcan
+                        @endif
                     </td>
                 </tr>
 
@@ -169,7 +160,6 @@
     <script>
         $(document).ready(function () {
         var table = $('#tabelKeluhan').DataTable({
-            ordering: false,
             fixedHeader:true,
             scrollX: false,
             searching: false,

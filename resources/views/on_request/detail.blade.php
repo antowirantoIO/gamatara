@@ -37,12 +37,12 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    @can('on_request-add')
+                                    @if($pmAuth == 'Project Admin')
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
                                         </div>
-                                    @endcan
+                                    @endif
 
                                     <div class="row gy-4">
                                         <div class="col-xxl-6 col-md-6">
@@ -95,9 +95,9 @@
                                             <label>Customer Name</label>
                                             <div class="input-group">
                                                 <input type="text" id="customer_name" name="id_customer" value="{{$getCustomer->name}}" placeholder="Nama Customer" class="form-control" />
-                                                @can('on_request-add')
+                                                @if($pmAuth == 'Project Admin')
                                                     <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
-                                                @endcan
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -168,11 +168,11 @@
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                @can('on_request-request-add')
+                                                @if($pmAuth == 'Project Admin')
                                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                         <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                     </div>
-                                                @endcan
+                                                @endif
                                             </div>
                                         </div>
 

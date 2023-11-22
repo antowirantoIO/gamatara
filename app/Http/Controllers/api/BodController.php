@@ -22,7 +22,9 @@ class BodController extends Controller
     public function laporanCustomer(Request $request)
     {
         try{
-            $data = Customer::select('id','name')->has('projects')->with('projects','projects.progress:harga_customer,qty,id_project')->get();
+            $data = Customer::select('id','name')->has('projects')
+            ->with('projects','projects.progress:harga_customer,qty,id_project')
+            ->get();
         
             foreach($data as $value){
                 if($value->projects)
@@ -206,7 +208,7 @@ class BodController extends Controller
     {
         try{
             $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
-                    ->select('id','nama_project','created_at','id_customer')
+                    ->select('id','nama_project','created_at','id_customer','status')
                     ->where('status',1)
                     ->get();
 

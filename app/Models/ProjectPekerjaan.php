@@ -97,6 +97,8 @@ class ProjectPekerjaan extends Model
                 ->orWhere('code', 'like', "%$filter->keyword%")
                 ->orWhere('start_project', 'like', "%$filter->keyword%")
                 ->orWhere('actual_selesai', 'like', "%$filter->keyword%");
+            })->orWhereHas('subKategori', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
             });
         });
     }

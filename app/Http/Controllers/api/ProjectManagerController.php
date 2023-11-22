@@ -141,6 +141,7 @@ class ProjectManagerController extends Controller
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
                         ->where('id_kategori', $request->id_kategori)
+                        ->where('id_subkategori', $request->id_subkategori)
                         ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
                         ->groupBy('id_subkategori')
                         ->get();

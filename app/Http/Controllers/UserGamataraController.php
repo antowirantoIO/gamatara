@@ -23,11 +23,11 @@ class UserGamataraController extends Controller
             if ($user->role->name == 'Project Enginer') {
                foreach($user->karyawan->pm ?? [] as $v){
                     foreach($v->pe as $value){
-                        $user['id_karyawan'] = $value->id_karyawan ?? '';
+                        $user['id_karyawan'] = $value->id ?? '';
                     }
                }
             } elseif ($user->role->name == 'Project Manager') {
-                $user['id_karyawan'] = $user->karyawan->pm->id_karyawan ?? '';
+                $user['id_karyawan'] = $user->karyawan->pm->id ?? '';
             } else {
                 $user['id_karyawan'] = '';
             }

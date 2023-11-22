@@ -21,7 +21,7 @@ class ProjectEngineerController extends Controller
         try{
             $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
                     ->select('id','nama_project','created_at','id_customer')
-                    ->where('pe_id',$request->pe_id)
+                    ->where('pe_id_1',$request->pe_id)
                     ->get();
 
             foreach ($data as $item) {

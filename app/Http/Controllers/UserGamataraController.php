@@ -20,14 +20,18 @@ class UserGamataraController extends Controller
                     ->with(['role:id,name','karyawan:id,name'])->where('id',$user)
                     ->first();
             $user['name'] = $user->karyawan->name ?? '';
-            if($user->role->name == 'Project Enginer' || $user->role->name == 'Project Engineer')
-            {
-                $user['id_karyawan'] = $user->karyawan->pm->pe->id ?? '';
-            }elseif($user->role->name == 'Project Manager'){
-                $user['id_karyawan'] = $user->karyawan->pm->id ?? '';
-            }else{
+            if ($user->role->name == 'Project Enginer') {
+               foreach($user->karyawan->pm ?? [] as $v){
+                    foreach($v->pe as $value){
+                        $user['id_karyawan'] = $value->id_karyawan ?? '';
+                    }
+               }
+            } elseif ($user->role->name == 'Project Manager') {
+                $user['id_karyawan'] = $user->karyawan->pm->id_karyawan ?? '';
+            } else {
                 $user['id_karyawan'] = '';
             }
+            
 
             $token = auth()->user()->createToken('API Token')->accessToken;
 

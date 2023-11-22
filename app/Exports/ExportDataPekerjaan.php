@@ -93,6 +93,11 @@ class ExportDataPekerjaan implements FromView,ShouldAutoSize,WithStyles,WithColu
                             'name' => 'Times New Roman'
                 ]
             ],
+            'A2:J5'=> ['alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+                ]
+            ],
             'A9:K9' => ['alignment' => [
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,

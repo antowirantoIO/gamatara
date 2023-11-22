@@ -64,16 +64,8 @@ class OnProgressExportController extends Controller
     {
         $data = groupDataPekerjaan($request);
         $project = OnRequest::where('id',$request->id_project)->first();
-        return Excel::download(new ExportDataPekerjaan($data, $project),'List_Data_Pekerjaan.xlsx');
-        // header("Pragma: public");
-        // header("Expires: 0");
-        // header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        // header("Content-Type: application/force-download");
-        // header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
-        // header("Content-Type: application/octet-stream");
-        // header("Content-Type: application/download");
-        // header('Content-Disposition: attachment; filename=List_Data_Pekerjaan.xlsx');
-        return view('export.ExportPekerjaanOnProgress', compact('data','project'));
+        return Excel::download(new ExportDataPekerjaan($data, $project),'SN-' . $project->nama_project . '.xlsx');
+        // return view('export.ExportPekerjaanOnProgress', compact('data','project'));
 
     }
 
@@ -81,16 +73,16 @@ class OnProgressExportController extends Controller
     {
         $project = ProjectPekerjaan::with('vendors')
                                     ->where('id_project',$request->id_project)->get();
+        $name = OnRequest::where('id',$request->id_project)->first();
         $project= $project->groupBy('vendors.name');
-        return Excel::download(new ExportAllTagihanVendor($project,$request),'Tagihan_Vendor.xlsx');
-        return view('export.ExportTagihanVendor',compact('data'));
+        return Excel::download(new ExportAllTagihanVendor($project,$request),'VENDOR BILLS'. $name->nama_project .'.xlsx');
     }
 
     public function tagihanCustomer (Request $request)
     {
         $data = groupDataPekerjaanVendor($request);
         $name = OnRequest::where('id',$request->id_project)->first();
-        return Excel::download(new ExportTagihanCustomer($data,$name),'Tagihan_Customer.xlsx');
-        // return view('export.ExportTagihanCustomer',compact('data','name'));
+        return Excel::download(new ExportTagihanCustomer($data,$name),'CUSTOMER BILLS-'.$name->nama_project.'.xlsx');
+        return view('export.ExportTagihanCustomer',compact('data','name'));
     }
 }

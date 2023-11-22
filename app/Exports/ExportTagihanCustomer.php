@@ -90,9 +90,14 @@ class ExportTagihanCustomer implements FromView, WithStyles,WithColumnWidths,Wit
                     'name' => 'Times New Roman'
                 ]
             ],
-            'C:J' => ['alignment' => [
+            'C5:J5' => ['alignment' => [
                 'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'wrapText' => true,
+                ]
+            ],
+            'C:J' => ['alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                 'wrapText' => true,
                 ]
             ],
@@ -132,7 +137,10 @@ class ExportTagihanCustomer implements FromView, WithStyles,WithColumnWidths,Wit
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getDelegate()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+                $event->sheet->getDelegate()->getPageSetup()->setOrientation
+                (\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+                $event->sheet->autoSize(true);
+
                 $event->sheet->getDelegate()->getPageSetup()->setPaperSize(14.00,8.50);
                 // $event->sheet->getDelegate()->getPageSetup()->setFitToWidth(14.00);
                 // $event->sheet->getDelegate()->getPageSetup()->setFitToHeight(8.50);

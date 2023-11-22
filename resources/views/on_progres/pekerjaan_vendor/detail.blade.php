@@ -185,13 +185,13 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="harga_vendor" class="form-label">Vendor Price</label>
-                                <input type="text" name="harga_vendor" id="harga_vendor" class="form-control" readonly>
+                                <input type="text" name="harga_vendor" id="harga_vendor" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="harga_customer" class="form-label">Customer Price</label>
-                                <input type="text" name="harga_customer" id="harga_customer" class="form-control" readonly>
+                                <input type="text" name="harga_customer" id="harga_customer" class="form-control">
                             </div>
                         </div>
                     </div>

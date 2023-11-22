@@ -77,21 +77,21 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="code" class="form-label">Code Project</label>
+                            <label for="code" class="form-label">Project Code</label>
                             <input type="text" name="code" class="form-control" id="code">
                         </div>
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_project" class="form-label">Nama Project</label>
+                            <label for="nama_project" class="form-label">Project Name</label>
                             <input type="text" name="nama_project" id="nama_project" class="form-control">
                         </div>
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_customer" class="form-label">Nama Customer</label>
+                            <label for="nama_customer" class="form-label">Customer Name</label>
                             <select name="nama_customer" id="nama_customer" class="form-select">
-                                <option value="">Pilih Nama Customer</option>
+                                <option value="">Choose Customer Name</option>
                                 @foreach($customer as $k)
                                 <option value="{{$k->id}}">{{$k->name}}</option>
                                 @endforeach
@@ -100,9 +100,9 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_pm" class="form-label">Nama PM</label>
+                            <label for="nama_pm" class="form-label">PM Name</label>
                             <select name="nama_pm" id="nama_pm" class="form-select">
-                                <option value="">Pilih Nama PM</option>
+                                <option value="">Choose PM Name</option>
                                 @foreach($pm as $p)
                                 <option value="{{$p->id}}">{{$p->name}}</option>
                                 @endforeach
@@ -111,7 +111,7 @@
                     </div>
                     <div class="col-xxl-12 col-md-12">
                         <div>
-                            <label for="date" class="form-label">Dari </label>
+                            <label for="date" class="form-label">Date </label>
                             <input type="text" name="date" id="date" class="form-control" >
                         </div>
                     </div>

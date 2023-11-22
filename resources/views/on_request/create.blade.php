@@ -46,14 +46,18 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="nama_customer">Customer Name</label>
-                                            <div class="input-group">
-                                                <input type="text" name="nama_customer" id="nama_customer" value="{{ old('nama_customer') }}" placeholder="Enter Customer Name" class="form-control" />
-                                                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
+                                            <label for="customer_name" class="form-label">Customer Name</label>
+                                            <div class="position-relative">
+                                                <select id="customer_name" name="id_customer" class="form-control select2" aria-label="Customer Name">
+                                                    <option value="">Choose Customer</option>
+                                                    @foreach($customer as $k)
+                                                        <option value="{{$k->id}}" {{ $k->id == old('id_customer') ? 'selected' : '' }}>{{$k->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if($pmAuth == 'Project Admin')
+                                                    <button style="width: 7%; height: 110%;" class="btn btn-primary btn-sm position-absolute top-0 end-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
+                                                @endif
                                             </div>
-                                            @if ($errors->has('nama_customer'))
-                                                <span class="text-danger">{{ $errors->first('nama_customer') }}</span>
-                                            @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
@@ -320,30 +324,72 @@
         });
     });
 
-    //show data customer
-    var route = "{{ url('customer') }}";
-    $('#nama_customer').typeahead({
-        source: function (query, process) {
-            return $.get(route, { query: query }, function (data) {
-                return process(data.map(function(customer) {
-                    return customer.name;
-                }));
-            });
-        },
-        updater: function (item) {
-            $.get(route, { query: item }, function (customerData) {
-                if (customerData.length > 0) {
-                    var selectedCustomer = customerData[0];
-                    $('#contact_person').val(selectedCustomer.contact_person);
-                    $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
-                    $('#alamat').val(selectedCustomer.alamat);
-                    $('#npwps').val(selectedCustomer.npwp);
-                }
-            });
-
-            return item;
+    // Initialize Select2
+    $('#customer_name').select2({
+        placeholder: 'Choose Customer',
+        ajax: {
+            url: "{{ url('customer') }}",
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results: data.map(function (customer) {
+                        return {
+                            id: customer.id,
+                            text: customer.name
+                        };
+                    })
+                };
+            },
+            cache: true
         }
     });
+
+    // Listen for the "select2:select" event when an item is selected
+    $('#customer_name').on('select2:select', function (e) {
+        var selectedCustomer = e.params.data;
+
+        // Use the selected customer data to populate other fields
+        $.ajax({
+            url: "{{ url('on_request/edits') }}/" + selectedCustomer.id,
+            method: 'GET',
+            dataType: 'json',
+            success: function (customerData) {
+                // Populate additional fields with the retrieved data
+                $('#contact_person').val(customerData.contact_person);
+                $('#nomor_contact_person').val(customerData.nomor_contact_person);
+                $('#alamat').val(customerData.alamat);
+                $('#npwps').val(customerData.npwp);
+            },
+            error: function (error) {
+                console.error('Error retrieving customer data:', error);
+            }
+        });
+    });
+    //show data customer
+    // var route = "{{ url('customer') }}";
+    // $('#nama_customer').typeahead({
+    //     source: function (query, process) {
+    //         return $.get(route, { query: query }, function (data) {
+    //             return process(data.map(function(customer) {
+    //                 return customer.name;
+    //             }));
+    //         });
+    //     },
+    //     updater: function (item) {
+    //         $.get(route, { query: item }, function (customerData) {
+    //             if (customerData.length > 0) {
+    //                 var selectedCustomer = customerData[0];
+    //                 $('#contact_person').val(selectedCustomer.contact_person);
+    //                 $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
+    //                 $('#alamat').val(selectedCustomer.alamat);
+    //                 $('#npwps').val(selectedCustomer.npwp);
+    //             }
+    //         });
+
+    //         return item;
+    //     }
+    // });
 
     //simpan keluhan
     // var addButton = document.getElementById("tambahKeluhan");

@@ -118,6 +118,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/updated/{id}', [OnRequestController::class, 'updated'])->name('on_request.updated');
         Route::get('/export', [OnRequestController::class, 'export'])->name('on_request.export');
         Route::get('/export-detail/{id}', [OnRequestController::class, 'exportDetail'])->name('on_request.exportDetail');
+        Route::get('/edits/{id}', [OnRequestController::class, 'edits'])->name('on_request.edits');
     });
 
     //keluhan

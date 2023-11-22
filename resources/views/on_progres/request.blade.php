@@ -695,15 +695,15 @@
                             let status = data.status || '-';
                             if(status === 1) {
                                 let date = moment(data.created_at);
-                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                let formated = date.format('DD MMMM YYYY');
                                 return formated
                             }else if ( status === 2 ){
                                 let date = moment(data.updated_at);
-                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                let formated = date.format('DD MMMM YYYY');
                                 return formated
                             }else{
                                 let date = moment(data.deleted_at);
-                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                let formated = date.format('DD MMMM YYYY');
                                 return formated
                             }
                         }

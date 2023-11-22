@@ -14,11 +14,11 @@
 
             <div class="row">
 
-                <div class="col-md-3" style="flex:1;" 
+                <div class="col-lg-3 style="flex:1;"
                         @if(auth()->user()->role->name == 'Project Manager' || auth()->user()->role->name == 'BOD')
                             data-bs-toggle="modal" data-bs-target="#advance"
                         @endif>
-                    <div class="card card-animate card-rad">
+                    <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-sm flex-shrink-0">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3" style="flex:1;">
+                <div class="col-lg-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -61,7 +61,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3" style="flex:1;">
+                <div class="col-lg-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -83,7 +83,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3" style="flex:1;">
+                <div class="col-lg-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -105,7 +105,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3" style="flex:1;">
+                <div class="col-lg-3" style="flex:1;">
                     <div class="card card-animate card-rad">
                         <div class="card-body">
                             <div class="d-flex align-items-center">

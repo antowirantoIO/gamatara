@@ -89,19 +89,26 @@ class OnRequestController extends Controller
         $lokasi     = LokasiProject::get();
         $jenis_kapal= JenisKapal::get();
         $status     = StatusSurvey::get();
+        $pmAuth     = Auth::user()->role->name ?? '';
 
-        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status'));
+        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth'));
+    }
+
+    public function edits(Request $request)
+    {
+        $data = Customer::find($request->id);
+
+        return response()->json($data);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nama_project'          => 'required',
-            'nama_customer'         => 'required',
             'lokasi_project'        => 'required',
             'contact_person'        => 'required',
             'nomor_contact_person'  => 'required',
-            'nama_customer'         => 'required',
+            'id_customer'           => 'required',
             'displacement'          => 'required',
             'jenis_kapal'           => 'required'
         ]);
@@ -115,7 +122,6 @@ class OnRequestController extends Controller
         }
         $randInt = substr($randInt, -5);
 
-        $getCustomer = Customer::where('name',$request->input('nama_customer'))->first();
         $getPM = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
         
         if($getPM == null){
@@ -126,7 +132,7 @@ class OnRequestController extends Controller
         $data                       = New OnRequest();
         $data->code                 = $code.$randInt;
         $data->nama_project         = $request->input('nama_project');
-        $data->id_customer          = $getCustomer->id;
+        $data->id_customer          = $request->input('id_customer');
         $data->id_lokasi_project    = $request->input('lokasi_project');
         $data->contact_person       = $request->input('contact_person');
         $data->nomor_contact_person = $request->input('nomor_contact_person');
@@ -177,11 +183,9 @@ class OnRequestController extends Controller
             'pe_id_1'       => 'required'
         ]);
 
-        $getCustomer = Customer::where('name',$request->input('id_customer'))->first();
-
         $data                       = OnRequest::find($request->id);
         $data->nama_project         = $request->input('nama_project');
-        $data->id_customer          = $getCustomer->id;
+        $data->id_customer          = $request->input('id_customer');
         $data->id_lokasi_project    = $request->input('lokasi_project');
         $data->contact_person       = $request->input('contact_person');
         $data->nomor_contact_person = $request->input('nomor_contact_person');

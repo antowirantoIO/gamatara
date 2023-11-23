@@ -324,10 +324,10 @@ class BodController extends Controller
                         ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                         ->where('project_pekerjaan.id_project', $id_project)
                         ->where('project_pekerjaan.id_kategori', $id_kategori)
-                        ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'sub_kategori.name')
+                        ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
                         ->filter($request)
                         ->get();
-                
+
             foreach ($progress as $item) {
                 $item->setAttribute('name', $item->subkategori->name . " " . $item->deskripsi_subkategori);
         

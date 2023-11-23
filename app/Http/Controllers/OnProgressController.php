@@ -474,6 +474,7 @@ class OnProgressController extends Controller
                                     ->groupBy('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
                                     ->get();
         $subWorker = groupSubWorker($workers);
+
         $vendor = Vendor::all();
         $subKategori = SubKategori::all();
         return view('on_progres.pekerjaan_vendor.index',compact('project','kategori','subWorker','vendor','subKategori','id'));
@@ -741,6 +742,7 @@ class OnProgressController extends Controller
         if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                     ->where('id_kategori',$request->id_kategori)
+                                    ->whereNotNull(['id_pekerjaan'])
                                     ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){

@@ -36,7 +36,6 @@
                                     @foreach ($kategori as $keys => $items)
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane {{ $loop->first ? 'fade show active' : '' }}" id="kategori-{{ $items->id }}" role="tabpanel" aria-labelledby="{{ $items->id }}-tab">
-                                                @foreach ($workers as $key => $worker)
 
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($items->id) }}</strong></span>
@@ -73,8 +72,10 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach ($worker as $value)
-                                                            <input type="text" class="d-none id_kategori" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                            @foreach ($workers as $key => $worker)
+                                                                @foreach ($worker as $value)
+                                                                <input type="text" class="d-none id_kategori" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                                @endforeach
                                                             @endforeach
                                                         </tbody>
                                                     </table>
@@ -82,8 +83,6 @@
                                                         <strong>Total Bill</strong> :
                                                         <strong class="tagihan-{{ $items->id }} {{ $loop->first ? 'active' : '' }}"></strong>
                                                     </div>
-
-                                                @endforeach
                                             </div>
                                         </div>
                                     @endforeach

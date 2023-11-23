@@ -116,8 +116,8 @@ class CompleteController extends Controller
         $allData = ProjectPekerjaan::where('id_project', $id)->get();
         $workers = $allData->groupBy('id_kategori','id_subkategori');
         $subKategori = SubKategori::all();
-        $lokasi = LokasiProject::all();
-        return view('complete.tagihan.customer',compact('id','kategori','workers','subKategori','lokasi'));
+        $vendor = Vendor::all();
+        return view('complete.tagihan.customer',compact('id','kategori','workers','subKategori','vendor'));
     }
 
     public function tagihanVendor($id,$vendor)
@@ -337,7 +337,7 @@ class CompleteController extends Controller
         if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                     ->where('id_kategori',$request->id_kategori)
-                                    ->with(['subKategori','projects.lokasi','pekerjaan']);
+                                    ->with(['subKategori','projects.lokasi','pekerjaan','vendors']);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
                 $data->where('id_subkategori',$request->sub_kategori);
@@ -361,4 +361,47 @@ class CompleteController extends Controller
         }
 
     }
+
+    public function ajaxProgresPekerjaanVendor(Request $request)
+    {
+
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project',$request->id_project)
+                                    ->where('id_kategori', $request->id_kategori)
+                                    ->where('id_vendor',$request->id_vendor)
+                                    ->with(['subKategori', 'vendors'])
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                    ->distinct();
+
+            if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+                $data->where('id_subkategori',$request->sub_kategori);
+            }
+
+            if($request->has('nama_vendor') && !empty($request->nama_vendor)){
+                $vendor = $request->nama_vendor;
+                $data->whereHas('vendors',function($item) use(&$vendor){
+                    $item->where('id',$vendor);
+                });
+            }
+
+
+            $data = $data->get();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('pekerjaan', function($data) {
+                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->addColumn('progres', function($data){
+                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
+                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+            })
+            ->make(true);
+        }
+    }
+
 }

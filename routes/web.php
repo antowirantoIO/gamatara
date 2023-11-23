@@ -287,6 +287,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('edit/request/{id}',[OnProgressController::class,'editRequestPekerjaan'])->name('on_progres.request.edit');
             Route::post('update/estimasi',[OnProgressController::class,'updateEstimasiProject'])->name('ajax.update-estimasi-project');
             Route::post('data-pekerjaan',[OnProgressController::class,'ajaxRequestDataPekerjaan'])->name('ajax.data-pekerjaan');
+            Route::post('recent-activity-detail',[OnProgressController::class,'ajaxRecentActivityDetail'])->name('ajax.recent-activity-detail');
         });
 
         Route::prefix('export')->group(function(){

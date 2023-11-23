@@ -573,6 +573,7 @@ class OnProgressController extends Controller
                                     ->where('id_project',$request->id_project)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->where('id_subkategori',$request->id_subkategori)
+                                    ->filter($request)
                                     ->orderBy('id','asc');
             if($request->has('id_pekerjaan') && !empty($request->id_pekerjaan)){
                 $data->where('id_pekerjaan',$request->id_pekerjaan);

@@ -11,7 +11,7 @@
                             <a href="{{route('on_progres.detail-worker',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Detail Pekerjaan</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Job Detail</h4>
                         </div>
                     </div>
                 </div>
@@ -25,8 +25,8 @@
                                 <table class="table" id="example1" style="font-size: 10px;">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE">Pekerjaan</th>
-                                            <th style="color:#929EAE">Lokasi</th>
+                                            <th style="color:#929EAE">Job</th>
+                                            <th style="color:#929EAE">Location</th>
                                             <th style="color:#929EAE">Detail / Other</th>
                                             <th style="color:#929EAE">Length (mm)</th>
                                             <th style="color:#929EAE">Width (mm)</th>
@@ -40,16 +40,16 @@
                                     <tbody>
                                         @foreach ($data as $item)
                                             <tr>
-                                                <td>{{ $item->pekerjaan->name }}</td>
-                                                <td>{{ $item->id_lokasi }}</td>
-                                                <td>{{ $item->detail }}</td>
-                                                <td>{{ $item->length }}</td>
-                                                <td>{{ $item->width }}</td>
-                                                <td>{{ $item->thick }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>{{ $item->amount }}</td>
-                                                <td>{{ $item->unit }}</td>
-                                                <td>{{ $item->vendors->name }}</td>
+                                                <td>{{ $item->pekerjaan->name ?? '-' }}</td>
+                                                <td>{{ $item->id_lokasi ?? '-' }}</td>
+                                                <td>{{ $item->detail ?? '-' }}</td>
+                                                <td>{{ $item->length ?? 0 }}</td>
+                                                <td>{{ $item->width ?? 0 }}</td>
+                                                <td>{{ $item->thick ?? 0 }}</td>
+                                                <td>{{ $item->qty ?? 0 }}</td>
+                                                <td>{{ $item->amount ?? 0 }}</td>
+                                                <td>{{ $item->unit ?? '-' }}</td>
+                                                <td>{{ $item->vendors->name ?? '-' }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -63,24 +63,36 @@
             <div class="row g-3">
                 <div class="row gy-4">
                     <div class="col-xxl-12 col-md-12">
-                        <p class="fs-4">Foto Sebelum</p>
-                        <div class="d-flex justify-content-around align-items-center">
-                            @foreach ($before as $b)
-                                <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
-                                    <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture">
-                                </a>
-                            @endforeach
-                        </div>
+                        <p class="fs-4">Before</p>
+                            @if ($before->count() > 0)
+                                <div class="d-flex justify-content-around align-items-center">
+                                    @foreach ($before as $b)
+                                        <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                            <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture">
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="d-flex justify-content-center align-items-center w-100 bg-white">
+                                    <img src="{{ asset('assets/images/notfound.svg') }}" alt="notfound" height="150" class="img-responsive">
+                                </div>
+                            @endif
                     </div>
                     <div class="col-xxl-12 col-md-12 mt-5">
-                        <p class="fs-4">Foto Sesudah</p>
-                        <div class="d-flex justify-content-around align-items-center">
-                            @foreach ($after as $a)
-                                <a href="{{ asset($a->photo) }}" data-lightbox="{{ asset($a->photo) }}">
-                                    <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture">
-                                </a>
-                            @endforeach
-                        </div>
+                        <p class="fs-4">After</p>
+                        @if ($after->count())
+                            <div class="d-flex justify-content-around align-items-center">
+                                @foreach ($after as $a)
+                                    <a href="{{ asset($a->photo) }}" data-lightbox="{{ asset($a->photo) }}">
+                                        <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture">
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-center align-items-center w-100 bg-white">
+                                <img src="{{ asset('assets/images/notfound.svg') }}" alt="notfound" height="150" class="img-responsive">
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

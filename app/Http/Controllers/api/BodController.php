@@ -198,7 +198,7 @@ class BodController extends Controller
             
             })->values();
 
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart' => $chartData]);
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart_progress' => $chartData]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

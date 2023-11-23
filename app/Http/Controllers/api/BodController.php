@@ -319,11 +319,11 @@ class BodController extends Controller
             //     ->filter($request)
             //     ->get();
 
-            $progress = ProjectPekerjaan::select('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
+            $progress = ProjectPekerjaan::select('project_pekerjaan.id_subkategori', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
                         ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                         ->where('project_pekerjaan.id_project', $request->id_project)
                         ->where('project_pekerjaan.id_kategori', $request->id_kategori)
-                        ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
+                        ->groupBy('project_pekerjaan.id_subkategori', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
                         ->filter($request)
                         ->get();
 

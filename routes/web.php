@@ -323,6 +323,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('ajax')->group(function(){
             Route::get('pekerjaan',[CompleteController::class,'ajaxProgresPekerjaan'])->name('complete.ajax.progres-pekerjaan');
             Route::get('pekerjaan-vendor',[CompleteController::class,'ajaxPekerjaanVendor'])->name('complete.ajax.pekerjaan-vendor');
+            Route::get('progres-pekerjaan-vendor',[CompleteController::class,'ajaxProgresPekerjaanVendor'])->name('complete.ajax.progres-pekerjaan-vendor');
             Route::get('setting-estimasi',[CompleteController::class,'ajaxSettingEstimasi'])->name('complete.ajax.setting-estimasi');
             Route::get('tagihan-vendor',[CompleteController::class,'ajaxTagihanVendor'])->name('complete.ajax.tagihan-vendor');
             Route::get('tagihan-customer',[CompleteController::class,'ajaxTagihanCustomer'])->name('complete.ajax.tagihan-customer');

@@ -34,41 +34,39 @@
                                 @foreach ($kategori as $keys => $items)
                                     <div class="tab-content" id="myTabContent">
                                         <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="kategori-{{ $items->id }}" role="tabpanel" aria-labelledby="{{ $items->id }}-tab">
-
-                                            @foreach ($subWorker as $key => $worker)
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                                    <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($items->id) }}</strong></span>
-                                                    <div>
-                                                        <button class="btn btn-secondary" id="btn-fillter-{{ $keys }}">
-                                                            <span>
-                                                                <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                                            </span> &nbsp; Filter
-                                                        </button>
-                                                        <button class="btn btn-danger export-button" id="export-button">
-                                                            <span>
-                                                                <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
-                                                            </span> &nbsp; Export
-                                                        </button>
-                                                    </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($items->id) }}</strong></span>
+                                                <div>
+                                                    <button class="btn btn-secondary" id="btn-fillter-{{ $keys }}">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
+                                                        </span> &nbsp; Filter
+                                                    </button>
+                                                    <button class="btn btn-danger export-button" id="export-button">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                                        </span> &nbsp; Export
+                                                    </button>
                                                 </div>
-                                                <table class="table w-100" id="tableData{{ $items->id }}">
-                                                    <thead class="table-light">
-                                                        <tr>
-                                                            <th style="color:#929EAE;width:600px;">Worker</th>
-                                                            <th style="color:#929EAE">Progress</th>
-                                                            <th style="color:#929EAE">Vendor</th>
-                                                            <th style="color:#929EAE">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                            </div>
+                                            <table class="table w-100" id="tableData{{ $items->id }}">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="color:#929EAE;width:600px;">Worker</th>
+                                                        <th style="color:#929EAE">Progress</th>
+                                                        <th style="color:#929EAE">Vendor</th>
+                                                        <th style="color:#929EAE">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($subWorker as $key => $worker)
                                                         @foreach ($worker as $value)
                                                             <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
                                                             <input type="text" class="d-none id_project {{ $loop->first ? 'active' : '' }}" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
                                                         @endforeach
-                                                    </tbody>
-                                                </table>
-                                            @endforeach
-
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 @endforeach

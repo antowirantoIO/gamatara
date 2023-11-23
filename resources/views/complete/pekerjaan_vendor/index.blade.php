@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('complete.edit',$project)}}">
+                            <a href="{{route('on_progress.edit',$project)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Vendor Works</h4>
@@ -23,7 +23,7 @@
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
                             @foreach ($kategori as $key => $item)
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link {{ $loop->first ? 'active' : '' }} rounded-pill" id="{{ $item->id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $item->id }}" type="button" role="tab" aria-controls="{{ $item->id }}" aria-selected="true">{{ $item->name }}</button>
+                                    <button class="nav-link {{ $loop->first ? 'active' : '' }} rounded-pill" id="{{ $item->id }}-tab" data-bs-toggle="tab" data-bs-target="#kategori-{{ $item->id }}" type="button" role="tab" aria-controls="{{ $item->id }}" aria-selected="true">{{ $item->name }}</button>
                                 </li>
                             @endforeach
                         </ul>
@@ -31,13 +31,13 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <div class="live-preview">
-                                @foreach ($subWorker as $key => $worker)
+                                @foreach ($kategori as $keys => $items)
                                     <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="kategori-{{ $items->id }}" role="tabpanel" aria-labelledby="{{ $items->id }}-tab">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
+                                                <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($items->id) }}</strong></span>
                                                 <div>
-                                                    <button class="btn btn-secondary" id="btn-fillter-{{ $key }}">
+                                                    <button class="btn btn-secondary" id="btn-fillter-{{ $keys }}">
                                                         <span>
                                                             <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Filter
@@ -49,7 +49,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            <table class="table w-100" id="tableData{{ $key }}">
+                                            <table class="table w-100" id="tableData{{ $items->id }}">
                                                 <thead class="table-light">
                                                     <tr>
                                                         <th style="color:#929EAE;width:600px;">Worker</th>
@@ -59,9 +59,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($worker as $value)
-                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
-                                                        <input type="text" class="d-none id_project {{ $loop->first ? 'active' : '' }}" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
+                                                    @foreach ($subWorker as $key => $worker)
+                                                        @foreach ($worker as $value)
+                                                            <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                            <input type="text" class="d-none id_project {{ $loop->first ? 'active' : '' }}" id="id_project-{{ $key }}" value="{{ $value->id_project }}">
+                                                        @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -91,9 +93,9 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Nama Pekerjaan</label>
+                            <label for="sub_kategori" class="form-label">Job Name</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
-                                <option value="">Pilih Nama Pekerjaan</option>
+                                <option value="">Choose Job Name</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
                                 @endforeach
@@ -102,9 +104,9 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_vendor" class="form-label">Nama Vendor</label>
+                            <label for="nama_vendor" class="form-label">Vendor Name</label>
                             <select name="nama_vendor" id="nama_vendor" class="form-select">
-                                <option value="">Pilih Vendor</option>
+                                <option value="">Choose Vendor</option>
                                 @foreach($vendor as $v)
                                 <option value="{{$v->id}}">{{$v->name}}</option>
                                 @endforeach
@@ -134,7 +136,7 @@
                 search: true
             });
 
-            @foreach ($subWorker as $key => $worker)
+            @foreach ($kategori as $key => $worker)
 
                 var id_kategori = $('#id_kategori-{{ $key }}').val();
                 var id_project = $('#id_project-{{ $key }}').val();
@@ -142,6 +144,7 @@
                 var table{{ $key }} = $('#tableData{{ $key }}').DataTable({
                     fixedHeader:true,
                     scrollX: false,
+                    bSort : false,
                     processing: true,
                     serverSide: true,
                     searching: false,
@@ -164,7 +167,7 @@
                         previousButton.css('display', 'none');
                     },
                     ajax : {
-                        url : '{{ route('ajax.progres-pekerjaan-vendor') }}',
+                        url : '{{ route('complete.ajax.progres-pekerjaan-vendor') }}',
                         method : 'GET',
                         data : function(d){
                             d._token = '{{ csrf_token() }}';
@@ -185,7 +188,7 @@
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
                                 let id_kategori = data.id_kategori;
-                                let url = '{{ route('complete.pekerjaan-vendor',[':id',':project',':subkategori',':idKategori']) }}';
+                                let url = '{{ route('on_progres.vendor-worker',[':id',':project',':subkategori',':idKategori']) }}';
                                 let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':idKategori',id_kategori);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>

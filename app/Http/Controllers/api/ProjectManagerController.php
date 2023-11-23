@@ -150,11 +150,11 @@ class ProjectManagerController extends Controller
             foreach ($progress as $item) {
                 $item->setAttribute('name', $item->subkategori->name . " " . $item->deskripsi_subkategori);
         
-                if ($status == 1) {
+                if ($item->status == 1) {
                     $status = '';
-                } elseif ($status == 2) {
+                } elseif ($item->status == 2) {
                     $status = 'Proses';
-                } elseif ($status == 3) {
+                } elseif ($item->status == 3) {
                     $status = 'Done';
                 }
         

@@ -155,15 +155,17 @@ class ProjectManagerController extends Controller
                 ->whereIn('id', $subkategoriIds)
                 ->get();
 
-            foreach ($subkategori as $item) {
-                $status = '';
-
+            $filteredSubkategori = $subkategori->filter(function ($item) use ($progressIds) {
+                return in_array($item->id, $progressIds);
+            });
+                
+            foreach ($filteredSubkategori as $item) {
                 $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-
+            
                 if ($matchingProgress) {
                     $item->setAttribute('name', $item->name . " " . $matchingProgress->deskripsi_subkategori);
                     $maxStatus = $matchingProgress->max_status;
-
+            
                     if ($maxStatus == 1) {
                         $status = '';
                     } elseif ($maxStatus == 2) {
@@ -171,9 +173,9 @@ class ProjectManagerController extends Controller
                     } elseif ($maxStatus == 3) {
                         $status = 'Done';
                     }
+            
+                    $item->status = $status;
                 }
-
-                $item->status = $status;
             }
          
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);

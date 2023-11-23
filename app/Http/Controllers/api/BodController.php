@@ -260,9 +260,11 @@ class BodController extends Controller
                     ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 
-            $vendorCount = ProjectPekerjaan::where('id_project', $request->id)
-                        ->distinct('id_vendor')
-                        ->count();
+            $vendor = Keluhan::where('on_request_id',$request->id)
+                    ->whereNotNull(['id_pm_approval','id_bod_approval'])
+                    ->select('id_vendor')
+                    ->groupBy('id_vendor')
+                    ->get();
                 
             $kategori = Kategori::get();
 
@@ -292,7 +294,7 @@ class BodController extends Controller
             }
                     
             $data['name'] = $data->projects->nama_project ?? '';
-            $data['vendor'] = $vendor;
+            $data['vendor'] = count($vendor);
             $data['kategori'] = $kategori;
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

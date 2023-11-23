@@ -93,6 +93,7 @@ function groupDataPekerjaan($request)
             $datas->where('id_vendor',$request->nama_vendor);
         }
         $datas = $datas->get();
+        $datas = $datas->groupBy('kode_unik');
         $data[$item->name] = $datas;
     });
     return $data;
@@ -229,7 +230,7 @@ function getLatters($name)
             return $latter;
             break;
 
-        case 'PIPA-PIA':
+        case 'PIPA-PIPA':
             $latter = 'D';
             return $latter;
             break;

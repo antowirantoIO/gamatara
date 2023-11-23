@@ -51,90 +51,93 @@
     @foreach ($data as $index => $item)
 
         <tr style="font-size: 8px; border:20px medium black;">
-            <td style="font-weight: bold; border:20px medium black;" align="center"  height="20">{{ $letters[$count] }}.</td>
+            <td style="font-weight: bold; border:20px medium black;" align="center"  height="20">{{ getLatters($index) }}.</td>
             <td colspan="9" style="font-weight: bold; border:20px medium black;"  height="20">&nbsp;{{ $index }}</td>
         </tr>
-        @foreach ($item as $indexs => $value)
-            @php
-                $subkategori = $value->subKategori->name;
-                $kodeUnik = $value->kode_unik;
-            @endphp
-            @if ($prevKodeUnik !== $kodeUnik)
-                <tr style="font-size: 8px;">
-                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td height="20"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                </tr>
-                <tr style="font-size: 8px;">
-                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $letters[$count] }}.{{ $subCount }}.</td>
-                    <td height="20">&nbsp;
-                        @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
-                            <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
-                        @else
-                            <strong>{{ $value->subKategori->name }}</strong>
-                        @endif
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+        @foreach ($item as $indexs => $items)
+            @foreach ($items as $key => $value)
+                @php
+                    $subkategori = $value->subKategori->name;
+                    $kodeUnik = $value->kode_unik;
+                @endphp
+                @if ($prevKodeUnik !== $kodeUnik)
+                    <tr style="font-size: 8px;">
+                        <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td height="20"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    </tr>
+                    <tr style="font-size: 8px;">
+                        <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ getLatters($index) }}.{{ $subCount }}.</td>
+                        <td height="20">&nbsp;
+                            @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
+                                <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
+                            @else
+                                <strong>{{ $value->subKategori->name }}</strong>
+                            @endif
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    </tr>
+                    @php
+                        if ($prevIndex !== $index) {
+                            $subCount++;
+                        } else {
+                            $subCount = 1;
+                        }
+                    @endphp
+                @endif
+                <tr style="font-size: 8px; border:20px medium black;">
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td height="20"> &nbsp;{{ $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan ?? '-' }}</td>
+                    <td height="20" align="center">{{ $value->id_lokasi }}</td>
+                    <td height="20" align="center">{{ $value->detail }}</td>
+                    <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>
+                    <td height="20" align="center">{{ number_format($value->width,2, ',','') }}</td>
+                    <td height="20" align="center">{{ number_format($value->thick,2, ',','') }}</td>
+                    <td height="20" align="center">{{ number_format($value->qty,2, ',','') }}</td>
+                    <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
+                    <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
+                    <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
+                    <td>{{ $kodeUnik }} / {{ $prevKodeUnik }} / {{ $subkategori }}</td>
                 </tr>
                 @php
-                    if ($prevIndex !== $index) {
-                        $subCount++;
-                    } else {
-                        $subCount = 1;
-                    }
+                    $prevIndex = $index;
+                    $prevSub = $subkategori;
+                    $prevKodeUnik = $kodeUnik;
                 @endphp
-            @endif
-            <tr style="font-size: 8px; border:20px medium black;">
-                <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                <td height="20"> &nbsp;{{ $value->pekerjaan->name ?? '-' }}</td>
-                <td height="20" align="center">{{ $value->id_lokasi }}</td>
-                <td height="20" align="center">{{ $value->detail }}</td>
-                <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>
-                <td height="20" align="center">{{ number_format($value->width,2, ',','') }}</td>
-                <td height="20" align="center">{{ number_format($value->thick,2, ',','') }}</td>
-                <td height="20" align="center">{{ number_format($value->qty,2, ',','') }}</td>
-                <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
-                <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
-                <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
-            </tr>
-            @php
-                $prevIndex = $index;
-                $prevSub = $subkategori;
-                $prevKodeUnik = $kodeUnik;
-            @endphp
+                @endforeach
+                @if($item->count() > 0)
+                    <tr style="font-size: 8px;">
+                        <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td height="20"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    </tr>
+                @endif
+                @php
+                    $prevIndex = $index;
+                    $count++
+                @endphp
             @endforeach
-            @if($item->count() > 0)
-                <tr style="font-size: 8px;">
-                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td height="20"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                </tr>
-            @endif
-            @php
-            $prevIndex = $index;
-            $count++
-        @endphp
     @endforeach
     {!! str_repeat('<tr></tr>', 1) !!}
     <tr align="center" style="font-size: 8px;">

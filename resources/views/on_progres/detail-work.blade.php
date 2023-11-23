@@ -40,7 +40,7 @@
                                     <tbody>
                                         @foreach ($data as $item)
                                             <tr>
-                                                <td>{{ $item->pekerjaan->name ?? '-' }}</td>
+                                                <td>{{ $item->pekerjaan->name . ' ' . $item->deskripsi_pekerjaan ?? '-' }}</td>
                                                 <td>{{ $item->id_lokasi ?? '-' }}</td>
                                                 <td>{{ $item->detail ?? '-' }}</td>
                                                 <td>{{ $item->length ?? 0 }}</td>

@@ -175,7 +175,7 @@
             },
             columns: [
                 {data: 'kategori.name', code: 'kategori'},
-                {data: 'sub_kategori.name', name: 'subkategori'},
+                {data: 'subkategori', name: 'subkategori'},
                 {data: 'action', name: 'action'}
             ]
         });

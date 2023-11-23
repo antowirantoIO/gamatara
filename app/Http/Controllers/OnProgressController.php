@@ -108,6 +108,9 @@ class OnProgressController extends Controller
                                     ->distinct();
             $data = $data->get();
             return DataTables::of($data)->addIndexColumn()
+                            ->addColumn('subkategori',function($data){
+                                return strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan' ? ($data->deskripsi_subkategori ? $data->subKategori->name . ' ' .  $data->deskripsi_subkategori : $data->subKategori->name) : $data->subKategori->name ;
+                            })
                             ->addColumn('action', function($data) {
                                return ' <div class="d-flex justify-contetn-center gap-3">
                                <a href="'.route('on_progres.request-pekerjaan',[$data->id_project,$data->id_vendor,$data->id_kategori,$data->id_subkategori]).'" class="btn btn-info btn-sm">
@@ -616,7 +619,7 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
                     return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
                 } else {
                     return $data->subKategori->name;

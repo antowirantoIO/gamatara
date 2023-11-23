@@ -117,6 +117,7 @@ function groupDataPekerjaanVendor($request)
             $datas->where('id_vendor',$request->nama_vendor);
         }
         $datas = $datas->get();
+        $datas = $datas->groupBy('id_subkategori');
         if ($datas->isNotEmpty()) {
             $data[$item->name] = $datas;
         }

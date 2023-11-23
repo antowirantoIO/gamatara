@@ -83,6 +83,6 @@ class OnProgressExportController extends Controller
         $data = groupDataPekerjaanVendor($request);
         $name = OnRequest::where('id',$request->id_project)->first();
         return Excel::download(new ExportTagihanCustomer($data,$name),'CUSTOMER BILLS-'.$name->nama_project.'.xlsx');
-        return view('export.ExportTagihanCustomer',compact('data','name'));
+        // return view('export.ExportTagihanCustomer',compact('data','name'));
     }
 }

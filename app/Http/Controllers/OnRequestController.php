@@ -219,4 +219,27 @@ class OnRequestController extends Controller
 
         return Excel::download(new ExportDetailOnRequest($data), 'List Detail On Request.xlsx');
     }
+
+    public function stores(Request $request)
+    {
+        $request->validate([
+            'name'                  => 'required',
+            'alamat'                => 'required',
+            'contact_person'        => 'required',
+            'nomor_contact_person'  => 'required',
+        ]);
+
+        $data = New Customer();
+        $data->name                     = $request->input('name');
+        $data->alamat                   = $request->input('alamat');
+        $data->contact_person           = $request->input('contact_person');
+        $data->nomor_contact_person     = $request->input('nomor_contact_person');
+        $data->email                    = $request->input('email');
+        $data->npwp                     = $request->input('npwp');
+        $data->save();
+
+        $data= Customer::find($data->id);
+
+        return response()->json($data);
+    }
 }

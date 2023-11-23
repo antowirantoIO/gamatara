@@ -86,7 +86,7 @@
         <table class="container">
             <tr>
                 <td class="logo-container">
-                    <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
+                    <!-- <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo"> -->
                 </td>
                 <td class="text-container">
                     <div class="header">PT. Gamatara Trans Ocean Shipyard</div>
@@ -106,11 +106,11 @@
             <tbody>
                 @foreach($keluhan as $item)
                 <tr>
-                    <td>&nbsp;{{ $item->vendors->name }}</td>
-                    <td>&nbsp;{{ $item->no_spk }} </td>
-                    <td>&nbsp;{{ $item->created_ats }} </td>
+                    <td>{{ $item->vendors->name }}</td>
+                    <td>{{ $item->no_spk }} </td>
+                    <td>{{ $item->created_atss }} </td>
                     <td>  
-                        &nbsp;{!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
+                        {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
                     </td>
                 </tr>
                 @endforeach

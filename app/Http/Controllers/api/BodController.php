@@ -160,9 +160,9 @@ class BodController extends Controller
             $data = ProjectManager::get();
             foreach($data as $item)
             {
-                $item['name'] = $item->karyawan ?? $item->karyawan->name ?? '';
-                $item['onprogress'] = $item->projects->where('status', 1)->count();
-                $item['complete'] = $item->projects->where('status', 2)->count();
+                $item['name'] = $item->karyawan->name ?? '';
+                $item['onprogress'] = $item->projects->where('status', 2)->count();
+                $item['complete'] = $item->projects->where('status', 3)->count();
             }
       
             $chart = OnRequest::select('pm_id', 'status','created_at')

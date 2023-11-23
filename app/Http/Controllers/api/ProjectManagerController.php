@@ -144,7 +144,7 @@ class ProjectManagerController extends Controller
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
                 ->where('id_kategori', $request->id_kategori)
-                ->select('id_subkategori', DB::raw('MAX(status) as max_status'), DB::raw('MAX(deskripsi_pekerjaan) as deskripsi_pekerjaan'))
+                ->select('id_subkategori', DB::raw('MAX(status) as max_status'), DB::raw('MAX(deskripsi_subkategori) as deskripsi_subkategori'))
                 ->groupBy('id_subkategori')
                 ->filter($request)
                 ->get();
@@ -161,7 +161,7 @@ class ProjectManagerController extends Controller
                 $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
 
                 if ($matchingProgress) {
-                    $item->setAttribute('name', $item->name . " " . $matchingProgress->deskripsi_pekerjaan);
+                    $item->setAttribute('name', $item->name . " " . $matchingProgress->deskripsi_subkategori);
                     $maxStatus = $matchingProgress->max_status;
 
                     if ($maxStatus == 1) {

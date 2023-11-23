@@ -144,38 +144,21 @@ class ProjectManagerController extends Controller
 
             $progress = ProjectPekerjaan::where('id_project', $request->id_project)
                 ->where('id_kategori', $request->id_kategori)
-                ->select('id_subkategori', DB::raw('MAX(status) as max_status'), DB::raw('GROUP_CONCAT(deskripsi_subkategori) as deskripsi_subkategori'))
-                ->groupBy('id_subkategori')
                 ->filter($request)
                 ->get();
-
-            $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
-
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
-                ->whereIn('id', $subkategoriIds)
-                ->get();
-
-            $filteredSubkategori = $subkategori->filter(function ($item) use ($subkategoriIds) {
-                return in_array($item->id, $subkategoriIds);
-            });
                 
-            foreach ($filteredSubkategori as $item) {
-                $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-            
-                if ($matchingProgress) {
-                    $item->setAttribute('name', $item->name . " " . $matchingProgress->deskripsi_subkategori);
-                    $maxStatus = $matchingProgress->max_status;
-            
-                    if ($maxStatus == 1) {
-                        $status = '';
-                    } elseif ($maxStatus == 2) {
-                        $status = 'Proses';
-                    } elseif ($maxStatus == 3) {
-                        $status = 'Done';
-                    }
-            
-                    $item->status = $status;
+            foreach ($progress as $item) {
+                $item->setAttribute('name', $item->subkategori->name . " " . $item->deskripsi_subkategori);
+        
+                if ($status == 1) {
+                    $status = '';
+                } elseif ($status == 2) {
+                    $status = 'Proses';
+                } elseif ($status == 3) {
+                    $status = 'Done';
                 }
+        
+                $item->status = $status;
             }
          
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);

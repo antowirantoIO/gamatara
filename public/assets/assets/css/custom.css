@@ -120,6 +120,11 @@ body{
     border-radius: 0.25rem
 }
 
+.select2-results__option--highlighted {
+    background-color: #0968E5;
+    color: #fff;
+}
+
 .draggable-row .select2-container--bootstrap-5 .select2-selection {
     width: 200px;
 }

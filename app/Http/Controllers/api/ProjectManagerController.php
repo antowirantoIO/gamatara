@@ -22,7 +22,7 @@ class ProjectManagerController extends Controller
     {
         try{
             $data = OnRequest::with(['complaint','customer:id,name'])
-                ->select('A.Nama_Project', 'A.created_at', 'A.id','A.id_customer',
+                ->select('A.Nama_Project', 'A.created_at', 'A.id_customer',
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'), 
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
                 ->from('Project as A')

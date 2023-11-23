@@ -75,7 +75,7 @@ class OnProgressExportController extends Controller
                                     ->where('id_project',$request->id_project)->get();
         $name = OnRequest::where('id',$request->id_project)->first();
         $project= $project->groupBy('vendors.name');
-        return Excel::download(new ExportAllTagihanVendor($project,$request),'VENDOR BILLS'. $name->nama_project .'.xlsx');
+        return Excel::download(new ExportAllTagihanVendor($project,$request),'VENDOR BILLS-'. $name->nama_project .'.xlsx');
     }
 
     public function tagihanCustomer (Request $request)

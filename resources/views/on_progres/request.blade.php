@@ -141,7 +141,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" class="project_pekerjaan_id">
-                <table class="table" id="tableHistory">
+                <table class="table w-100" id="tableHistory">
                     <thead style="background-color:#194BFB; color: white;">
                         <tr>
                             <th style="width: 200px">Job</th>

@@ -36,53 +36,52 @@
                                     @foreach ($kategori as $keys => $items)
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane {{ $loop->first ? 'fade show active' : '' }}" id="kategori-{{ $items->id }}" role="tabpanel" aria-labelledby="{{ $items->id }}-tab">
-
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($items->id) }}</strong></span>
-                                                        <div>
-                                                            <button class="btn btn-secondary" id="btn-fillter-{{ $key }}">
-                                                                <span>
-                                                                    <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                                                </span> &nbsp; Filter
-                                                            </button>
-                                                            <button class="btn btn-danger export-button" id="export-button">
-                                                                <span>
-                                                                    <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
-                                                                </span> &nbsp; Export
-                                                            </button>
-                                                        </div>
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($items->id) }}</strong></span>
+                                                    <div>
+                                                        <button class="btn btn-secondary" id="btn-fillter-{{ $key }}">
+                                                            <span>
+                                                                <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
+                                                            </span> &nbsp; Filter
+                                                        </button>
+                                                        <button class="btn btn-danger export-button" id="export-button">
+                                                            <span>
+                                                                <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                                            </span> &nbsp; Export
+                                                        </button>
                                                     </div>
-                                                    <table class="table w-100" id="tableData{{ $items->id }}">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th style="color:#929EAE;">Job</th>
-                                                                <th style="color:#929EAE;">Vendor</th>
-                                                                <th style="color:#929EAE;">Description</th>
-                                                                <th style="color:#929EAE">Location</th>
-                                                                <th style="color:#929EAE">Detail / Other</th>
-                                                                <th style="color:#929EAE">Length (mm)</th>
-                                                                <th style="color:#929EAE">Width (mm)</th>
-                                                                <th style="color:#929EAE">Thick (mm)</th>
-                                                                <th style="color:#929EAE">Qty</th>
-                                                                <th style="color:#929EAE">Amount</th>
-                                                                <th style="color:#929EAE">Unit</th>
-                                                                <th style="color:#929EAE">Unit Price</th>
-                                                                <th style="color:#929EAE">Total Price</th>
-                                                                <th style="color:#929EAE">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($workers as $key => $worker)
-                                                                @foreach ($worker as $value)
-                                                                <input type="text" class="d-none id_kategori" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
-                                                                @endforeach
+                                                </div>
+                                                <table class="table w-100" id="tableData{{ $items->id }}">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th style="color:#929EAE;">Job</th>
+                                                            <th style="color:#929EAE;">Vendor</th>
+                                                            <th style="color:#929EAE;">Description</th>
+                                                            <th style="color:#929EAE">Location</th>
+                                                            <th style="color:#929EAE">Detail / Other</th>
+                                                            <th style="color:#929EAE">Length (mm)</th>
+                                                            <th style="color:#929EAE">Width (mm)</th>
+                                                            <th style="color:#929EAE">Thick (mm)</th>
+                                                            <th style="color:#929EAE">Qty</th>
+                                                            <th style="color:#929EAE">Amount</th>
+                                                            <th style="color:#929EAE">Unit</th>
+                                                            <th style="color:#929EAE">Customer Price</th>
+                                                            <th style="color:#929EAE">Total Price</th>
+                                                            <th style="color:#929EAE">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($workers as $key => $worker)
+                                                            @foreach ($worker as $value)
+                                                            <input type="text" class="d-none id_kategori" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
                                                             @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                    <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
-                                                        <strong>Total Bill</strong> :
-                                                        <strong class="tagihan-{{ $items->id }} {{ $loop->first ? 'active' : '' }}"></strong>
-                                                    </div>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                                <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
+                                                    <strong>Total Bill</strong> :
+                                                    <strong class="tagihan-{{ $items->id }} {{ $loop->first ? 'active' : '' }}"></strong>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -472,7 +471,7 @@
                     $('#amount').val(ress.data.amount);
                     $('#conversion').val(ress.data.conversion);
                     $('#harga_vendor').val(rupiah(ress.data.harga_vendor));
-                    $('#harga_customer').val(ress.data.harga_customer ? rupiah(ress.data.harga_customer) : 0);
+                    $('#harga_customer').val(ress.data.pekerjaan ? rupiah(ress.data.pekerjaan.harga_customer) : 0);
                     modalEdit.modal('show');
                 })
             });

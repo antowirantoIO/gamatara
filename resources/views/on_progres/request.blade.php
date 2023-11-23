@@ -60,7 +60,7 @@
                                             <table class="table" id="tablePekerjaan">
                                                 <thead style="background-color:#194BFB; color: white;">
                                                     <tr>
-                                                        <th style="width: 200px">Job</th>
+                                                        <th>Job</th>
                                                         <th style="width: 200px">Description</th>
                                                         <th style="width: 200px">Location</th>
                                                         <th style="width: 200px">Detail / Other</th>
@@ -132,6 +132,37 @@
     </div>
 </div>
 
+<div id="modalHistory" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-top-right modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Recent Activity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="project_pekerjaan_id">
+                <table class="table w-100" id="tableHistory">
+                    <thead style="background-color:#194BFB; color: white;">
+                        <tr>
+                            <th style="width: 200px">Job</th>
+                            <th style="width: 200px">Date</th>
+                            <th style="width: 200px">Status</th>
+                            <th style="width: 90px">Length (mm)</th>
+                            <th style="width: 90px">Width (mm)</th>
+                            <th style="width: 90px">Thick (mm)</th>
+                            <th style="width: 90px">Unit</th>
+                            <th style="width: 90px">Qty</th>
+                            <th style="width: 90px">Amount</th>
+                            <th style="width: 90px">Vendor Price</th>
+                            <th style="width: 90px">Customer Price</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -143,7 +174,7 @@
             let id_subkategori = '{{ $subkategori_id }}';
             let id_project = '{{ $id }}';
             let id_vendor = '{{ $vendor->id }}';
-
+            let modalHistory = $('#modalHistory');
 
             $('#sub_kategori').trigger('change');
 
@@ -194,6 +225,9 @@
                 fixedHeader:true,
                 ordering : false,
                 scrollX: true,
+                columnDefs: [
+                    { "width": "20%", "targets": 0 }
+                ],
                 paging : false,
                 processing: true,
                 serverSide: true,
@@ -234,7 +268,7 @@
                             var keys = data.DT_RowIndex;
                             return pekerjaan(id_pekerjaan, keys);
                         },
-                        width : '200px'
+                        width: "200px"
                     },
                     {
                         data : function (data) {
@@ -367,8 +401,13 @@
                     {
                         data : function (data) {
                             let id = data.id;
-                            return `<div class="btn btn-danger btn-trash" data-id=${id}>
-                                <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                            return `<div class="d-flex justify-content-around gap-3">
+                                <div class="btn btn-danger btn-trash" data-id=${id}>
+                                    <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
+                                </div>
+                                <div class="btn btn-info btn-history" data-id=${id}>
+                                    <i><img src="{{asset('assets/images/history.svg')}}" style="width: 20px; color:white;"></i>
+                                </div>
                             </div>`;
                         }
                     }
@@ -533,6 +572,18 @@
                 }
             })
 
+            $(document).delegate('.btn-history','click',function(){
+                let data = $('.parent-clone');
+                let id = $(this).data('id');
+                $('.project_pekerjaan_id').val(id);
+                modalHistory.modal('show');
+                getRecentDetail(id);
+            })
+
+            modalHistory.on('hidden.bs.modal',function(){
+                $('#tableHistory').DataTable().destroy();
+            })
+
             let table = $('#tableActivity').DataTable({
                 fixedHeader:true,
                 scrollX: false,
@@ -610,6 +661,7 @@
                     { data : 'harga_customer', name : 'harga_customer' },
                 ]
             })
+
 
             $('#kategori').on('change',function(){
                 let id = $(this).val();
@@ -729,6 +781,87 @@
                     icon: icon,
                     title: message
                 })
+            }
+
+            function getRecentDetail (id) {
+                var tableRecent = $('#tableHistory').DataTable({
+                    fixedHeader:true,
+                    scrollX: false,
+                    ordering : false,
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    bLengthChange: false,
+                    autoWidth : true,
+                    language: {
+                        processing:
+                            '<div class="spinner-border text-info" role="status">' +
+                            '<span class="sr-only">Loading...</span>' +
+                            "</div>",
+                        paginate: {
+                            Search: '<i class="icon-search"></i>',
+                            first: "<i class='fas fa-angle-double-left'></i>",
+                            next: "Next <span class='mdi mdi-chevron-right'></span>",
+                            last: "<i class='fas fa-angle-double-right'></i>",
+                        },
+                        "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                    },
+                    drawCallback: function() {
+                        var previousButton = $('.paginate_button.previous');
+                        previousButton.css('display', 'none');
+                    },
+                    ajax : {
+                        url : '{{ route('ajax.recent-activity-detail') }}',
+                        method : 'POST',
+                        data : function (d) {
+                            d._token    = '{{ csrf_token() }}';
+                            d.id        =  id
+                        }
+                    },
+                    columns : [
+                        { data : 'pekerjaan.name', name : 'id_pekerjaan'},
+                        {
+                            data : function(data) {
+                                let status = data.status || '-';
+                                if(status === 1) {
+                                    let date = moment(data.created_at);
+                                    let formated = date.format('DD MMMM YYYY');
+                                    return formated
+                                }else if ( status === 2 ){
+                                    let date = moment(data.updated_at);
+                                    let formated = date.format('DD MMMM YYYY');
+                                    return formated
+                                }else{
+                                    let date = moment(data.deleted_at);
+                                    let formated = date.format('DD MMMM YYYY');
+                                    return formated
+                                }
+                            }
+                        },
+                        {
+                            data : function(data) {
+                                let status = data.status;
+                                if(status === 1) {
+                                    return `<div class="text-success">${data.description} </div>`
+                                }else if(status === 2){
+                                    return `<div class="text-info">${data.description} </div>`
+                                }else{
+                                    return `<div class="text-danger">${data.description} </div>`
+                                }
+                            }
+                        },
+                        { data : 'length', name : 'length' },
+                        { data : 'width', name : 'width' },
+                        { data : 'thick', name : 'thick' },
+                        { data : 'unit', name : 'unit' },
+                        { data : 'qty', name : 'qty' },
+                        { data : 'amount', name : 'amount' },
+                        { data : 'harga_vendor', name : 'harga_vendor' },
+                        { data : 'harga_customer', name : 'harga_customer' },
+                    ]
+                });
+
+                return tableRecent;
             }
 
         })

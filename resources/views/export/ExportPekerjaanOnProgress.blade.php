@@ -111,7 +111,6 @@
                     <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
                     <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
                     <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
-                    <td>{{ $kodeUnik }} / {{ $prevKodeUnik }} / {{ $subkategori }}</td>
                 </tr>
                 @php
                     $prevIndex = $index;

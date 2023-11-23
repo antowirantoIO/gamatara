@@ -201,6 +201,8 @@ class OnProgressController extends Controller
                 $currentData = RecentActivity::where('project_pekerjaan_id',$idProject)
                 ->orderBy('created_at','desc')
                 ->first();
+                $project = ProjectPekerjaan::where('id',$idProject)->first();
+                $pekerjaan = Pekerjaan::where('id',$item)->first();
                 $isDifferent = false;
                 if ($currentData) {
                     if ($currentData->deskripsi_pekerjaan !== $request->deskripsi[$key] ||
@@ -217,7 +219,6 @@ class OnProgressController extends Controller
                         $isDifferent = false;
                     }
                 }
-
                 ProjectPekerjaan::where('id',$idProject)->update([
                     'id_project' => $request->id_project ?? null,
                     'id_kategori' => $request->kategori ?? null,
@@ -236,6 +237,7 @@ class OnProgressController extends Controller
                     'qty' => $request->qty[$key] ?? null,
                     'amount' => $request->amount[$key] ?? null,
                     'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ?? null,
+                    'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
                     'kode_unik' => $number
                 ]);
                 $recent = RecentActivity::where('project_pekerjaan_id',$request->id[$key])->first();
@@ -288,6 +290,7 @@ class OnProgressController extends Controller
                     ]);
                 }
             }else {
+                $harga_customer = Pekerjaan::where('id',$item)->first();
                 $pekerjaan = ProjectPekerjaan::create([
                     'id_project' => $request->id_project ?? null,
                     'id_kategori' => $request->kategori ?? null,
@@ -305,6 +308,7 @@ class OnProgressController extends Controller
                     'unit' => $request->unit[$key] ?? null,
                     'qty' => $request->qty[$key] ?? null,
                     'amount' => $request->amount[$key] ?? null,
+                    'harga_customer' => $harga_customer->harga_customer ?? null,
                     'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ?? null,
                     'kode_unik' => $number
                 ]);
@@ -326,6 +330,7 @@ class OnProgressController extends Controller
                     'qty' => $request->qty[$key] ?? null,
                     'amount' => $request->amount[$key] ?? null,
                     'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ?? null,
+                    'harga_customer' => $harga_customer->harga_customer ?? null,
                     'description' => 'Created New Data',
                     'status' => 1,
                     'created_at' => date('Y-m-d H:i:s')
@@ -841,7 +846,7 @@ class OnProgressController extends Controller
 
     public function editRequestPekerjaan($id)
     {
-        $data = ProjectPekerjaan::find($id);
+        $data = ProjectPekerjaan::where('id',$id)->with(['pekerjaan'])->first();
         return response()->json(['status' => 200,'data' => $data]);
     }
 
@@ -852,6 +857,18 @@ class OnProgressController extends Controller
         ]);
 
         return response()->json(['status' => 200,'msg' => 'Data Successfuly Updated']);
+    }
+
+    public function ajaxRecentActivityDetail(Request $request)
+    {
+        $data = RecentActivity::where('project_pekerjaan_id', $request->id)
+                            ->with(['pekerjaan'])
+                            ->orderBy('created_at','desc')
+                            ->orderBy('updated_at','desc')
+                            ->orderBy('deleted_at','desc')
+                            ->get();
+        return DataTables::of($data)->addIndexColumn()
+        ->make(true);
     }
 
 }

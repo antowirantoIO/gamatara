@@ -28,7 +28,7 @@ class ProjectManagerController extends Controller
                 ->from('project as A')
                 ->leftJoin('project_pekerjaan as b', 'A.id', '=', 'b.id_project')
                 ->where('A.pm_id', $request->pm_id)
-                ->groupBy('A.id')
+                ->groupBy('A.id', 'A.nama_project', 'A.created_at', 'A.id_customer', 'A.status')
                 ->orderByDesc('A.created_at')
                 ->get();
 

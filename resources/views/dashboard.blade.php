@@ -280,28 +280,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($vendors as $keys => $v)
-                                        <tr>
-                                            <td><center>{{ $v->vendors->name }}</center></td>
-                                            <td>
-                                                <Center>
-                                                @isset($progress[$keys])
-                                                    {{ $progress[$keys]->onprogress }}
-                                                @else
-                                                    0
-                                                @endisset
-                                                </Center>
-                                            </td>
-                                            <td>
-                                                <Center>
-                                                @isset($progress[$keys])
-                                                    {{ $progress[$keys]->complete }}
-                                                @else
-                                                    0
-                                                @endisset
-                                                </Center>
-                                            </td>
-                                        </tr>
+                                        @foreach($progress as $keys => $v)
+                                            <tr>
+                                                <td><center>{{ optional($v->vendors)->name }}</center></td>
+                                                <td>
+                                                    <Center>
+                                                    {{$v->onprogress}}
+                                                    </Center>
+                                                </td>
+                                                <td>
+                                                    <Center>
+                                                    {{$v->complete}}
+                                                    </Center>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

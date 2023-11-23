@@ -38,14 +38,14 @@ class LaporanProjectManagerController extends Controller
                 // Menambahkan filter untuk kolom 'on_progress' berdasarkan jumlah yang diinputkan user
                 if (!empty($request->input('on_progress'))) {
                     $query->whereHas('projects', function ($subQuery) use ($request) {
-                        $subQuery->where('status', 1)
+                        $subQuery->where('status', 2)
                             ->havingRaw('COUNT(*) = ?', [$request->input('on_progress')]);
                     });
                 }
 
                 if (!empty($request->input('complete'))) {
                     $query->whereHas('projects', function ($subQuery) use ($request) {
-                        $subQuery->where('status', 2)
+                        $subQuery->where('status', 3)
                             ->havingRaw('COUNT(*) = ?', [$request->input('complete')]);
                     });
                 }

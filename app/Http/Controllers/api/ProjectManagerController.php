@@ -155,8 +155,8 @@ class ProjectManagerController extends Controller
                 ->whereIn('id', $subkategoriIds)
                 ->get();
 
-            $filteredSubkategori = $subkategori->filter(function ($item) use ($progressIds) {
-                return in_array($item->id, $progressIds);
+            $filteredSubkategori = $subkategori->filter(function ($item) use ($subkategoriIds) {
+                return in_array($item->id, $subkategoriIds);
             });
                 
             foreach ($filteredSubkategori as $item) {

@@ -161,8 +161,8 @@ class BodController extends Controller
             foreach($data as $item)
             {
                 $item['name'] = $item->karyawan->name ?? '';
-                $item['onprogress'] = $item->projects->where('status', 1)->count();
-                $item['complete'] = $item->projects->where('status', 2)->count();
+                $item['onprogress'] = $item->projects->where('status', 2)->count();
+                $item['complete'] = $item->projects->where('status', 3)->count();
             }
       
             $chart = OnRequest::select('pm_id', 'status','created_at')
@@ -198,7 +198,7 @@ class BodController extends Controller
             
             })->values();
 
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart' => $chartData]);
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart_progress' => $chartData]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
@@ -300,40 +300,63 @@ class BodController extends Controller
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $name->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::where('id_project', $request->id_project)
+            $progress = ProjectPekerjaan::with(['subkategori:id,name,id_kategori'])
+                ->select('id','status','id_kategori','id_subkategori','id_project','created_at','updated_at','deskripsi_subkategori')
+                ->where('id_project', $request->id_project)
                 ->where('id_kategori', $request->id_kategori)
-                ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
-                ->groupBy('id_subkategori')
                 ->filter($request)
                 ->get();
-
-            $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
-
-            $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
-                ->whereIn('id', $subkategoriIds)
-                ->get();
-
-            foreach ($subkategori as $item) {
-                $status = '';
-
-                $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
-
-                if ($matchingProgress) {
-                    $maxStatus = $matchingProgress->max_status;
-
-                    if ($maxStatus == 1) {
-                        $status = '';
-                    } elseif ($maxStatus == 2) {
-                        $status = 'Proses';
-                    } elseif ($maxStatus == 3) {
-                        $status = 'Done';
-                    }
+                
+            foreach ($progress as $item) {
+                $item->setAttribute('name', $item->subkategori->name . " " . $item->deskripsi_subkategori);
+        
+                if ($item->status == 1) {
+                    $status = '';
+                } elseif ($item->status == 2) {
+                    $status = 'Proses';
+                } elseif ($item->status == 3) {
+                    $status = 'Done';
                 }
-
+        
                 $item->status = $status;
             }
+            // $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
+            // $namakategori = $name->first()->kategori->name ?? '';            
+
+            // $progress = ProjectPekerjaan::where('id_project', $request->id_project)
+            //     ->where('id_kategori', $request->id_kategori)
+            //     ->select('id_subkategori', DB::raw('MAX(status) as max_status'))
+            //     ->groupBy('id_subkategori')
+            //     ->filter($request)
+            //     ->get();
+
+            // $subkategoriIds = $progress->pluck('id_subkategori')->toArray();
+
+            // $subkategori = SubKategori::where('id_kategori', $request->id_kategori)
+            //     ->whereIn('id', $subkategoriIds)
+            //     ->get();
+
+            // foreach ($subkategori as $item) {
+            //     $status = '';
+
+            //     $matchingProgress = $progress->firstWhere('id_subkategori', $item->id);
+
+            //     if ($matchingProgress) {
+            //         $maxStatus = $matchingProgress->max_status;
+
+            //         if ($maxStatus == 1) {
+            //             $status = '';
+            //         } elseif ($maxStatus == 2) {
+            //             $status = 'Proses';
+            //         } elseif ($maxStatus == 3) {
+            //             $status = 'Done';
+            //         }
+            //     }
+
+            //     $item->status = $status;
+            // }
          
-            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $subkategori]);
+            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

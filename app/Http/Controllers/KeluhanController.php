@@ -145,13 +145,13 @@ class KeluhanController extends Controller
         $cetak = "SPK.pdf";
         $pm = User::find($keluhan->id_pm_approval);
         $bod = User::find($keluhan->id_bod_approval);
-        $pa = ProjectAdmin::find($data->pa_id);
+        $pa = ProjectAdmin::with('karyawan.user')->find($data->pa_id);
         $vendor = Vendor::find($keluhan->id_vendor);
         $total = count(OnRequest::get());
         $total = str_pad($total, 3, '0', STR_PAD_LEFT);
 
         $data['approvalPA'] = $pa->karyawan->name ?? '';
-        $data['ttdPA'] = $pa->ttd ?? '';
+        $data['ttdPA'] = $pa->karyawan->user ? $pa->karyawan->user->ttd : '';
         $data['approvalPM'] = $pm->karyawan->name ?? '';
         $data['ttdPM'] = $pm->ttd ?? '';
         $data['approvalBOD'] = $bod->karyawan->name ?? '';

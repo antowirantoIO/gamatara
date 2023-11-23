@@ -274,7 +274,7 @@
                                 <table class="table" id="example3">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE"><center>Project Manager</center></th>
+                                            <th style="color:#929EAE"><center>Vendor Name</center></th>
                                             <th style="color:#929EAE"><center>On Progress</center></th>
                                             <th style="color:#929EAE"><center>Complete</center></th>
                                         </tr>

@@ -260,9 +260,10 @@ class BodController extends Controller
                     ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 
-            $vendor = ProjectPekerjaan::where('id_project',$request->id)
-                    ->get();
-
+            $vendorCount = ProjectPekerjaan::where('id_project', $request->id)
+                        ->distinct('id_vendor')
+                        ->count();
+                
             $kategori = Kategori::get();
 
             $progress = ProjectPekerjaan::where('id_project', $request->id)
@@ -291,7 +292,7 @@ class BodController extends Controller
             }
                     
             $data['name'] = $data->projects->nama_project ?? '';
-            $data['vendor'] = count($vendor);
+            $data['vendor'] = $vendor;
             $data['kategori'] = $kategori;
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

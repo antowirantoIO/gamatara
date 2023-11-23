@@ -325,7 +325,7 @@ class BodController extends Controller
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                     ->where('project_pekerjaan.id_project', $id_project)
                     ->where('project_pekerjaan.id_kategori', $id_kategori)
-                    ->groupBy('project_pekerjaan.id')
+                    ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name')
                     ->filter($request)
                     ->get();
                 

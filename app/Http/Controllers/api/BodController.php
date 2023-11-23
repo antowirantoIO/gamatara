@@ -15,6 +15,7 @@ use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\ProjectManager;
+use App\Models\Keluhan;
 use DB;
 
 class BodController extends Controller
@@ -207,19 +208,25 @@ class BodController extends Controller
     public function index(Request $request)
     {
         try{
-            $data = OnRequest::with(['progress:id,id_project,id_vendor','progress.vendors:id,name','customer:id,name'])
-                    ->select('id','nama_project','created_at','id_customer','status')
-                    ->where('status',1)
-                    ->get();
+            $data = OnRequest::with(['complaint','customer:id,name'])
+                ->select('A.nama_project', 'A.created_at', 'A.id','A.id_customer',
+                    DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'), 
+                    DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
+                ->from('Project as A')
+                ->leftJoin('project_pekerjaan as b', 'A.id', '=', 'b.id_project')
+                ->where('A.status', 1)
+                ->groupBy('A.id', 'A.nama_project', 'A.created_at', 'A.id_customer', 'A.status')
+                ->orderByDesc('A.created_at')
+                ->get();
 
             foreach ($data as $item) {
-                $item['nama_customer'] = $item->customer->name ?? '';
+                $item['nama_customer'] = $item->customer->name ?? '-';
                 $item['tanggal'] = $item->created_at ? date('d M Y', strtotime($item->created_at)) : '-';
-                $item['progress_pekerjaan'] = getProgresProject($item->id) . ' / ' . getCompleteProject($item->id);
+                $item['progress_pekerjaan'] = $item->done . ' / ' .$item->total;
 
                 if ($item->complaint->isEmpty()) {
                     $status = 1;
-                } elseif ($item->complaint->where('id_pm_approval','!==', null)->isNotEmpty() && $item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
+                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
                     $status = 2;
                 } else {
                     $status = 3;
@@ -254,9 +261,12 @@ class BodController extends Controller
                     ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 
-            $vendor = ProjectPekerjaan::where('id_project',$request->id)
+            $vendor = Keluhan::where('on_request_id',$request->id)
+                    ->whereNotNull(['id_pm_approval','id_bod_approval'])
+                    ->select('id_vendor')
+                    ->groupBy('id_vendor')
                     ->get();
-
+                
             $kategori = Kategori::get();
 
             $progress = ProjectPekerjaan::where('id_project', $request->id)

@@ -742,6 +742,7 @@ class OnProgressController extends Controller
         if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                     ->where('id_kategori',$request->id_kategori)
+                                    ->whereNotNull(['id_pekerjaan'])
                                     ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){

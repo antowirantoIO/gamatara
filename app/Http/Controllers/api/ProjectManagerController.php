@@ -142,7 +142,7 @@ class ProjectManagerController extends Controller
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $name->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::select('id','name','status','id_kategori','id_project','created_at','updated_at','deskripsi_subkategori')
+            $progress = ProjectPekerjaan::select('id','status','id_kategori','id_project','created_at','updated_at','deskripsi_subkategori')
                 ->where('id_project', $request->id_project)
                 ->where('id_kategori', $request->id_kategori)
                 ->filter($request)

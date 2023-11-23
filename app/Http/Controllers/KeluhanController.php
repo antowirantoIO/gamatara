@@ -31,10 +31,10 @@ class KeluhanController extends Controller
 
                 $code = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/';
                 $projectCode = Keluhan::where('no_spk', 'LIKE', '%'.$code.'%')->count();
-                $randInt = '0001';
+                $randInt = '001';
                 if ($projectCode >= 1) {
                     $count = $projectCode+1;
-                    $randInt = '000'.(string)$count;
+                    $randInt = '00'.(string)$count;
                 }
                 $randInt = substr($randInt, -5);
 
@@ -106,16 +106,24 @@ class KeluhanController extends Controller
 
     public function SPK(Request $request)
     {
-        $data = OnRequest::find($request->id);
-        $keluhan = Keluhan::where('on_request_id',$request->id)->get();
-        $cetak = "Rekap SPK.pdf";
+        $data       = OnRequest::find($request->id);
+        $keluhan    = Keluhan::join('vendor', 'project_request.id_vendor', '=', 'vendor.id')
+                        ->where('project_request.on_request_id', $request->id)
+                        ->orderBy('vendor.name', 'asc')
+                        ->get();
+
+        $cetak      = "Rekap SPK.pdf";
 
         $data['created_ats'] = Carbon::parse($data->created_at)->format('d M Y');
         $data['target_selesais'] = Carbon::parse($data->target_selesai)->format('d M Y');
 
         foreach($keluhan as $value)
         {
-            $value['created_ats'] = Carbon::parse($value->bod_date_approval)->format('d M Y');
+            if($value){
+                $value['created_atss'] = Carbon::parse($value->bod_date_approval)->format('d M Y');
+            }else{
+                $value['created_atss'] = "-";
+            }
         }
         
         if ($keluhan->isNotEmpty()) {

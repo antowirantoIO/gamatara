@@ -67,10 +67,10 @@ class DashboardController extends Controller
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 
-        $vendors = Keluhan::whereNotNull(['id_pm_approval','id_bod_approval'])
-                    ->select('id_vendor')
-                    ->groupBy('id_vendor')
-                    ->get();
+        // $vendors = Keluhan::whereNotNull(['id_pm_approval','id_bod_approval'])
+        //             ->select('id_vendor')
+        //             ->groupBy('id_vendor')
+        //             ->get();
 
         $progress = ProjectPekerjaan::whereNotNull('id_pekerjaan')
                     ->select('id_vendor')
@@ -88,6 +88,6 @@ class DashboardController extends Controller
 
         $data       = OnRequest::get();
 
-        return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','vendors','progress','pm'));
+        return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','progress','pm'));
     }
 }

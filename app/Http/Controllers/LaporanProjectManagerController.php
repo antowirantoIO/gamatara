@@ -87,8 +87,8 @@ class LaporanProjectManagerController extends Controller
                         ->get();
 
         $chartData = $data->groupBy('pm_id')->map(function (&$groupedData) {
-            $onProgressCount = $groupedData->where('status', 1)->count();
-            $completeCount = $groupedData->where('status', 2)->count();
+            $onProgressCount = $groupedData->where('status', 2)->count();
+            $completeCount = $groupedData->where('status', 3)->count();
 
             $employeeName = $groupedData->first()->pm->karyawan->name;
 

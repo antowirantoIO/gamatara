@@ -143,7 +143,7 @@ class OnProgressController extends Controller
             'id_vendor' => $request->id_vendor
         ]);
 
-        return back()->with('success','Data Berhasil Di Simpan !');
+        return back()->with('success','Data saved successfully !');
     }
 
     public function addWork($id, $vendor,$kategori,$subKategori)

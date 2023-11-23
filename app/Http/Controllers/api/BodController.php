@@ -272,7 +272,7 @@ class BodController extends Controller
             $progress = ProjectPekerjaan::where('id_project', $request->id)
                         ->select('id_kategori')
                         ->selectRaw('COUNT(id) as total_status_1')
-                        ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
+                        ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as total_status_2')
                         ->groupBy('id_kategori')
                         ->get();
             

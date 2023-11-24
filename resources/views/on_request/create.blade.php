@@ -305,6 +305,7 @@
                             'Customer has been successfully added',
                             'success'
                         );
+                        window.location.reload();
                     } else if (response.errors) {
                         if (response.errors.npwp) {
                             $("#npwp").addClass('is-invalid');

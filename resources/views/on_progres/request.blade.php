@@ -70,13 +70,11 @@
                                                         <th style="width: 90px">Qty</th>
                                                         <th style="width: 90px">Amount</th>
                                                         <th style="width: 90px">Unit</th>
-                                                        <th style="width: 90px">Unit Prices</th>
-                                                        <th style="width: 90px">Total Prices</th>
                                                         <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="clone">
-                                                    <input type="text" class="d-none" name="kode_unik" value="{{ $kode_unik ?? null }}">
+                                                    <input type="text" class="d-none" name="kode_unik" value="{{ $kode_unik ?? null }}" id="kode_unik">
                                                     @foreach ($pekerjaan as $keys => $p)
                                                     <input type="text" class="d-none" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
                                                     @endforeach
@@ -89,39 +87,6 @@
                                         <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <h4>Recent Activity</h4>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="live-preview">
-                                <table class="table w-100" id="tableActivity">
-                                    <thead style="background-color:#194BFB;color:#FFFFFF;">
-                                        <tr>
-                                            <th style="width: 200px">Job</th>
-                                            <th style="width: 200px">Date</th>
-                                            <th style="width: 200px">Status</th>
-                                            <th style="width: 90px">Length (mm)</th>
-                                            <th style="width: 90px">Width (mm)</th>
-                                            <th style="width: 90px">Thick (mm)</th>
-                                            <th style="width: 90px">Unit</th>
-                                            <th style="width: 90px">Qty</th>
-                                            <th style="width: 90px">Amount</th>
-                                            <th style="width: 90px">Vendor Price</th>
-                                            <th style="width: 90px">Customer Price</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -174,6 +139,7 @@
             let id_subkategori = '{{ $subkategori_id }}';
             let id_project = '{{ $id }}';
             let id_vendor = '{{ $vendor->id }}';
+            let kode_unik = $('#kode_unik').val();
             let modalHistory = $('#modalHistory');
 
             $('#sub_kategori').trigger('change');
@@ -258,7 +224,8 @@
                         id_project,
                         id_kategori,
                         id_subkategori,
-                        id_vendor
+                        id_vendor,
+                        kode_unik
                     }
                 },
                 columns : [
@@ -272,6 +239,7 @@
                     },
                     {
                         data : function (data) {
+                            console.log(data);
                             let desc = data.deskripsi_pekerjaan || '';
                             let konversi = data.conversion || 0;
                             var keys = data.DT_RowIndex;
@@ -308,7 +276,7 @@
                     },
                     {
                         data : function (data) {
-                            let length = data.length || '';
+                            let length = data.length || 1;
                             var status = false;
                             var items = '';
                             let recent = data.activitys.map(item =>{
@@ -321,7 +289,7 @@
                     },
                     {
                         data : function (data) {
-                            let width = data.width || '';
+                            let width = data.width || 1;
                             var status = false;
                             let recent = data.activitys.map(item =>{
                                 status = data.width !== item.width ? 'bg-danger text-white' : '';
@@ -332,7 +300,7 @@
                     },
                     {
                         data : function (data) {
-                            let thick = data.thick || '';
+                            let thick = data.thick || 1;
                             var status = false;
                             let recent = data.activitys.map(item =>{
                                 status = data.thick !== item.thick ? 'bg-danger text-white' : '';
@@ -343,7 +311,7 @@
                     },
                     {
                         data : function (data) {
-                            let qty = data.qty || '';
+                            let qty = data.qty || 1;
                             var status = false;
                             let recent = data.activitys.map(item =>{
                                 status = data.qty !== item.qty ? 'bg-danger text-white' : '';
@@ -375,28 +343,6 @@
                             return ` <input type="text" class="form-control  ${status ? 'bg-danger text-white' : ''}" id="unit" name="unit[]" style="width: 60px;" value="${unit}">`;
                         },
                         width : '50px'
-                    },
-                    {
-                        data : function (data) {
-                            var harga_vendor = data.harga_vendor || '';
-                            var status = false;
-                            var items = '';
-                            let recent = data.activitys.map(item =>{
-                                items = item.harga_vendor ;
-                            })
-                            status = items !== harga_vendor ? 'bg-danger text-white' : '';
-                            return ` <input type="text" class="form-control ${status}" name="harga_vendor[]" id="harga_vendor" value="${formatRupiah(harga_vendor)}" readonly>`;
-                        },
-                        width : '150px'
-                    },
-                    {
-                        data : function (data) {
-                            let harga_vendor = parseFloat(data.harga_vendor) || '';
-                            let amount = data.amount || '';
-                            let total = Math.ceil(harga_vendor * amount);
-                            return ` <input type="text" class="form-control ${status}" name="total[]" value="${formatRupiah(parseInt(total))}" readonly>`;
-                        },
-                        width : '150px'
                     },
                     {
                         data : function (data) {
@@ -437,13 +383,13 @@
                         <input type="text" class="form-control" name="detail[]">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="length[]">
+                        <input type="text" class="form-control" name="length[]">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="width[]">
+                        <input type="text" class="form-control" name="width[]">
                     </td>
                     <td>
-                        <input type="number" class="form-control" name="thick[]">
+                        <input type="text" class="form-control" name="thick[]">
                     </td>
                     <td>
                         <input type="text" class="form-control" name="qty[]" >
@@ -454,14 +400,6 @@
                     <td>
                         <input type="text" class="form-control" id="unit${count}" name="unit[]">
                     </td>
-
-                    <td>
-                        <input type="text" class="form-control harga_vendor" id="harga_vendor${count}" name="harga_vendor[]"  ${userRole === 'admin' ? 'readonly' : ''}>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control total" id="total${count}" name="total[]"  ${userRole === 'admin' ? 'readonly' : ''}>
-                    </td>
-
                     <td>
                         <div class="btn btn-danger btn-trash">
                             <i><img src="{{asset('assets/images/trash2.svg')}}" style="width: 20px;"></i>
@@ -518,17 +456,10 @@
                 var konversi = $(this).closest('tr').find('input[name="convertion[]"]').val();
                 var parts = konversi.split('/');
                 var amountValue = (lengthValue * widthValue * thickValue * qtyValue * parseFloat(parts[0])) / parseInt(parts[1]);
-                var harga_vendor = $(this).closest('tr').find('input[name="harga_vendor[]"]').val();
-                harga_vendor = harga_vendor.replace(",", "");
 
-                // Mengonversi string menjadi integer
-                parseInt(harga_vendor, 10);
-
-                var total = harga_vendor * amountValue;
                 amountValue = amountValue.toFixed(2);
 
                 $(this).closest('tr').find('input[name="amount[]"]').val(amountValue);
-                $(this).closest('tr').find('input[name="total[]"]').val(formatRupiah(total));
 
             });
 
@@ -582,84 +513,6 @@
 
             modalHistory.on('hidden.bs.modal',function(){
                 $('#tableHistory').DataTable().destroy();
-            })
-
-            let table = $('#tableActivity').DataTable({
-                fixedHeader:true,
-                scrollX: false,
-                ordering : false,
-                processing: true,
-                serverSide: true,
-                searching: false,
-                bLengthChange: false,
-                autoWidth : true,
-                language: {
-                    processing:
-                        '<div class="spinner-border text-info" role="status">' +
-                        '<span class="sr-only">Loading...</span>' +
-                        "</div>",
-                    paginate: {
-                        Search: '<i class="icon-search"></i>',
-                        first: "<i class='fas fa-angle-double-left'></i>",
-                        next: "Next <span class='mdi mdi-chevron-right'></span>",
-                        last: "<i class='fas fa-angle-double-right'></i>",
-                    },
-                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
-                },
-                drawCallback: function() {
-                    var previousButton = $('.paginate_button.previous');
-                    previousButton.css('display', 'none');
-                },
-                ajax : {
-                    url : '{{ route('ajax.recent-activity') }}',
-                    data : function (d) {
-                        d.id =  id_project,
-                        d.id_kategori = '{{ $kategori }}',
-                        d.id_subkategori = '{{ $subKategori }}',
-                        d.id_vendor = '{{ $vendor->id }}'
-                    }
-                },
-                columns : [
-                    { data : 'pekerjaan.name', name : 'id_pekerjaan'},
-                    {
-                        data : function(data) {
-                            let status = data.status || '-';
-                            if(status === 1) {
-                                let date = moment(data.created_at);
-                                let formated = date.format('DD MMMM YYYY');
-                                return formated
-                            }else if ( status === 2 ){
-                                let date = moment(data.updated_at);
-                                let formated = date.format('DD MMMM YYYY');
-                                return formated
-                            }else{
-                                let date = moment(data.deleted_at);
-                                let formated = date.format('DD MMMM YYYY');
-                                return formated
-                            }
-                        }
-                    },
-                    {
-                        data : function(data) {
-                            let status = data.status;
-                            if(status === 1) {
-                                return `<div class="text-success">${data.description} </div>`
-                            }else if(status === 2){
-                                return `<div class="text-info">${data.description} </div>`
-                            }else{
-                                return `<div class="text-danger">${data.description} </div>`
-                            }
-                        }
-                    },
-                    { data : 'length', name : 'length' },
-                    { data : 'width', name : 'width' },
-                    { data : 'thick', name : 'thick' },
-                    { data : 'unit', name : 'unit' },
-                    { data : 'qty', name : 'qty' },
-                    { data : 'amount', name : 'amount' },
-                    { data : 'harga_vendor', name : 'harga_vendor' },
-                    { data : 'harga_customer', name : 'harga_customer' },
-                ]
             })
 
 

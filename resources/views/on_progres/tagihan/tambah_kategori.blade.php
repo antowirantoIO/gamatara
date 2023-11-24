@@ -174,7 +174,13 @@
                 url: urlReplace,
             },
             columns: [
-                {data: 'kategori.name', code: 'kategori'},
+                {
+                    data: function(data) {
+                        console.log(data);
+                        return data.kategori.name
+                    },
+                    code: 'kategori'
+                },
                 {data: 'subkategori', name: 'subkategori'},
                 {data: 'action', name: 'action'}
             ]

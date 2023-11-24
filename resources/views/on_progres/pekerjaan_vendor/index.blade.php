@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress.edit',$project)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Works</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Jobs</h4>
                         </div>
                     </div>
                 </div>
@@ -42,17 +42,12 @@
                                                             <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
                                                         </span> &nbsp; Filter
                                                     </button>
-                                                    <button class="btn btn-danger export-button" id="export-button">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
-                                                        </span> &nbsp; Export
-                                                    </button>
                                                 </div>
                                             </div>
                                             <table class="table w-100" id="tableData{{ $items->id }}">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;width:600px;">Worker</th>
+                                                        <th style="color:#929EAE;width:600px;">Job</th>
                                                         <th style="color:#929EAE">Progress</th>
                                                         <th style="color:#929EAE">Vendor</th>
                                                         <th style="color:#929EAE">Action</th>

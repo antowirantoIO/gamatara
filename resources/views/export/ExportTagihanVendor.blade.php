@@ -111,7 +111,7 @@
                     @endif
                     <tr>
                         <td align="center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
-                        <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan ? ($value->deskripsi_pekerjaan ? $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan : $value->pekerjaan->name) : ' ' }}</td>
+                        <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan ? ($value->pekerjaan->name ? ($value->deskripsi_pekerjaan ? $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan : $value->pekerjaan->name) : '') : '' }}</td>
                         <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->id_lokasi ?? ' ' }}</td>
                         <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->detail ?? ' ' }}</td>
                         <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ? number_format($value->length,2, ',','') : '' }}</td>

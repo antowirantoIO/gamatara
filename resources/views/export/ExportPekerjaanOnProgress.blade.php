@@ -101,7 +101,7 @@
                 @endif
                 <tr style="font-size: 8px; border:20px medium black;">
                     <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td height="20"> &nbsp;{{ $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan ?? '-' }}</td>
+                    <td height="20"> &nbsp;{{ $value->pekerjaan ? ($value->pekerjaan->name ? ($value->deskripsi_pekerjaan ? $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan : $value->pekerjaan->name) : '') : '' }}</td>
                     <td height="20" align="center">{{ $value->id_lokasi }}</td>
                     <td height="20" align="center">{{ $value->detail }}</td>
                     <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>

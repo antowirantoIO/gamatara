@@ -27,7 +27,7 @@ class ProjectEngineerController extends Controller
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
                 ->from('Project as A')
                 ->leftJoin('project_pekerjaan as b', 'A.id', '=', 'b.id_project')
-                ->where('A.pe_id_id', $request->pe_id)
+                ->where('A.pe_id', $request->pe_id)
                 ->groupBy('A.id', 'A.nama_project', 'A.created_at', 'A.id_customer', 'A.status')
                 ->orderByDesc('A.created_at')
                 ->get();

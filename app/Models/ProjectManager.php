@@ -16,14 +16,24 @@ class ProjectManager extends Model
         return $this->hasOne(Karyawan::class, 'id','id_karyawan');
     }
 
+    // public function pe()
+    // {
+    //     return $this->hasMany(ProjectEngineer::class, 'id_pm');
+    // }
+
+    // public function pa()
+    // {
+    //     return $this->hasMany(ProjectAdmin::class, 'id_pm');
+    // }
+
     public function pe()
     {
-        return $this->hasMany(ProjectEngineer::class, 'id_pm');
+        return $this->belongsToMany(ProjectEngineer::class, 'pe', 'id_pm', 'id_karyawan');
     }
 
     public function pa()
     {
-        return $this->hasMany(ProjectAdmin::class, 'id_pm');
+        return $this->belongsToMany(ProjectAdmin::class, 'pa', 'id_pm', 'id_karyawan');
     }
 
     public function projects()

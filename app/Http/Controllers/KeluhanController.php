@@ -158,12 +158,12 @@ class KeluhanController extends Controller
         if($data->pm)
         {
             $cek = $data->pm; 
-            foreach($cek->pe as $value)
+            foreach($cek->pes as $value)
             {
                 $value['pe_name'] =  $value->karyawan->name ?? '';
             }
 
-            foreach($cek->pa as $value){
+            foreach($cek->pas as $value){
                 $value['pa_name'] =  $value->karyawan->name ?? '';
             }
         } 

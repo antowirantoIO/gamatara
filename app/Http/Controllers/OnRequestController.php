@@ -47,6 +47,7 @@ class OnRequestController extends Controller
             }
             
             $data = $data->where('status',1)
+                        ->where('status','')
                         ->filter($request)
                         ->orderBy('created_at', 'desc')
                         ->get();

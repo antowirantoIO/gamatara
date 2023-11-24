@@ -218,13 +218,10 @@
         });
         var chart = null;
         var charts = (data, isUpdate) => {
-            console.log(data,isUpdate);
-            if (data.length > 0) {
-                var chartData = Object.values(data).map(item => ({
-                    name: item.Employee,
-                    data: [item['On Progress'], item['Complete']],
-                }));
-            }
+            var chartData = Object.values(data).map(item => ({
+                name: item.Employee,
+                data: [item['On Progress'], item['Complete']],
+            }));
 
             var options = {
                 chart: {

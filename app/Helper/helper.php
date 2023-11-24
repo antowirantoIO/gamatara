@@ -143,7 +143,7 @@ function groupExportTagihanVendor($request,$id_vendor)
             $datas->where('id_vendor',$request->nama_vendor);
         }
         $datas = $datas->get();
-        // if ($datas->isNotEmpty()) {
+        $datas = $datas->groupBy('id_subkategori');
             $data[$item->name] = $datas;
         // }
     });

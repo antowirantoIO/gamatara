@@ -740,6 +740,9 @@ class OnProgressController extends Controller
                     return $data->subKategori->name;
                 }
             })
+            ->addColumn('pekerjaan', function($data) {
+                return $data->pekerjaan->name ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name . ' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan->name;
+            })
             ->make(true);
         }
 

@@ -71,10 +71,17 @@ class BodController extends Controller
 
                 $totalHarga = [];
 
-                foreach ($datas as $item) {
-                    $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+            
+            foreach ($datas as $item) {
+                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+            }
+            
+            for ($i = 0; $i < 12; $i++) {
+                if (!isset($totalHargaPerBulan[$i])) {
+                    $totalHargaPerBulan[$i] = 0;
                 }
-
+            }
+            
             $arrayChart = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data,'chart'=> $arrayChart]);
@@ -164,8 +171,8 @@ class BodController extends Controller
             foreach($data as $item)
             {
                 $item['name'] = $item->karyawan->name ?? '';
-                $item['onprogress'] = $item->projects->where('status', 2)->count();
-                $item['complete'] = $item->projects->where('status', 3)->count();
+                $item['onprogress'] = $item->projects->where('status', 1)->count();
+                $item['complete'] = $item->projects->where('status', 2)->count();
             }
       
             $chart = OnRequest::select('pm_id', 'status','created_at')
@@ -326,7 +333,7 @@ class BodController extends Controller
             //             ->groupBy('project_pekerjaan.id_subkategori', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
             //             ->filter($request)
             //             ->get();
-            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project')
+            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','project_pekerjaan.deskripsi_subkategori')
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                     ->where('project_pekerjaan.id_project', $request->id_project)
                     ->where('project_pekerjaan.id_kategori', $request->id_kategori)
@@ -335,7 +342,7 @@ class BodController extends Controller
                     ->get();
         
             foreach ($progress as $item) {
-                $item->setAttribute('name', $item->subkategori->name ?? '' . " " . $item->deskripsi_subkategori ?? '');
+                $item->name = ($item->subkategori->name ?? '') . " " . ($item->deskripsi_subkategori ?? '');
         
                 if ($item->status == 1) {
                     $status = '';
@@ -404,7 +411,10 @@ class BodController extends Controller
             $kategori = SubKategori::find($request->id_subkategori);   
 
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
-                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_project', $request->id_project)
+                    ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
+                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                     ->orderBy('created_at','desc')
                     ->limit(3)
                     ->get();
@@ -424,8 +434,11 @@ class BodController extends Controller
     public function detailpekerjaanBOD(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id',$request->id)->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
+                    ->where('id_project', $request->id_project)
+                    ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
+                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

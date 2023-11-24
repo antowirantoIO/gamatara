@@ -27,7 +27,7 @@ class ProjectEngineerController extends Controller
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
                 ->from('Project as A')
                 ->leftJoin('project_pekerjaan as b', 'A.id', '=', 'b.id_project')
-                ->where('A.pe_id_id', $request->pe_id)
+                ->where('A.pe_id_1', $request->pe_id)
                 ->groupBy('A.id', 'A.nama_project', 'A.created_at', 'A.id_customer', 'A.status')
                 ->orderByDesc('A.created_at')
                 ->get();
@@ -134,7 +134,7 @@ class ProjectEngineerController extends Controller
             //             ->filter($request)
             //             ->get();
 
-            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project')
+            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','project_pekerjaan.deskripsi_subkategori')
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                     ->where('project_pekerjaan.id_project', $request->id_project)
                     ->where('project_pekerjaan.id_kategori', $request->id_kategori)
@@ -177,7 +177,10 @@ class ProjectEngineerController extends Controller
             $kategori = SubKategori::find($request->id_subkategori);   
 
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
-                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_project', $request->id_project)
+                    ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
+                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                     ->orderBy('created_at','desc')
                     ->limit(3)
                     ->get();
@@ -266,7 +269,10 @@ class ProjectEngineerController extends Controller
     {
         try{
             $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id',$request->id)->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_project', $request->id_project)
+                    ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
+                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

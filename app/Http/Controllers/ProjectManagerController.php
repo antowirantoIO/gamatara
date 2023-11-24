@@ -139,26 +139,33 @@ class ProjectManagerController extends Controller
             'pa'    => 'required|array'
         ]);
 
-        $data               = ProjectManager::find($request->id);
-        $data->id_karyawan  = $request->input('pm');
+        $data = ProjectManager::find($request->id);
+        $data->id_karyawan = $request->input('pm');
         $data->save();
 
-        $data->pe()->delete();
-        $data->pa()->delete();
+        $data->pe()->sync($request->pe);
+        $data->pa()->sync($request->pa);
 
-        foreach($request->pe as $selectedPEId) {
-            $dataPE                 = New ProjectEngineer();
-            $dataPE->id_pm          = $data->id;
-            $dataPE->id_karyawan    = $selectedPEId;
-            $dataPE->save();
-        }
+        // $data               = ProjectManager::find($request->id);
+        // $data->id_karyawan  = $request->input('pm');
+        // $data->save();
 
-        foreach($request->pa as $selectedPAId) {
-            $dataPA                 = New ProjectAdmin();
-            $dataPA->id_pm          = $data->id;
-            $dataPA->id_karyawan    = $selectedPAId;
-            $dataPA->save();
-        }
+        // $data->pe()->delete();
+        // $data->pa()->delete();
+
+        // foreach($request->pe as $selectedPEId) {
+        //     $dataPE                 = New ProjectEngineer();
+        //     $dataPE->id_pm          = $data->id;
+        //     $dataPE->id_karyawan    = $selectedPEId;
+        //     $dataPE->save();
+        // }
+
+        // foreach($request->pa as $selectedPAId) {
+        //     $dataPA                 = New ProjectAdmin();
+        //     $dataPA->id_pm          = $data->id;
+        //     $dataPA->id_karyawan    = $selectedPAId;
+        //     $dataPA->save();
+        // }
 
         return redirect(route('project_manager'))
                     ->with('success', 'Data saved successfully');
@@ -168,10 +175,9 @@ class ProjectManagerController extends Controller
     {
         $data   = ProjectManager::findOrFail($id);
         $data->delete();
-        $datas  = ProjectEngineer::where('id_pm',$id)->get();
-        $datas->delete();
-        $datass = ProjectAdmin::where('id_pm',$id)->get();
-        $datass->delete();
+
+        ProjectEngineer::destroy(ProjectEngineer::where('id_pm', $id)->pluck('id'));
+        ProjectAdmin::destroy(ProjectAdmin::where('id_pm', $id)->pluck('id'));
 
         return redirect(route('project_manager'))
                     ->with('success', 'Data successfully deleted');

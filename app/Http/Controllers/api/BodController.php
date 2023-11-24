@@ -112,7 +112,12 @@ class BodController extends Controller
                     }
                 }
             
-                $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
+                if($jumlah_tagihan)
+                {
+                    $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
+                }else{
+                    $value['jumlah_tagihan'] = 0;
+                }
             }
 
             if($request->tahun != null)

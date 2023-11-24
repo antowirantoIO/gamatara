@@ -263,7 +263,6 @@
                                 return accumulator + (currentValue.harga_customer * currentValue.amount);
                             }, 0);
                             $('.tagihan-{{ $key }}').text(rupiah(amount))
-                            console.log(data);
                         }
                     },
                     columns : [

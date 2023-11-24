@@ -25,7 +25,7 @@
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
                             @foreach ($kategori as $key => $item)
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link {{ $loop->first ? 'active' : '' }} rounded-pill" id="{{ $item->id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ $item->id }}" type="button" role="tab" aria-controls="{{ $item->id }}" aria-selected="true">{{ $item->name }}</button>
+                                    <button class="nav-link {{ $loop->first ? 'active' : '' }} rounded-pill" id="{{ $item->id }}-tab" data-bs-toggle="tab" data-bs-target="#kategori-{{ $item->id }}" type="button" role="tab" aria-controls="{{ $item->id }}" aria-selected="true">{{ $item->name }}</button>
                                 </li>
                             @endforeach
                         </ul>
@@ -34,9 +34,9 @@
                         <div class="card-body">
                             <div class="live-preview">
                                 <div class="col-md-12">
-                                    @foreach ($workers as $key => $worker)
+                                    @foreach ($kategori as $keys => $items)
                                         <div class="tab-content" id="myTabContent">
-                                            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="{{ $key }}" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="kategori-{{ $items->id }}" role="tabpanel" aria-labelledby="{{ $items->id }}-tab">
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <span class="fs-5"><strong>Pekerjaan {{ getNameKategori($key) }}</strong></span>
                                                     <div>
@@ -47,7 +47,7 @@
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <table class="table w-100" id="tableData{{ $key }}">
+                                                <table class="table w-100" id="tableData{{ $items->id }}">
                                                     <thead class="table-light">
                                                         <tr>
                                                             <th style="color:#929EAE;">Job</th>
@@ -65,14 +65,16 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($worker as $value)
-                                                        <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                        @foreach ($workers as $key => $worker)
+                                                            @foreach ($worker as $value)
+                                                            <input type="text" class="d-none id_kategori {{ $loop->first ? 'active' : '' }}" id="id_kategori-{{ $key }}" value="{{ $value->id_kategori }}">
+                                                            @endforeach
                                                         @endforeach
                                                     </tbody>
                                                 </table>
                                                 <div class="d-flex jsutify-content-start align-items-center gap-3 fs-4">
                                                     <strong>Total Bills</strong> :
-                                                    <strong class="tagihan-{{ $key }} {{ $loop->first ? 'active' : '' }}"></strong>
+                                                    <strong class="tagihan-{{ $items->id }} {{ $loop->first ? 'active' : '' }}"></strong>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,7 +140,7 @@
                 dropdownParent: $("#modalFillter")
             });
 
-            @foreach ( $workers as $key => $worker )
+            @foreach ( $kategori as $key => $worker )
                 var id_kategori = $('#id_kategori-{{ $key }}').val();
                 var table{{ $key }} = $('#tableData{{ $key }}').DataTable({
                     fixedHeader:true,
@@ -185,7 +187,7 @@
                         }
                     },
                     columns : [
-                        { data : 'pekerjaan.name', name : 'pekerjaan'},
+                        { data : 'pekerjaan', name : 'pekerjaan'},
                         { data : 'subKategori', name : 'subKategori'},
                         { data : 'id_lokasi', name : 'id_lokasi'},
                         {data : 'detail', name : 'detail'},

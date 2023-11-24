@@ -342,7 +342,7 @@ class BodController extends Controller
                     ->get();
         
             foreach ($progress as $item) {
-                $item->setAttribute('name', $item->deskripsi_subkategori ?? '-');
+                $item->name = ($item->subkategori->name ?? '') . " " . ($item->deskripsi_subkategori ?? '');
         
                 if ($item->status == 1) {
                     $status = '';

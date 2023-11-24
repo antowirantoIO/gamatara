@@ -12,6 +12,7 @@ use App\Models\Pekerjaan;
 use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use App\Models\Keluhan;
 use DB;
 use Illuminate\Support\Facades\File;
 
@@ -73,7 +74,13 @@ class ProjectEngineerController extends Controller
                     ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 
-            $vendor = ProjectPekerjaan::where('id_project',$request->id)
+            // $vendor = ProjectPekerjaan::where('id_project',$request->id)
+            //         ->get();
+
+            $vendor = Keluhan::where('on_request_id',$request->id)
+                    ->whereNotNull(['id_pm_approval','id_bod_approval'])
+                    ->select('id_vendor')
+                    ->groupBy('id_vendor')
                     ->get();
 
             $kategori = Kategori::get();
@@ -119,12 +126,20 @@ class ProjectEngineerController extends Controller
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $name->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::with(['subkategori:id,name,id_kategori'])
-                ->select('id','status','id_kategori','id_subkategori','id_project','created_at','updated_at','deskripsi_subkategori')
-                ->where('id_project', $request->id_project)
-                ->where('id_kategori', $request->id_kategori)
-                ->filter($request)
-                ->get();
+            // $progress = ProjectPekerjaan::with(['subkategori:id,name,id_kategori'])
+            //     ->select('id','status','id_kategori','id_subkategori','id_project','created_at','updated_at','deskripsi_subkategori')
+            //     ->where('id_project', $request->id_project)
+            //     ->where('id_kategori', $request->id_kategori)
+            //     ->filter($request)
+            //     ->get();
+
+            $progress = ProjectPekerjaan::select('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
+                        ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
+                        ->where('project_pekerjaan.id_project', $request->id_project)
+                        ->where('project_pekerjaan.id_kategori', $request->id_kategori)
+                        ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
+                        ->filter($request)
+                        ->get();
                 
             foreach ($progress as $item) {
                 $item->setAttribute('name', $item->subkategori->name . " " . $item->deskripsi_subkategori);

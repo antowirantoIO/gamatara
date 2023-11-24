@@ -112,34 +112,22 @@ class KeluhanController extends Controller
                         ->orderBy('vendor.name', 'asc')
                         ->get();
 
-        $cetak      = "Rekap SPK.pdf";
-
-        $data['created_ats'] = Carbon::parse($data->created_at)->format('d M Y');
-        $data['target_selesais'] = Carbon::parse($data->target_selesai)->format('d M Y');
+        $data['created']        = Carbon::parse($data->created_at)->format('d M Y');
+        $data['target_selesai'] = Carbon::parse($data->target_selesai)->format('d M Y');
 
         foreach($keluhan as $value)
         {
-            if($value){
-                $value['created_atss'] = Carbon::parse($value->bod_date_approval)->format('d M Y');
-            }else{
-                $value['created_atss'] = "-";
-            }
-        }
-        
-        if ($keluhan->isNotEmpty()) {
-            $min = $keluhan->min(function ($item) {
-                return Carbon::parse($item->created_at)->format('d M Y');
-            });
-        
-            $max = $keluhan->max(function ($item) {
-                return Carbon::parse($item->created_at)->format('d M Y');
-            });
-        } else {
-            $min = null;
-            $max = null;
+           if($value){
+                if($value->bod_date_approval != null){
+                    $value['bod_approval'] = Carbon::parse($value->bod_date_approval)->format('d M Y');
+                }else{
+                    $value['bod_approval'] = "-";
+                }
+           }
         }
 
-        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan','min','max'))
+        $cetak      = "Rekap SPK.pdf";
+        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
                     ->setPaper('A4', 'potrait')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);

@@ -602,6 +602,7 @@
                             'Customer has been successfully added',
                             'success'
                         )
+                        window.location.reload();
                     } else {
                         alert("Validation error: " + response.message);
                     }

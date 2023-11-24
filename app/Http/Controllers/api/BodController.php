@@ -273,7 +273,7 @@ class BodController extends Controller
 
             $progress = ProjectPekerjaan::where('id_project', $request->id)
                         ->select('id_kategori')
-                        ->selectRaw('COUNT(id_Pekerjaan) as total_status_1')
+                        ->selectRaw('COUNT(id_pekerjaan) as total_status_1')
                         ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as total_status_2')
                         ->groupBy('id_kategori')
                         ->get();
@@ -326,7 +326,7 @@ class BodController extends Controller
             //             ->groupBy('project_pekerjaan.id_subkategori', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
             //             ->filter($request)
             //             ->get();
-            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as count_id'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status')
+            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status')
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                     ->where('project_pekerjaan.id_project', $request->id_project)
                     ->where('project_pekerjaan.id_kategori', $request->id_kategori)

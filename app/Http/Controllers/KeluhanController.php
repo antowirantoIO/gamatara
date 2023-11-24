@@ -34,7 +34,7 @@ class KeluhanController extends Controller
                 $randInt = '001';
                 if ($projectCode >= 1) {
                     $count = $projectCode+1;
-                    $randInt = '00'.(string)$count;
+                    $randInt = str_pad($count, 3, '0', STR_PAD_LEFT);
                 }
                 $randInt = substr($randInt, -5);
 

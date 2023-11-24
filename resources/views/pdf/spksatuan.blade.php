@@ -31,41 +31,58 @@
                 font-size: 11px;
             }
 
-            .font-size-10{
-                font-size: 10px;
-            }
-
-            .text-blue{
-                color: #4F71BE;
-            }
-
-            .p-20 {
-                padding: 15px;
-            }
-
             .text-center {
                 text-align: center;
             }
 
-            .text-right {
-                text-align: right;
+            .logo {
+                width: 100px;
             }
 
-            .text-left {
-                text-align: left;
+            .text-container {
+                flex-grow: 1;
+                text-align: center;
+                text-transform: uppercase;
+                padding-left: 300px; /* Sesuaikan sesuai kebutuhan */
+            }
+
+            .logo-container {
+                margin-right: 100px; /* Tambahkan margin kanan sesuai kebutuhan */
+            }
+
+            .header {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .project-name {
+                font-size: 15px;
+                font-weight: bold;
+                color: black;
             }
         </style>
     </head>
     <body>
-        <table width="100%" style="margin-bottom: 10px;">
+        <table class="container">
+            <tr>
+                <td class="logo-container">
+                    <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
+                </td>
+                <td class="text-container">
+                    <div class="header">Surat Perintah Kerja</div>
+                    <div class="project-name">No: {{ $data->po_no }}</div>
+                </td>
+            </tr>
+        </table>
+        <!-- <table width="100%" style="margin-bottom: 10px;">
             <tr>
                 <td>
                     <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
                 </td>
-                <td style="text-transform: uppercase;padding-left: 155px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
+                    <td style="text-transform: uppercase;padding-left: 155px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
                 </td>
             </tr>
-        </table>
+        </table> -->
         <table class="font-size-11" style="border: 1px solid black;" width="100%">
             <tr>
                 <td>

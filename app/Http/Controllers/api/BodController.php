@@ -438,6 +438,7 @@ class BodController extends Controller
                     ->where('id_project', $request->id_project)
                     ->where('id_subkategori', $request->id_subkategori)
                     ->where('id_kategori',$request->id_kategori)
+                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

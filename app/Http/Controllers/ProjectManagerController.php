@@ -143,10 +143,7 @@ class ProjectManagerController extends Controller
         $data->id_karyawan = $request->input('pm');
         $data->save();
 
-        // Update ProjectEngineer relationships
         $data->pe()->sync($request->pe);
-
-        // Update ProjectAdmin relationships
         $data->pa()->sync($request->pa);
 
         // $data               = ProjectManager::find($request->id);
@@ -178,10 +175,9 @@ class ProjectManagerController extends Controller
     {
         $data   = ProjectManager::findOrFail($id);
         $data->delete();
-        $datas  = ProjectEngineer::where('id_pm',$id)->get();
-        $datas->delete();
-        $datass = ProjectAdmin::where('id_pm',$id)->get();
-        $datass->delete();
+
+        ProjectEngineer::destroy(ProjectEngineer::where('id_pm', $id)->pluck('id'));
+        ProjectAdmin::destroy(ProjectAdmin::where('id_pm', $id)->pluck('id'));
 
         return redirect(route('project_manager'))
                     ->with('success', 'Data successfully deleted');

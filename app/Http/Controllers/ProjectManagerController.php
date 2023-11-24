@@ -139,26 +139,36 @@ class ProjectManagerController extends Controller
             'pa'    => 'required|array'
         ]);
 
-        $data               = ProjectManager::find($request->id);
-        $data->id_karyawan  = $request->input('pm');
+        $data = ProjectManager::find($request->id);
+        $data->id_karyawan = $request->input('pm');
         $data->save();
 
-        $data->pe()->delete();
-        $data->pa()->delete();
+        // Update ProjectEngineer relationships
+        $data->pe()->sync($request->pe);
 
-        foreach($request->pe as $selectedPEId) {
-            $dataPE                 = New ProjectEngineer();
-            $dataPE->id_pm          = $data->id;
-            $dataPE->id_karyawan    = $selectedPEId;
-            $dataPE->save();
-        }
+        // Update ProjectAdmin relationships
+        $data->pa()->sync($request->pa);
 
-        foreach($request->pa as $selectedPAId) {
-            $dataPA                 = New ProjectAdmin();
-            $dataPA->id_pm          = $data->id;
-            $dataPA->id_karyawan    = $selectedPAId;
-            $dataPA->save();
-        }
+        // $data               = ProjectManager::find($request->id);
+        // $data->id_karyawan  = $request->input('pm');
+        // $data->save();
+
+        // $data->pe()->delete();
+        // $data->pa()->delete();
+
+        // foreach($request->pe as $selectedPEId) {
+        //     $dataPE                 = New ProjectEngineer();
+        //     $dataPE->id_pm          = $data->id;
+        //     $dataPE->id_karyawan    = $selectedPEId;
+        //     $dataPE->save();
+        // }
+
+        // foreach($request->pa as $selectedPAId) {
+        //     $dataPA                 = New ProjectAdmin();
+        //     $dataPA->id_pm          = $data->id;
+        //     $dataPA->id_karyawan    = $selectedPAId;
+        //     $dataPA->save();
+        // }
 
         return redirect(route('project_manager'))
                     ->with('success', 'Data saved successfully');

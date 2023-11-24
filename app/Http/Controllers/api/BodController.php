@@ -404,7 +404,9 @@ class BodController extends Controller
             $kategori = SubKategori::find($request->id_subkategori);   
 
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
-                    ->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_project', $request->id_project)
+                    ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
                     ->orderBy('created_at','desc')
                     ->limit(3)
                     ->get();

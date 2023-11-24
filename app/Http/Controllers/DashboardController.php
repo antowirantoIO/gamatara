@@ -81,8 +81,8 @@ class DashboardController extends Controller
 
         $pm = ProjectManager::with(['projects' => function ($query) {
             $query->select('pm_id')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as onprogress')
-                ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as complete')
+                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
+                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
                 ->groupBy('pm_id');
         }])->get();                                        
 

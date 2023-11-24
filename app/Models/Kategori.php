@@ -9,7 +9,12 @@ class Kategori extends Model
 {
     protected $table = 'kategori';
     protected $guarded = [];
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
+
+    public function projectPekerjaan()
+    {
+        return $this->hasMany(ProjectPekerjaan::class, 'id_kategori', 'id');
+    }
 
     public function scopeFilter($query, $filter)
     {

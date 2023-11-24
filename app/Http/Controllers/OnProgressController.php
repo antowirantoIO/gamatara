@@ -103,17 +103,18 @@ class OnProgressController extends Controller
             $data = ProjectPekerjaan::where('id_project',$id)
                                     ->where('id_vendor',$vendor)
                                     ->with('kategori','subKategori')
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori','kode_unik')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori','kode_unik', DB::raw('MAX(kode_unik) as kode_unik'))
                                     ->distinct();
             $data = $data->get();
+
             return DataTables::of($data)->addIndexColumn()
                             ->addColumn('subkategori',function($data){
                                 return strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan' ? ($data->deskripsi_subkategori ? $data->subKategori->name . ' ' .  $data->deskripsi_subkategori : $data->subKategori->name) : $data->subKategori->name ;
                             })
                             ->addColumn('action', function($data) {
                                return ' <div class="d-flex justify-contetn-center gap-3">
-                               <a href="'.route('on_progres.request-pekerjaan',[$data->id_project,$data->id_vendor,$data->id_kategori,$data->id_subkategori]).'" class="btn btn-info btn-sm">
+                               <a href="'.route('on_progres.request-pekerjaan',[$data->id_project,$data->id_vendor,$data->id_kategori,$data->id_subkategori, $data->kode_unik ?? 0]).'" class="btn btn-info btn-sm">
                                    <span>
                                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                    </span>
@@ -143,13 +144,14 @@ class OnProgressController extends Controller
             'id_project' => $request->id_project,
             'id_kategori' => $request->kategori,
             'id_subkategori' => $request->subkategori,
-            'id_vendor' => $request->id_vendor
+            'id_vendor' => $request->id_vendor,
+            'kode_unik' => generateBarcodeNumber()
         ]);
 
         return back()->with('success','Data saved successfully !');
     }
 
-    public function addWork($id, $vendor,$kategori,$subKategori)
+    public function addWork($id, $vendor,$kategori,$subKategori, $kodeUnik)
     {
         $works = Kategori::all();
         $vendor = Vendor::where('id',$vendor)->first();
@@ -157,6 +159,7 @@ class OnProgressController extends Controller
                                     ->where('id_kategori',$kategori)
                                     ->where('id_subkategori',$subKategori)
                                     ->where('id_vendor',$vendor->id)
+                                    ->where('kode_unik',$kodeUnik)
                                     ->get();
         $kode_unik = $pekerjaan->pluck('kode_unik')->first();
         $kategori_id = $pekerjaan->pluck('id_kategori')->first();
@@ -191,7 +194,7 @@ class OnProgressController extends Controller
         if($validasi->fails()){
             return back()->with('error',$validasi->errors()->first());
         }
-        $number = $request->unik !== null ? $request->unik : generateBarcodeNumber();
+        $number = $request->kode_unik;
 
         foreach($request->pekerjaan as $key => $item){
             // dd($request->amount[$key]);
@@ -212,8 +215,7 @@ class OnProgressController extends Controller
                         intval($currentData->thick) !== intval($request->thick[$key]) ||
                         $currentData->unit !== $request->unit[$key] ||
                         intval($currentData->qty) !== intval($request->qty[$key]) ||
-                        $currentData->amount != floatval($request->amount[$key]) ||
-                        intval($currentData->harga_vendor) !== intval(str_replace(",", "", $request->harga_vendor[$key]))) {
+                        $currentData->amount != floatval($request->amount[$key]) ) {
                         $isDifferent = true;
                     }else{
                         $isDifferent = false;
@@ -236,7 +238,7 @@ class OnProgressController extends Controller
                     'unit' => $request->unit[$key] ?? null,
                     'qty' => $request->qty[$key] ?? null,
                     'amount' => $request->amount[$key] ?? null,
-                    'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ?? null,
+                    'harga_vendor' => $project->harga_vendor ?? $pekerjaan->harga_vendor,
                     'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
                     'kode_unik' => $number
                 ]);
@@ -260,10 +262,10 @@ class OnProgressController extends Controller
                             'unit' => $request->unit[$key],
                             'qty' => $request->qty[$key],
                             'amount' => $request->amount[$key],
-                            'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
                             'description' => 'Updated Data',
                             'status' => 2,
-                            'updated_at' => date('Y-m-d H:i:s')
+                            'updated_at' => date('Y-m-d H:i:s'),
+                            'kode_unik' => $number
                         ]);
                     }
                 }else{
@@ -283,14 +285,14 @@ class OnProgressController extends Controller
                         'qty' => $request->qty[$key] ?? null,
                         'detail' => $request->detail[$key] ?? null,
                         'amount' => $request->amount[$key] ?? null,
-                        'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ,
                         'description' => 'Created New Data',
                         'status' => 1,
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'kode_unik' => $number
                     ]);
                 }
             }else {
-                $harga_customer = Pekerjaan::where('id',$item)->first();
+                $harga_pekerjaan = Pekerjaan::where('id',$item)->first();
                 $pekerjaan = ProjectPekerjaan::create([
                     'id_project' => $request->id_project ?? null,
                     'id_kategori' => $request->kategori ?? null,
@@ -308,8 +310,8 @@ class OnProgressController extends Controller
                     'unit' => $request->unit[$key] ?? null,
                     'qty' => $request->qty[$key] ?? null,
                     'amount' => $request->amount[$key] ?? null,
-                    'harga_customer' => $harga_customer->harga_customer ?? null,
-                    'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ?? null,
+                    'harga_vendor' => $harga_pekerjaan->harga_vendor ?? null,
+                    'harga_customer' => $harga_pekerjaan->harga_customer ?? null,
                     'kode_unik' => $number
                 ]);
 
@@ -329,8 +331,8 @@ class OnProgressController extends Controller
                     'unit' => $request->unit[$key] ?? null,
                     'qty' => $request->qty[$key] ?? null,
                     'amount' => $request->amount[$key] ?? null,
-                    'harga_vendor' => str_replace(",", "", $request->harga_vendor[$key]) ?? null,
-                    'harga_customer' => $harga_customer->harga_customer ?? null,
+                    'harga_vendor' => $harga_pekerjaan->harga_vendor ?? null,
+                    'harga_customer' => $harga_pekerjaan->harga_customer ?? null,
                     'description' => 'Created New Data',
                     'status' => 1,
                     'created_at' => date('Y-m-d H:i:s')
@@ -444,25 +446,41 @@ class OnProgressController extends Controller
         return view('on_progres.tableData', compact('keluhans'));
     }
 
-    public function tagihanVendor(Request $request, $id,$vendor)
+    public function tagihanVendor(Request $request, $id, $vendor)
     {
-        $kategori = Kategori::all();
+        $kategori = Kategori::whereHas('projectPekerjaan', function($query) use ($id) {
+                                return $query->where('id_project', $id);
+                            })
+                            ->whereHas('projectPekerjaan',function($querys) use($vendor){
+                                return $querys->where('id_vendor',$vendor);
+                            })
+                            ->get();
+
+        $desiredOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL", "PERMESINAN", "PIPA-PIPA", "INTERIOR KAPAL", "LAIN-LAIN"];
+
+        $workers = $kategori->sortBy(function ($group, $key) use ($desiredOrder) {
+            $index = array_search($key, $desiredOrder);
+            return $index !== false ? $index : PHP_INT_MAX;
+        });
         $subKategori = SubKategori::all();
         $lokasi = LokasiProject::all();
-        $allData = ProjectPekerjaan::where('id_project', $id)
-                                    ->where('id_vendor',$vendor)
-                                    ->get();
-        $workers = $allData->groupBy('id_kategori','id_subkategori');
-
         return view('on_progres.tagihan_vendor',compact('id','kategori','workers','subKategori','lokasi','vendor'));
     }
 
     public function tagihanCustomer($id)
     {
-        $kategori = Kategori::all();
-        $allData = ProjectPekerjaan::where('id_project', $id)->get();
-        $workers = $allData->groupBy('id_kategori','id_subkategori');
+        $kategori = Kategori::whereHas('projectPekerjaan', function($query) use ($id) {
+            return $query->where('id_project', $id);
+        })->get();
+
+        $desiredOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL", "PERMESINAN", "PIPA-PIPA", "INTERIOR KAPAL", "LAIN-LAIN"];
+
+        $workers = $kategori->sortBy(function ($group, $key) use ($desiredOrder) {
+            $index = array_search($key, $desiredOrder);
+            return $index !== false ? $index : PHP_INT_MAX;
+        });
         $subKategori = SubKategori::all();
+        $lokasi = LokasiProject::all();
         $vendor = Vendor::all();
         return view('on_progres.tagihan_customer',compact('id','kategori','workers','subKategori','vendor'));
     }
@@ -751,10 +769,16 @@ class OnProgressController extends Controller
     public function ajaxTagihanCustomer(Request $request)
     {
         if($request->ajax()){
-            $data = ProjectPekerjaan::where('id_project', $request->id_project)
-                                    ->where('id_kategori',$request->id_kategori)
-                                    ->whereNotNull(['id_pekerjaan'])
-                                    ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
+            if(!empty($request->id_kategori)){
+                $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                                        ->where('id_kategori',$request->id_kategori)
+                                        ->whereNotNull(['id_pekerjaan'])
+                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
+            }else {
+                $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                        ->whereNotNull(['id_pekerjaan'])
+                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
+            }
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
                 $data->where('id_subkategori',$request->sub_kategori);
@@ -814,6 +838,7 @@ class OnProgressController extends Controller
                                 ->where('id_kategori',$request->id_kategori)
                                 ->where('id_subkategori',$request->id_subkategori)
                                 ->where('id_vendor',$request->id_vendor)
+                                ->where('kode_unik',$request->kode_unik)
                                 ->with(['pekerjaan'])
                                 ->orderBy('created_at','desc')
                                 ->orderBy('updated_at','desc')
@@ -838,6 +863,7 @@ class OnProgressController extends Controller
                     ->where('id_kategori',$request->id_kategori)
                     ->where('id_subkategori',$request->id_subkategori)
                     ->where('id_vendor',$request->id_vendor)
+                    ->where('kode_unik',$request->kode_unik)
                     ->with('activitys')
                     ->get();
 

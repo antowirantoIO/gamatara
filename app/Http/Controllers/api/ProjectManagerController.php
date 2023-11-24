@@ -154,20 +154,21 @@ class ProjectManagerController extends Controller
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $name->first()->kategori->name ?? '';            
 
-            // $progress = ProjectPekerjaan::with(['subkategori:id,name,id_kategori'])
-            //     ->select('id','status','id_kategori','id_subkategori','id_project','created_at','updated_at','deskripsi_subkategori')
-            //     ->where('id_project', $request->id_project)
-            //     ->where('id_kategori', $request->id_kategori)
-            //     ->filter($request)
-            //     ->get();
-
-            $progress = ProjectPekerjaan::select('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
-                        ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
-                        ->where('project_pekerjaan.id_project', $request->id_project)
-                        ->where('project_pekerjaan.id_kategori', $request->id_kategori)
-                        ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
-                        ->filter($request)
-                        ->get();
+            // $progress = ProjectPekerjaan::select('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
+            //             ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
+            //             ->where('project_pekerjaan.id_project', $request->id_project)
+            //             ->where('project_pekerjaan.id_kategori', $request->id_kategori)
+            //             ->groupBy('project_pekerjaan.id', 'project_pekerjaan.deskripsi_subkategori', 'project_pekerjaan.status', 'project_pekerjaan.id_subkategori', 'sub_kategori.name')
+            //             ->filter($request)
+            //             ->get();
+            
+            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status')
+                    ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
+                    ->where('project_pekerjaan.id_project', $request->id_project)
+                    ->where('project_pekerjaan.id_kategori', $request->id_kategori)
+                    ->groupBy('sub_kategori.name', 'project_pekerjaan.deskripsi_subkategori','project_pekerjaan.id_subkategori', 'project_pekerjaan.status')
+                    ->filter($request)
+                    ->get();
                 
             foreach ($progress as $item) {
                 $item->setAttribute('name', $item->subkategori->name . " " . $item->deskripsi_subkategori);

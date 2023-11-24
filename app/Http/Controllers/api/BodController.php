@@ -71,10 +71,17 @@ class BodController extends Controller
 
                 $totalHarga = [];
 
-                foreach ($datas as $item) {
-                    $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+            
+            foreach ($datas as $item) {
+                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+            }
+            
+            for ($i = 0; $i < 12; $i++) {
+                if (!isset($totalHargaPerBulan[$i])) {
+                    $totalHargaPerBulan[$i] = 0;
                 }
-
+            }
+            
             $arrayChart = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data,'chart'=> $arrayChart]);
@@ -112,12 +119,7 @@ class BodController extends Controller
                     }
                 }
             
-                if($jumlah_tagihan)
-                {
-                    $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
-                }else{
-                    $value['jumlah_tagihan'] = 0;
-                }
+                $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
             }
 
             if($request->tahun != null)

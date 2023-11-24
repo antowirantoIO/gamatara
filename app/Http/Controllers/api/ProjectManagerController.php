@@ -229,7 +229,10 @@ class ProjectManagerController extends Controller
     {
         try{
             $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id',$request->id)->where('id_project', $request->id_project)->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_project', $request->id_project)
+                    ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
+                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

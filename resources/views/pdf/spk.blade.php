@@ -86,12 +86,12 @@
         <table class="container">
             <tr>
                 <td class="logo-container">
-                    <!-- <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo"> -->
+                    <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
                 </td>
                 <td class="text-container">
                     <div class="header">PT. Gamatara Trans Ocean Shipyard</div>
                     <div class="project-name">Rekap SPK {{$data->nama_project}}</div>
-                    <div class="date-range">From {{$data->created_ats}} To {{$data->target_selesais ?? '-'}}</div>
+                    <div class="date-range">From {{ $data->created }} To {{ $data->target_selesai ?? '-' }}</div>
                 </td>
             </tr>
         </table>
@@ -108,7 +108,7 @@
                 <tr>
                     <td>{{ $item->vendors->name }}</td>
                     <td>{{ $item->no_spk }} </td>
-                    <td>{{ $item->created_atss }} </td>
+                    <td>{{ $item->bod_approval }} </td>
                     <td>  
                         {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
                     </td>

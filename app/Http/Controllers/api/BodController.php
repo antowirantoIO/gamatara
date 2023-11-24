@@ -426,10 +426,10 @@ class BodController extends Controller
     public function detailpekerjaanBOD(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','deskripsi_pekerjaan')
-                    ->where('id_kategori',$request->id_kategori)
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
                     ->where('id_project', $request->id_project)
                     ->where('id_subkategori', $request->id_subkategori)
+                    ->where('id_kategori',$request->id_kategori)
                     ->orderBy('created_at','desc')
                     ->get();
 

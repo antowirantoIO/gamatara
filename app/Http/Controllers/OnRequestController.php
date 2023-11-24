@@ -46,7 +46,10 @@ class OnRequestController extends Controller
                 $data->where('pm_id', '');
             }
             
-            $data = $data->filter($request)->orderBy('created_at', 'desc')->get();
+            $data = $data->where('status',1)
+                        ->filter($request)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('survey', function($data){

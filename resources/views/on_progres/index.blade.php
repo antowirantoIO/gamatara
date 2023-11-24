@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; On Progres</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; On Progress</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" id="btn-fillter">
@@ -31,7 +31,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">On Progres</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">On Progress</h4>
                             <div>
 
                             </div>

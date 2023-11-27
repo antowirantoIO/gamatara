@@ -83,7 +83,9 @@ function groupDataPekerjaan($request)
     $kategori = Kategori::orderByRaw("FIELD(name, '" . implode("','", $customOrder) . "')")->get();
     $data = collect();
     $kategori->each(function($item) use ($data,&$request){
-        $datas = ProjectPekerjaan::where('id_kategori',$item->id)->where('id_project',$request->id_project);
+        $datas = ProjectPekerjaan::where('id_kategori',$item->id)
+                                ->where('id_project',$request->id_project)
+                                ->whereNotNull(['id_pekerjaan']);
 
         if($request->has('sub_kategori') && !empty($request->sub_kategori)){
             $datas->where('id_subkategori',$request->id_subkategori);
@@ -93,7 +95,7 @@ function groupDataPekerjaan($request)
             $datas->where('id_vendor',$request->nama_vendor);
         }
         $datas = $datas->get();
-        $datas = $datas->groupBy('kode_unik');
+        $datas = $datas->groupBy('id_subkategori');
         $data[$item->name] = $datas;
     });
     return $data;
@@ -106,8 +108,8 @@ function groupDataPekerjaanVendor($request)
     $data = collect();
     $kategori->each(function($item) use ($data,&$request){
         $datas = ProjectPekerjaan::where('id_kategori',$item->id)
-                                // ->where('id_vendor',1)
-                                ->where('id_project',$request->id_project);
+                                ->where('id_project',$request->id_project)
+                                ->whereNotNull(['id_pekerjaan']);
 
         if($request->has('sub_kategori') && !empty($request->sub_kategori)){
             $datas->where('id_subkategori',$request->id_subkategori);
@@ -133,8 +135,8 @@ function groupExportTagihanVendor($request,$id_vendor)
     $kategori->each(function($item) use ($data,&$request, $id_vendor){
         $datas = ProjectPekerjaan::where('id_kategori',$item->id)
                                 ->where('id_vendor',$id_vendor)
-                                ->where('id_project',$request->id_project);
-
+                                ->where('id_project',$request->id_project)
+                                ->whereNotNull(['id_pekerjaan']);
         if($request->has('sub_kategori') && !empty($request->sub_kategori)){
             $datas->where('id_subkategori',$request->id_subkategori);
         }

@@ -84,6 +84,13 @@
                     $nowKategori = $key;
                 @endphp
                     @if ($prevKodeUnik != $kodeUnik)
+                        @php
+                        if ($prevKategori !== $key) {
+                            $subCount = 1;
+                        } else {
+                            $subCount++;
+                        }
+                        @endphp
                         <tr style="font-size: 8px;">
                             <td class="text-center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                             <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -98,13 +105,6 @@
                             <td style="border: 20px medium black;"></td>
                             <td style="border: 20px medium black;"></td>
                         </tr>
-                        @php
-                        if ($prevKategori !== $key) {
-                            $subCount = 1;
-                        } else {
-                            $subCount++;
-                        }
-                        @endphp
                         <tr>
                             <td height="30" align="center" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $subCount }}</td>
                             <td height="30" style="font-size: 8px;">

@@ -26,7 +26,7 @@ class BodController extends Controller
     {
         try{
             $perPage = 5;
-            $page = request()->get('page', $request->page);
+            $page = request()->get('page', 1);
             
             $data = Customer::select('id', 'name')->has('projects')
                 ->with('projects', 'projects.progress:harga_customer,qty,id_project')
@@ -63,14 +63,17 @@ class BodController extends Controller
                 return $result;
             });
             
-            $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan');
+            // Sort the data by 'jumlah_tagihan' in descending order
+            $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
             
-            // Manually create paginated data
-            $currentPageItems = $dataArray->splice(($page - 1) * $perPage, $perPage)->values();
+            // Calculate the pagination manually
+            $total = $dataArray->count();
+            $start = ($page - 1) * $perPage;
+            $currentPageItems = $dataArray->slice($start, $perPage)->values();
             
             $paginator = new LengthAwarePaginator(
                 $currentPageItems,
-                $dataArray->count(),
+                $total,
                 $perPage,
                 $page,
                 [

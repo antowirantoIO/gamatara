@@ -22,18 +22,18 @@ class UserGamataraController extends Controller
                     ->first();
             $user['name'] = $user->karyawan->name ?? '';
 
-            if ($user->role->name == 'Project Enginer') {    
+            if ($user->role->name == 'Project Enginer') {
                 $PE = ProjectEngineer::where('id_karyawan',$user->id_karyawan)->first();
                 if($PE){
                     $user['id_karyawan'] = $PE->id;
                 }else {
                     $user['id_karyawan'] = '';
                 }
-                
+
             } elseif ($user->role->name == 'Project Manager') {
                 $user['id_karyawan'] = optional($user->karyawan)->pm->id;
             }
-            
+
 
             $token = auth()->user()->createToken('API Token')->accessToken;
 
@@ -54,21 +54,21 @@ class UserGamataraController extends Controller
     {
         $validasi = Validator::make($request->only(['email','password','password_konfirmasi']),[
             'email' => 'required|email',
-            'password' => 'required|min:8',
-            'password_konfirmasi' => 'required|min:8'
+            'password' => 'required|min:6',
+            'password_konfirmasi' => 'required|min:6'
         ]);
 
         if($validasi->fails()){
-            return response()->json(['status' => 500,'message' => $validasi->errors()->first()]);
+            return response()->json(['status' => 400,'message' => $validasi->errors()->first()]);
         }
 
         if($request->password !== $request->password_konfirmasi){
-            return response()->json(['statis' => 500,'message' => 'Password dan Password Konfirmasi Tidak Sama !'],500);
+            return response()->json(['status' => 400,'message' => 'Password dan Password Konfirmasi Tidak Sama !'],400);
         }
 
         $user = User::where('email',$request->email)->first();
         if(!$user){
-            return response()->json(['status' => 500,'message' => 'User Tidak Terdaftar!']);
+            return response()->json(['status' => 400,'message' => 'User Tidak Terdaftar!']);
         }
 
         User::where('email',$request->email)->update([

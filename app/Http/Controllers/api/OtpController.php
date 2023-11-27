@@ -35,9 +35,9 @@ class OtpController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 500,
+                'status' => 400,
                 'message' => $e->getMessage()
-            ],500);
+            ],400);
         }
 
     }

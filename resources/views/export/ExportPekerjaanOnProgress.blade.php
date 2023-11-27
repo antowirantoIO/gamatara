@@ -49,7 +49,6 @@
         $prevIndex = '';
     @endphp
     @foreach ($data as $index => $item)
-
         <tr style="font-size: 8px; border:20px medium black;">
             <td style="font-weight: bold; border:20px medium black;" align="center"  height="20">{{ getLatters($index) }}.</td>
             <td colspan="9" style="font-weight: bold; border:20px medium black;"  height="20">&nbsp;{{ $index }}</td>
@@ -58,9 +57,16 @@
             @foreach ($items as $key => $value)
                 @php
                     $subkategori = $value->subKategori->name;
-                    $kodeUnik = $value->kode_unik;
+                    $kodeUnik = $indexs;
                 @endphp
-                @if ($prevKodeUnik !== $kodeUnik)
+                @if ($prevKodeUnik != $kodeUnik)
+                    @php
+                        if ($prevIndex !== $index) {
+                            $subCount = 1;
+                        } else {
+                            $subCount++;
+                        }
+                    @endphp
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td height="20"></td>
@@ -91,13 +97,6 @@
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                     </tr>
-                    @php
-                        if ($prevIndex !== $index) {
-                            $subCount++;
-                        } else {
-                            $subCount = 1;
-                        }
-                    @endphp
                 @endif
                 <tr style="font-size: 8px; border:20px medium black;">
                     <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>

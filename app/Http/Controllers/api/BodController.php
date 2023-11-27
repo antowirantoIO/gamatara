@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Customer;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
@@ -58,11 +59,16 @@ class BodController extends Controller
 
             $data = $data->sortByDesc('jumlah_tagihan')->values();
 
-            $paginatedData = $data->slice(($page - 1) * $perPage, $perPage)->values();
-            $paginator = new Paginator($paginatedData, $perPage, $page, [
-                'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ]);
+            $paginator = new LengthAwarePaginator(
+                $data->forPage($page, $perPage),
+                $data->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => 'page',
+                ]
+            );
 
             if($request->tahun != null)
             {

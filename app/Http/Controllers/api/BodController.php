@@ -28,40 +28,41 @@ class BodController extends Controller
             $perPage = 5;
             $page = request()->get('page', $request->page);
 
-            $data = Customer::select('id','name')->has('projects')
-            ->with('projects','projects.progress:harga_customer,qty,id_project')
-            ->get();
-        
-            foreach($data as $value){
-                if($value->projects)
-                {
+            $data = Customer::select('id', 'name')->has('projects')
+                ->with('projects', 'projects.progress:harga_customer,qty,id_project')
+                ->get();
+
+            $dataArray = $data->transform(function ($value) {
+                if ($value->projects) {
                     $value['jumlah_project'] = $value->projects->count();
-                }else{
+                } else {
                     $value['jumlah_project'] = 0;
                 }
 
                 $jumlah_tagihan = 0;
-            
+
                 if ($value->projects) {
-                    foreach($value->projects as $values){
+                    foreach ($value->projects as $values) {
                         foreach ($values->progress as $project) {
                             $progress = $project ?? null;
-                
+
                             if ($progress) {
                                 $jumlah_tagihan += $progress->harga_customer * $progress->qty;
                             }
                         }
                     }
                 }
-            
-                $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
-            }
 
-            $data = $data->sortByDesc('jumlah_tagihan')->values();
+                $value['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
+
+                return $value->toArray();
+            });
+
+            $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
 
             $paginator = new LengthAwarePaginator(
-                $data->forPage($page, $perPage),
-                $data->count(),
+                $dataArray->forPage($page, $perPage),
+                $dataArray->count(),
                 $perPage,
                 $page,
                 [
@@ -141,6 +142,8 @@ class BodController extends Controller
                 $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
             }
 
+            $data = $data->values();
+
             $paginator = new LengthAwarePaginator(
                 $data->forPage($page, $perPage),
                 $data->count(),
@@ -207,6 +210,8 @@ class BodController extends Controller
                 $item['onprogress'] = $item->projects->where('status', 1)->count();
                 $item['complete'] = $item->projects->where('status', 2)->count();
             }
+            
+            $data = $data->values();
 
             $paginator = new LengthAwarePaginator(
                 $data->forPage($page, $perPage),

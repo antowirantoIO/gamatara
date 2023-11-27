@@ -141,11 +141,16 @@ class BodController extends Controller
                 $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
             }
 
-            $paginatedData = $data->slice(($page - 1) * $perPage, $perPage)->values();
-            $paginator = new Paginator($paginatedData, $perPage, $page, [
-                'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ]);
+            $paginator = new LengthAwarePaginator(
+                $data->forPage($page, $perPage),
+                $data->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => 'page',
+                ]
+            );
 
             if($request->tahun != null)
             {
@@ -203,11 +208,16 @@ class BodController extends Controller
                 $item['complete'] = $item->projects->where('status', 2)->count();
             }
 
-            $paginatedData = $data->slice(($page - 1) * $perPage, $perPage)->values();
-            $paginator = new Paginator($paginatedData, $perPage, $page, [
-                'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ]);
+            $paginator = new LengthAwarePaginator(
+                $data->forPage($page, $perPage),
+                $data->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => 'page',
+                ]
+            );
       
             $chart = OnRequest::select('pm_id', 'status','created_at')
                     ->with(['pm','pm.karyawan'])

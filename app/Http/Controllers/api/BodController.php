@@ -222,11 +222,13 @@ class BodController extends Controller
                 $item['complete'] = $item->projects->where('status', 2)->count();
             }
 
-            $data = $data->values();
-
+            $total = $data->count();
+            $start = ($page - 1) * $perPage;
+            $currentPageItems = $data->slice($start, $perPage)->values();
+            
             $paginator = new LengthAwarePaginator(
-                $data->forPage($page, $perPage),
-                $data->count(),
+                $currentPageItems,
+                $total,
                 $perPage,
                 $page,
                 [

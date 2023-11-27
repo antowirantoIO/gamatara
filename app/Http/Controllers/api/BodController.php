@@ -27,46 +27,49 @@ class BodController extends Controller
         try{
             $perPage = 5;
             $page = request()->get('page', $request->page);
-
+            
             $data = Customer::select('id', 'name')->has('projects')
                 ->with('projects', 'projects.progress:harga_customer,qty,id_project')
                 ->get();
-
+            
             $dataArray = $data->map(function ($value) {
                 $result = [
                     'id' => $value->id,
                     'name' => $value->name,
                 ];
-
+            
                 if ($value->projects) {
                     $result['jumlah_project'] = $value->projects->count();
                 } else {
                     $result['jumlah_project'] = 0;
                 }
-
+            
                 $jumlah_tagihan = 0;
-
+            
                 if ($value->projects) {
                     foreach ($value->projects as $values) {
                         foreach ($values->progress as $project) {
                             $progress = $project ?? null;
-
+            
                             if ($progress) {
                                 $jumlah_tagihan += $progress->harga_customer * $progress->qty;
                             }
                         }
                     }
                 }
-
+            
                 $result['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
-
+            
                 return $result;
             });
-
-            $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
-
+            
+            $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan');
+            
+            // Manually create paginated data
+            $currentPageItems = $dataArray->splice(($page - 1) * $perPage, $perPage)->values();
+            
             $paginator = new LengthAwarePaginator(
-                $dataArray->forPage($page, $perPage),
+                $currentPageItems,
                 $dataArray->count(),
                 $perPage,
                 $page,

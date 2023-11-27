@@ -32,11 +32,16 @@ class BodController extends Controller
                 ->with('projects', 'projects.progress:harga_customer,qty,id_project')
                 ->get();
 
-            $dataArray = $data->transform(function ($value) {
+            $dataArray = $data->map(function ($value) {
+                $result = [
+                    'id' => $value->id,
+                    'name' => $value->name,
+                ];
+
                 if ($value->projects) {
-                    $value['jumlah_project'] = $value->projects->count();
+                    $result['jumlah_project'] = $value->projects->count();
                 } else {
-                    $value['jumlah_project'] = 0;
+                    $result['jumlah_project'] = 0;
                 }
 
                 $jumlah_tagihan = 0;
@@ -53,9 +58,9 @@ class BodController extends Controller
                     }
                 }
 
-                $value['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
+                $result['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
 
-                return $value->toArray();
+                return $result;
             });
 
             $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
@@ -210,7 +215,7 @@ class BodController extends Controller
                 $item['onprogress'] = $item->projects->where('status', 1)->count();
                 $item['complete'] = $item->projects->where('status', 2)->count();
             }
-            
+
             $data = $data->values();
 
             $paginator = new LengthAwarePaginator(

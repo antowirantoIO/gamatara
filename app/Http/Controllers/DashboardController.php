@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $spkrequest = OnRequest::with(['kapal', 'customer']);
         
         if ($cekRole == 'Project Manager') {
-            $spkrequest->where('pm_id', $cekPa->id);
+            $spkrequest->where('pm_id', $cekPa->id ?? '');
         }else if ($cekRole == 'BOD') {
             if($result){
                 $spkrequest->whereIn('pm_id', array_column($result, 'id'));

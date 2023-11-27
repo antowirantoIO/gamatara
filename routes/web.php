@@ -196,6 +196,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export', [LaporanCustomerController::class, 'export'])->name('laporan_customer.export');
         Route::get('/exportDetail', [LaporanCustomerController::class, 'exportDetail'])->name('laporan_customer.exportDetail');
         Route::get('/chart', [LaporanCustomerController::class, 'chart'])->name('laporan_customer.chart');
+        Route::post('/data-chart', [LaporanCustomerController::class, 'dataChart'])->name('laporan_customer.dataChart');
     });
 
     //laporan vendor
@@ -204,9 +205,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/detail/{id}', [LaporanVendorController::class, 'detail'])->name('laporan_vendor.detail');
         Route::get('/export', [LaporanVendorController::class, 'export'])->name('laporan_vendor.export');
         Route::get('/exportDetail', [LaporanVendorController::class, 'exportDetail'])->name('laporan_vendor.exportDetail');
-        Route::prefix('chart')->group(function(){
-            Route::get('data',[LaporanVendorController::class,'chart'])->name('laporan_vendor.charts');
-        });
+        Route::post('/data-charts', [LaporanVendorController::class, 'dataCharts'])->name('laporan_vendor.dataCharts');
     });
 
     //laporan project manager

@@ -12,85 +12,129 @@ use App\Models\ProjectPekerjaan;
 use App\Exports\ExportReportCustomer;
 use App\Exports\ExportReportCustomerDetail;
 use DB;
+use Carbon\Carbon;
 
 class LaporanCustomerController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Customer::has('projects')->with('projects','projects.progress')->get();
-        
-            return Datatables::of($data)->addIndexColumn()
-            ->addColumn('jumlah_project', function ($customer) {
-                if($customer->projects)
-                {
-                    return $customer->projects->count();
-                }else{
-                    return "0";
+
+    $datas = Customer::has('projects')
+        ->with(['projects' => function ($query) use ($request) {
+            $query->with(['progress' => function ($progressQuery) use ($request) {
+                if ($request->report_by == 'tahun') {
+                    $start_date = Carbon::parse($request->start_date)->startOfYear();
+                    $end_date = Carbon::parse($request->end_date)->endOfYear();
+                    $progressQuery->whereBetween('created_at', [$start_date, $end_date]);
+                } elseif ($request->report_by == 'bulan') {
+                    $start_date = Carbon::parse($request->start_date)->startOfMonth();
+                    $end_date = Carbon::parse($request->end_date)->endOfMonth();
+                    $progressQuery->whereBetween('created_at', [$start_date, $end_date]);
+                } elseif ($request->report_by == 'tanggal') {
+                    $start_date = Carbon::parse($request->start_date)->startOfDay();
+                    $end_date = Carbon::parse($request->end_date)->endOfDay();
+                    $progressQuery->whereBetween('created_at', [$start_date, $end_date]);
                 }
-            })
-            ->addColumn('nilai_project', function ($customer) {
-                $totalHargaCustomer = 0;
-            
-                if ($customer->projects) {
-                    foreach($customer->projects as $value){
-                        foreach ($value->progress as $project) {
-                            $progress = $project ?? null;
-                
-                            if ($progress) {
-                                $totalHargaCustomer += $progress->harga_customer * $progress->qty;
-                            }
+            }]);
+        }])
+        ->get();
+
+        foreach ($datas as $value) {
+            if ($value->projects) {
+                $value['total_project'] = $value->projects->count();
+            } else {
+                $value['total_project'] = 0;
+            }
+
+            $totalHargaCustomer = 0;
+
+            if ($value->projects) {
+                foreach ($value->projects as $values) {
+                    foreach ($values->progress as $project) {
+                        $progress = $project ?? null;
+
+                        if ($progress) {
+                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
                         }
                     }
                 }
-            
-                return 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
-            })
-            ->addColumn('name', function($data){
-                return $data->name ?? '';
-            })
-            ->addColumn('action', function ($data) {
-                $btnDetail = '';
-                $id = '';
-
-                if ($data->projects) {
-                    foreach ($data->projects as $project) {
-                        $id = $project->id;
-                    }
-                }
- 
-                if (Can('laporan_customer-detail')) {
-                    $btnDetail .= '<a href="' . route('laporan_customer.detail', $id) . '" class="btn btn-warning btn-sm">
-                                        <span>
-                                            <i><img src="' . asset('assets/images/eye.svg') . '" style="width: 15px;"></i>
-                                        </span>
-                                    </a>';
-                }
-            
-                return $btnDetail;
-            })            
-            ->rawColumns(['action','jumlah_project','nilai_project'])
-            ->make(true);   
-        }
-
-        $tahun = now()->format('Y');
-        $totalHargaPerBulan = array_fill(0, 12, 0);
-
-        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer * qty) as total_harga')
-            ->whereYear('created_at', $tahun)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-
-            $totalHarga = [];
-
-            foreach ($data as $item) {
-                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
             }
 
-        $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
+            $value['totalHargaCustomer'] = 'Rp ' . number_format($totalHargaCustomer, 0, ',', '.');
+        }
 
-        return view('laporan_customer.index', compact('totalHargaData','tahun'));
+        $datas = $datas->sortByDesc('totalHargaCustomer')->values();
+        
+        if($request->report_by){
+            return response()->json([
+                'datas' => $datas
+            ]);
+        }
+
+        $customers = Customer::has('projects')->get();
+
+        return view('laporan_customer.index', compact('customers','datas'));
+    }
+
+    public function dataChart(Request $request)
+    {
+        if($request->report_by != null)
+        {
+            $report_by = $request->report_by;
+        }else{
+            $report_by = 'tahun';
+        }
+        $tahun = now()->format('Y');
+
+        $data = ProjectPekerjaan::with(['projects'])
+        ->when($request->filled('customer_id'), function ($query) use ($request) {
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_customer', $request->customer_id);
+            });
+        })
+        ->get()
+        ->groupBy('projects.id_customer');
+
+        $data_customer = [];
+        $date = [];
+        $result = $data->map(function ($groupedItems) use ($report_by) {
+            return $groupedItems->groupBy(function ($item) use ($report_by) {
+                switch ($report_by) {
+                    case 'bulan':
+                        return $item->created_at->format('Y-m');
+                    case 'tahun':
+                        return $item->created_at->format('Y');
+                    case 'tanggal':
+                    default:
+                        return $item->created_at->toDateString();
+                }
+            });
+        });
+        // dd($result);
+        foreach($result as $keyId => $value){
+            $price_project = [];
+            foreach($value as $keyDate => $item) {
+                if(!in_array($keyDate, $date))
+                    $date[] = $keyDate;
+                
+                $price_project[$keyId][] = $item->sum('harga_customer') * $item->sum('qty');
+            }
+            // $all_price_project = [];
+            // foreach($value as $key => $item) {
+            //     $all_price_project[] = $item->sum('harga_customer') * $item->sum('qty');
+            // }
+            // dd($price_project);
+            $data_customer[] = [
+                'name' => $item->first()->projects->customer->name ?? '',
+                'data' => $price_project[$keyId]
+            ];
+        }
+        // dd($data_customer);
+
+        return response()->json([
+            'date' => array_values($date),
+            'data_customer' => $data_customer
+        ]);
     }
 
     public function chart(Request $request){

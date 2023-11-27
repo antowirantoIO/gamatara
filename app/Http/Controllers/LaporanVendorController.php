@@ -16,75 +16,112 @@ class LaporanVendorController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = Vendor::filter($request);
-
-            return Datatables::of($data)->addIndexColumn()
-            ->addColumn('jumlah_project', function ($vendor) {
-                if($vendor->projectPekerjaan)
-                {
-                    return $vendor->projectPekerjaan->count();
-                }else{
-                    return "0";
-                }
-            })
-            ->addColumn('nilai_tagihan', function ($vendor) {
-                $totalHargaCustomer = 0;
+        $datas = Vendor::with(['projectPekerjaan' => function ($query) use ($request) {
             
-                if ($vendor->projectPekerjaan) {
-                    foreach($vendor->projectPekerjaan as $value){
-            
-                        if ($value) {
-                            $totalHargaCustomer += $value->harga_vendor * $value->qty;
-                        }
-                        
+                $query->where('id_vendor',$request->vendor_id);
+                if ($request->report_by) {
+                    if ($request->report_by === 'tahun') {
+                        $query->whereYear('created_at', $request->start_date)
+                                ->whereYear('created_at', $request->end_date);
+                    } elseif ($request->report_by === 'bulan') {
+                        $query->whereYear('created_at', $request->start_date)
+                                ->whereMonth('created_at', $request->start_date);
+                    } else {
+                        $query->whereDate('created_at', '>=', $request->start_date)
+                        ->whereDate('created_at', '<=', $request->end_date);
                     }
                 }
             
-                return 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
-            })
-            ->addColumn('action', function($data){
-                $btnDetail = '';
-                if(Can('laporan_vendor-detail')) {
-                    $btnDetail = '<a href="'.route('laporan_vendor.detail', $data->id).'" class="btn btn-warning btn-sm">
-                                    <span>
-                                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                                    </span>
-                                </a>';
+        }])->get();
+        
+        foreach($datas as $value){
+            if($value->projectPekerjaan)
+            {
+                $value['total_project'] = $value->projectPekerjaan->count();
+            }else{
+                $value['total_project'] = 0;
+            }
+
+            $nilai_tagihan = 0;
+            
+            if ($value->projectPekerjaan) {
+                foreach($value->projectPekerjaan as $values){
+        
+                    if ($values) {
+                        $nilai_tagihan += $values->harga_vendor * $values->qty;
+                    }
+                    
                 }
-
-                return $btnDetail;
-            })
-            ->rawColumns(['action'])
-            ->make(true);                    
+            }
+        
+            $value['nilai_tagihan'] = 'Rp '. number_format($nilai_tagihan, 0, ',', '.');
         }
+        $datas = $datas->sortByDesc('nilai_tagihan')->values();
 
+        if($request->report_by){
+            return response()->json([
+                'datas' => $datas
+            ]);
+        }
+        
+        $vendors = Vendor::has('projectPekerjaan')->get();
+        return view('laporan_vendor.index', compact('vendors','datas'));
+        
+    }
+
+    public function dataCharts(Request $request)
+    {
+        if($request->report_by != null)
+        {
+            $report_by = $request->report_by;
+        }else{
+            $report_by = 'tahun';
+        }
         $tahun = now()->format('Y');
 
-        $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
-                    ->join('project as C', function ($join) use ($tahun) {
-                        $join->on('B.id_project', '=', 'C.id')
-                            ->where('B.id_kategori', '=', 3)
-                            ->whereYear('C.created_at', '=', $tahun);
-                    })
-                    ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
-                    ->groupBy('vendor.id', 'vendor.name')
-                    ->orderByDesc(DB::raw('SUM(B.amount)'))
-                    ->get();
+        $data = ProjectPekerjaan::with(['vendors'])
+        ->when($request->filled('vendor_id'), function ($query) use ($request) {
+        
+                $query->where('id_vendor', $request->vendor_id);
 
-        if(count($result) === 0){
-            $result = [
-                [
-                    'id' => 0,
-                    'name' => 'Not Available',
-                    'tonase' => '0.00'
-                ]
+        })
+        ->get()
+        ->groupBy('id_vendor');
+
+        $data_customer = [];
+        $date = [];
+        $result = $data->map(function ($groupedItems) use ($report_by) {
+            return $groupedItems->groupBy(function ($item) use ($report_by) {
+                switch ($report_by) {
+                    case 'bulan':
+                        return $item->created_at->format('Y-m');
+                    case 'tahun':
+                        return $item->created_at->format('Y');
+                    case 'tanggal':
+                    default:
+                        return $item->created_at->toDateString();
+                }
+            });
+        });
+        // dd($result);
+        foreach($result as $keyId => $value){
+            $price_project = [];
+            foreach($value as $keyDate => $item) {
+                if(!in_array($keyDate, $date))
+                    $date[] = $keyDate;
+                
+                $price_project[$keyId][] = $item->sum('harga_vendor') * $item->sum('qty');
+            }
+            $data_customer[] = [
+                'name' => $item->first()->vendors->name ?? '',
+                'data' => $price_project[$keyId]
             ];
-        }else{
-            $result = $result;
         }
 
-        return view('laporan_vendor.index',compact('tahun','result'));
+        return response()->json([
+            'date' => array_values($date),
+            'data_vendor' => $data_customer
+        ]);
     }
 
     public function chart(Request $request)

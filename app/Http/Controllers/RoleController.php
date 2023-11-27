@@ -119,13 +119,12 @@ class RoleController extends Controller
 
     public function delete($id)
     {
-        $data = Roles::findOrFail($id);
+        $data   = Roles::findOrFail($id);
+        $cek    = User::where('id_role',$data->id)->first();
 
-        if ($data->users()->exists()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Tidak dapat menghapus data karena role masih digunakan di user'
-            ]);
+        if ($cek) {
+            return redirect(route('role'))
+                ->with('error', 'Unable to delete data because the role is still in use in the user');
         }
     
         $data->delete();

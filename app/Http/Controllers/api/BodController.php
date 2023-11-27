@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use App\Models\Customer;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
@@ -23,6 +24,9 @@ class BodController extends Controller
     public function laporanCustomer(Request $request)
     {
         try{
+            $perPage = 5;
+            $page = request()->get('page', $request->page);
+
             $data = Customer::select('id','name')->has('projects')
             ->with('projects','projects.progress:harga_customer,qty,id_project')
             ->get();
@@ -54,6 +58,12 @@ class BodController extends Controller
 
             $data = $data->sortByDesc('jumlah_tagihan')->values();
 
+            $paginatedData = $data->slice(($page - 1) * $perPage, $perPage)->values();
+            $paginator = new Paginator($paginatedData, $perPage, $page, [
+                'path' => Paginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]);
+
             if($request->tahun != null)
             {
                 $tahun = $request->tahun;
@@ -84,7 +94,7 @@ class BodController extends Controller
             
             $arrayChart = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
 
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data,'chart'=> $arrayChart]);
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $paginator,'chart'=> $arrayChart]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
@@ -93,6 +103,9 @@ class BodController extends Controller
     public function laporanVendor(Request $request)
     {
         try{
+            $perPage = 5;
+            $page = request()->get('page', $request->page);
+
             $data = Vendor::select('id','name')
                     ->with('projectPekerjaan:id,harga_vendor,qty,id_project')
                     ->get();
@@ -121,6 +134,12 @@ class BodController extends Controller
             
                 $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
             }
+
+            $paginatedData = $data->slice(($page - 1) * $perPage, $perPage)->values();
+            $paginator = new Paginator($paginatedData, $perPage, $page, [
+                'path' => Paginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]);
 
             if($request->tahun != null)
             {
@@ -151,7 +170,7 @@ class BodController extends Controller
                         ->orderByDesc(\DB::raw('SUM(B.amount)'))
                         ->get();
 
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data, 'byTonase'=> $byTonase , 'byVolume' => $byVolume]);
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $paginator, 'byTonase'=> $byTonase , 'byVolume' => $byVolume]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
@@ -160,6 +179,9 @@ class BodController extends Controller
     public function laporanPM(Request $request)
     {
         try{
+            $perPage = 5;
+            $page = request()->get('page', $request->page);
+
             if($request->tahun != null)
             {
                 $tahun = $request->tahun;
@@ -174,25 +196,17 @@ class BodController extends Controller
                 $item['onprogress'] = $item->projects->where('status', 1)->count();
                 $item['complete'] = $item->projects->where('status', 2)->count();
             }
+
+            $paginatedData = $data->slice(($page - 1) * $perPage, $perPage)->values();
+            $paginator = new Paginator($paginatedData, $perPage, $page, [
+                'path' => Paginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]);
       
             $chart = OnRequest::select('pm_id', 'status','created_at')
                     ->with(['pm','pm.karyawan'])
                     ->whereYear('created_at',$tahun)
                     ->get();
-
-            // $chartData = $chart->groupBy('pm_id')->map(function (&$groupedData) {
-            //     $onProgressCount = $groupedData->where('status', 1)->count();
-            //     $completeCount = $groupedData->where('status', 2)->count();
-
-            //     $employeeName = $groupedData->first()->pm->karyawan->name;
-
-            //     return [
-            //         'name' => $employeeName,
-            //         'on_progress' => $onProgressCount,
-            //         'complete' => $completeCount,
-            //     ];
-
-            // });
 
             $chartData = $chart->groupBy('pm_id')->map(function ($groupedData) {
                 $onProgressCount = $groupedData->where('status', 1)->count();
@@ -205,10 +219,9 @@ class BodController extends Controller
                     'on_progress' => $onProgressCount,
                     'complete' => $completeCount,
                 ];
-            
             })->values();
 
-            return response()->json(['success' => true, 'message' => 'success', 'data' => $data ,'chart_progress' => $chartData]);
+            return response()->json(['success' => true, 'message' => 'success', 'data' => $paginator ,'chart_progress' => $chartData]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

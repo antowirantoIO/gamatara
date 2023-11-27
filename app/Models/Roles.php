@@ -13,7 +13,7 @@ class Roles extends Model
 
     public function users()
     {
-        return $this->hasOne(Roles::class, 'jabatan','id');
+        return $this->hasMany(User::class, 'id','id_role');
     }
 
     public function scopeFilter($query, $filter)

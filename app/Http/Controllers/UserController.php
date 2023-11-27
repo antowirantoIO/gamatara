@@ -140,8 +140,7 @@ class UserController extends Controller
     public function delete($id)
     {
         $data           = User::findOrFail($id);
-        $data->status   = 1;
-        $data->save();
+        $data->delete();
 
         return redirect(route('user'))
                     ->with('success', 'Data successfully deleted');

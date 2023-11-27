@@ -67,9 +67,11 @@
                             @if ($before->count() > 0)
                                 <div class="d-flex justify-content-around align-items-center">
                                     @foreach ($before as $b)
-                                        <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
-                                            <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture">
-                                        </a>
+                                        <div>
+                                            <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                                <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
+                                            </a>
+                                        </div>
                                     @endforeach
                                 </div>
                             @else
@@ -83,9 +85,11 @@
                         @if ($after->count())
                             <div class="d-flex justify-content-around align-items-center">
                                 @foreach ($after as $a)
+                                  <div>
                                     <a href="{{ asset($a->photo) }}" data-lightbox="{{ asset($a->photo) }}">
-                                        <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture">
+                                        <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture" height="200" width="200">
                                     </a>
+                                  </div>
                                 @endforeach
                             </div>
                         @else

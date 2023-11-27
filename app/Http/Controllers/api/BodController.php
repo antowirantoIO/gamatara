@@ -63,10 +63,8 @@ class BodController extends Controller
                 return $result;
             });
             
-            // Sort the data by 'jumlah_tagihan' in descending order
             $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
             
-            // Calculate the pagination manually
             $total = $dataArray->count();
             $start = ($page - 1) * $perPage;
             $currentPageItems = $dataArray->slice($start, $perPage)->values();
@@ -153,11 +151,13 @@ class BodController extends Controller
                 $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
             }
 
-            $data = $data->values();
-
+            $total = $data->count();
+            $start = ($page - 1) * $perPage;
+            $currentPageItems = $data->slice($start, $perPage)->values();
+            
             $paginator = new LengthAwarePaginator(
-                $data->forPage($page, $perPage),
-                $data->count(),
+                $currentPageItems,
+                $total,
                 $perPage,
                 $page,
                 [

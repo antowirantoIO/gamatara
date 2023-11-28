@@ -157,7 +157,8 @@
                                                     </select>
                                             </div>
                                         </div> 
-                                        <!-- <div class="col-xxl-6 col-md-6"></div> -->
+
+                                        @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">
@@ -173,13 +174,14 @@
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
-                                                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-                                                        <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
-                                                    </div>
-                                                @endif
+                                                
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                                                    <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
+                                                </div>
+                                                
                                             </div>
                                         </div>
+                                        @endif
 
                                         <!--tabel-->
                                         <div id="tabelKeluhanWrapper">

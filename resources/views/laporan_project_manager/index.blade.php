@@ -11,11 +11,6 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Project Manager</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
-                                <span>
-                                    <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                </span> &nbsp; Filter
-                            </button>
                             <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
@@ -27,128 +22,119 @@
             </div>
 
             <div class="row">
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">Project Manager</h4>
-                            <div>
-
-                            </div>
-                        </div>
-
-                        <div class="card-body" style="height: 640px;">
-                            <table class="table" id="tableData">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="color:#929EAE">Project Manager Name</th>
-                                        <th style="color:#929EAE">On Progress</th>
-                                        <th style="color:#929EAE">Complete</th>
-                                        <th style="color:#929EAE">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">
-                                <span style="width: 15px;height: 15px;background-color:#90BDFF; display: inline-block;"></span>
-                                &nbsp; On Progress
-                                &nbsp;
-                                <span style="width: 15px;height: 15px;background-color:#194BFB; display: inline-block;"></span>
-                                &nbsp; Complete
-                            </h4>
-                            <div class="mt-3 mt-lg-0 ml-lg-auto">
-                                <div class="dropdown" role="group">
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="yearDropdownButton">
-                                        {{ $tahun }}
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="yearDropdown">
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
+                <div class="col-12">
+                    <div class="card card-outline">
                         <div class="card-body">
-                            <div id="bar" data-colors='["--vz-success"]' class="apex-charts" dir="ltr"></div>
+                            <form id="form_filter">
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label>Report By</label>
+                                        <select class="form-control" name="report_by" id="report_by">
+                                            <option value="tanggal">Days</option>
+                                            <option value="bulan">Month</option>
+                                            <option value="tahun">Year</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label>Project Manager Name</label>
+                                        <select class="form-control" name="project_manager_id" id="project_manager_id">
+                                            <option value="">-- Select Project Manager --</option>
+                                            @foreach($pm as $p)
+                                                <option value="{{ $p->id }}">{{ $p->karyawan->name ?? '-' }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Date</label>
+                                        <input type="text" class="form-control" name="daterange" id="daterange" autocomplete="off" placeholder="--Select Date--">
+                                    </div>
+                                    <div class="form-group col-md-3 mt-3">
+                                        <div>
+                                            <button class="btn btn-primary" id="btn-search">Show Data</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-        </div>
-    </div>
-</div>
-
-<!--modal-->
-<div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
-            @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="zoomInModalLabel">Filter</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row gy-4">
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="customer" class="form-label">Project Manager Name</label>
-                                <input type="text" name="nama_project_manager" class="form-control" id="nama_project_manager">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="on_progress" class="form-label">On Progress</label>
-                                <input type="text" name="on_progress" id="on_progress" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="complete" class="form-label">Complete</label>
-                                <input type="text" name="complete" id="complete" class="form-control">
+            <section class="content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="table-responsive">
+                                    <table class="table" id="tableData">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="color:#929EAE">Project Manager Name</th>
+                                                <th style="color:#929EAE">On Progress</th>
+                                                <th style="color:#929EAE">Complete</th>
+                                                <th style="color:#929EAE">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($datas as $d)
+                                            <tr>
+                                                <td>{{ $d->name }}</td>
+                                                <td>{{ $d->onprogress }}</td>
+                                                <td>{{ $d->complete }}</td>
+                                                <td><a href="{{route('laporan_project_manager.detail', $d->id)}}" class="btn btn-warning btn-sm">
+                                                <span>
+                                                    <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                </span>
+                                                </a></td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            </section>
+            <section class="content">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                        <div class="card-body">
+                             <div id="chartContent"></div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </div>
 </div>
-<!--end modal-->
 @endsection
 
 @section('scripts')
 <script>
-
-    //datatable
-     $(document).ready(function () {
-        const yearDropdown = $('#yearDropdown');
-        const yearDropdownButton = $('#yearDropdownButton');
-        var apexChart;
-
-        $.ajax({
-            url : '{{ route('laporan_project_manager.charts') }}',
-            success : function(data){
-                charts(data,false);
+    $(document).ready(function() {
+        $('#daterange').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
             }
+        });
 
-        })
+        $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
 
         var table = $('#tableData').DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthChange: false,
-            scrollX: false,
-            processing: true,
-            serverSide: true,
             searching: false,
             language: {
                 processing:
@@ -167,157 +153,148 @@
                 var previousButton = $('.paginate_button.previous');
                 previousButton.css('display', 'none');
             },
-            ajax: {
-                url: "{{ route('laporan_project_manager') }}",
-                data: function (d) {
-                    d.name          = $('#nama_project_manager').val();
-                    d.on_progress   = $('#on_progress').val();
-                    d.complete      = $('#complete').val();
-                }
+        });
+        
+        $('#btn-search').click(function(e){
+            var report_by = $('#report_by').val();
+            var project_manager_id = $('#project_manager_id').val();
+            var daterange = $('#daterange').val();
+
+            $.ajax({
+                    url: '{{route('laporan_project_manager')}}',
+                    type: 'GET',
+                    data: { report_by: report_by, project_manager_id: project_manager_id,daterange : daterange},
+                    success: function (response) {
+                        table.clear().draw();
+                        table.rows.add(response.datas.map(function (item) {
+                            return [
+                                item.name,
+                                item.onprogress,
+                                item.complete,
+                                '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
+                                '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +
+                                '</a>'
+                            ];
+                        })).draw();
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                    });
+                })
+        });
+    
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
+        },
+    });
+
+    const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
+        series: [],
+        chart: {
+            type: "bar",
+            height: 350,
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: "55%",
+                endingShape: "rounded",
             },
-            columns: [
-                {data: 'name', name: 'name'},
-                {data: 'on_progress', name: 'on_progress'},
-                {data: 'complete', name: 'complete'},
-                {data: 'action', name: 'action'}
-            ]
-        });
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ["transparent"],
+        },
+        xaxis: {
+            categories: ["hari"],
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                },
+            },
+        },
+    });
+    chartTab.render();
 
-        $('.form-control').on('change', function() {
-            table.draw();
-        });
+    const domString = {
+        form_filter: $('#form_filter'),
+    }
 
-        function hideOverlay() {
-            $('.loading-overlay').fadeOut('slow', function() {
-                $(this).remove();
-            });
-        }
+    $(() => {
 
-        $('#export-button').on('click', function(event) {
-            event.preventDefault();
+        domString.form_filter.on('submit', (e) => {
+            e.preventDefault()
+            const data = domString.form_filter.serialize()
+            chartData(data)
+        })
+    })
 
-            var name        = $('#name').val();
-            var on_progress = $('#on_progress').val();
-            var complete    = $('#complete').val();
-
-            var url = '{{ route("laporan_project_manager.export") }}?' + $.param({
-                name: name,
-                on_progress: on_progress,
-                complete: complete,
-            });
-
-            $('.loading-overlay').show();
-
-            window.location.href = url;
-
-            setTimeout(hideOverlay, 2000);
-        });
-
-        $(document).ready(function() {
-            $('.loading-overlay').hide();
-        });
-        var chart = null;
-        var charts = (data, isUpdate) => {
-            var chartData = Object.values(data).map(item => ({
-                name: item.Employee,
-                data: [item['On Progress'], item['Complete']],
-            }));
-
-            var options = {
+    function chartData(input) {
+    $.ajax({
+        url: `{{ route('laporan_project_manager.dataChartt') }}`,
+        method: "POST",
+        data: input,
+        success: function (data) {
+    
+            chartTab.updateOptions({
+                series: data.data_pm,
                 chart: {
-                    type: 'bar',
-                    height: 600,
+                    type: "bar",
+                    height: 350,
                 },
                 plotOptions: {
                     bar: {
-                        horizontal: true,
-                        borderRadius: 5,
-                        barHeight:10
+                        horizontal: false,
+                        columnWidth: "55%",
+                        endingShape: "rounded",
                     },
                 },
                 dataLabels: {
                     enabled: false,
                 },
-                series: [
-                    {
-                        name: 'On Progress',
-                        data: chartData ? chartData.map(item => parseInt(item.data[0])) : [0],
-                    },
-                    {
-                        name: 'Complete',
-                        data: chartData ? chartData.map(item => parseInt(item.data[1])) : [0],
-                    }
-                ],
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ["transparent"],
+                },
                 xaxis: {
-                        labels:{
-                            show:false,
+                    categories: data.date,
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) {
+                            return val.toLocaleString();
+                        }
+                    }
+                },
+                fill: {
+                    opacity: 1,
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return val;
                         },
-                        categories: chartData ? chartData.map(item => item.name) : [],
                     },
-                    colors: ['#90BDFF','#194BFB'],
-                    legend: {
-                    show: false,
-                }
-            };
-
-            // Periksa jumlah data, jika hanya ada satu data, atur tinggi chart sesuai dengan data tersebut
-            if (chartData.length === 1) {
-                var dataValue = chartData[0]?.data[0];
-                options.chart.height = 150;
-            }
-
-            if(isUpdate){
-                var chart = new ApexCharts(document.querySelector("#bar"), options);
-                chart.update()
-            }else{
-                var chart = new ApexCharts(document.querySelector("#bar"), options);
-                chart.render();
-            }
-
-        }
-        const currentYear = (new Date()).getFullYear();
-        const years = [];
-        for (let i = currentYear; i >= currentYear - 20; i--) {
-            years.push(i);
-        }
-
-        let dropdownList = [];
-        years.forEach(function (year) {
-            dropdownList += `<li class="dropdown-item" data-year="${year}">
-                                ${year}
-                            </li>`
-        });
-        $('#yearDropdown').html(dropdownList);
-
-        yearDropdown.on('click', '.dropdown-item', function() {
-            const year = $(this).data('year');
-            yearDropdownButton.text(year);
-            $.ajax({
-                url: '{{ route('laporan_project_manager.charts') }}',
-                method: 'get',
-                data: {
-                    year: year
                 },
-                success: function(data) {
-                    charts(data,true);
-                },
-                error: function(error) {
-                    console.error(error);
-                }
             });
-        })
-
-        $('#export-button').on('click', function(event) {
-            event.preventDefault();
-
-            var url = '{{ route("laporan_project_manager.export") }}'
-
-            $('.loading-overlay').show();
-
-            window.location.href = url;
-
-            setTimeout(hideOverlay, 2000);
-        });
+        },
+        error: function (err) {
+            console.log(err.responseJSON.message);
+        },
     });
+}
 </script>
 @endsection

@@ -18,7 +18,7 @@ class UserGamataraController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user()->id;
             $user = User::select('id', 'id_karyawan', 'id_role')
-                    ->with(['role:id,name','karyawan:id,name','karyawan.pm:id,id_karyawan','karyawan.pm.pe:id,id_pm,id_karyawan'])->where('id',$user)
+                    ->with(['role:id,name','karyawan:id,name','karyawan.pm:id,id_karyawan','karyawan.pm.pes:id,id_pm,id_karyawan'])->where('id',$user)
                     ->first();
             $user['name'] = $user->karyawan->name ?? '';
 

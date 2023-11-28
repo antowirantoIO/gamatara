@@ -10,13 +10,7 @@
                         <div class="flex-grow-1 d-flex align-items-center">
                             <h4 class="mb-0 ml-2"> &nbsp; Report Customer</h4>
                         </div>
-                        {{-- <input type="hidden" id="tot" value="{{$totalHargaData}}"> --}}
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <!-- <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
-                                <span>
-                                    <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                </span> &nbsp; Filter
-                            </button> -->
                             <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
@@ -43,7 +37,7 @@
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>Customer Name</label>
-                                        <select class="form-control" name="customer_id">
+                                        <select class="form-control" name="customer_id" id="customer_id">
                                             <option value="">-- Select Customer --</option>
                                             @foreach($customers as $customer)
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -70,7 +64,7 @@
                 </div>
             </div>
 
-            <!-- <section class="content">
+            <section class="content">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -91,7 +85,11 @@
                                                 <td>{{$d->name}}</td>
                                                 <td>{{$d->total_project}}</td>
                                                 <td>{{$d->totalHargaCustomer}}</td>
-                                                <td><a href="{{route('laporan_customer.detail', $d->id)}}">eye</a></td>
+                                                <td><a href="{{route('laporan_customer.detail', $d->id)}}" class="btn btn-warning btn-sm">
+                                                <span>
+                                                    <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                </span>
+                                                </a></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -101,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-            </section> -->
+            </section>
             <section class="content">
                 <div class="row">
                     <div class="col-xl-12">
@@ -152,23 +150,30 @@
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
 
-        $.ajax({
-                url: '{{route('laporan_customer')}}',
-                type: 'GET',
-                data: { report_by: report_by, customer_id: customer_id,start_date : start_date , end_date: end_date},
-                success: function (response) {
-                    console.log(response.datas)
-                    table.clear().draw();
-                    table.rows.add(response.datas).draw();
-                },
-                error: function (error) {
-                    // Handle errors here
-                    console.error(error);
-                }
-                });
-            })
+            $.ajax({
+                    url: '{{route('laporan_customer')}}',
+                    type: 'GET',
+                    data: { report_by: report_by, customer_id: customer_id,start_date : start_date , end_date: end_date},
+                    success: function (response) {
+                        table.clear().draw();
+                        table.rows.add(response.datas.map(function (item) {
+                            return [
+                                item.name,
+                                item.total_project,
+                                item.totalHargaCustomer,
+                                '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
+                                '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +
+                                '</a>'
+                            ];
+                        })).draw();
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                    });
+                })
         });
-
+    
 
     $.ajaxSetup({
         headers: {

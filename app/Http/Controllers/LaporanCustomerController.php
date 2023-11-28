@@ -20,26 +20,27 @@ class LaporanCustomerController extends Controller
     {
 
         $datas = Customer::has('projects')
-        ->with(['projects' => function ($query) use ($request) {
-            $query->when($request->filled('customer_id'), function ($innerQuery) use ($request) {
-                $innerQuery->where('id_customer', $request->customer_id);
-            })
-            ->with(['progress' => function ($progressQuery) use ($request) {
-                $progressQuery->when($request->filled('start_date') && $request->filled('end_date'), function ($dateQuery) use ($request) {
-                    $startDate = Carbon::parse($request->start_date);
-                    $endDate = Carbon::parse($request->end_date);
-                    $dateQuery->whereBetween('created_at', [$startDate, $endDate]);
+            ->when($request->filled('customer_id'), function ($query) use ($request) {
+                $query->whereHas('projects', function ($innerQuery) use ($request) {
+                    $innerQuery->where('id_customer', $request->customer_id);
                 });
-            }]);
-        }])
+            })
+            ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+                $query->whereHas('projects.progress', function ($query) use ($request) {
+                    $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+                });
+            })
         ->get();
 
         foreach ($datas as $value) {
             if ($value->projects) {
                 $value['total_project'] = $value->projects->count();
+                $id = $value->projects->first()->id;
+                $value['detail_url'] = route('laporan_customer.detail', $id);
             } else {
                 $value['total_project'] = 0;
             }
+            $value['eye_image_url'] = "/assets/images/eye.svg";
 
             $totalHargaCustomer = 0;
 

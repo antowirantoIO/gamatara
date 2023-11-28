@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <!-- <section class="content">
+            <section class="content">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="card">
@@ -85,7 +85,7 @@
                                                 <td>{{$d->name}}</td>
                                                 <td>{{$d->total_project}}</td>
                                                 <td>{{$d->nilai_tagihan}}</td>
-                                                <td><a href="{{route('laporan_vendor.detail', $d->id)}}">
+                                                <td><a href="{{route('laporan_vendor.detail', $d->id)}}" class="btn btn-warning btn-sm">
                                                 <span>
                                                     <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                 </span>
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </div>
-            </section> -->
+            </section>
             <section class="content">
                 <div class="row">
                     <div class="col-xl-12">
@@ -156,12 +156,19 @@
             type: 'GET',
             data: { report_by: report_by, vendor_id: vendor_id, start_date: start_date, end_date: end_date },
             success: function (response) {
-                console.log(response.datas)
                 table.clear().draw();
-                table.rows.add(response.datas).draw();
+                table.rows.add(response.datas.map(function (item) {
+                    return [
+                        item.name,
+                        item.total_project,
+                        item.nilai_tagihan,
+                        '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
+                        '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +
+                        '</a>'
+                    ];
+                })).draw();
             },
             error: function (error) {
-                // Handle errors here
                 console.error(error);
             }
         });

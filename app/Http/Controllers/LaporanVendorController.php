@@ -16,31 +16,28 @@ class LaporanVendorController extends Controller
 {
     public function index(Request $request)
     {
-        $datas = Vendor::with(['projectPekerjaan' => function ($query) use ($request) {
+        $datas = Vendor::has('projectPekerjaan')
+            ->when($request->filled('vendor_id'), function ($query) use ($request) {
+            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_vendor', $request->vendor_id);
+            })
+            ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+                $query->whereHas('projectPekerjaan', function ($query) use ($request) {
+                    $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+                });
+            });
+        })->get();
             
-                $query->where('id_vendor',$request->vendor_id);
-                if ($request->report_by) {
-                    if ($request->report_by === 'tahun') {
-                        $query->whereYear('created_at', $request->start_date)
-                                ->whereYear('created_at', $request->end_date);
-                    } elseif ($request->report_by === 'bulan') {
-                        $query->whereYear('created_at', $request->start_date)
-                                ->whereMonth('created_at', $request->start_date);
-                    } else {
-                        $query->whereDate('created_at', '>=', $request->start_date)
-                        ->whereDate('created_at', '<=', $request->end_date);
-                    }
-                }
-            
-        }])->get();
-        
         foreach($datas as $value){
             if($value->projectPekerjaan)
             {
                 $value['total_project'] = $value->projectPekerjaan->count();
+                $value['detail_url'] = route('laporan_vendor.detail', $value->id);
             }else{
                 $value['total_project'] = 0;
             }
+
+            $value['eye_image_url'] = "/assets/images/eye.svg";
 
             $nilai_tagihan = 0;
             
@@ -112,6 +109,7 @@ class LaporanVendorController extends Controller
                     $date[] = $keyDate;
                 
                 $price_project[$keyId][] = $item->sum('harga_vendor') * $item->sum('qty');
+                // $price_project[$keyId][] += ($item->harga_vendor ?? 0) * ($item->qty ?? 0);
             }
             $data_customer[] = [
                 'name' => $item->first()->vendors->name ?? '',

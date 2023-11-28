@@ -393,6 +393,7 @@ class OnProgressController extends Controller
         $data = ProjectPekerjaan::where('id_project',$idProject)
                                 ->where('id_kategori',$id)
                                 ->where('id_subkategori',$subKategori)
+                                ->whereNotNull(['id_pekerjaan'])
                                 ->get();
         $before = BeforePhoto::where('id_project',$idProject)
                             ->where('id_kategori',$id)

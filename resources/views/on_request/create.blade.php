@@ -105,7 +105,7 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="displacement">Displacement Ship</label>
+                                                <label for="displacement">Displacement Ship (GT)</label>
                                                 <input type="number" name="displacement" id="displacement" value="{{ old('displacement') }}" class="form-control" placeholder="Enter Displacement Kapal">
                                             </div>
                                             @if ($errors->has('displacement'))

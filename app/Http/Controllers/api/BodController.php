@@ -300,7 +300,7 @@ class BodController extends Controller
     public function detailBOD(Request $request)
     {
         try{                  
-            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pas.karyawan:id,name,nomor_telpon','pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon','pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
          

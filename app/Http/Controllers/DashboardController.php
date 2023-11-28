@@ -35,22 +35,31 @@ class DashboardController extends Controller
         }
         
         $spkrequest = $spkrequest->whereHas('complaint', function ($query) use ($cekRole) {
-                            if ($cekRole == 'Project Manager') {
-                                $query->whereNull('id_pm_approval')->whereNull('id_bod_approval');
-                            } elseif ($cekRole == 'BOD') {
-                                $query->whereNotNull('id_pm_approval')->whereNull('id_bod_approval');
-                            }
-                        })
-                        ->get();
-                    
-        $keluhan = $spkrequest->map(function ($item) {
+            if ($cekRole == 'Project Manager') {
+                $query->whereNull('id_pm_approval')->whereNull('id_bod_approval');
+            } elseif ($cekRole == 'BOD') {
+                $query->whereNotNull('id_pm_approval')->whereNull('id_bod_approval');
+            }
+        })->get();
+        
+        $keluhan = $spkrequest->map(function ($item) use ($cekRole) {
+            // Hitung jumlah keluhan berdasarkan peran (role)
+            $jumlahKeluhan = $item->complaint->filter(function ($complaint) use ($cekRole) {
+                if ($cekRole == 'Project Manager') {
+                    return is_null($complaint->id_pm_approval) && is_null($complaint->id_bod_approval);
+                } elseif ($cekRole == 'BOD') {
+                    return !is_null($complaint->id_pm_approval) && is_null($complaint->id_bod_approval);
+                }
+                return false;
+            })->count();
+        
             return [
                 'id' => $item->id,
                 'code' => $item->code,
                 'nama_project' => $item->nama_project,
-                'jumlah' => $item->complaint->count(),
+                'jumlah' => $jumlahKeluhan,
             ];
-        })->toArray();
+        })->toArray();        
             
         $spkrequest = count($spkrequest);
 

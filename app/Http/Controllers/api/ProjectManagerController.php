@@ -22,7 +22,7 @@ class ProjectManagerController extends Controller
     {
         try{
             $data = OnRequest::with(['complaint','customer:id,name'])
-                ->select('A.nama_project', 'A.created_at', 'A.id_customer',
+                ->select('A.nama_project', 'A.created_at','A.id', 'A.id_customer',
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'), 
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
                 ->from('project as A')
@@ -57,7 +57,7 @@ class ProjectManagerController extends Controller
     public function detailPM(Request $request)
     {
         try{                  
-            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pas.karyawan:id,name,nomor_telpon','pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon','pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
          

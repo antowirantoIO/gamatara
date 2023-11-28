@@ -272,6 +272,13 @@
                 xaxis: {
                     categories: data.date,
                 },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) {
+                            return val.toLocaleString();
+                        }
+                    }
+                },
                 fill: {
                     opacity: 1,
                 },

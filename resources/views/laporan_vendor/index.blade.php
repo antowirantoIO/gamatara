@@ -159,13 +159,12 @@
         $('#btn-search').click(function(e){
             var report_by = $('#report_by').val();
             var vendor_id = $('#vendor_id').val();
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
+            var daterange = $('#daterange').val();
 
             $.ajax({
                 url: '{{route('laporan_vendor')}}',
                 type: 'GET',
-                data: { report_by: report_by, vendor_id: vendor_id, start_date: start_date, end_date: end_date },
+                data: { report_by: report_by, vendor_id: vendor_id, daterange: daterange},
                 success: function (response) {
                     table.clear().draw();
                     table.rows.add(response.datas.map(function (item) {

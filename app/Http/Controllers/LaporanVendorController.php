@@ -24,9 +24,10 @@ class LaporanVendorController extends Controller
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
             list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
+        
+            return $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request, $start_date, $end_date) {
                 $reportType = $request->report_by;
-
+        
                 switch ($reportType) {
                     case 'tahun':
                         $innerQuery->whereYear('created_at', $start_date);
@@ -42,7 +43,7 @@ class LaporanVendorController extends Controller
                         break;
                 }
             });
-        })
+        })        
         ->get();
             
         foreach($datas as $value){

@@ -207,7 +207,7 @@
 <div class="modal fade" id="exampleModalgrid" tabindex="-1" aria-labelledby="exampleModalgridLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+            <form action="{{route('on_request.stores')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalgridLabel">Add Customer</h5>
@@ -609,7 +609,8 @@
                             'Customer has been successfully added',
                             'success'
                         )
-                        window.location.reload();
+                        var newCustomerData = Array.isArray(response) ? response : [response];
+                        updateSelectCustomer(newCustomerData);
                     } else {
                         alert("Validation error: " + response.message);
                     }
@@ -621,72 +622,42 @@
         });
     });
 
-    // Initialize Select2
-    $('#customer_name').select2({
-        placeholder: 'Choose Customer',
-        ajax: {
-            url: "{{ url('customer') }}",
-            dataType: 'json',
-            delay: 250,
-            processResults: function (data) {
-                return {
-                    results: data.map(function (customer) {
-                        return {
-                            id: customer.id,
-                            text: customer.name
-                        };
-                    })
-                };
-            },
-            cache: true
-        }
-    });
+    function updateSelectCustomer(newCustomerData) {
+        var selectCustomer = $("#customer_name");
+        var existingCustomerData = selectCustomer.data("customerData") || [];
 
-    // Listen for the "select2:select" event when an item is selected
-    $('#customer_name').on('select2:select', function (e) {
-        var selectedCustomer = e.params.data;
+        var mergedCustomerData = [...existingCustomerData, ...newCustomerData];
 
-        // Use the selected customer data to populate other fields
-        $.ajax({
-            url: "{{ url('on_request/edits') }}/" + selectedCustomer.id,
-            method: 'GET',
-            dataType: 'json',
-            success: function (customerData) {
-                // Populate additional fields with the retrieved data
-                $('#contact_person').val(customerData.contact_person);
-                $('#nomor_contact_person').val(customerData.nomor_contact_person);
-                $('#alamat').val(customerData.alamat);
-                $('#npwps').val(customerData.npwp);
-            },
-            error: function (error) {
-                console.error('Error retrieving customer data:', error);
-            }
+        selectCustomer.data("customerData", mergedCustomerData);
+
+        mergedCustomerData.forEach(function (customer) {
+            selectCustomer.append('<option value="' + customer.id + '">' + customer.name + '</option>');
         });
-    });
+    }
 
     //get nama customer dan set ke inputan masing2
-    // var route = "{{ url('customer') }}";
-    // $('#customer_name').typeahead({
-    //     source: function (query, process) {
-    //         return $.get(route, { query: query }, function (data) {
-    //             return process(data.map(function(customer) {
-    //                 return customer.name;
-    //             }));
-    //         });
-    //     },
-    //     updater: function (item) {
-    //         $.get(route, { query: item }, function (customerData) {
-    //             if (customerData.length > 0) {
-    //                 var selectedCustomer = customerData[0];
-    //                 $('#contact_person').val(selectedCustomer.contact_person);
-    //                 $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
-    //                 $('#alamat').val(selectedCustomer.alamat);
-    //                 $('#npwps').val(selectedCustomer.npwp);
-    //             }
-    //         });
-    //         return item;
-    //     }
-    // });
+    var route = "{{ url('customer') }}";
+    $('#customer_name').typeahead({
+        source: function (query, process) {
+            return $.get(route, { query: query }, function (data) {
+                return process(data.map(function(customer) {
+                    return customer.name;
+                }));
+            });
+        },
+        updater: function (item) {
+            $.get(route, { query: item }, function (customerData) {
+                if (customerData.length > 0) {
+                    var selectedCustomer = customerData[0];
+                    $('#contact_person').val(selectedCustomer.contact_person);
+                    $('#nomor_contact_person').val(selectedCustomer.nomor_contact_person);
+                    $('#alamat').val(selectedCustomer.alamat);
+                    $('#npwps').val(selectedCustomer.npwp);
+                }
+            });
+            return item;
+        }
+    });
 
     //hapus data yg sudah ada sebelumnya 
     var btnHapus = document.querySelectorAll(".btnHapus");

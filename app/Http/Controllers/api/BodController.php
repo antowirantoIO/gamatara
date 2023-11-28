@@ -413,7 +413,7 @@ class BodController extends Controller
                         ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
                         ->first();
 
-            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','deskripsi_subkategori')
                     ->where('id_project', $request->id_project)
                     ->where('id_subkategori', $request->id_subkategori)
                     ->where('id_kategori',$request->id_kategori)

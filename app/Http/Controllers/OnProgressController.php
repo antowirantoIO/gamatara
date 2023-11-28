@@ -179,6 +179,7 @@ class OnProgressController extends Controller
 
     public function requestPost(Request $request)
     {
+        // dd($request->all());
         $validasi = Validator::make($request->all(),[
             'kategori' => 'required',
             'sub_kategori' => 'required',
@@ -262,6 +263,8 @@ class OnProgressController extends Controller
                             'unit' => $request->unit[$key],
                             'qty' => $request->qty[$key],
                             'amount' => $request->amount[$key],
+                            'harga_vendor' => $project->harga_vendor ?? $pekerjaan->harga_vendor,
+                            'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
                             'description' => 'Updated Data',
                             'status' => 2,
                             'updated_at' => date('Y-m-d H:i:s'),
@@ -285,6 +288,8 @@ class OnProgressController extends Controller
                         'qty' => $request->qty[$key] ?? null,
                         'detail' => $request->detail[$key] ?? null,
                         'amount' => $request->amount[$key] ?? null,
+                        'harga_vendor' => $project->harga_vendor ?? $pekerjaan->harga_vendor,
+                        'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
                         'description' => 'Created New Data',
                         'status' => 1,
                         'created_at' => date('Y-m-d H:i:s'),
@@ -432,7 +437,7 @@ class OnProgressController extends Controller
     {
         $kategori = Kategori::all();
         $allData = ProjectPekerjaan::where('id_project', $id)->get();
-        $workers = $allData->groupBy('id_kategori','id_subkategori');
+        $workers = $allData->groupBy('id_vendor');
         $subKategori = SubKategori::all();
         $lokasi = LokasiProject::all();
         return view('on_progres.tagihan.index',compact('id','kategori','workers','subKategori','lokasi'));
@@ -738,6 +743,7 @@ class OnProgressController extends Controller
             $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                     ->where('id_kategori',$request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
+                                    ->whereNotNull(['id_pekerjaan'])
                                     ->with(['subKategori','projects.lokasi','pekerjaan']);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
@@ -806,12 +812,11 @@ class OnProgressController extends Controller
     public function ajaxAllTagihan (Request $request)
     {
         $data = ProjectPekerjaan::where('id_project', $request->id)
-                                ->with(['subKategori','projects','pekerjaan','projects.pm','projects.customer','vendors'])
-                                ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                                ->distinct();
+                            ->with(['subKategori', 'projects', 'pekerjaan', 'projects.pm', 'projects.customer', 'vendors'])
+                            ->get();
+
         if($request->ajax()){
-            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
+            $data = $data->unique('id_vendor');
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {

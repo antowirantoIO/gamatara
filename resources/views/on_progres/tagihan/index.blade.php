@@ -180,6 +180,9 @@
                         d.nama_customer = $('#nama_customer').val();
                         d.nama_pm = $('#nama_pm').val();
                         d.date =  $('#date').val();
+                    },
+                    complete : function (data) {
+                        console.log(data.responseJSON);
                     }
                 },
                 columns : [

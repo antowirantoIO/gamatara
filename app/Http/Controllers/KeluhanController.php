@@ -18,40 +18,28 @@ class KeluhanController extends Controller
     {        
         if($request->keluhanId == null)
         {
+            $code = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/';
+            $projectCode = Keluhan::where('no_spk', 'LIKE', '%'.$code.'%')->count();
+            $randInt = '001';
+            if ($projectCode >= 1) {
+                $count = $projectCode+1;
+                $randInt = str_pad($count, 3, '0', STR_PAD_LEFT);
+            }
+            $randInt = substr($randInt, -5);
 
-            // $cekReq = count(Keluhan::where('on_request_id',$request->id)->where('id_vendor',$request->vendor)->get());
-            // if($cekReq > 0){
-            //     return response()->json(
-            //         [
-            //             'message' => 'Vendor Sudah Ada',
-            //             'status' => 500
-            //         ]
-            //     );
-            // }else{
+            $keluhan                = new Keluhan();
+            $keluhan->on_request_id = $request->id;
+            $keluhan->id_vendor     = $request->vendor;
+            $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
+            $keluhan->no_spk        = $code.$randInt;
+            $keluhan->save();
 
-                $code = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/';
-                $projectCode = Keluhan::where('no_spk', 'LIKE', '%'.$code.'%')->count();
-                $randInt = '001';
-                if ($projectCode >= 1) {
-                    $count = $projectCode+1;
-                    $randInt = str_pad($count, 3, '0', STR_PAD_LEFT);
-                }
-                $randInt = substr($randInt, -5);
-
-                $keluhan                = new Keluhan();
-                $keluhan->on_request_id = $request->id;
-                $keluhan->id_vendor     = $request->vendor;
-                $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
-                $keluhan->no_spk        = $code.$randInt;
-                $keluhan->save();
-
-                return response()->json([
-                        'message' => 'Request successfully added',
-                        'status' => 200, 
-                        'id' => $keluhan->id, 
-                        'id_vendor' => $keluhan->id_vendor
-                    ]);
-            // }
+            return response()->json([
+                    'message' => 'Request successfully added',
+                    'status' => 200, 
+                    'id' => $keluhan->id, 
+                    'id_vendor' => $keluhan->id_vendor
+                ]);
         }else{
             $keluhan                = Keluhan::find($request->keluhanId);
             $keluhan->on_request_id = $request->id;

@@ -43,7 +43,6 @@ class DashboardController extends Controller
         })->get();
         
         $keluhan = $spkrequest->map(function ($item) use ($cekRole) {
-            // Hitung jumlah keluhan berdasarkan peran (role)
             $jumlahKeluhan = $item->complaint->filter(function ($complaint) use ($cekRole) {
                 if ($cekRole == 'Project Manager') {
                     return is_null($complaint->id_pm_approval) && is_null($complaint->id_bod_approval);

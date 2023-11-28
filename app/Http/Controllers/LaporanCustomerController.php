@@ -169,9 +169,9 @@ class LaporanCustomerController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $cek = OnRequest::where('id', $request->id)->get();
-            $cekIds = $cek->pluck('id')->toArray();
-            $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
+            // $cek = OnRequest::where('id', $request->id)->get();
+            // $cekIds = $cek->pluck('id')->toArray();
+            $data = ProjectPekerjaan::with('projects')->where('id_project',$request->id)
                     ->addSelect(['total' => OnRequest::selectRaw('count(*)')
                         ->whereColumn('project_pekerjaan.id_project', 'project.id')
                         ->groupBy('id_customer')

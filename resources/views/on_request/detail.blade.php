@@ -174,11 +174,15 @@
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                
+                                                @if($pmAuth == 'Project Admin')
                                                 <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                     <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                 </div>
-                                                
+                                                @elseif($pmAuth == 'BOD')
+                                                <div class="flex-grow-1 d-flex align-items-center justify-content-end bodOnly d-none">
+                                                    <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
+                                                </div>
+                                                @endif
                                             </div>
                                         </div>
                                         @endif
@@ -344,8 +348,8 @@
         })
         .then(function (response) {
             if (response.status === 200) {
-
-                getTableData(idData);
+                // getTableData(idData);
+                $('.bodOnly').removeClass('d-none');
                 return response.json();
             } else {
                 throw new Error('Failed to retrieve complaint data');
@@ -357,7 +361,8 @@
 
             textarea.value = data.data.keluhan.replace('<br>', '\n');
             vendorSelect.value = data.data.id_vendor;
-            $("#vendor").select2("val", vendorSelect.value);
+            // $("#vendor").select2("val", vendorSelect.value);
+            $("#vendor").val(vendorSelect.value).trigger('change');
             var saveButton = document.getElementById("tambahKeluhan");
             saveButton.setAttribute("data-id-keluhan", id);
         })
@@ -417,7 +422,7 @@
 
                         var saveButton = document.getElementById("tambahKeluhan");
                         saveButton.setAttribute("data-id-keluhan", '');
-                        // return response.json();
+                        $(".bodOnly").addClass("d-none");
                     } else if(data.status === 500) {
                         Swal.fire({
                             icon: 'error',

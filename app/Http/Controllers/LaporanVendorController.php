@@ -29,16 +29,16 @@ class LaporanVendorController extends Controller
 
                 switch ($reportType) {
                     case 'tahun':
-                        $innerQuery->whereYear('created_at', $startDate);
+                        $innerQuery->whereYear('created_at', $start_date);
                         break;
                     case 'tanggal':
-                        $innerQuery->whereDate('created_at', '>=', $startDate)
-                            ->whereDate('created_at', '<=', $endDate);
+                        $innerQuery->whereDate('created_at', '>=', $start_date)
+                            ->whereDate('created_at', '<=', $end_date);
                         break;
                     case 'bulan':
                     default:
-                        $innerQuery->whereMonth('created_at', $startDate)
-                            ->whereYear('created_at', $endDate);
+                        $innerQuery->whereMonth('created_at', $start_date)
+                            ->whereYear('created_at', $end_date);
                         break;
                 }
             });

@@ -452,14 +452,10 @@ class OnProgressController extends Controller
 
     public function tagihanVendor(Request $request, $id, $vendor)
     {
-        $kategori = Kategori::whereHas('projectPekerjaan', function($query) use ($id) {
-                                return $query->where('id_project', $id);
-                            })
-                            ->whereHas('projectPekerjaan',function($querys) use($vendor){
-                                return $querys->where('id_vendor',$vendor);
+        $kategori = Kategori::whereHas('projectPekerjaan', function($query) use ($id,$vendor) {
+                                return $query->where('id_project', $id)->where('id_vendor',$vendor);
                             })
                             ->get();
-
         $desiredOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL", "PERMESINAN", "PIPA-PIPA", "INTERIOR KAPAL", "LAIN-LAIN"];
 
         $workers = $kategori->sortBy(function ($group, $key) use ($desiredOrder) {
@@ -497,17 +493,20 @@ class OnProgressController extends Controller
 
     public function allPekerjaanVendor(Request $request, $id, $project)
     {
-        $kategori = Kategori::all();
-        $workers = ProjectPekerjaan::where('id_vendor',$id)
-                                    ->where('id_project',$project)
-                                    ->select('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
-                                    ->groupBy('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
-                                    ->get();
-        $subWorker = groupSubWorker($workers);
+        $kategori = Kategori::whereHas('projectPekerjaan', function($query) use ($project,$id) {
+                                return $query->where('id_project', $project)->where('id_vendor',$id);
+                            })
+                            ->get();
+        $desiredOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL", "PERMESINAN", "PIPA-PIPA", "INTERIOR KAPAL", "LAIN-LAIN"];
+
+        $workers = $kategori->sortBy(function ($group, $key) use ($desiredOrder) {
+        $index = array_search($key, $desiredOrder);
+        return $index !== false ? $index : PHP_INT_MAX;
+        });
 
         $vendor = Vendor::all();
         $subKategori = SubKategori::all();
-        return view('on_progres.pekerjaan_vendor.index',compact('project','kategori','subWorker','vendor','subKategori','id'));
+        return view('on_progres.pekerjaan_vendor.index',compact('project','kategori','vendor','subKategori','id','workers'));
     }
 
     public function vendorWorker(Request $request, $id, $project,$subkategori,$idkategori)

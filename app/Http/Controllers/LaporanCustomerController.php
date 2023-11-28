@@ -27,7 +27,7 @@ class LaporanCustomerController extends Controller
             })
             ->when($request->filled('daterange'), function ($query) use ($request) {
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                $query->whereHas('projects.progress', function ($query) use ($request) {
+                $query->whereHas('projects.progress', function ($query) use ($request, $start_date, $end_date) {
                     $query->whereBetween('created_at', [$start_date, $end_date]);
                 });
             })

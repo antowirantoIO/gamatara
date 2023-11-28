@@ -17,20 +17,18 @@
                 </div>
             </div>
 
-
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-between">
                         <ul class="nav nav-tabs gap-3" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link btn-filter-category rounded-pill active"  data-category_id="" type="button">All</button>
+                            </li>
                             @foreach ($workers as $key => $worker)
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link btn-filter-category {{ $loop->first ? 'active' : '' }} rounded-pill" data-category_id="{{ $worker->id }}"  data-name="{{ $worker->name }}" data-bs-target="#{{ $key }}" type="button">{{ $worker->name }}</button>
+                                    <button class="nav-link btn-filter-category rounded-pill" data-category_id="{{ $worker->id }}"  data-name="{{ $worker->name }}" data-bs-target="#{{ $key }}" type="button">{{ $worker->name }}</button>
                                 </li>
-                                @endforeach
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link btn-filter-category rounded-pill"  data-category_id="" type="button">All</button>
-                                </li>
+                            @endforeach
                         </ul>
                    </div>
                     <div class="card mt-3">

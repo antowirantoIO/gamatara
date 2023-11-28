@@ -57,7 +57,7 @@ class OnProgressController extends Controller
             $data = $data->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('progres', function($data){
-                return getProgresProject($data->id) . ' / ' . getCompleteProject($data->id);
+                return getTotalProgressPekerjaan($data->id,3) . ' / ' . getTotalProgressPekerjaan($data->id);
             })
             ->addColumn('start', function($data){
                 return $data->created_at ? $data->created_at->format('d F Y') : '';
@@ -91,8 +91,6 @@ class OnProgressController extends Controller
                                     ->get();
         $pekerjaan = ProjectPekerjaan::where('id_project',$id)
                                     ->whereNotNull('id_pekerjaan')
-                                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->first();
         return view('on_progres.edit',compact('data','projects','pekerjaan','progress','status','id'));
     }

@@ -362,8 +362,8 @@
 
             textarea.value = data.data.keluhan.replace('<br>', '\n');
             vendorSelect.value = data.data.id_vendor;
-            console.log(vendorSelect);
-            $("#vendor").select2("val", vendorSelect.value);
+            // $("#vendor").select2("val", vendorSelect.value);
+            $("#vendor").val(vendorSelect.value).trigger('change');
             var saveButton = document.getElementById("tambahKeluhan");
             saveButton.setAttribute("data-id-keluhan", id);
         })

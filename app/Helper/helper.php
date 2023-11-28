@@ -195,6 +195,26 @@ function barcodeNumberExists($number) {
     return ProjectPekerjaan::where('kode_unik',$number)->exists();
 }
 
+function getTotalProgressPekerjaan($id_project, $status = null)
+{
+    if($status !== null){
+        $data = ProjectPekerjaan::where('id_project', $id_project)->where('status', $status)->count();
+    }else {
+        $data = ProjectPekerjaan::where('id_project', $id_project)->count();
+    }
+    return $data;
+}
+
+function getTotalProgressVendor($id_project, $vendor, $status = null) {
+
+    if($status !== null){
+        $data = ProjectPekerjaan::where('id_project', $id_project)->where('id_vendor', $vendor)->where('status', $status)->count();
+    }else{
+        $data = ProjectPekerjaan::where('id_project', $id_project)->where('id_vendor', $vendor)->count();
+    }
+    return $data;
+}
+
 function getProgressPekerjaan($id_vendor, $id)
 {
     $progress = ProjectPekerjaan::where('id_project',$id)

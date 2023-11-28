@@ -91,19 +91,13 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($projects as $keys => $project)
-                                            @php
-                                                $progress = getProgressPekerjaan($project->id_vendor,$data->id);
-                                            @endphp
+                                            {{-- @php
+                                                dd(getTotalProgressVendor($data->id, $project->id_vendor,3));
+                                            @endphp --}}
                                             <tr>
                                                 <td>{{ $project->vendors->name }}</td>
 
-                                                @isset($progress->total_status_2)
-                                                    <td>{{ $progress->total_status_2 }} / {{ $progress->total_status_1 }}</td>
-                                                @else
-                                                    <td>
-                                                        0 / 0
-                                                    </td>
-                                                @endisset
+                                                <td>{{ getTotalProgressVendor($data->id, $project->id_vendor,3) }} / {{ getTotalProgressVendor($data->id, $project->id_vendor,null) }}</td>
                                                 <td>
                                                     <div class="d-flex justify-contetn-center gap-3">
                                                         <a href="{{ route('on_progress.pekerjaan-vendor.all',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
@@ -138,10 +132,10 @@
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="fs-5 text-start">
                                                         Job Progress<br>
-                                                        @if (!$pekerjaan->total_status_1)
+                                                        @if (!getTotalProgressPekerjaan($data->id))
                                                             0 / 0
                                                         @else
-                                                            {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
+                                                            {{ getTotalProgressPekerjaan($data->id,3) }} / {{ getTotalProgressPekerjaan($data->id) }}
                                                         @endif
                                                     </div>
                                                     <div>

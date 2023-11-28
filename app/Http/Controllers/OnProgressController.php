@@ -91,8 +91,6 @@ class OnProgressController extends Controller
                                     ->get();
         $pekerjaan = ProjectPekerjaan::where('id_project',$id)
                                     ->whereNotNull('id_pekerjaan')
-                                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->first();
         return view('on_progres.edit',compact('data','projects','pekerjaan','progress','status','id'));
     }

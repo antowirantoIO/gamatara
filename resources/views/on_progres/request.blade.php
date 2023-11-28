@@ -76,7 +76,7 @@
                                                 <tbody id="clone">
                                                     <input type="text" class="d-none" name="kode_unik" value="{{ $kode_unik ?? null }}" id="kode_unik">
                                                     @foreach ($pekerjaan as $keys => $p)
-                                                    <input type="text" class="d-none" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}">
+                                                    <input type="text" class="d-none" name="id[]" value="{{ $p->id }}" class="id-{{ $p->id }}" id="id-{{ $id }}">
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -171,6 +171,7 @@
                         $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
                         $('#unit').val(ress.data.unit);
                         $(`#convertion-${keys}`).val(ress.data.konversi);
+                        getAmount();
                     })
                 });
 
@@ -187,7 +188,7 @@
                 axis: 'y',
             });
 
-            $('#tablePekerjaan').DataTable({
+            let table = $('#tablePekerjaan').DataTable({
                 fixedHeader:true,
                 ordering : false,
                 scrollX: true,
@@ -239,7 +240,6 @@
                     },
                     {
                         data : function (data) {
-                            console.log(data);
                             let desc = data.deskripsi_pekerjaan || '';
                             let konversi = data.conversion || 0;
                             var keys = data.DT_RowIndex;
@@ -278,11 +278,9 @@
                         data : function (data) {
                             let length = data.length || 1;
                             var status = false;
-                            var items = '';
                             let recent = data.activitys.map(item =>{
-                                items = item.length ;
+                                status = data.length !== item.length ? 'bg-danger text-white' : '';
                             })
-                            status = items !== length ? 'bg-danger text-white' : '';
                             return ` <input type="text" class="form-control ${status}" name="length[]"  value="${length}">`;
                         },
                         width : '70px'
@@ -327,7 +325,7 @@
                             let recent = data.activitys.map(item =>{
                                 status = data.amount !== item.amount ? 'bg-danger text-white' : '';
                             })
-                            return ` <input type="text" class="form-control ${status}" name="amount[]" value="${amount}" readonly>`;
+                            return ` <input type="text" class="form-control ${status}" name="amount[]" value="${amount}">`;
                         },
                         width : '70px'
                     },
@@ -383,16 +381,16 @@
                         <input type="text" class="form-control" name="detail[]">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="length[]">
+                        <input type="text" class="form-control" name="length[]" value="1">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="width[]">
+                        <input type="text" class="form-control" name="width[]" value="1">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="thick[]">
+                        <input type="text" class="form-control" name="thick[]" value="1">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="qty[]" >
+                        <input type="text" class="form-control" name="qty[]" value="1">
                     </td>
                     <td>
                         <input type="text" class="form-control" name="amount[]" >
@@ -447,6 +445,18 @@
 
             })
 
+            const getAmount = () => {
+                var lengthValue = parseFloat($('.draggable-row').closest('tr').find('input[name="length[]"]').val());
+                var widthValue = parseFloat($('.draggable-row').closest('tr').find('input[name="width[]"]').val());
+                var thickValue = parseFloat($('.draggable-row').closest('tr').find('input[name="thick[]"]').val());
+                var qtyValue = parseFloat($('.draggable-row').closest('tr').find('input[name="qty[]"]').val());
+                var konversi = $('.draggable-row').closest('tr').find('input[name="convertion[]"]').val();
+                var parts = konversi.split('/');
+                var amountValue = (lengthValue * widthValue * thickValue * qtyValue * parseFloat(parts[0])) / parseInt(parts[1]);
+
+                amountValue = amountValue.toFixed(2);
+                $('.draggable-row').closest('tr').find('input[name="amount[]"]').val(amountValue);
+            }
 
             $('#clone').on('change', '.draggable-row input[name="length[]"], input[name="width[]"], input[name="thick[]"],input[name="qty[]"]', function() {
                 var lengthValue = parseFloat($(this).closest('tr').find('input[name="length[]"]').val());
@@ -466,6 +476,7 @@
             $(document).delegate('.btn-trash','click',function(){
                 let data = $('.parent-clone');
                 let id = $(this).data('id');
+                console.log(id);
                 if(typeof id !== 'undefined' && id !== null && id !== '' ){
                     Swal.fire({
                         title: 'Are You Sure Deleted Data?',
@@ -488,8 +499,9 @@
                             }).then(ress => {
                                 if(ress.status === 200) {
                                     $(this).closest('tr').remove();
-                                    $(`.id-${id}`).remove();
-                                    table.draw();
+                                    let input = $("input[name='id[]'][value='" + id + "']").remove();
+                                    console.log(input);
+                                    // $('#id-' + id).remove();
                                     alertToast('success',ress.msg);
                                 }
                             })

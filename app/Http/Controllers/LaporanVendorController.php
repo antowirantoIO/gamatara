@@ -22,11 +22,10 @@ class LaporanVendorController extends Controller
                 $innerQuery->where('id_vendor', $request->vendor_id);
             });
         })
-        ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+        ->when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
             $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
                 $reportType = $request->report_by;
-                $startDate = $request->start_date;
-                $endDate = $request->end_date;
 
                 switch ($reportType) {
                     case 'tahun':
@@ -98,9 +97,10 @@ class LaporanVendorController extends Controller
         ->when($request->filled('vendor_id'), function ($query) use ($request) {
             $query->where('id_vendor', $request->vendor_id);
         })
-        ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
-            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
-        })
+        ->when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            return $query->whereBetween('created_at', [$start_date, $end_date]);
+        })  
         ->get()
         ->groupBy('id_vendor');
 

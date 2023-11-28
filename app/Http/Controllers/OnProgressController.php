@@ -57,7 +57,7 @@ class OnProgressController extends Controller
             $data = $data->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('progres', function($data){
-                return getProgresProject($data->id) . ' / ' . getCompleteProject($data->id);
+                return getTotalProgressPekerjaan($data->id,3) . ' / ' . getTotalProgressPekerjaan($data->id);
             })
             ->addColumn('start', function($data){
                 return $data->created_at ? $data->created_at->format('d F Y') : '';

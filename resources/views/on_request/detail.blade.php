@@ -348,8 +348,7 @@
         })
         .then(function (response) {
             if (response.status === 200) {
-
-                console.log(response)
+                // getTableData(idData);
                 $('.bodOnly').removeClass('d-none');
                 return response.json();
             } else {

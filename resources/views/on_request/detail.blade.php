@@ -37,7 +37,7 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
+                                    @if($pmAuth == 'Project Admin')
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
@@ -173,7 +173,7 @@
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                @if($pmAuth == 'Project Admin')
+                                                @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
                                                     <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                         <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                     </div>

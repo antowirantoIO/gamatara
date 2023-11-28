@@ -708,9 +708,27 @@
                         { data : 'thick', name : 'thick' },
                         { data : 'unit', name : 'unit' },
                         { data : 'qty', name : 'qty' },
-                        { data : 'amount', name : 'amount' },
-                        { data : 'harga_vendor', name : 'harga_vendor' },
-                        { data : 'harga_customer', name : 'harga_customer' },
+                        {
+                            data : function(data) {
+                                let amount = data.amount || 0;
+                                return parseFloat(amount);
+                            },
+                            name : 'amount'
+                        },
+                        {
+                            data : function(data) {
+                                let harga_vendor = data.harga_vendor || 0;
+                                return formatRupiah(harga_vendor);
+                            },
+                            name : 'harga_vendor'
+                        },
+                        {
+                            data : function(data) {
+                                let harga_customer = data.harga_customer || 0 ;
+                                return formatRupiah(harga_customer);
+                            },
+                            name : 'harga_customer'
+                        },
                     ]
                 });
 

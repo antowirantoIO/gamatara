@@ -17,16 +17,34 @@ class LaporanVendorController extends Controller
     public function index(Request $request)
     {
         $datas = Vendor::has('projectPekerjaan')
-            ->when($request->filled('vendor_id'), function ($query) use ($request) {
+        ->when($request->filled('vendor_id'), function ($query) use ($request) {
             $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
                 $innerQuery->where('id_vendor', $request->vendor_id);
-            })
-            ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
-                $query->whereHas('projectPekerjaan', function ($query) use ($request) {
-                    $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
-                });
             });
-        })->get();
+        })
+        ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
+                $reportType = $request->report_by;
+                $startDate = $request->start_date;
+                $endDate = $request->end_date;
+
+                switch ($reportType) {
+                    case 'tahun':
+                        $innerQuery->whereYear('created_at', $startDate);
+                        break;
+                    case 'tanggal':
+                        $innerQuery->whereDate('created_at', '>=', $startDate)
+                            ->whereDate('created_at', '<=', $endDate);
+                        break;
+                    case 'bulan':
+                    default:
+                        $innerQuery->whereMonth('created_at', $startDate)
+                            ->whereYear('created_at', $endDate);
+                        break;
+                }
+            });
+        })
+        ->get();
             
         foreach($datas as $value){
             if($value->projectPekerjaan)
@@ -101,19 +119,23 @@ class LaporanVendorController extends Controller
                 }
             });
         });
-        // dd($result);
+        
         foreach($result as $keyId => $value){
             $price_project = [];
             foreach($value as $keyDate => $item) {
                 if(!in_array($keyDate, $date))
                     $date[] = $keyDate;
                 
-                $price_project[$keyId][] = $item->sum('harga_vendor') * $item->sum('qty');
-                // $price_project[$keyId][] += ($item->harga_vendor ?? 0) * ($item->qty ?? 0);
+                // $price_project[$keyId][] = $item->sum('harga_vendor') * $item->sum('qty');
+                $price_project[$keyId] = [];
+                $price_project[$keyId][] = $item->sum(function ($individualItem) {
+                    return ($individualItem->harga_vendor ?? 0) * ($individualItem->qty ?? 0);
+                });
+
             }
             $data_customer[] = [
                 'name' => $item->first()->vendors->name ?? '',
-                'data' => $price_project[$keyId]
+                'data' => $price_project[$keyId],
             ];
         }
 

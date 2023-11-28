@@ -115,7 +115,10 @@ class LaporanCustomerController extends Controller
                 if(!in_array($keyDate, $date))
                     $date[] = $keyDate;
                 
-                $price_project[$keyId][] = $item->sum('harga_customer') * $item->sum('qty');
+                // $price_project[$keyId][] = $item->sum('harga_customer') * $item->sum('qty');
+                $price_project[$keyId][] = $item->sum(function ($individualItem) {
+                    return ($individualItem->harga_customer ?? 0) * ($individualItem->qty ?? 0);
+                });
             }
             $data_customer[] = [
                 'name' => $item->first()->projects->customer->name ?? '',

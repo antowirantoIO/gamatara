@@ -25,9 +25,10 @@ class LaporanCustomerController extends Controller
                     $innerQuery->where('id_customer', $request->customer_id);
                 });
             })
-            ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+            ->when($request->filled('daterange'), function ($query) use ($request) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
                 $query->whereHas('projects.progress', function ($query) use ($request) {
-                    $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+                    $query->whereBetween('created_at', [$start_date, $end_date]);
                 });
             })
         ->get();
@@ -87,9 +88,10 @@ class LaporanCustomerController extends Controller
                 $innerQuery->where('id_customer', $request->customer_id);
             });
         })
-        ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
-            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
-        })
+        ->when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            return $query->whereBetween('created_at', [$start_date, $end_date]);
+        })  
         ->get()
         ->groupBy('projects.id_customer');
 

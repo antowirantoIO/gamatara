@@ -142,7 +142,7 @@
                                         </div>   
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Displacement Ship</label>
+                                                <label>Displacement Ship (GT)</label>
                                                 <input type="number" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Enter Displacement Ship">
                                             </div>
                                         </div>   

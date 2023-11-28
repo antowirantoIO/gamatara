@@ -44,13 +44,9 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <label>Start Date</label>
-                                        <input type="date" value="{{ date('Y-m-d') }}" name="start_date" id="start_date" class="form-control" />
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label>End Date</label>
-                                        <input type="date" value="{{ date('Y-m-d') }}" name="end_date" id="end_date" class="form-control" />
+                                    <div class="form-group col-md-6">
+                                        <label>Date</label>
+                                        <input type="text" class="form-control" name="daterange" id="daterange" autocomplete="off" placeholder="--Select Date--">
                                     </div>
                                     <div class="form-group col-md-3 mt-3">
                                         <div>
@@ -119,6 +115,23 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function() {
+        $('#daterange').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+    });
+
     $(document).ready(function () {
         var table = $('#tableData').DataTable({
             ordering: false,

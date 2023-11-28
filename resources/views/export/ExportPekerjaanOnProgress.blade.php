@@ -104,12 +104,12 @@
                     <td height="20"> &nbsp;{{ $value->pekerjaan ? ($value->pekerjaan->name ? ($value->deskripsi_pekerjaan ? $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan : $value->pekerjaan->name) : '') : '' }}</td>
                     <td height="20" align="center">{{ $value->id_lokasi }}</td>
                     <td height="20" align="center">{{ $value->detail }}</td>
-                    <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>
-                    <td height="20" align="center">{{ number_format($value->width,2, ',','') }}</td>
-                    <td height="20" align="center">{{ number_format($value->thick,2, ',','') }}</td>
-                    <td height="20" align="center">{{ number_format($value->qty,2, ',','') }}</td>
-                    <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
-                    <td height="20" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
+                    <td height="20" align="right">{{ number_format($value->length,2, ',','') }}</td>
+                    <td height="20" align="right">{{ number_format($value->width,2, ',','') }}</td>
+                    <td height="20" align="right">{{ number_format($value->thick,2, ',','') }}</td>
+                    <td height="20" align="right">{{ number_format($value->qty,2, ',','') }}</td>
+                    <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
+                    <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
                     <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
                 </tr>
                 @php

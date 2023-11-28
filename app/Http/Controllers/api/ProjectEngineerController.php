@@ -174,7 +174,12 @@ class ProjectEngineerController extends Controller
                             ->where('id_kategori',$request->id_kategori)
                             ->get();
 
-            $kategori = SubKategori::find($request->id_subkategori);   
+            $kategori = SubKategori::find($request->id_subkategori); 
+            $pekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
+                        ->where('id_subkategori', $request->id_subkategori)
+                        ->where('id_kategori',$request->id_kategori)
+                        ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
+                        ->first();  
 
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
                     ->where('id_project', $request->id_project)
@@ -191,7 +196,7 @@ class ProjectEngineerController extends Controller
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
          
-            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
+            return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name." ".$pekerjaan->deskripsi_subkategori , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
@@ -232,6 +237,7 @@ class ProjectEngineerController extends Controller
                 }
 
                 $befores = new BeforePhoto();
+                $befores->deskripsi_subkategori = $request->deskripsi_subkategori;
                 $befores->id_kategori = $request->id_kategori;
                 $befores->id_subkategori = $request->id_subkategori;
                 $befores->id_project = $request->id_project;
@@ -254,6 +260,7 @@ class ProjectEngineerController extends Controller
                     $destination =  $destinationPath . '/' . $filename;
                 }
                 $afters = new AfterPhoto();
+                $afters->deskripsi_subkategori = $request->deskripsi_subkategori;
                 $afters->id_kategori = $request->id_kategori;
                 $afters->id_subkategori = $request->id_subkategori;
                 $afters->id_project = $request->id_project;

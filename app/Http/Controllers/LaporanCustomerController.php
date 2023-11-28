@@ -19,22 +19,17 @@ class LaporanCustomerController extends Controller
     public function index(Request $request)
     {
 
-    $datas = Customer::has('projects')
+        $datas = Customer::has('projects')
         ->with(['projects' => function ($query) use ($request) {
-            $query->with(['progress' => function ($progressQuery) use ($request) {
-                if ($request->report_by == 'tahun') {
-                    $start_date = Carbon::parse($request->start_date)->startOfYear();
-                    $end_date = Carbon::parse($request->end_date)->endOfYear();
-                    $progressQuery->whereBetween('created_at', [$start_date, $end_date]);
-                } elseif ($request->report_by == 'bulan') {
-                    $start_date = Carbon::parse($request->start_date)->startOfMonth();
-                    $end_date = Carbon::parse($request->end_date)->endOfMonth();
-                    $progressQuery->whereBetween('created_at', [$start_date, $end_date]);
-                } elseif ($request->report_by == 'tanggal') {
-                    $start_date = Carbon::parse($request->start_date)->startOfDay();
-                    $end_date = Carbon::parse($request->end_date)->endOfDay();
-                    $progressQuery->whereBetween('created_at', [$start_date, $end_date]);
-                }
+            $query->when($request->filled('customer_id'), function ($innerQuery) use ($request) {
+                $innerQuery->where('id_customer', $request->customer_id);
+            })
+            ->with(['progress' => function ($progressQuery) use ($request) {
+                $progressQuery->when($request->filled('start_date') && $request->filled('end_date'), function ($dateQuery) use ($request) {
+                    $startDate = Carbon::parse($request->start_date);
+                    $endDate = Carbon::parse($request->end_date);
+                    $dateQuery->whereBetween('created_at', [$startDate, $endDate]);
+                });
             }]);
         }])
         ->get();
@@ -64,7 +59,7 @@ class LaporanCustomerController extends Controller
         }
 
         $datas = $datas->sortByDesc('totalHargaCustomer')->values();
-        
+
         if($request->report_by){
             return response()->json([
                 'datas' => $datas
@@ -84,13 +79,15 @@ class LaporanCustomerController extends Controller
         }else{
             $report_by = 'tahun';
         }
-        $tahun = now()->format('Y');
 
         $data = ProjectPekerjaan::with(['projects'])
         ->when($request->filled('customer_id'), function ($query) use ($request) {
             $query->whereHas('projects', function ($innerQuery) use ($request) {
                 $innerQuery->where('id_customer', $request->customer_id);
             });
+        })
+        ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         })
         ->get()
         ->groupBy('projects.id_customer');
@@ -110,7 +107,7 @@ class LaporanCustomerController extends Controller
                 }
             });
         });
-        // dd($result);
+      
         foreach($result as $keyId => $value){
             $price_project = [];
             foreach($value as $keyDate => $item) {
@@ -119,17 +116,11 @@ class LaporanCustomerController extends Controller
                 
                 $price_project[$keyId][] = $item->sum('harga_customer') * $item->sum('qty');
             }
-            // $all_price_project = [];
-            // foreach($value as $key => $item) {
-            //     $all_price_project[] = $item->sum('harga_customer') * $item->sum('qty');
-            // }
-            // dd($price_project);
             $data_customer[] = [
                 'name' => $item->first()->projects->customer->name ?? '',
                 'data' => $price_project[$keyId]
             ];
         }
-        // dd($data_customer);
 
         return response()->json([
             'date' => array_values($date),

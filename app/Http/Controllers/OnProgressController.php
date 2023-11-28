@@ -94,7 +94,7 @@ class OnProgressController extends Controller
                                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
                                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
                                     ->first();
-        return view('on_progres.edit',compact('data','projects','pekerjaan','progress','status'));
+        return view('on_progres.edit',compact('data','projects','pekerjaan','progress','status','id'));
     }
 
     public function tambahKategori(Request $request, $id,$vendor)
@@ -179,7 +179,6 @@ class OnProgressController extends Controller
 
     public function requestPost(Request $request)
     {
-        // dd($request->all());
         $validasi = Validator::make($request->all(),[
             'kategori' => 'required',
             'sub_kategori' => 'required',

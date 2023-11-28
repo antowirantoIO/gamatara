@@ -143,7 +143,7 @@
                                                     </div>
                                                 </div>
                                             </a>
-                                            @hasrole('BOD')
+                                            @hasrole(['BOD','Project Manager'])
                                                 @if ($status > 0)
                                                     <button class="btn btn-block w-100 rounded-3 border-0 text-white" style="background: grey;" disabled>
                                                         <div class="d-flex justify-content-between align-items-end">
@@ -156,16 +156,32 @@
                                                         </div>
                                                     </button>
                                                 @else
-                                                    <button class="btn btn-success btn-block w-100 rounded-3 border-0" id="btn-approval">
-                                                        <div class="d-flex justify-content-between align-items-end">
-                                                            <div class="fs-5 text-start">
-                                                                Approval Complete<br>
+                                                    @hasrole('BOD')
+                                                        @if ($data->approval_pm)
+                                                            <button class="btn btn-success btn-block w-100 rounded-3 border-0" id="btn-approval">
+                                                                <div class="d-flex justify-content-between align-items-end">
+                                                                    <div class="fs-5 text-start">
+                                                                        Approval Complete<br>
+                                                                    </div>
+                                                                    <div>
+                                                                        <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        @endif
+                                                    @endhasrole
+                                                    @hasrole('Project Manager')
+                                                        <button class="btn btn-success btn-block w-100 rounded-3 border-0" id="btn-approval">
+                                                            <div class="d-flex justify-content-between align-items-end">
+                                                                <div class="fs-5 text-start">
+                                                                    Approval Complete<br>
+                                                                </div>
+                                                                <div>
+                                                                    <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                                </div>
                                                             </div>
-                                                            <div>
-                                                                <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
-                                                            </div>
-                                                        </div>
-                                                    </button>
+                                                        </button>
+                                                    @endhasrole
                                                 @endif
                                             @endhasrole
                                         </div>

@@ -81,9 +81,10 @@ class LaporanVendorController extends Controller
 
         $data = ProjectPekerjaan::with(['vendors'])
         ->when($request->filled('vendor_id'), function ($query) use ($request) {
-        
-                $query->where('id_vendor', $request->vendor_id);
-
+            $query->where('id_vendor', $request->vendor_id);
+        })
+        ->when($request->filled('start_date') && $request->filled('end_date'), function ($query) use ($request) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         })
         ->get()
         ->groupBy('id_vendor');

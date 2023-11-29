@@ -313,7 +313,7 @@ class BodController extends Controller
     public function navbarBOD(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::select('id','id_project','id_kategori','status')
+            $data = ProjectPekerjaan::select('id','id_project','id_kategori','status','kode_unik')
                     ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 
@@ -366,15 +366,16 @@ class BodController extends Controller
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
             $namakategori = $name->first()->kategori->name ?? '';            
 
-            $progress = ProjectPekerjaan::select('project_pekerjaan.deskripsi_subkategori', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','project_pekerjaan.deskripsi_subkategori')
+            $progress = ProjectPekerjaan::with(['vendors:id,name'])->select('project_pekerjaan.deskripsi_subkategori','project_pekerjaan.kode_unik', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','project_pekerjaan.deskripsi_subkategori','id_vendor')
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
                     ->where('project_pekerjaan.id_project', $request->id_project)
                     ->where('project_pekerjaan.id_kategori', $request->id_kategori)
-                    ->groupBy('sub_kategori.name', 'project_pekerjaan.deskripsi_subkategori','project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project')
+                    ->groupBy('sub_kategori.name', 'project_pekerjaan.deskripsi_subkategori','project_pekerjaan.kode_unik','project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','id_vendor')
                     ->filter($request)
                     ->get();
         
             foreach ($progress as $item) {
+                $item->nama_vendor = $item->vendors->name ?? '';
                 $item->name = ($item->subkategori->name ?? '') . " " . ($item->deskripsi_subkategori ?? '');
         
                 if ($item->status == 1) {
@@ -398,32 +399,26 @@ class BodController extends Controller
     {
         try{
             $beforePhoto = BeforePhoto::where('id_project',$request->id_project)
-                            ->where('id_subkategori',$request->id_subkategori)
-                            ->where('id_kategori',$request->id_kategori)
+                            ->where('kode_unik',$request->kode_unik)
                             ->get();
             $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
-                            ->where('id_subkategori',$request->id_subkategori)
-                            ->where('id_kategori',$request->id_kategori)
+                            ->where('kode_unik',$request->kode_unik)
                             ->get();
 
             $kategori = SubKategori::find($request->id_subkategori);   
             $pekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
-                        ->where('id_subkategori', $request->id_subkategori)
-                        ->where('id_kategori',$request->id_kategori)
-                        ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
+                        ->where('kode_unik', $request->kode_unik)
                         ->first();
 
-            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','deskripsi_subkategori')
+            $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','deskripsi_subkategori','kode_unik','length','width','thick','amount','unit')
                     ->where('id_project', $request->id_project)
-                    ->where('id_subkategori', $request->id_subkategori)
-                    ->where('id_kategori',$request->id_kategori)
-                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
+                    ->where('kode_unik', $request->kode_unik)
                     ->orderBy('created_at','desc')
                     ->limit(3)
                     ->get();
 
             foreach ($data as $item) {
-                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '') . ' ' . ($item->length ?? '') . ' ' . ($item->width ?? '') . ' ' . ($item->thick ?? '') . ' ' . ($item->qty ?? '') . ' ' . ($item->amount ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
@@ -437,16 +432,14 @@ class BodController extends Controller
     public function detailpekerjaanBOD(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan')
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','kode_unit','length','width','thick','amount','unit')
                     ->where('id_project', $request->id_project)
-                    ->where('id_subkategori', $request->id_subkategori)
-                    ->where('id_kategori',$request->id_kategori)
-                    ->where('deskripsi_subkategori',$request->deskripsi_subkategori)
+                    ->where('kode_unik', $request->kode_unik)
                     ->orderBy('created_at','desc')
                     ->get();
 
             foreach($data as $value){
-                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '');
+                $value['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '') . ' ' . ($item->length ?? '') . ' ' . ($item->width ?? '') . ' ' . ($item->thick ?? '') . ' ' . ($item->qty ?? '') . ' ' . ($item->amount ?? '')  . ' ' . ($item->unit ?? '');
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

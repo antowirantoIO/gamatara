@@ -38,7 +38,11 @@ class OnRequestController extends Controller
                 if($cekPm){
                     $data->where('pm_id', $cekPm->id_pm);
                 }
-            }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
+            }else if ($cekRole == 'BOD' 
+                        || $cekRole == 'Super Admin' 
+                        || $cekRole == 'Administator' 
+                        || $cekRole == 'Staff Finance'
+                        || $cekRole == 'SPV Finance') {
                 if($result){
                     $data->whereIn('pm_id', array_column($result, 'id'));
                 }

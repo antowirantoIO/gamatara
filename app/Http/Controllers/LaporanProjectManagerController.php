@@ -60,10 +60,10 @@ class LaporanProjectManagerController extends Controller
         }
 
         $datas = ProjectManager::with(['projects' => function ($query) use ($request) {
-                $query->select('pm_id')
+                $query->select('pm_id','status','created_at')
                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
-                    ->groupBy('pm_id');
+                    ->groupBy('pm_id','status','created_at');
             }])
             ->when($request->filled('project_manager_id'), function ($query) use ($request) {
                 $query->where('pm_id', $request->project_manager_id);

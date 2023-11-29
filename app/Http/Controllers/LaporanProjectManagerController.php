@@ -29,11 +29,11 @@ class LaporanProjectManagerController extends Controller
         ->get();
 
         foreach ($datas as $value) {
-            if ($value->first()->projects) {
-                $value['detail_url'] = route('laporan_project_manager.detail', $value->first()->id);
-                $value['name'] = $value->first()->karyawan->name ?? '';
-                $value['onprogress'] = $value->first()->projects->where('status', 1)->count();
-                $value['complete'] = $value->first()->projects->where('status', 2)->count();
+            if ($value->projects) {
+                $value['detail_url'] = route('laporan_project_manager.detail', $value->id);
+                $value['name'] = $value->karyawan->name ?? '';
+                $value['onprogress'] = $value->projects->where('status', 1)->count();
+                $value['complete'] = $value->projects->where('status', 2)->count();
                 $value['eye_image_url'] = "/assets/images/eye.svg";
             }
         }
@@ -60,13 +60,15 @@ class LaporanProjectManagerController extends Controller
         }
 
         $datas = ProjectManager::with(['projects' => function ($query) use ($request) {
-                $query->select('pm_id','status','created_at')
+                $query->select('pm_id', 'status', 'created_at')
                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
-                    ->groupBy('pm_id','status','created_at');
+                    ->groupBy('pm_id', 'status', 'created_at');
             }])
             ->when($request->filled('project_manager_id'), function ($query) use ($request) {
-                $query->where('pm_id', $request->project_manager_id);
+                $query->whereHas('projects', function ($innerQuery) use ($request) {
+                    $innerQuery->where('pm_id', $request->project_manager_id);
+                });
             })
             ->when($request->filled('daterange'), function ($query) use ($request) {
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
@@ -97,27 +99,22 @@ class LaporanProjectManagerController extends Controller
                 }
             }
             
-            $result = [];
+            $result = [
+                'date' => array_values($date),
+                'data_pm' => [],
+            ];
+            
             foreach ($data_pm as $name => $data) {
-                $rowData = [
+                $onprogressTotal = array_sum(array_column($data, 'onprogress'));
+                $completeTotal = array_sum(array_column($data, 'complete'));
+            
+                $result['data_pm'][] = [
                     'name' => $name,
-                    'data' => [],
+                    'data' => [$onprogressTotal, $completeTotal],
                 ];
-            
-                foreach ($date as $dateKey) {
-                    $rowData['data'][] = [
-                        'onprogress' => $data[$dateKey]['onprogress'] ?? 0,
-                        'complete' => $data[$dateKey]['complete'] ?? 0,
-                    ];
-                }
-            
-                $result[] = $rowData;
             }
             
-            return response()->json([
-                'date' => array_values($date),
-                'data_pm' => $result,
-            ]);
+            return response()->json($result);
     }
 
     public function detail(Request $request, $id)

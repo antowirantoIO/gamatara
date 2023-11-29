@@ -398,7 +398,7 @@ class BodController extends Controller
                 ];
             }            
          
-            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress]);
+            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress , 'list_vendor' => $list_vendor]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

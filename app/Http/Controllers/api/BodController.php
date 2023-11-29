@@ -405,11 +405,12 @@ class BodController extends Controller
                             ->where('kode_unik',$request->kode_unik)
                             ->get();
 
-            $kategori = SubKategori::find($request->id_subkategori);   
             $pekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
                         ->where('kode_unik', $request->kode_unik)
                         ->first();
 
+            $kategori = SubKategori::find($pekerjaan->id_subkategori);   
+            
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','deskripsi_subkategori','kode_unik','length','width','thick','amount','unit')
                     ->where('id_project', $request->id_project)
                     ->where('kode_unik', $request->kode_unik)

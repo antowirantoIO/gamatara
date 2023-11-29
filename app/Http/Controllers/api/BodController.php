@@ -392,6 +392,7 @@ class BodController extends Controller
             $list_vendor = ProjectPekerjaan::has('vendors')
                 ->with(['vendors:id,name'])
                 ->select('id_vendor')
+                ->distinct()
                 ->get();
 
             foreach ($list_vendor as $v) {

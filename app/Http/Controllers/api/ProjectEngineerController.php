@@ -149,7 +149,20 @@ class ProjectEngineerController extends Controller
                 $item->status = $status;
             }
          
-            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress]);
+            $list_vendor = ProjectPekerjaan::has('vendors')
+            ->with(['vendors:id,name'])
+            ->select('id_vendor')
+            ->distinct()
+            ->get();
+
+            foreach ($list_vendor as $v) {
+                $vendorData[] = [
+                    'id'   => $v->vendors->id ?? '',
+                    'name' => $v->vendors->name ?? '',
+                ];
+            }            
+     
+            return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress , 'list_vendor' => $list_vendor]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }

@@ -59,7 +59,8 @@ class LaporanProjectManagerController extends Controller
             $report_by = 'tahun';
         }
 
-        $datas = ProjectManager::with(['projects' => function ($query) use ($request) {
+        $datas = ProjectManager::has(['projects'])
+                ->with(['projects' => function ($query) use ($request) {
                 $query->select('pm_id', 'status', 'created_at')
                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')

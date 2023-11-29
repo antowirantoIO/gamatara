@@ -14,7 +14,7 @@ class LaporanProjectManagerController extends Controller
 {
     public function index(Request $request)
     {
-        $datas = ProjectManager::with(['projects'])
+        $datas = ProjectManager::has('projects')
         ->when($request->filled('project_manager_id'), function ($query) use ($request) {
             $query->whereHas('projects', function ($innerQuery) use ($request) {
                 $innerQuery->where('pm_id', $request->project_manager_id);
@@ -59,15 +59,14 @@ class LaporanProjectManagerController extends Controller
             $report_by = 'tahun';
         }
 
-        $datas = ProjectManager::has(['projects'])
-                ->with(['projects' => function ($query) use ($request) {
-                $query->select('pm_id', 'status', 'created_at')
+        $datas = ProjectManager::with(['projects' => function ($query) use ($request) {
+                $query->select('pm_id')
                     ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
-                    ->groupBy('pm_id', 'status', 'created_at');
+                    ->groupBy('pm_id');
             }])
             ->when($request->filled('project_manager_id'), function ($query) use ($request) {
-                $query->where('id', $request->project_manager_id);
+                $query->where('pm_id', $request->project_manager_id);
             })
             ->when($request->filled('daterange'), function ($query) use ($request) {
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));

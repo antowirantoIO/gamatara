@@ -313,7 +313,7 @@ class BodController extends Controller
     public function navbarBOD(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::select('id','id_project','id_kategori','status','kode_unik')
+            $data = ProjectPekerjaan::select('id','id_project','id_kategori','status')
                     ->with(['projects'])->where('id_project',$request->id)
                     ->first();
 

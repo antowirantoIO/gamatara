@@ -220,7 +220,7 @@ class ProjectManagerController extends Controller
     public function detailpekerjaanPM(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','kode_unit','length','width','thick','amount','unit')
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','kode_unik','length','width','thick','amount','unit')
                     ->where('id_project', $request->id_project)
                     ->where('kode_unik', $request->kode_unik)
                     ->orderBy('created_at','desc')

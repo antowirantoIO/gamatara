@@ -388,6 +388,15 @@ class BodController extends Controller
         
                 $item->status = $status;
             }
+
+            $list_vendor = ProjectPekerjaan::has('vendors')->with('vendors')->get();
+
+            foreach ($list_vendor as $v) {
+                $vendorData[] = [
+                    'id'   => $v->vendors->id ?? '',
+                    'name' => $v->vendors->name ?? '',
+                ];
+            }            
          
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress]);
         } catch (\Exception $e) {

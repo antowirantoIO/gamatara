@@ -115,6 +115,21 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
+        $('#export-button').on('click', function() {
+            $.ajax({
+                url: '{{ route("laporan_project_manager.export") }}',
+                method: 'GET',
+                success: function(response) {
+                    // Handle success, e.g., show a success message or redirect
+                    console.log(response);
+                },
+                error: function(error) {
+                    // Handle error, e.g., show an error message
+                    console.error(error);
+                }
+            });
+        });
+
         $('#daterange').daterangepicker({
             autoUpdateInput: false,
             locale: {

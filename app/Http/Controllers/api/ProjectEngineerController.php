@@ -276,7 +276,7 @@ class ProjectEngineerController extends Controller
                     ->get();
 
             foreach($data as $value){
-                $value['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '') . ' ' . ($item->length ?? '') . ' ' . ($item->width ?? '') . ' ' . ($item->thick ?? '') . ' ' . ($item->qty ?? '') . ' ' . ($item->amount ?? '')  . ' ' . ($item->unit ?? '');
+                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '') . ' ' . ($value->length ?? '') . ' ' . ($value->width ?? '') . ' ' . ($value->thick ?? '') . ' ' . ($value->qty ?? '') . ' ' . ($value->amount ?? '')  . ' ' . ($value->unit ?? '');
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

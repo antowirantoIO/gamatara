@@ -39,9 +39,9 @@ class ProjectManagerController extends Controller
 
                 if ($item->complaint->isEmpty()) {
                     $status = 1;
-                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
+                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
                     $status = 2;
-                } else {
+                } elseif ($item->complaint->where('id_pm_approval', '!=', null)->count() == $item->complaint->count()) {
                     $status = 3;
                 }
 

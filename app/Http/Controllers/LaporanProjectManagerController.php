@@ -86,7 +86,18 @@ class LaporanProjectManagerController extends Controller
 
                 foreach ($projects as $project) {
                     $name = $project->pm->karyawan->name;
-                    $dateKey = $project->created_at->format('Y-m-d');
+                    switch ($report_by) {
+                        case 'bulan':
+                            $dateKey = $project->created_at->format('Y-m');
+                            break;
+                        case 'tahun':
+                            $dateKey = $project->created_at->format('Y');
+                            break;
+                        case 'tanggal':
+                        default:
+                            $dateKey = $project->created_at->toDateString();
+                            break;
+                    }
 
                     $data_pm[$name][$dateKey] = [
                         'onprogress' => $project->onprogress,

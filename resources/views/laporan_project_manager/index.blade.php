@@ -115,6 +115,12 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
+            },
+        });
+
         $('#export-button').on('click', function() {
             $.ajax({
                 url: '{{ route("laporan_project_manager.export") }}',
@@ -215,11 +221,7 @@
         });
 
 
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-        },
-    });
+
 
     const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
         series: [],

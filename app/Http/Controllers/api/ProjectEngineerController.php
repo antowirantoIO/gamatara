@@ -152,7 +152,9 @@ class ProjectEngineerController extends Controller
             $list_vendor = ProjectPekerjaan::has('vendors')
             ->with(['vendors:id,name'])
             ->select('id_vendor')
-            ->distinct()
+            ->where('id_project', $request->id_project)
+            ->where('id_kategori', $request->id_kategori)
+            ->distinct('deskripsi_subkategori')
             ->get();
 
             foreach ($list_vendor as $v) {

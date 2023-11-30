@@ -11,11 +11,11 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Project Manager</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <button class="btn btn-danger" id="export-button">
+                            <a href="{{ route('laporan_project_manager.export') }}" class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -115,27 +115,6 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-            },
-        });
-
-        $('#export-button').on('click', function() {
-            $.ajax({
-                url: '{{ route("laporan_project_manager.export") }}',
-                method: 'GET',
-                success: function(response) {
-                    // Handle success, e.g., show a success message or redirect
-                    console.log(response);
-                },
-                error: function(error) {
-                    // Handle error, e.g., show an error message
-                    console.error(error);
-                }
-            });
-        });
-
         $('#daterange').daterangepicker({
             autoUpdateInput: false,
             locale: {
@@ -221,7 +200,11 @@
         });
 
 
-
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
+        },
+    });
 
     const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
         series: [],

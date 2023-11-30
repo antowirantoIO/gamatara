@@ -434,7 +434,7 @@ class BodController extends Controller
                     ->get();
 
             foreach ($data as $item) {
-                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '') . ' ' . ($item->length ?? '') . ' ' . ($item->width ?? '') . ' ' . ($item->thick ?? '') . ' ' . ($item->qty ?? '') . ' ' . ($item->amount ?? '');
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }

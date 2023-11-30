@@ -99,7 +99,7 @@ class LaporanProjectManagerController extends Controller
                             break;
                     }
 
-                    $data_pm[$name][$dateKey] = [
+                    $data_pm[$name][$dateKey][] = [
                         'onprogress' => $project->onprogress,
                         'complete' => $project->complete,
                     ];
@@ -116,12 +116,16 @@ class LaporanProjectManagerController extends Controller
             ];
 
             foreach ($data_pm as $name => $data) {
-                $onprogressTotal = array_sum(array_column($data, 'onprogress'));
-                $completeTotal = array_sum(array_column($data, 'complete'));
-
+                $onprogressTotal = [];
+                $completeTotal = [];
+                foreach($data as $item) {
+                    $onprogressTotal[] = array_sum(array_column($item, 'onprogress'));
+                    $completeTotal[] = array_sum(array_column($item, 'complete'));
+                }
+           
                 $result['data_pm'][] = [
                     'name' => $name,
-                    'data' => [$onprogressTotal, $completeTotal],
+                    'data' => [array_sum($onprogressTotal), array_sum($completeTotal)],
                 ];
             }
 

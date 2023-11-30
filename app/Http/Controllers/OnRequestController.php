@@ -38,7 +38,11 @@ class OnRequestController extends Controller
                 if($cekPm){
                     $data->where('pm_id', $cekPm->id_pm);
                 }
-            }else if ($cekRole == 'BOD' || $cekRole == 'Super Admin' || $cekRole == 'Administator') {
+            }else if ($cekRole == 'BOD' 
+                        || $cekRole == 'Super Admin' 
+                        || $cekRole == 'Administator' 
+                        || $cekRole == 'Staff Finance'
+                        || $cekRole == 'SPV Finance') {
                 if($result){
                     $data->whereIn('pm_id', array_column($result, 'id'));
                 }
@@ -89,10 +93,10 @@ class OnRequestController extends Controller
 
     public function create()
     {
-        $customer   = Customer::get();
-        $lokasi     = LokasiProject::get();
-        $jenis_kapal= JenisKapal::get();
-        $status     = StatusSurvey::get();
+        $customer   = Customer::orderBy('name','asc')->get();
+        $lokasi     = LokasiProject::orderBy('name','asc')->get();
+        $jenis_kapal= JenisKapal::orderBy('name','asc')->get();
+        $status     = StatusSurvey::orderBy('name','asc')->get();
         $pmAuth     = Auth::user()->role->name ?? '';
 
         return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth'));
@@ -165,15 +169,15 @@ class OnRequestController extends Controller
     {
         $data           = OnRequest::find($request->id);
         $getCustomer    = Customer::find($data->id_customer);
-        $customer       = Customer::get();
-        $lokasi         = LokasiProject::get();
-        $jenis_kapal    = JenisKapal::get();
+        $customer       = Customer::orderBy('name','asc')->get();
+        $lokasi         = LokasiProject::orderBy('name','asc')->get();
+        $jenis_kapal    = JenisKapal::orderBy('name','asc')->get();
         $pe             = ProjectEngineer::where('id_pm',$data->pm_id)->with(['karyawan'])->get();
-        $vendor         = Vendor::get();
+        $vendor         = Vendor::orderBy('name','asc')->get();
         $pmAuth         = Auth::user()->role->name ?? '';
         $keluhan        = Keluhan::where('on_request_id', $request->id)->get();
         $count          = $keluhan->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
-        $status         = StatusSurvey::get();
+        $status         = StatusSurvey::orderBy('name','asc')->get();
         $keluhan        = count($keluhan);
 
         return view('on_request.detail', Compact('status','keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pe','vendor','pmAuth'));

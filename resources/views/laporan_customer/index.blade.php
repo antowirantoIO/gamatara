@@ -130,9 +130,7 @@
         $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
-    });
 
-    $(document).ready(function () {
         var table = $('#tableData').DataTable({
             ordering: false,
             fixedHeader:true,
@@ -160,13 +158,12 @@
         $('#btn-search').click(function(e){
             var report_by = $('#report_by').val();
             var customer_id = $('#customer_id').val();
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
+            var daterange = $('#daterange').val();
 
             $.ajax({
                     url: '{{route('laporan_customer')}}',
                     type: 'GET',
-                    data: { report_by: report_by, customer_id: customer_id,start_date : start_date , end_date: end_date},
+                    data: { report_by: report_by, customer_id: customer_id,daterange : daterange},
                     success: function (response) {
                         table.clear().draw();
                         table.rows.add(response.datas.map(function (item) {
@@ -273,6 +270,13 @@
                 },
                 xaxis: {
                     categories: data.date,
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (val) {
+                            return val.toLocaleString();
+                        }
+                    }
                 },
                 fill: {
                     opacity: 1,

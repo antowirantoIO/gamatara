@@ -14,52 +14,107 @@ class LaporanProjectManagerController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = ProjectManager::filter($request);
+        $datas = ProjectManager::has('projects')
+        ->when($request->filled('project_manager_id'), function ($query) use ($request) {
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                $innerQuery->where('pm_id', $request->project_manager_id);
+            });
+        })
+        ->when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            });
+        })
+        ->get();
 
-            return Datatables::of($data)->addIndexColumn()
-            ->addColumn('name', function($data){
-                return $data->karyawan->name ?? '';
-            })
-            ->addColumn('on_progress', function($data){
-                return $data->projects->where('status', 2)->count();
-            })
-            ->addColumn('complete', function($data){
-                return $data->projects->where('status', 3)->count();
-            })
-            ->addColumn('action', function($data){
-                return '<a href="'.route('laporan_project_manager.detail', $data->id).'" class="btn btn-warning btn-sm">
-                    <span>
-                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                    </span>
-                </a>';
-            })
-            ->filter(function ($query) use ($request) {
-
-                if (!empty($request->input('name'))) {
-                   $query->where('id', $request->name);
-                }
-
-                if (!empty($request->input('on_progress'))) {
-                    $query->whereHas('projects', function ($subQuery) use ($request) {
-                        $subQuery->where('status', 2)
-                            ->havingRaw('COUNT(*) = ?', [$request->input('on_progress')]);
-                    });
-                }
-
-                if (!empty($request->input('complete'))) {
-                    $query->whereHas('projects', function ($subQuery) use ($request) {
-                        $subQuery->where('status', 3)
-                            ->havingRaw('COUNT(*) = ?', [$request->input('complete')]);
-                    });
-                }
-
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+        foreach ($datas as $value) {
+            if ($value->projects) {
+                $value['detail_url'] = route('laporan_project_manager.detail', $value->id);
+                $value['name'] = $value->karyawan->name ?? '';
+                $value['onprogress'] = $value->projects->where('status', 1)->count();
+                $value['complete'] = $value->projects->where('status', 2)->count();
+                $value['eye_image_url'] = "/assets/images/eye.svg";
+            }
         }
-        $project_manager = ProjectManager::all();
-        return view('laporan_project_manager.index',compact('project_manager'));
+        $datas = $datas->values();
+
+        if($request->report_by){
+            return response()->json([
+                'datas' => $datas
+            ]);
+        }
+
+        $pm = ProjectManager::has('projects')->get();
+
+        return view('laporan_project_manager.index',compact('pm','datas'));
+    }
+
+    public function dataChartt(Request $request)
+    {
+        if($request->report_by != null)
+        {
+            $report_by = $request->report_by;
+        }else{
+            $report_by = 'tahun';
+        }
+
+        $datas = ProjectManager::with(['projects' => function ($query) use ($request) {
+                $query->select('pm_id', 'status', 'created_at')
+                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
+                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
+                    ->groupBy('pm_id', 'status', 'created_at');
+            }])
+            ->when($request->filled('project_manager_id'), function ($query) use ($request) {
+                $query->whereHas('projects', function ($innerQuery) use ($request) {
+                    $innerQuery->where('pm_id', $request->project_manager_id);
+                });
+            })
+            ->when($request->filled('daterange'), function ($query) use ($request) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
+                    $query->whereBetween('created_at', [$start_date, $end_date]);
+                });
+            })
+            ->get();
+
+            $data_pm = [];
+            $date = [];
+
+            foreach ($datas as $keyId => $value) {
+                $projects = $value->projects;
+
+                foreach ($projects as $project) {
+                    $name = $project->pm->karyawan->name;
+                    $dateKey = $project->created_at->format('Y-m-d');
+
+                    $data_pm[$name][$dateKey] = [
+                        'onprogress' => $project->onprogress,
+                        'complete' => $project->complete,
+                    ];
+
+                    if (!in_array($dateKey, $date)) {
+                        $date[] = $dateKey;
+                    }
+                }
+            }
+
+            $result = [
+                'date' => array_values($date),
+                'data_pm' => [],
+            ];
+
+            foreach ($data_pm as $name => $data) {
+                $onprogressTotal = array_sum(array_column($data, 'onprogress'));
+                $completeTotal = array_sum(array_column($data, 'complete'));
+
+                $result['data_pm'][] = [
+                    'name' => $name,
+                    'data' => [$onprogressTotal, $completeTotal],
+                ];
+            }
+
+            return response()->json($result);
     }
 
     public function detail(Request $request, $id)

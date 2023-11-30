@@ -219,6 +219,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::get('export',[LaporanProjectManagerController::class,'export'])->name('laporan_project_manager.export');
+        Route::post('/data-chartt', [LaporanProjectManagerController::class, 'dataChartt'])->name('laporan_project_manager.dataChartt');
     });
 
     //laporan Satisfaction note

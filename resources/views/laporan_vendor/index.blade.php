@@ -44,13 +44,9 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <label>Start Date</label>
-                                        <input type="date" value="{{ date('Y-m-d') }}" name="start_date" id="start_date" class="form-control" />
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label>End Date</label>
-                                        <input type="date" value="{{ date('Y-m-d') }}" name="end_date" id="end_date" class="form-control" />
+                                    <div class="form-group col-md-6">
+                                        <label>Date</label>
+                                        <input type="text" class="form-control" name="daterange" id="daterange" autocomplete="off" placeholder="--Select Date--">
                                     </div>
                                     <div class="form-group col-md-3 mt-3">
                                         <div>
@@ -121,60 +117,73 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
-    var table = $('#tableData').DataTable({
-        ordering: false,
-        fixedHeader:true,
-        lengthChange: false,
-        searching: false,
-        language: {
-            processing:
-                '<div class="spinner-border text-info" role="status">' +
-                '<span class="sr-only">Loading...</span>' +
-                "</div>",
-            paginate: {
-                Search: '<i class="icon-search"></i>',
-                first: "<i class='fas fa-angle-double-left'></i>",
-                next: "Next <span class='mdi mdi-chevron-right'></span>",
-                last: "<i class='fas fa-angle-double-right'></i>",
-            },
-            "info": "Displaying _START_ - _END_ of _TOTAL_ result",
-        },
-        drawCallback: function() {
-            var previousButton = $('.paginate_button.previous');
-            previousButton.css('display', 'none');
-        },
-    });
-    
-    $('#btn-search').click(function(e){
-        var report_by = $('#report_by').val();
-        var vendor_id = $('#vendor_id').val();
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
-
-        $.ajax({
-            url: '{{route('laporan_vendor')}}',
-            type: 'GET',
-            data: { report_by: report_by, vendor_id: vendor_id, start_date: start_date, end_date: end_date },
-            success: function (response) {
-                table.clear().draw();
-                table.rows.add(response.datas.map(function (item) {
-                    return [
-                        item.name,
-                        item.total_project,
-                        item.nilai_tagihan,
-                        '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
-                        '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +
-                        '</a>'
-                    ];
-                })).draw();
-            },
-            error: function (error) {
-                console.error(error);
+        $('#daterange').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
             }
         });
-    });
-});
 
+        $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+
+        var table = $('#tableData').DataTable({
+            ordering: false,
+            fixedHeader:true,
+            lengthChange: false,
+            searching: false,
+            language: {
+                processing:
+                    '<div class="spinner-border text-info" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    "</div>",
+                paginate: {
+                    Search: '<i class="icon-search"></i>',
+                    first: "<i class='fas fa-angle-double-left'></i>",
+                    next: "Next <span class='mdi mdi-chevron-right'></span>",
+                    last: "<i class='fas fa-angle-double-right'></i>",
+                },
+                "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+            },
+            drawCallback: function() {
+                var previousButton = $('.paginate_button.previous');
+                previousButton.css('display', 'none');
+            },
+        });
+    
+        $('#btn-search').click(function(e){
+            var report_by = $('#report_by').val();
+            var vendor_id = $('#vendor_id').val();
+            var daterange = $('#daterange').val();
+
+            $.ajax({
+                url: '{{route('laporan_vendor')}}',
+                type: 'GET',
+                data: { report_by: report_by, vendor_id: vendor_id, daterange: daterange},
+                success: function (response) {
+                    table.clear().draw();
+                    table.rows.add(response.datas.map(function (item) {
+                        return [
+                            item.name,
+                            item.total_project,
+                            item.nilai_tagihan,
+                            '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
+                            '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +
+                            '</a>'
+                        ];
+                    })).draw();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
 
     $.ajaxSetup({
         headers: {

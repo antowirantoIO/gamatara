@@ -27,7 +27,7 @@ class LaporanCustomerController extends Controller
             })
             ->when($request->filled('daterange'), function ($query) use ($request) {
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                $query->whereHas('projects.progress', function ($query) use ($request) {
+                $query->whereHas('projects.progress', function ($query) use ($request, $start_date, $end_date) {
                     $query->whereBetween('created_at', [$start_date, $end_date]);
                 });
             })
@@ -169,9 +169,9 @@ class LaporanCustomerController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            // $cek = OnRequest::where('id', $request->id)->get();
-            // $cekIds = $cek->pluck('id')->toArray();
-            $data = ProjectPekerjaan::with('projects')->where('id_project',$request->id)
+            $cek = OnRequest::where('id', $request->id)->get();
+            $cekIds = $cek->pluck('id')->toArray();
+            $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                     ->addSelect(['total' => OnRequest::selectRaw('count(*)')
                         ->whereColumn('project_pekerjaan.id_project', 'project.id')
                         ->groupBy('id_customer')
@@ -231,7 +231,7 @@ class LaporanCustomerController extends Controller
             ->make(true);                    
         }
 
-        $data = OnRequest::where('id',$request->id)->first();
+        $data = OnRequest::where('id_customer',$request->id)->first();
 
         return view('laporan_customer.detail', compact('data'));
     }

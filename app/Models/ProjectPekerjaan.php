@@ -92,6 +92,7 @@ class ProjectPekerjaan extends Model
         })->when($filter->keyword ?? false, function($query) use ($filter) {
             return $query->where(function ($query) use ($filter) {
                 $query->where('harga_customer', 'like', "%$filter->keyword%");
+                $query->where('deskripsi_subkategori', 'like', "%$filter->keyword%");
             })->orWhereHas('projects', function($query) use($filter) {
                 $query->where('nama_project', 'like', "%$filter->keyword%")
                 ->orWhere('code', 'like', "%$filter->keyword%")
@@ -99,7 +100,11 @@ class ProjectPekerjaan extends Model
                 ->orWhere('actual_selesai', 'like', "%$filter->keyword%");
             })->orWhereHas('subKategori', function($query) use($filter) {
                 $query->where('name', 'like', "%$filter->keyword%");
+            })->orWhereHas('vendors', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
             });
+        })->when($filter->vendor ?? false, function($query) use ($filter) {
+            return $query->whereIn('id_vendor', json_decode($filter->vendor));
         });
     }
 }

@@ -15,8 +15,8 @@
             <tr>
                 <td  height="20" style="border: 20px medium black;" align="center">{{ $loop->iteration }}</td>
                 <td  height="20" style="border: 20px medium black;">{{ $item->karyawan->name }}</td>
+                <td  height="20" style="border: 20px medium black;" align="center">{{ $item->projects->where('status', 1)->count() }}</td>
                 <td  height="20" style="border: 20px medium black;" align="center">{{ $item->projects->where('status', 2)->count() }}</td>
-                <td  height="20" style="border: 20px medium black;" align="center">{{ $item->projects->where('status', 3)->count() }}</td>
             </tr>
         @endforeach
     </tbody>

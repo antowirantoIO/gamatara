@@ -453,7 +453,7 @@ class BodController extends Controller
                     ->get();
 
             foreach($data as $value){
-                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '') . ' ' . ($value->length ?? '') . ' ' . ($value->width ?? '') . ' ' . ($value->thick ?? '') . ' ' . ($value->qty ?? '') . ' ' . ($value->amount ?? '')  . ' ' . ($value->unit ?? '');
+                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '') . '<br> Length :' . ($value->length ?? '') . '<br> Width :' . ($value->width ?? '') . '<br> Thick :' . ($value->thick ?? '') . '<br> Qty :' . ($value->qty ?? '') . '<br> Amount :' . ($value->amount ?? '')  . '<br> Unit :' . ($value->unit ?? '');
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

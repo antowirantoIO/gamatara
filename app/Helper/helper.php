@@ -198,9 +198,14 @@ function barcodeNumberExists($number) {
 function getTotalProgressPekerjaan($id_project, $status = null)
 {
     if($status !== null){
-        $data = ProjectPekerjaan::where('id_project', $id_project)->where('status', $status)->count();
+        $data = ProjectPekerjaan::where('id_project', $id_project)
+                                ->where('status', $status)
+                                ->whereNotNull(['id_pekerjaan'])
+                                ->count();
     }else {
-        $data = ProjectPekerjaan::where('id_project', $id_project)->count();
+        $data = ProjectPekerjaan::where('id_project', $id_project)
+                                ->whereNotNull(['id_pekerjaan'])
+                                ->count();
     }
     return $data;
 }
@@ -208,9 +213,16 @@ function getTotalProgressPekerjaan($id_project, $status = null)
 function getTotalProgressVendor($id_project, $vendor, $status = null) {
 
     if($status !== null){
-        $data = ProjectPekerjaan::where('id_project', $id_project)->where('id_vendor', $vendor)->where('status', $status)->count();
+        $data = ProjectPekerjaan::where('id_project', $id_project)
+                                ->where('id_vendor', $vendor)
+                                ->where('status', $status)
+                                ->whereNotNull(['id_pekerjaan'])
+                                ->count();
     }else{
-        $data = ProjectPekerjaan::where('id_project', $id_project)->where('id_vendor', $vendor)->count();
+        $data = ProjectPekerjaan::where('id_project', $id_project)
+                                ->whereNotNull(['id_pekerjaan'])
+                                ->where('id_vendor', $vendor)
+                                ->count();
     }
     return $data;
 }

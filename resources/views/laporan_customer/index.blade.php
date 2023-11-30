@@ -156,7 +156,7 @@
                 previousButton.css('display', 'none');
             },
         });
-        
+
         $('#btn-search').click(function(e){
             var report_by = $('#report_by').val();
             var customer_id = $('#customer_id').val();
@@ -186,7 +186,7 @@
                     });
                 })
         });
-    
+
 
     $.ajaxSetup({
         headers: {
@@ -236,7 +236,6 @@
     }
 
     $(() => {
-
         domString.form_filter.on('submit', (e) => {
             e.preventDefault()
             const data = domString.form_filter.serialize()
@@ -250,7 +249,7 @@
         method: "POST",
         data: input,
         success: function (data) {
-    
+
             chartTab.updateOptions({
                 series: data.data_customer,
                 chart: {

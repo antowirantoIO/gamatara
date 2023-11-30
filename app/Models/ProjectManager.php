@@ -46,9 +46,7 @@ class ProjectManager extends Model
         return $query->when($filter->pm ?? false, function($query) use ($filter) {
             return $query->where('id_karyawan',$filter->pm);
         })->when($filter->name ?? false, function($query) use($filter) {
-            $query->whereHas('karyawan',function($querys) use($filter){
-                return $querys->where('name','like','%'. $filter->name . '%');
-            });
+            return $query->where('id',$filter->name);
         });
     }
 }

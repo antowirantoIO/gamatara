@@ -35,7 +35,11 @@ class LaporanProjectManagerController extends Controller
                 </a>';
             })
             ->filter(function ($query) use ($request) {
-                // Menambahkan filter untuk kolom 'on_progress' berdasarkan jumlah yang diinputkan user
+
+                if (!empty($request->input('name'))) {
+                   $query->where('id', $request->name);
+                }
+
                 if (!empty($request->input('on_progress'))) {
                     $query->whereHas('projects', function ($subQuery) use ($request) {
                         $subQuery->where('status', 2)
@@ -54,8 +58,8 @@ class LaporanProjectManagerController extends Controller
             ->rawColumns(['action'])
             ->make(true);
         }
-        $tahun = now()->format('Y');
-        return view('laporan_project_manager.index',compact('tahun'));
+        $project_manager = ProjectManager::all();
+        return view('laporan_project_manager.index',compact('project_manager'));
     }
 
     public function detail(Request $request, $id)

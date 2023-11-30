@@ -388,7 +388,7 @@ class OnProgressController extends Controller
         return view('on_progres.detail',compact('id','kategori','subWorker','vendor','subKategori'));
     }
 
-    public function subDetailWorker($id,$idProject,$subKategori)
+    public function subDetailWorker($id,$idProject,$subKategori, $kodeUnik)
     {
         $data = ProjectPekerjaan::where('id_project',$idProject)
                                 ->where('id_kategori',$id)
@@ -396,12 +396,10 @@ class OnProgressController extends Controller
                                 ->whereNotNull(['id_pekerjaan'])
                                 ->get();
         $before = BeforePhoto::where('id_project',$idProject)
-                            ->where('id_kategori',$id)
-                            ->where('id_subkategori',$subKategori)
+                            ->where('kode_unik',$kodeUnik)
                             ->get();
         $after = AfterPhoto::where('id_project',$idProject)
-                            ->where('id_kategori',$id)
-                            ->where('id_subkategori',$subKategori)
+                            ->where('kode_unik',$kodeUnik)
                             ->get();
         // dd($before,$after);
         return view('on_progres.detail-work',compact('data','idProject','before','after'));
@@ -686,7 +684,7 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
                     return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
                 } else {
                     return $data->subKategori->name;

@@ -187,8 +187,9 @@
                                 let id_kategori = data.id_kategori;
                                 let id_project = data.id_project;
                                 let id_subkategori = data.id_subkategori;
-                                let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori']) }}';
-                                let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori);
+                                let kode_unik = data.kode_unik;
+                                let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori',':kode_unik']) }}';
+                                let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':kode_unik',kode_unik);
                                 return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                     <span>
                                         <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>

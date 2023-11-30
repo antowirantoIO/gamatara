@@ -282,7 +282,7 @@ class BodController extends Controller
 
                 if ($item->complaint->isEmpty()) {
                     $status = 1;
-                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_bod_approval', null)->isEmpty()) {
+                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_bod_approval', null)->isNotEmpty()) {
                     $status = 2;
                 } else {
                     $status = 3;

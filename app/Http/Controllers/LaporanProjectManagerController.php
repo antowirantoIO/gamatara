@@ -176,7 +176,7 @@ class LaporanProjectManagerController extends Controller
     public function export(Request $request)
     {
         $data = ProjectManager::all();
-        return Excel::download(new ExportLaporanProjectManager($data),'Laporan Pekerjaan PM.xlsx');
+        return Excel::download(new ExportLaporanProjectManager($data),'Report Project Manager.xlsx');
         return view('export.ExportLaporanManager',compact('data'));
     }
 }

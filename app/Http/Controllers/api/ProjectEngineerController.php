@@ -149,11 +149,12 @@ class ProjectEngineerController extends Controller
                 $item->status = $status;
             }
          
-            $list_vendor = ProjectPekerjaan::has('vendors')
-            ->with(['vendors:id,name'])
-            ->select('id_vendor')
-            ->distinct()
-            ->get();
+            // $list_vendor = ProjectPekerjaan::has('vendors')
+            // ->with(['vendors:id,name'])
+            // ->select('id_vendor')
+            // ->distinct()
+            // ->get();
+            $list_vendor = $progress;
 
             foreach ($list_vendor as $v) {
                 $vendorData[] = [

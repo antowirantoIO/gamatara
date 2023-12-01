@@ -68,31 +68,30 @@ class DashboardController extends Controller
                         })
                         ->where('status',1)
                         ->get();
-                        
+
         $onprogress = count($onprogress);
         $complete = count(OnRequest::where('status',2)->get());
         
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 
-        // $vendors = Keluhan::whereNotNull(['id_pm_approval','id_bod_approval'])
-        //             ->select('id_vendor')
-        //             ->groupBy('id_vendor')
-        //             ->get();
-
         $progress = ProjectPekerjaan::whereNotNull('id_pekerjaan')
                     ->select('id_vendor')
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as onprogress')
                     ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as complete')
                     ->groupBy('id_vendor')
+                    ->orderByDesc('complete')
                     ->get();
 
         $pm = ProjectManager::with(['projects' => function ($query) {
-            $query->select('pm_id')
-                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
-                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
-                ->groupBy('pm_id');
-        }])->get();                                        
+                $query->select('pm_id')
+                    ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
+                    ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
+                    ->groupBy('pm_id');
+            }])
+            ->selectRaw('pm.*, (SELECT SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) FROM project WHERE project.pm_id = pm.id) as complete')
+            ->orderByDesc('complete')
+            ->get();                  
 
         $data       = OnRequest::orderBy('created_at','desc')->get();
 

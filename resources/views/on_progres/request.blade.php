@@ -442,7 +442,6 @@
                     var formattedValue = formatRupiah(inputValue);
                     $(this).val(formattedValue);
                 });
-
             })
 
             const getAmount = () => {
@@ -457,6 +456,7 @@
                 amountValue = amountValue.toFixed(2);
                 $('.draggable-row').closest('tr').find('input[name="amount[]"]').val(amountValue);
             }
+
 
             $('#clone').on('change', '.draggable-row input[name="length[]"], input[name="width[]"], input[name="thick[]"],input[name="qty[]"]', function() {
                 var lengthValue = parseFloat($(this).closest('tr').find('input[name="length[]"]').val());

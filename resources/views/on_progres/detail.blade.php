@@ -58,7 +58,6 @@
                                                     <tr>
                                                         <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE;">Progress</th>
-                                                        <th style="color:#929EAE;">Vendor</th>
                                                         <th style="color:#929EAE;">Action</th>
                                                     </tr>
                                                 </thead>
@@ -175,10 +174,8 @@
                 columns : [
                     { data : 'pekerjaan'},
                     { data : 'progres'},
-                    { data : 'vendors.name'},
                     {
                         data : function(data){
-                            console.log(data);
                             let id_kategori = data.id_kategori;
                             let id_project = data.id_project;
                             let id_subkategori = data.id_subkategori;

@@ -37,7 +37,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label for="jabatan">Job Title</label>
-                                                <input type="text" name="jabatan" id="jabatan" value="{{ old('jabatan') }}" class="form-control" placeholder="Enter Job Title">
+                                                <input type="text" name="jabatan" id="jabatan" value="{{ $data->jabatan }}" class="form-control" placeholder="Enter Job Title">
                                             </div>
                                             @if ($errors->has('jabatan'))
                                                 <span class="text-danger">{{ $errors->first('jabatan') }}</span>

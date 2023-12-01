@@ -218,32 +218,32 @@
                                 <table class="table" id="example2">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE"><center>Project Manager</center></th>
-                                            <th style="color:#929EAE"><center>On Progress</center></th>
-                                            <th style="color:#929EAE"><center>Complete</center></th>
+                                            <th style="color:#929EAE">Project Manager</th>
+                                            <th style="color:#929EAE">On Progress</th>
+                                            <th style="color:#929EAE">Complete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($pm as $key => $v)
                                             <tr>
                                                 <td>
-                                                    <center>
+                                                    
                                                         {{ $v->karyawan->name ?? '' }}
-                                                    </center>
+                                                    
                                                 </td>
                                                 <td>
-                                                    <center>
+                                                    
                                                         @foreach ($v->projects as $project)
                                                             {{ $project->onprogress ?? '' }}
                                                         @endforeach
-                                                    </center>
+                                                    
                                                 </td>
                                                 <td>
-                                                    <center>
+                                                    
                                                         @foreach ($v->projects as $project)
                                                             {{ $project->complete ?? '' }}
                                                         @endforeach
-                                                    </center>
+                                                    
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -274,24 +274,24 @@
                                 <table class="table" id="example3">
                                     <thead class="table-light">
                                         <tr>
-                                            <th style="color:#929EAE"><center>Vendor Name</center></th>
-                                            <th style="color:#929EAE"><center>On Progress</center></th>
-                                            <th style="color:#929EAE"><center>Complete</center></th>
+                                            <th style="color:#929EAE">Vendor Name</th>
+                                            <th style="color:#929EAE">On Progress</th>
+                                            <th style="color:#929EAE">Complete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($progress as $keys => $v)
                                             <tr>
-                                                <td><center>{{ optional($v->vendors)->name }}</center></td>
+                                                <td>{{ optional($v->vendors)->name }}</td>
                                                 <td>
-                                                    <Center>
+                                                    
                                                     {{$v->onprogress}}
-                                                    </Center>
+                                                    
                                                 </td>
                                                 <td>
-                                                    <Center>
+                                                    
                                                     {{$v->complete}}
-                                                    </Center>
+                                                    
                                                 </td>
                                             </tr>
                                         @endforeach

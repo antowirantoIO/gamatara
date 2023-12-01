@@ -85,16 +85,19 @@ class DashboardController extends Controller
                     ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as onprogress')
                     ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as complete')
                     ->groupBy('id_vendor')
-                    ->get();
+                    ->orderByDesc('projects.complete')
+                    ->get();  
 
         $pm = ProjectManager::with(['projects' => function ($query) {
             $query->select('pm_id')
                 ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
                 ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
                 ->groupBy('pm_id');
-        }])->get();                                        
+        }])
+        ->orderByDesc('projects.complete')
+        ->get();                                     
 
-        $data       = OnRequest::get();
+        $data       = OnRequest::orderBy('created_at','desc')->get();
 
         return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','progress','pm'));
     }

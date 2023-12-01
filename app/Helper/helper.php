@@ -42,14 +42,22 @@ function getNameKategori($id)
     return ucwords(strtolower($data));
 }
 
-function getProgress($id, $idKategori,$idvendor)
+function getProgress($id, $idKategori,$idvendor, $status=null)
 {
-    $pekerjaan = ProjectPekerjaan::where('id_project',$id)
-                                ->where('id_kategori',$idKategori)
-                                ->where('id_vendor',$idvendor)
-                                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as total_status_1')
-                                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as total_status_2')
-                                ->first();
+    if($status !== null){
+        $pekerjaan = ProjectPekerjaan::where('id_project',$id)
+                                    ->where('id_kategori',$idKategori)
+                                    ->where('id_vendor',$idvendor)
+                                    ->where('status', $status)
+                                    ->whereNotNull(['id_pekerjaan'])
+                                    ->count();
+    }else{
+        $pekerjaan = ProjectPekerjaan::where('id_project',$id)
+                                    ->where('id_kategori',$idKategori)
+                                    ->where('id_vendor',$idvendor)
+                                    ->whereNotNull(['id_pekerjaan'])
+                                    ->count();
+    }
     return $pekerjaan;
 }
 

@@ -252,6 +252,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('detail-worker/{id}',[OnProgressController::class,'detailWorker'])->name('on_progres.detail-worker');
         Route::get('table-data/{id}',[OnProgressController::class,'tableData'])->name('on_progres.table-data');
         Route::get('approval/{id}',[OnProgressController::class,'approvalProject'])->name('on_progres.approval-project');
+        Route::get('approval-pm/{id}',[OnProgressController::class,'approvalProjectPM'])->name('on_progres.approval-project-pm');
 
 
         Route::prefix('pekerjaan-vendor')->group(function(){

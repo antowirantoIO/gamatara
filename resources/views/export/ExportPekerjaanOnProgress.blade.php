@@ -124,7 +124,18 @@
                     $prevSub = $subkategori;
                     $prevKodeUnik = $kodeUnik;
                 @endphp
-                @endforeach
+            @endforeach
+            @foreach ($items as $keys => $value)
+                <tr>
+                    <td height="20" style="border-left: 20px medium black;border-left: 20px medium black;"></td>
+                    @foreach ($value->beforePhoto as $before)
+                    <td height="20" height="100">
+                        <img src="{{ public_path($before->photo) }}" alt="photo">
+                    </td>
+                    @endforeach
+                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                </tr>
+            @endforeach
                 @if($item->count() > 0)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>

@@ -91,9 +91,6 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($projects as $keys => $project)
-                                            {{-- @php
-                                                dd(getTotalProgressVendor($data->id, $project->id_vendor,3));
-                                            @endphp --}}
                                             <tr>
                                                 <td>{{ $project->vendors->name }}</td>
 
@@ -144,7 +141,7 @@
                                                 </div>
                                             </a>
                                             @hasrole(['BOD','Project Manager'])
-                                                @if ($status > 0)
+                                                @if ($status < 0)
                                                     <button class="btn btn-block w-100 rounded-3 border-0 text-white" style="background: grey;" disabled>
                                                         <div class="d-flex justify-content-between align-items-end">
                                                             <div class="fs-5 text-start">
@@ -168,19 +165,43 @@
                                                                     </div>
                                                                 </div>
                                                             </button>
+                                                        @else
+                                                            <button class="btn btn-block w-100 rounded-3 border-0 text-white" style="background: grey;" disabled>
+                                                                <div class="d-flex justify-content-between align-items-end">
+                                                                    <div class="fs-5 text-start">
+                                                                        Approval Complete<br>
+                                                                    </div>
+                                                                    <div>
+                                                                        <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
                                                         @endif
                                                     @endhasrole
                                                     @hasrole('Project Manager')
-                                                        <button class="btn btn-success btn-block w-100 rounded-3 border-0" id="btn-approval">
-                                                            <div class="d-flex justify-content-between align-items-end">
-                                                                <div class="fs-5 text-start">
-                                                                    Approval Complete<br>
+                                                        @if ($data->approval_pm)
+                                                            <button class="btn btn-success btn-block w-100 rounded-3 border-0">
+                                                                <div class="d-flex justify-content-between align-items-end">
+                                                                    <div class="fs-5 text-start">
+                                                                        Approved<br>
+                                                                    </div>
+                                                                    <div>
+                                                                        <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                                    </div>
                                                                 </div>
-                                                                <div>
-                                                                    <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                            </button>
+                                                        @else
+                                                            <button class="btn btn-success btn-block w-100 rounded-3 border-0" id="btn-approval-pm">
+                                                                <div class="d-flex justify-content-between align-items-end">
+                                                                    <div class="fs-5 text-start">
+                                                                        Approval Complete<br>
+                                                                    </div>
+                                                                    <div>
+                                                                        <i><img src="{{asset('assets/images/like.svg')}}" style="width: 30px;"></i>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </button>
+                                                            </button>
+                                                        @endif
                                                     @endhasrole
                                                 @endif
                                             @endhasrole
@@ -277,6 +298,34 @@
                             if(ress.status === 200){
                                 alertToast('success',ress.msg)
                                 location.href = '{{ route('complete') }}'
+                            }
+                       })
+                    }
+                });
+            });
+
+            $('#btn-approval-pm').on('click',function(){
+                let id = "{{ $id }}"
+                let url = '{{ route('on_progres.approval-project-pm',':id') }}';
+                let urlReplace = url.replace(':id',id);
+                Swal.fire({
+                    title: "Are you sure?",
+                    // text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, approved it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                       $.ajax({
+                            url : urlReplace,
+                            method : 'GET'
+                       }).then(ress => {
+                            if(ress.status === 200){
+                                console.log(ress);
+                                alertToast('success',ress.msg)
+                                location.reload();
                             }
                        })
                     }

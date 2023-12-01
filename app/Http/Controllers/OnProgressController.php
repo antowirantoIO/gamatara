@@ -644,7 +644,7 @@ class OnProgressController extends Controller
                                         ->where('id_kategori',$request->id_kategori)
                                         ->whereNotNull(['id_pekerjaan'])
                                         ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
-                                        ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                                        ->groupBy('id_subkategori','id_kategori','id_vendor','id_project','deskripsi_subkategori')
                                         ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
                                         ->distinct();
             }else {
@@ -679,8 +679,7 @@ class OnProgressController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
-                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,3) . ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,null);
             })
             ->make(true);
         }
@@ -721,8 +720,7 @@ class OnProgressController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
-                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,3). ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,null);
             })
             ->make(true);
         }
@@ -928,6 +926,19 @@ class OnProgressController extends Controller
                             ->get();
         return DataTables::of($data)->addIndexColumn()
         ->make(true);
+    }
+
+    public function approvalProjectPM(Request $request, $id)
+    {
+        $id_user = auth()->user()->id;
+        OnRequest::where('id', $id)->update([
+            'approval_pm' => $id_user
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'msg' => 'Data Approved !'
+        ],200);
     }
 
 }

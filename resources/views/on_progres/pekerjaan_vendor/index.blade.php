@@ -11,7 +11,7 @@
                             <a href="{{route('on_progress.edit',$project)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Bills</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Vendor Work</h4>
                         </div>
                     </div>
                 </div>

@@ -105,13 +105,13 @@
                                                                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                             </span>
                                                         </a>
-                                                        @hasrole(['Staff Finance','Project Admin','SPV Finance'])
+                                                        @can('edit-pekerjaan-vendor')
                                                         <a href="{{ route('on_progres.request.tambah-kategori',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
                                                             <span>
                                                                 <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
                                                             </span>
                                                         </a>
-                                                        @endhasrole
+                                                        @endcan
                                                     </div>
                                                 </td>
                                             </tr>
@@ -186,28 +186,32 @@
                                             @endhasrole
                                         </div>
                                         <div class="d-flex gap-3">
-                                            <a href="{{ route('on_progres.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
-                                                <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5 text-start">
-                                                        Vendor <br>
-                                                       <strong>Bills</strong>
-                                                    </div>
-                                                    <div>
-                                                        <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="{{ route('on_progres.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
-                                                <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5 text-start">
-                                                        Customer <br>
+                                            @can('laporan-vendor')
+                                                <a href="{{ route('on_progres.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
+                                                    <div class="d-flex justify-content-between align-items-end">
+                                                        <div class="fs-5 text-start">
+                                                            Vendor <br>
                                                         <strong>Bills</strong>
+                                                        </div>
+                                                        <div>
+                                                            <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                </a>
+                                            @endcan
+                                            @can('laporan-customer')
+                                                <a href="{{ route('on_progres.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
+                                                    <div class="d-flex justify-content-between align-items-end">
+                                                        <div class="fs-5 text-start">
+                                                            Customer <br>
+                                                            <strong>Bills</strong>
+                                                        </div>
+                                                        <div>
+                                                            <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </a>
+                                                </a>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>

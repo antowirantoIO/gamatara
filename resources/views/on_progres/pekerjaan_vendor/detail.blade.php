@@ -48,9 +48,9 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
-                                            @hasrole(['Staff Finance','SPV Finance'])
+                                            @can('edit-pekerjaan-vendor')
                                             <th style="color:#929EAE">Action</th>
-                                            @endhasrole
+                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,8 +83,12 @@
                                             <th style="width: 90px">Unit</th>
                                             <th style="width: 90px">Qty</th>
                                             <th style="width: 90px">Amount</th>
-                                            <th style="width: 90px">Vendor Price</th>
-                                            <th style="width: 90px">Customer Price</th>
+                                            @can('recent-activity-harga-vendor')
+                                                <th style="width: 90px">Vendor Price</th>
+                                            @endcan
+                                            @can('recent-activity-harga-customer')
+                                                <th style="width: 90px">Customer Price</th>
+                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -182,18 +186,22 @@
                                 <input type="text" name="amount" id="amount" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="harga_vendor" class="form-label">Vendor Price</label>
-                                <input type="text" name="harga_vendor" id="harga_vendor" class="form-control">
+                        @can('edit-harga-vendor')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="harga_vendor" class="form-label">Vendor Price</label>
+                                    <input type="text" name="harga_vendor" id="harga_vendor" class="form-control">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="harga_customer" class="form-label">Customer Price</label>
-                                <input type="text" name="harga_customer" id="harga_customer" class="form-control">
+                        @endcan
+                        @can('edit-harga-customer')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="harga_customer" class="form-label">Customer Price</label>
+                                    <input type="text" name="harga_customer" id="harga_customer" class="form-control">
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -273,7 +281,7 @@
                     { data : 'qty' },
                     { data : 'amount' },
                     { data : 'unit' },
-                    @hasrole(['Staff Finance','SPV Finance'])
+                    @can('edit-pekerjaan-vendor')
                     {
                         data : function (data) {
                             let id = data.id;
@@ -284,7 +292,7 @@
                             </button>`
                         }
                     }
-                    @endhasrole
+                    @endcan
                 ]
 
             });
@@ -354,15 +362,15 @@
                             let status = data.status || '-';
                             if(status === 1) {
                                 let date = moment(data.created_at);
-                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                let formated = date.format('DD MMMM YYYY');
                                 return formated
                             }else if ( status === 2 ){
                                 let date = moment(data.updated_at);
-                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                let formated = date.format('DD MMMM YYYY');
                                 return formated
                             }else{
                                 let date = moment(data.deleted_at);
-                                let formated = date.format('DD MMMM YYYY HH:mm:ss');
+                                let formated = date.format('DD MMMM YYYY');
                                 return formated
                             }
                         }
@@ -385,8 +393,12 @@
                     { data : 'unit', name : 'unit' },
                     { data : 'qty', name : 'qty' },
                     { data : 'amount', name : 'amount' },
-                    { data : 'harga_vendor', name : 'harga_vendor' },
-                    { data : 'harga_customer', name : 'harga_customer' },
+                    @can('recent-activity-harga-vendor')
+                        { data : 'harga_vendor', name : 'harga_vendor' },
+                    @endcan
+                    @can('recent-activity-harga-customer')
+                        { data : 'harga_customer', name : 'harga_customer' },
+                    @endcan
                 ]
             })
 

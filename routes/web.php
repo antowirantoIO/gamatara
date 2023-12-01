@@ -312,7 +312,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('pekerjaan')->group(function(){
             Route::get('detail/{id}',[CompleteController::class,'detailPekerjaan'])->name('complete.pekerjaan');
-            Route::get('sub-detail/{id}/{idProject}/{idSub}',[CompleteController::class,'subDetailPekerjaan'])->name('complete.sub-detail-pekerjaan');
+            Route::get('sub-detail/{id}/{idProject}/{idSub}/{kodeUnik}',[CompleteController::class,'subDetailPekerjaan'])->name('complete.sub-detail-pekerjaan');
         });
 
         Route::prefix('tagihan')->group(function(){

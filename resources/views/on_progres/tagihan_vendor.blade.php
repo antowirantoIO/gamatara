@@ -175,36 +175,114 @@
                 columns : [
                     { data : 'pekerjaan', name : 'pekerjaan'},
                     { data : 'subKategori', name : 'subKategori'},
-                    { data : 'id_lokasi', name : 'id_lokasi'},
-                    {data : 'detail', name : 'detail'},
-                    {data : 'length', name : 'length'},
-                    {data : 'width', name : 'width'},
-                    {data : 'thick', name : 'thick'},
-                    {data : 'qty', name : 'qty'},
-                    {data : 'amount', name : 'amount'},
-                    {data : 'unit', name : 'unit'},
+                    {
+                        data : function(data) {
+                            let location = data.id_lokasi || '';
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.id_lokasi !== item.id_lokasi ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${location}</div>`;
+                        }
+                    },
                     {
                         data : function(data){
-                            if(data.harga_vendor !== null){
-                                let amount = data.harga_vendor || '-';
-                                return rupiah(amount);
-                            }else{
-                                return 0;
-                            }
+                            let detail = data.detail || '';
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.detail !== item.detail ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${detail}</div>`;
+                        }
+                    },
+                    {
+                        data : function(data) {
+                            let length = data.length || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.length !== item.length ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${length}</div>`;
+                        },
+                        name : 'length'
+                    },
+                    {
+                        data : function (data) {
+                            let width = data.width || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.width !== item.width ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${width}</div>`;
+                        },
+                        name : 'width'
+                    },
+                    {
+                        data : function (data) {
+                            let thick = data.thick || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.thick !== item.thick ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${thick}</div>`;
+                        },
+                        name : 'thick'
+                    },
+                    {
+                        data : function (data) {
+                            let qty = data.qty || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.qty !== item.qty ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${qty}</div>`;
+                        },
+                        name : 'qty'
+                    },
+                    {
+                        data : function (data) {
+                            let amount = data.amount || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.amount !== item.amount ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${amount}</div>`;
+                        },
+                        name : 'amount'
+                    },
+                    {
+                        data : function (data) {
+                            let unit = data.unit || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.unit !== item.unit ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${unit}</div>`;
+                        },
+                        name : 'unit'
+                    },
+                    {
+                        data : function(data){
+                            let amount = data.harga_vendor || 0;
+                            var status = false;
+                            var recent = data.activitys.map(item =>{
+                                status = data.harga_vendor != item.harga_vendor ? 'bg-danger text-white' : '';
+                            })
+                            return `<div class="${status} p-3 rounded-3">${rupiah(amount)}</div>`;
                         }
                     },
                     {
                         data : function(data){
                             if(data.harga_vendor !== null){
-                                let harga = data.harga_vendor || '-';
-                                let amount = data.amount;
-                                let total = amount * harga;
-                                return rupiah(total);
+                                let harga = data.harga_vendor || 0;
+                                let amount = data.amount || 0;
+                                let total = harga * amount;
+                                return `<div class="p-3">${rupiah(total)}</div>`
                             }else{
-                                return 0;
+                                return `<div class="p-3">0</div>`;
                             }
                         }
-                    }
+                    },
                 ]
             })
             handleFiltertab($('.btn-filter-category.active'));

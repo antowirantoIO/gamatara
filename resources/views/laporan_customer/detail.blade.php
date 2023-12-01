@@ -171,7 +171,7 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_customer.detail', '') }}/" + {{ $data->id }},
+                url: "{{ route('laporan_customer.detail', '') }}/" + {{ $data->id_customer }},
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
@@ -214,7 +214,7 @@
             var status_project  = $('#status_project').val();
 
             var url = '{{ route("laporan_customer.exportDetail") }}?' + $.param({
-                id              : {{$data->id}},
+                id              : {{$data->id_customer}},
                 code            : code,
                 nama_project    : nama_project,
                 tanggal_mulai   : tanggal_mulai,

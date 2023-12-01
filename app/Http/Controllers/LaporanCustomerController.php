@@ -169,7 +169,7 @@ class LaporanCustomerController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $cek = OnRequest::where('id', $request->id)->get();
+            $cek = OnRequest::where('id_customer', $request->id)->get();
             $cekIds = $cek->pluck('id')->toArray();
             $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                     ->addSelect(['total' => OnRequest::selectRaw('count(*)')
@@ -205,7 +205,7 @@ class LaporanCustomerController extends Controller
             })
             ->addColumn('status_project', function($data){
                 if($data->projects->status == 1){
-                    $status = '<span style="color: yellow;">Progress</span>';
+                    $status = '<span style="color: blue;">Progress</span>';
                 }else if($data->projects->status == 2){
                     $status = '<span style="color: green;">Complete</span>';
                 }else{
@@ -284,9 +284,7 @@ class LaporanCustomerController extends Controller
                  $value['nilai_project'] = 'Rp 0000';
             }
 
-            if($value->projects->status == 1){
-                $value['status'] = 'Request';
-            }else if($value->projects->status == 2){
+            if($value->projects->status == 2){
                 $value['status'] = 'Progress';
             }else if($value->projects->status == 3){
                 $value['status'] = 'Complete';

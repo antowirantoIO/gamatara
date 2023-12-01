@@ -268,7 +268,9 @@ class LaporanCustomerController extends Controller
 
     public function exportDetail(Request $request)
     {
-        $data = ProjectPekerjaan::with('projects')->where('id_project',$request->id)
+        $cek = OnRequest::where('id_customer', $request->id)->get();
+        $cekIds = $cek->pluck('id')->toArray();
+        $data = ProjectPekerjaan::with(['projects'])->where('id_project',$cekIds)
                 ->addSelect(['total' => OnRequest::selectRaw('count(*)')
                     ->whereColumn('project_pekerjaan.id_project', 'project.id')
                     ->groupBy('id_customer')

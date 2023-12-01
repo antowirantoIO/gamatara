@@ -49,8 +49,8 @@
                                             <table class="table w-100" id="tableData">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE;">Kategori</th>
+                                                        <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE">Location</th>
                                                         <th style="color:#929EAE">Detail / Other</th>
                                                         <th style="color:#929EAE">Length (mm)</th>
@@ -138,25 +138,25 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="length" class="form-label">Length</label>
-                                <input type="text" name="length" id="length" class="form-control">
+                                <input type="text" name="length" id="length" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="width" class="form-label">Width</label>
-                                <input type="text" name="width" id="width" class="form-control">
+                                <input type="text" name="width" id="width" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="thick" class="form-label">Thick</label>
-                                <input type="text" name="thick" id="thick" class="form-control">
+                                <input type="text" name="thick" id="thick" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="unit" class="form-label">Unit</label>
-                                <input type="text" name="unit" id="unit" class="form-control">
+                                <input type="text" name="unit" id="unit" class="form-control" >
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
@@ -168,21 +168,25 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="amount" class="form-label">Amount</label>
-                                <input type="text" name="amount" id="amount" class="form-control" readonly>
+                                <input type="text" name="amount" id="amount" class="form-control">
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="harga_vendor" class="form-label">Vendor Price</label>
-                                <input type="text" name="harga_vendor" id="harga_vendor" class="form-control">
+                        @can('edit-harga-vendor')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="harga_vendor" class="form-label">Vendor Price</label>
+                                    <input type="text" name="harga_vendor" id="harga_vendor" class="form-control">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="harga_customer" class="form-label">Customer Price</label>
-                                <input type="text" name="harga_customer" id="harga_customer" class="form-control harga_customer">
+                        @endcan
+                        @can('edit-harga-customer')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="harga_customer" class="form-label">Customer Price</label>
+                                    <input type="text" name="harga_customer" id="harga_customer" class="form-control">
+                                </div>
                             </div>
-                        </div>
+                        @endcan
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -281,8 +285,8 @@
                     }
                 },
                 columns : [
-                    { data : 'pekerjaan', name : 'pekerjaan'},
                     { data : 'subKategori', name : 'subKategori'},
+                    { data : 'pekerjaan', name : 'pekerjaan'},
                     {
                         data : function(data) {
                             let location = data.id_lokasi || '';

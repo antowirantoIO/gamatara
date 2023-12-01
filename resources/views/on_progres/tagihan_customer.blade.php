@@ -151,19 +151,19 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="length" class="form-label">Length</label>
-                                <input type="text" name="length" id="length" class="form-control">
+                                <input type="text" name="length" id="length" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="width" class="form-label">Width</label>
-                                <input type="text" name="width" id="width" class="form-control">
+                                <input type="text" name="width" id="width" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="thick" class="form-label">Thick</label>
-                                <input type="text" name="thick" id="thick" class="form-control">
+                                <input type="text" name="thick" id="thick" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
@@ -181,7 +181,7 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="amount" class="form-label">Amount</label>
-                                <input type="text" name="amount" id="amount" class="form-control" readonly>
+                                <input type="text" name="amount" id="amount" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">

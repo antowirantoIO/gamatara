@@ -80,7 +80,7 @@
                                             <tr>
                                                 <td>{{$d->name}}</td>
                                                 <td>{{$d->total_project}}</td>
-                                                <td>{{$d->harga}}</td>
+                                                <td>{{$d->total}}</td>
                                                 <td><a href="{{route('laporan_lokasi_project.detail', $d->id)}}" class="btn btn-warning btn-sm">
                                                 <span>
                                                     <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>

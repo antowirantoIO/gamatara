@@ -40,7 +40,7 @@ class LaporanLokasiProjectController extends Controller
                     $id = $project->id;
                 }
                 $value['total_project'] = $value->projects->count();
-                $value['detail_url'] = route('laporan_customer.detail', $id);
+                $value['detail_url'] = route('laporan_lokasi_project.detail', $id);
             } else {
                 $value['total_project'] = 0;
             }

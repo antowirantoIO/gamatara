@@ -164,7 +164,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 380px;">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table" id="example1">
                                     <thead class="table-light">
@@ -364,7 +364,7 @@
             fixedHeader:true,
             scrollX: false,
             searching: false,
-            lengthMenu: [5, 10, 15],
+            lengthMenu: [10, 15, 20, 25, 50],
             pageLength: 5,
             language: {
                 processing:

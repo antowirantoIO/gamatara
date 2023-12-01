@@ -115,7 +115,10 @@
                 <tr>
                     @foreach ($value->beforePhoto as $before)
                     <td>
-                        <img src="{{ URL::asset($before->photo) }}" alt="photo">
+                        @php
+                            $photo = $before->photo;
+                        @endphp
+                        <img src="{{ URL::asset($photo) }}" alt="photo">
                     </td>
                     @endforeach
                 </tr>

@@ -116,7 +116,7 @@
                     @foreach ($value->beforePhoto as $before)
                     <td>
                         @php
-                            $photo = $before->photo;
+                            $photo = public_path($before->photo);
                         @endphp
                         <img src="{!! URL::asset($photo) !!}" alt="photo">
                     </td>

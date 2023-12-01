@@ -93,7 +93,7 @@
                                         </div>          
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat">Alamat Customer</label>
+                                                <label for="alamat">Customer Address</label>
                                                 <input type="text" class="form-control" name="alamat" id="alamat" value="{{ old('alamat') }}" readonly>
                                             </div>
                                         </div>   

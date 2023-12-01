@@ -17,6 +17,11 @@ class ProjectPekerjaan extends Model
         return $this->belongsTo(Vendor::class,'id_vendor','id');
     }
 
+    public function beforePhoto()
+    {
+        return $this->hasMany(BeforePhoto::class,'kode_unik','kode_unik');
+    }
+
     public function lokasi ()
     {
         return $this->belongsTo(LokasiProject::class,'id_lokasi','id');

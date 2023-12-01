@@ -181,7 +181,7 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="amount" class="form-label">Amount</label>
-                                <input type="text" name="amount" id="amount" class="form-control" readonly>
+                                <input type="text" name="amount" id="amount" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">

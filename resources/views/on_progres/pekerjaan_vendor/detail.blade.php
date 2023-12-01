@@ -285,6 +285,7 @@
                     {
                         data : function (data) {
                             let id = data.id;
+                            console.log(data);
                             return   `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
                                 <span>
                                     <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>

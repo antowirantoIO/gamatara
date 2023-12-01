@@ -43,11 +43,11 @@
                                                 <td>{{ $item->pekerjaan->name . ' ' . $item->deskripsi_pekerjaan ?? '-' }}</td>
                                                 <td>{{ $item->id_lokasi ?? '-' }}</td>
                                                 <td>{{ $item->detail ?? '-' }}</td>
-                                                <td>{{ $item->length ?? 0 }}</td>
-                                                <td>{{ $item->width ?? 0 }}</td>
-                                                <td>{{ $item->thick ?? 0 }}</td>
-                                                <td>{{ $item->qty ?? 0 }}</td>
-                                                <td>{{ $item->amount ?? 0 }}</td>
+                                                <td>{{ number_format($item->length,2, ',','') ?? 0 }}</td>
+                                                <td>{{ number_format($item->width,2, ',','') ?? 0 }}</td>
+                                                <td>{{ number_format($item->thick,2, ',','') ?? 0 }}</td>
+                                                <td>{{ number_format($item->qty,2, ',','') ?? 0 }}</td>
+                                                <td>{{number_format($item->amount,2, ',','') ?? 0 }}</td>
                                                 <td>{{ $item->unit ?? '-' }}</td>
                                                 <td>{{ $item->vendors->name ?? '-' }}</td>
                                             </tr>
@@ -66,10 +66,12 @@
                         <p class="fs-4">Before</p>
                             @if ($before->count() > 0)
                                 <div class="d-flex justify-content-around align-items-center bg-white p-3">
-                                    @foreach ($before as $b)
-                                        <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
-                                            <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
-                                        </a>
+                                    @foreach ($data as $d)
+                                        @foreach ($d->beforePhoto as $b)
+                                            <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                                <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
+                                            </a>
+                                        @endforeach
                                     @endforeach
                                 </div>
                             @else

@@ -206,7 +206,37 @@
     </div>
 </div>
 
-
+<div id="modalHistory" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-top-right modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Recent Activity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="project_pekerjaan_id">
+                <table class="table w-100" id="tableHistory">
+                    <thead style="background-color:#194BFB; color: white;">
+                        <tr>
+                            <th style="width: 200px">Job</th>
+                            <th style="width: 200px">Date</th>
+                            <th style="width: 200px">Status</th>
+                            <th style="width: 90px">Length (mm)</th>
+                            <th style="width: 90px">Width (mm)</th>
+                            <th style="width: 90px">Thick (mm)</th>
+                            <th style="width: 90px">Unit</th>
+                            <th style="width: 90px">Qty</th>
+                            <th style="width: 90px">Amount</th>
+                            <th style="width: 90px">Vendor Price</th>
+                            <th style="width: 90px">Customer Price</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -216,6 +246,7 @@
             let filterData = {};
             let modalInput = $('#modalFillter');
             let modalEdit = $('#modalEdit');
+            let modalHistory = $('#modalHistory');
 
             let btnFilterCategory = $('.btn-filter-category');
 
@@ -392,15 +423,22 @@
                             }
                         }
                     },
-                    @can('edit-pekerjaan-vendro')
+                    @can('edit-pekerjaan-vendor')
                         {
                             data : function(data){
                                 let id = data.id;
-                                return `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
-                                    <span>
-                                        <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
-                                    </span>
-                                </button>`
+                                return `<div class="d-flex justify-content-around gap-3">
+                                    <button data-id="${id}" class="btn btn-info btn-sm btn-edit">
+                                        <span>
+                                            <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                        </span>
+                                    </button>
+                                    <button class="btn btn-warning btn-history btn-sm" data-id=${id}>
+                                        <span>
+                                            <i><img src="{{asset('assets/images/history.svg')}}" style="width: 20px; color:white;"></i>
+                                        </span>
+                                    </button>
+                                </div>`
                             }
                         }
                     @endcan
@@ -473,6 +511,19 @@
                     modalEdit.modal('show');
                 })
             });
+
+            $(document).delegate('.btn-history','click',function(){
+                let data = $('.parent-clone');
+                let id = $(this).data('id');
+                $('.project_pekerjaan_id').val(id);
+                modalHistory.modal('show');
+                getRecentDetail(id);
+            })
+
+            modalHistory.on('hidden.bs.modal',function(){
+                $('#tableHistory').DataTable().destroy();
+            })
+
             $('.harga_customer').on('input', function() {
                 var inputValue = $(this).val();
                 var formattedValue = formatRupiah(inputValue);
@@ -500,6 +551,105 @@
                 ribuan 	= reverse.match(/\d{1,3}/g);
                 ribuan	= ribuan.join('.').split('').reverse().join('');
                 return ribuan;
+            }
+
+            function getRecentDetail (id) {
+                var tableRecent = $('#tableHistory').DataTable({
+                    fixedHeader:true,
+                    scrollX: false,
+                    ordering : false,
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    bLengthChange: false,
+                    autoWidth : true,
+                    language: {
+                        processing:
+                            '<div class="spinner-border text-info" role="status">' +
+                            '<span class="sr-only">Loading...</span>' +
+                            "</div>",
+                        paginate: {
+                            Search: '<i class="icon-search"></i>',
+                            first: "<i class='fas fa-angle-double-left'></i>",
+                            next: "Next <span class='mdi mdi-chevron-right'></span>",
+                            last: "<i class='fas fa-angle-double-right'></i>",
+                        },
+                        "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                    },
+                    drawCallback: function() {
+                        var previousButton = $('.paginate_button.previous');
+                        previousButton.css('display', 'none');
+                    },
+                    ajax : {
+                        url : '{{ route('ajax.recent-activity-detail') }}',
+                        method : 'POST',
+                        data : function (d) {
+                            d._token    = '{{ csrf_token() }}';
+                            d.id        =  id
+                        }
+                    },
+                    columns : [
+                        { data : 'pekerjaan.name', name : 'id_pekerjaan'},
+                        {
+                            data : function(data) {
+                                let status = data.status || '-';
+                                if(status === 1) {
+                                    let date = moment(data.created_at);
+                                    let formated = date.format('DD MMMM YYYY');
+                                    return formated
+                                }else if ( status === 2 ){
+                                    let date = moment(data.updated_at);
+                                    let formated = date.format('DD MMMM YYYY');
+                                    return formated
+                                }else{
+                                    let date = moment(data.deleted_at);
+                                    let formated = date.format('DD MMMM YYYY');
+                                    return formated
+                                }
+                            }
+                        },
+                        {
+                            data : function(data) {
+                                let status = data.status;
+                                if(status === 1) {
+                                    return `<div class="text-success">${data.description} </div>`
+                                }else if(status === 2){
+                                    return `<div class="text-info">${data.description} </div>`
+                                }else{
+                                    return `<div class="text-danger">${data.description} </div>`
+                                }
+                            }
+                        },
+                        { data : 'length', name : 'length' },
+                        { data : 'width', name : 'width' },
+                        { data : 'thick', name : 'thick' },
+                        { data : 'unit', name : 'unit' },
+                        { data : 'qty', name : 'qty' },
+                        {
+                            data : function(data) {
+                                let amount = data.amount || 0;
+                                return parseFloat(amount);
+                            },
+                            name : 'amount'
+                        },
+                        {
+                            data : function(data) {
+                                let harga_vendor = data.harga_vendor || 0;
+                                return rupiah(harga_vendor);
+                            },
+                            name : 'harga_vendor'
+                        },
+                        {
+                            data : function(data) {
+                                let harga_customer = data.harga_customer || 0 ;
+                                return rupiah(harga_customer);
+                            },
+                            name : 'harga_customer'
+                        },
+                    ]
+                });
+
+                return tableRecent;
             }
         })
     </script>

@@ -167,7 +167,7 @@ class LaporanLokasiProjectController extends Controller
                 }
             })
             ->addColumn('tanggal_mulai', function($data){
-                return $data->projects ? $data->created_at->format('d M Y') : ''; ;
+                return $data->projects ? $data->projects->created_at->format('d M Y') : ''; ;
             })
             ->addColumn('tanggal_selesai', function($data){
                 return $data->projects->actual_selesai ?? '-';

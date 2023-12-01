@@ -227,7 +227,7 @@ class LaporanVendorController extends Controller
                 }
             })
             ->addColumn('tanggal_mulai', function($data){
-                return $data->projects->start_project ;
+                return $data->projects ? $data->projects->created_at->format('d M Y') : ''; ;
             })
             ->addColumn('tanggal_selesai', function($data){
                 return $data->projects->actual_selesai ?? '-';
@@ -297,9 +297,9 @@ class LaporanVendorController extends Controller
             }
             
             if ($value->projects) {
-                if($value->projects->status == 2){
+                if($value->projects->status == 1){
                     $value['status'] = 'Progress';
-                }else if($value->projects->status == 3){
+                }else if($value->projects->status == 2){
                     $value['status'] = 'Complete';
                 }else{
                     $value['status'] = '-';

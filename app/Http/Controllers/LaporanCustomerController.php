@@ -178,7 +178,6 @@ class LaporanCustomerController extends Controller
                     ])
                     ->filter($request);
 
-
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('code', function($data){
                 return $data->projects->code ?? '';
@@ -190,7 +189,7 @@ class LaporanCustomerController extends Controller
                 return $data->total;
             })
             ->addColumn('nilai_project', function($data){
-                $harga_customer = $data->harga_customer;
+                $harga_customer = $data->harga_customer * $data->qty;
                 if (is_numeric($harga_customer)) {
                     return 'Rp ' . number_format($harga_customer, 0, ',', '.');
                 } else {
@@ -270,16 +269,15 @@ class LaporanCustomerController extends Controller
     {
         $cek = OnRequest::where('id_customer', $request->id)->get();
         $cekIds = $cek->pluck('id')->toArray();
-        $data = ProjectPekerjaan::with(['projects'])->where('id_project',$cekIds)
+        $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                 ->addSelect(['total' => OnRequest::selectRaw('count(*)')
                     ->whereColumn('project_pekerjaan.id_project', 'project.id')
                     ->groupBy('id_customer')
                 ])
-                ->filter($request)
-                ->get();
+                ->filter($request)->get();
 
         foreach($data as $value){
-            $harga_customer = $value->harga_customer;
+            $harga_customer = $value->harga_customer * $value->qty;
             if (is_numeric($harga_customer)) {
                  $value['nilai_project'] = 'Rp ' . number_format($harga_customer, 0, ',', '.');
             } else {

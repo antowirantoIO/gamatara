@@ -159,7 +159,7 @@ class LaporanLokasiProjectController extends Controller
                 return $data->total;
             })
             ->addColumn('nilai_project', function($data){
-                $harga_customer = $data->harga_customer;
+                $harga_customer = $data->harga_customer* $data->qty;
                 if (is_numeric($harga_customer)) {
                     return 'Rp ' . number_format($harga_customer, 0, ',', '.');
                 } else {
@@ -238,7 +238,7 @@ class LaporanLokasiProjectController extends Controller
                 ->get();
 
         foreach($data as $value){
-            $harga_customer = $value->harga_customer;
+            $harga_customer = $value->harga_customer * $value->qty;
             if (is_numeric($harga_customer)) {
                  $value['nilai_project'] = 'Rp ' . number_format($harga_customer, 0, ',', '.');
             } else {

@@ -125,7 +125,7 @@
                                     <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </button>
-                        @else
+                        @elseif($pmAuth == 'Project Admin')
                             <button type="button" class="btn btn-sm" 
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
                                     style="background-color:grey; 

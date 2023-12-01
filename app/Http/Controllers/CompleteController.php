@@ -10,6 +10,8 @@ use App\Models\Kategori;
 use App\Models\Vendor;
 use App\Models\SubKategori;
 use App\Models\Pekerjaan;
+use App\Models\BeforePhoto;
+use App\Models\AfterPhoto;
 use App\Models\LokasiProject;
 
 use Illuminate\Http\Request;
@@ -91,12 +93,19 @@ class CompleteController extends Controller
         return view('complete.pekerjaan.index',compact('kategori','id','vendor','subKategori','subWorker'));
     }
 
-    public function subDetailPekerjaan($id,$idProject,$subKategori)
+    public function subDetailPekerjaan($id,$idProject,$subKategori,$kodeUnik)
     {
         $data = ProjectPekerjaan::where('id_project',$idProject)
                                 ->where('id_kategori',$id)
                                 ->where('id_subkategori',$subKategori)
                                 ->get();
+        $before = BeforePhoto::where('id_project',$idProject)
+                            ->where('kode_unik',$kodeUnik)
+                            ->get();
+        $after = AfterPhoto::where('id_project',$idProject)
+                            ->where('kode_unik',$kodeUnik)
+                            ->get();
+            // dd($before,$after);
         return view('complete.pekerjaan.detail',compact('data','idProject'));
     }
 
@@ -370,8 +379,8 @@ class CompleteController extends Controller
                                     ->where('id_kategori', $request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->with(['subKategori', 'vendors'])
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori','kode_unik')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori','kode_unik', DB::raw('MAX(id) as id'))
                                     ->distinct();
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){

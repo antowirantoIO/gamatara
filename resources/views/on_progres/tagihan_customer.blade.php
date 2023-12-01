@@ -69,7 +69,9 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Customer Price</th>
                                                         <th style="color:#929EAE">Total Price</th>
-                                                        <th style="color:#929EAE">Action</th>
+                                                        @can('edit-pekerjaan-vendor')
+                                                            <th style="color:#929EAE">Action</th>
+                                                        @endcan
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -390,16 +392,18 @@
                             }
                         }
                     },
-                    {
-                        data : function(data){
-                            let id = data.id;
-                            return `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
-                                <span>
-                                    <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
-                                </span>
-                            </button>`
+                    @can('edit-pekerjaan-vendro')
+                        {
+                            data : function(data){
+                                let id = data.id;
+                                return `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
+                                    <span>
+                                        <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                    </span>
+                                </button>`
+                            }
                         }
-                    }
+                    @endcan
                 ]
 
             })

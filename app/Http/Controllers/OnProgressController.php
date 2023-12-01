@@ -377,15 +377,19 @@ class OnProgressController extends Controller
 
     public function detailWorker($id)
     {
-        $kategori = Kategori::all();
-        $workers = ProjectPekerjaan::where('id_project',$id)
-                                    ->select('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
-                                    ->groupBy('id_project','id_kategori','id_subkategori','id_vendor','status','deskripsi_subkategori')
-                                    ->get();
-        $subWorker = groupSubWorker($workers);
+        $kategori = Kategori::whereHas('projectPekerjaan', function($query) use ($id) {
+            return $query->where('id_project', $id);
+        })->get();
+
+        $desiredOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL", "PERMESINAN", "PIPA-PIPA", "INTERIOR KAPAL", "LAIN-LAIN"];
+
+        $workers = $kategori->sortBy(function ($group, $key) use ($desiredOrder) {
+            $index = array_search($key, $desiredOrder);
+            return $index !== false ? $index : PHP_INT_MAX;
+        });
         $vendor = Vendor::all();
         $subKategori = SubKategori::all();
-        return view('on_progres.detail',compact('id','kategori','subWorker','vendor','subKategori'));
+        return view('on_progres.detail',compact('id','kategori','vendor','subKategori','workers'));
     }
 
     public function subDetailWorker($id,$idProject,$subKategori, $kodeUnik)
@@ -531,6 +535,8 @@ class OnProgressController extends Controller
             return back()->with('error',$validasi->errors()->first());
         }
 
+        $project = ProjectPekerjaan::where('id',$request->id)->first();
+
         ProjectPekerjaan::where('id',$request->id)->update([
             'length' => $request->length,
             'width' => $request->width,
@@ -538,34 +544,49 @@ class OnProgressController extends Controller
             'unit' => $request->unit,
             'qty' => $request->qty,
             'amount' => str_replace(",", ".", $request->amount),
-            'harga_vendor' => $request->harga_vendor,
-            'harga_vendor' => str_replace(",", "", $request->harga_vendor),
-            'harga_customer' =>  str_replace(",", "", $request->harga_customer)
+            'harga_vendor' => $request->harga_vendor ? str_replace(",", "", $request->harga_vendor) : $project->harga_vendor,
+            'harga_customer' =>  $request->harga_customer ? str_replace(",", "", $request->harga_customer) : $project->harga_customer
         ]);
 
         $data = ProjectPekerjaan::where('id',$request->id)->first();
-
-        RecentActivity::create([
-            'project_pekerjaan_id' => $data->id,
-            'id_vendor' => $data->id_vendor,
-            'id_project' => $data->id_project,
-            'id_pekerjaan' => $data->id_pekerjaan,
-            'id_kategori' => $data->id_kategori,
-            'id_subkategori' => $data->id_subkategori,
-            'deskripsi_pekerjaan' => $data->deskripsi_pekerjaan,
-            'id_lokasi' => $data->id_lokasi,
-            'detail' => $data->detail,
-            'length' => $data->length,
-            'width' => $data->width,
-            'thick' => $data->thick,
-            'unit' => $data->unit,
-            'qty' => $data->qty,
-            'amount' => $data->amount,
-            'harga_vendor' => str_replace(",", "", $request->harga_vendor) ,
-            'harga_customer' =>  str_replace(",", "", $request->harga_customer),
-            'description' => 'Updated Data',
-            'status' => 2
-        ]);
+        $currentData = RecentActivity::where('project_pekerjaan_id',$project->id)
+        ->orderBy('created_at','desc')
+        ->first();
+        $isDifferent = false;
+        if ($currentData) {
+            if (intval($currentData->length) !== intval($request->length) ||
+                intval($currentData->width) !== intval($request->width) ||
+                intval($currentData->thick) !== intval($request->thick) ||
+                intval($currentData->qty) !== intval($request->qty) ||
+                $currentData->amount != floatval($request->amount)) {
+                $isDifferent = true;
+            }else{
+                $isDifferent = false;
+            }
+        }
+        if($isDifferent){
+            RecentActivity::create([
+                'project_pekerjaan_id' => $data->id,
+                'id_vendor' => $data->id_vendor,
+                'id_project' => $data->id_project,
+                'id_pekerjaan' => $data->id_pekerjaan,
+                'id_kategori' => $data->id_kategori,
+                'id_subkategori' => $data->id_subkategori,
+                'deskripsi_pekerjaan' => $data->deskripsi_pekerjaan,
+                'id_lokasi' => $data->id_lokasi,
+                'detail' => $data->detail,
+                'length' => $data->length,
+                'width' => $data->width,
+                'thick' => $data->thick,
+                'unit' => $data->unit,
+                'qty' => $data->qty,
+                'amount' => $data->amount,
+                'harga_vendor' => $request->harga_vendor ? str_replace(",", "", $request->harga_vendor) : $project->harga_vendor,
+                'harga_customer' =>  $request->harga_customer ? str_replace(",", "", $request->harga_customer) : $project->harga_customer,
+                'description' => 'Updated Data',
+                'status' => 2
+            ]);
+        }
 
         return back()->with('success','Successfully Updated Data');
     }
@@ -618,13 +639,22 @@ class OnProgressController extends Controller
     {
 
         if($request->ajax()){
-            $data = ProjectPekerjaan::where('id_project',$request->id_project)
-                                    ->where('id_kategori', $request->id_kategori)
-                                    // ->where('id_vendor',$request->id_vendor)
-                                    ->with(['subKategori', 'vendors'])
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                                    ->distinct();
+            if(!empty($request->id_kategori)){
+                $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                                        ->where('id_kategori',$request->id_kategori)
+                                        ->whereNotNull(['id_pekerjaan'])
+                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
+                                        ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                                        ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                        ->distinct();
+            }else {
+                $data = ProjectPekerjaan::where('id_project', $request->id_project)
+                        ->whereNotNull(['id_pekerjaan'])
+                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
+                        ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                        ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                        ->distinct();
+            }
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
                 $data->where('id_subkategori',$request->sub_kategori);
@@ -739,7 +769,7 @@ class OnProgressController extends Controller
                                     ->where('id_kategori',$request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->whereNotNull(['id_pekerjaan'])
-                                    ->with(['subKategori','projects.lokasi','pekerjaan']);
+                                    ->with(['subKategori','projects.lokasi','pekerjaan','activitys']);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
                 $data->where('id_subkategori',$request->sub_kategori);

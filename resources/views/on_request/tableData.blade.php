@@ -42,9 +42,15 @@
                                 </button>
                             @endif
                         @elseif($pmAuth == 'BOD')
-                            <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
-                                Approved
-                            </button>
+                            @if($complaint->id_pm_approval != null && $complaint->id_bod_approval == null)
+                                <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
+                                    Approved
+                                </button>
+                            @elseif($complaint->id_pm_approval != null && $complaint->id_bod_approval != null)
+                                <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
+                                    Approved
+                                </button>
+                            @endif
                         @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             @if($complaint->id_pm_approval != null)
                                 Approved

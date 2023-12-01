@@ -11,6 +11,11 @@ class LokasiProject extends Model
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 
+    public function projects()
+    {
+        return $this->HasMany(OnRequest::class, 'id_lokasi_project','id');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {

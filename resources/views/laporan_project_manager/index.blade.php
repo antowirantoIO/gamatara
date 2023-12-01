@@ -11,11 +11,11 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Project Manager</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <button class="btn btn-danger" id="export-button">
+                            <a href="{{ route('laporan_project_manager.export') }}" class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -131,12 +131,12 @@
         });
 
 
-        $.ajax({
-            url : '{{ route('laporan_project_manager.charts') }}',
-            success : function(data){
-                charts(data);
-            }
-        });
+        // $.ajax({
+        //     url : '{{ route('laporan_project_manager.charts') }}',
+        //     success : function(data){
+        //         charts(data);
+        //     }
+        // });
 
         $('#daterange').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
@@ -261,9 +261,26 @@
         method: "POST",
         data: input,
         success: function (data) {
+            const seriesData = data.data_pm.map(item => {
+            return [
+                {
+                    name: item.name + ' (onprogress)',
+                    data: [
+                        { x: item.name + ' (onprogress)', y: item.data[0] },
+                    ]
+                },
+                {
+                    name: item.name + ' (complete)',
+                    data: [
+                        { x: item.name + ' (complete)', y: item.data[1] },
+                    ]
+                }
+            ];
+        });
 
-            chartTab.updateOptions({
-                series: data.data_pm,
+        const flattenedSeriesData = seriesData.flat();
+        chartTab.updateOptions({
+            series: flattenedSeriesData,
                 chart: {
                     type: "bar",
                     height: 350,

@@ -110,8 +110,7 @@ class KaryawanController extends Controller
     public function delete($id)
     {
         $data           = Karyawan::findOrFail($id);
-        $data->status   = 1;
-        $data->save();
+        $data->delete();
 
         return redirect(route('karyawan'))
                     ->with('success', 'Data successfully deleted');

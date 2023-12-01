@@ -8,10 +8,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('laporan_customer')}}">
+                            <a href="{{route('laporan_lokasi_project')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Report Customer Detail</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Project Location Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">
@@ -33,7 +33,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
-                            <h4 class="card-title mb-0 flex-grow-1">{{ $data->customer->name ?? ''}}</h4>
+                            <h4 class="card-title mb-0 flex-grow-1"><b>{{ $data->lokasi->name ?? ''}}</b></h4>
                             <div>
                           
                             </div>
@@ -49,7 +49,6 @@
                                         <th style="color:#929EAE">End Date</th>
                                         <th style="color:#929EAE">Project Value</th>
                                         <th style="color:#929EAE">Project Status</th>
-                                        <!-- <th style="color:#929EAE">Action</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -100,9 +99,8 @@
                                 <label for="status_project">Project Status</label>
                                 <select name="status_project" id="status_project" class="form-control">
                                     <option value="">Choose Project Status</option>
-                                    <option value="1">Request</option>
-                                    <option value="2">Selesai</option>
-                                    <option value="99">Cancel</option>
+                                    <option value="1">Progress</option>
+                                    <option value="2">Complete</option>
                                 </select>
                             </div>
                         </div>
@@ -171,7 +169,7 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_customer.detail', '') }}/" + {{ $data->id_customer }},
+                url: "{{ route('laporan_lokasi_project.detail', '') }}/" + {{ $data->id_lokasi_project }},
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
@@ -189,7 +187,6 @@
                 {data: 'tanggal_selesai', name: 'tanggal_selesai'},
                 {data: 'nilai_project', name: 'nilai_project'},
                 {data: 'status_project', name: 'status_project'},
-                // {data: 'action', name: 'action'}
             ]
         });
 
@@ -213,8 +210,8 @@
             var nilai_project   = $('#nilai_project').val();
             var status_project  = $('#status_project').val();
 
-            var url = '{{ route("laporan_customer.exportDetail") }}?' + $.param({
-                id              : {{$data->id_customer}},
+            var url = '{{ route("laporan_lokasi_project.exportDetails") }}?' + $.param({
+                id              : {{$data->id_lokasi_project}},
                 code            : code,
                 nama_project    : nama_project,
                 tanggal_mulai   : tanggal_mulai,

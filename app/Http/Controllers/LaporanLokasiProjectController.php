@@ -7,22 +7,22 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Exports\ExportLaporanCustomer;
 use App\Models\Customer;
+use App\Models\LokasiProject;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
-use App\Exports\ExportReportCustomer;
-use App\Exports\ExportReportCustomerDetail;
+use App\Exports\ExportReportProjectLocation;
+use App\Exports\ExportReportProjectLocationDetail;
 use DB;
 use Carbon\Carbon;
 
-class LaporanCustomerController extends Controller
+class LaporanLokasiProjectController extends Controller
 {
     public function index(Request $request)
     {
-
-        $datas = Customer::has('projects')
-            ->when($request->filled('customer_id'), function ($query) use ($request) {
+        $datas = LokasiProject::has('projects')
+            ->when($request->filled('lokasi_id'), function ($query) use ($request) {
                 $query->whereHas('projects', function ($innerQuery) use ($request) {
-                    $innerQuery->where('id_customer', $request->customer_id);
+                    $innerQuery->where('id_lokasi_project', $request->lokasi_id);
                 });
             })
             ->when($request->filled('daterange'), function ($query) use ($request) {
@@ -40,30 +40,30 @@ class LaporanCustomerController extends Controller
                     $id = $project->id;
                 }
                 $value['total_project'] = $value->projects->count();
-                $value['detail_url'] = route('laporan_customer.detail', $id);
+                $value['detail_url'] = route('laporan_lokasi_project.detail', $id);
             } else {
                 $value['total_project'] = 0;
             }
             $value['eye_image_url'] = "/assets/images/eye.svg";
 
-            $totalHargaCustomer = 0;
+            $total = 0;
 
             if ($value->projects) {
-                foreach ($value->projects as $values) {
+                foreach ($value->projects as $values) { 
                     foreach ($values->progress as $project) {
                         $progress = $project ?? null;
 
                         if ($progress) {
-                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                            $total += $progress->harga_customer * $progress->qty;
                         }
                     }
                 }
             }
 
-            $value['totalHargaCustomer'] = 'Rp ' . number_format($totalHargaCustomer, 0, ',', '.');
+            $value['total'] = 'Rp ' . number_format($total, 0, ',', '.');
         }
 
-        $datas = $datas->sortByDesc('totalHargaCustomer')->values();
+        $datas = $datas->sortByDesc('total')->values();
 
         if($request->report_by){
             return response()->json([
@@ -71,9 +71,9 @@ class LaporanCustomerController extends Controller
             ]);
         }
 
-        $customers = Customer::has('projects')->get();
+        $lokasi = LokasiProject::has('projects')->get();
 
-        return view('laporan_customer.index', compact('customers','datas'));
+        return view('laporan_lokasi_project.index', compact('lokasi','datas'));
     }
 
     public function dataChart(Request $request)
@@ -86,9 +86,9 @@ class LaporanCustomerController extends Controller
         }
 
         $data = ProjectPekerjaan::with(['projects'])
-        ->when($request->filled('customer_id'), function ($query) use ($request) {
+        ->when($request->filled('lokasi_id'), function ($query) use ($request) {
             $query->whereHas('projects', function ($innerQuery) use ($request) {
-                $innerQuery->where('id_customer', $request->customer_id);
+                $innerQuery->where('id_lokasi_project', $request->lokasi_id);
             });
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
@@ -96,7 +96,7 @@ class LaporanCustomerController extends Controller
             return $query->whereBetween('created_at', [$start_date, $end_date]);
         })  
         ->get()
-        ->groupBy('projects.id_customer');
+        ->groupBy('projects.id_lokasi_project');
 
         $data_customer = [];
         $date = [];
@@ -119,14 +119,13 @@ class LaporanCustomerController extends Controller
             foreach($value as $keyDate => $item) {
                 if(!in_array($keyDate, $date))
                     $date[] = $keyDate;
-                
-                // $price_project[$keyId][] = $item->sum('harga_customer') * $item->sum('qty');
+
                 $price_project[$keyId][] = $item->sum(function ($individualItem) {
                     return ($individualItem->harga_customer ?? 0) * ($individualItem->qty ?? 0);
                 });
             }
             $data_customer[] = [
-                'name' => $item->first()->projects->customer->name ?? '',
+                'name' => $item->first()->projects->lokasi->name ?? '',
                 'data' => $price_project[$keyId]
             ];
         }
@@ -136,48 +135,18 @@ class LaporanCustomerController extends Controller
             'data_customer' => $data_customer
         ]);
     }
-
-    public function chart(Request $request){
-        if($request->year)
-        {
-            $tahun = $request->year;
-        }else{
-            $tahun = now()->format('Y');
-        }
-       
-        $totalHargaPerBulan = array_fill(0, 12, 0);
-
-        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer) as total_harga')
-            ->whereYear('created_at', $tahun)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-
-            $totalHarga = [];
-
-            foreach ($data as $item) {
-                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
-            }
-
-        $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
-
-        return response()->json([
-            'totalHargaData' => $totalHargaData
-        ]);
-    }
     
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $cek = OnRequest::where('id_customer', $request->id)->get();
+            $cek = OnRequest::where('id_lokasi_project', $request->id)->get();
             $cekIds = $cek->pluck('id')->toArray();
             $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                     ->addSelect(['total' => OnRequest::selectRaw('count(*)')
                         ->whereColumn('project_pekerjaan.id_project', 'project.id')
-                        ->groupBy('id_customer')
+                        ->groupBy('id_lokasi_project')
                     ])
                     ->filter($request);
-
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('code', function($data){
@@ -204,7 +173,7 @@ class LaporanCustomerController extends Controller
                 return $data->projects->actual_selesai ?? '-';
             })
             ->addColumn('status_project', function($data){
-                if($data->projects->status == 1){
+               if($data->projects->status == 1){
                     $status = '<span style="color: blue;">Progress</span>';
                 }else if($data->projects->status == 2){
                     $status = '<span style="color: green;">Complete</span>';
@@ -213,30 +182,20 @@ class LaporanCustomerController extends Controller
                 }
                 return $status;
             })
-            ->addColumn('action', function($data){
-                $btnDetail = '';
-                if(Can('laporan_customer-detail')) {
-                    $btnDetail = '<a href="'.route('laporan_customer_detail.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
-                                    <span>
-                                        <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
-                                    </span>
-                                </a>';
-                }
-
-                return $btnDetail;
-            })
-            ->rawColumns(['action','status_project','tanggal_mulai','jumlah_project','nilai_project'])
+            ->rawColumns(['status_project','tanggal_mulai','jumlah_project','nilai_project'])
             ->make(true);                    
         }
 
-        $data = OnRequest::where('id_customer',$request->id)->first();
+        $data = OnRequest::where('id_lokasi_project',$request->id)->first();
 
-        return view('laporan_customer.detail', compact('data'));
+        return view('laporan_lokasi_project.detail', compact('data'));
     }
 
     public function export(Request $request)
     {
-        $data = Customer::has('projects')->with('projects','projects.progress')->get();
+        $data = LokasiProject::has('projects')
+                ->with('projects','projects.progress')
+                ->get();
         
         foreach($data as $value){
             if($value->projects)
@@ -263,17 +222,17 @@ class LaporanCustomerController extends Controller
             $value['totalHargaCustomer'] = 'Rp '. number_format($totalHargaCustomer, 0, ',', '.');
         }
 
-        return Excel::download(new ExportReportCustomer($data), 'Report Customer.xlsx');
+        return Excel::download(new ExportReportProjectLocation($data), 'Report Project Location.xlsx');
     }
 
     public function exportDetail(Request $request)
     {
-        $cek = OnRequest::where('id_customer', $request->id)->get();
+        $cek = OnRequest::where('id_lokasi_project', $request->id)->get();
         $cekIds = $cek->pluck('id')->toArray();
-        $data = ProjectPekerjaan::with(['projects'])->where('id_project',$cekIds)
+        $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                 ->addSelect(['total' => OnRequest::selectRaw('count(*)')
                     ->whereColumn('project_pekerjaan.id_project', 'project.id')
-                    ->groupBy('id_customer')
+                    ->groupBy('id_lokasi_project')
                 ])
                 ->filter($request)
                 ->get();
@@ -286,15 +245,16 @@ class LaporanCustomerController extends Controller
                  $value['nilai_project'] = 'Rp 0000';
             }
 
-            if($value->projects->status == 2){
+            if($value->projects->status == 1){
                 $value['status'] = 'Progress';
-            }else if($value->projects->status == 3){
+            }else if($value->projects->status == 2){
                 $value['status'] = 'Complete';
             }else{
                 $value['status'] = '-';
             }
+
         }
 
-        return Excel::download(new ExportReportCustomerDetail($data), 'Report Customer Detail.xlsx');
+        return Excel::download(new ExportReportProjectLocationDetail($data), 'Report Project Location Detail.xlsx');
     }
 }

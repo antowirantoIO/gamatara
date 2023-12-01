@@ -130,7 +130,7 @@
                 </li>
                 @endcan
                 @if (Gate::allows('laporan_customer-view') || Gate::allows('laporan_vendor-view') || Gate::allows('laporan_project_manager-view') || 
-                Gate::allows('satisfaction_note-view'))
+                Gate::allows('satisfaction_note-view') || Gate::allows('laporan_lokasi_project-view'))
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('laporan_customer*') ? 'active' : '' || request()->is('laporan_vendor*') ? 'active' : '' || request()->is('laporan_project_manager*') ? 'active' : '' }}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
                         <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Report</span>
@@ -150,6 +150,11 @@
                             @can('laporan_project_manager-view')
                             <li class="nav-item">
                                 <a href="{{ route('laporan_project_manager') }}" class="nav-link {{ request()->is('laporan_project_manager*') ? 'active' : ''}}" data-key="t-ecommerce"> Report Project Manager </a>
+                            </li>
+                            @endcan
+                            @can('laporan_lokasi_project-view')
+                            <li class="nav-item">
+                                <a href="{{ route('laporan_lokasi_project') }}" class="nav-link {{ request()->is('laporan_lokasi_project*') ? 'active' : ''}}" data-key="t-ecommerce"> Report Project Location </a>
                             </li>
                             @endcan
                             <!-- @can('satisfaction_note-view')

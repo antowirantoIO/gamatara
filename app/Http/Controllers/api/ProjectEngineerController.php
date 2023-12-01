@@ -39,7 +39,7 @@ class ProjectEngineerController extends Controller
 
                 if ($item->complaint->isEmpty()) {
                     $status = 1;
-                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_pm_approval', null)->isNotEmpty()) {
+                } elseif ($item->complaint->where('id_pm_approval', null)->isNotEmpty() && $item->complaint->where('id_bod_approval', null)->isNotEmpty()) {
                     $status = 2;
                 } else {
                     $status = 3;
@@ -152,7 +152,9 @@ class ProjectEngineerController extends Controller
             $list_vendor = ProjectPekerjaan::has('vendors')
             ->with(['vendors:id,name'])
             ->select('id_vendor')
-            ->distinct()
+            ->where('id_project', $request->id_project)
+            ->where('id_kategori', $request->id_kategori)
+            ->distinct('deskripsi_subkategori')
             ->get();
 
             foreach ($list_vendor as $v) {
@@ -177,7 +179,6 @@ class ProjectEngineerController extends Controller
             $afterPhoto = AfterPhoto::where('id_project',$request->id_project)
                             ->where('kode_unik',$request->kode_unik)
                             ->get();
-                            
             $pekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
             ->where('kode_unik', $request->kode_unik)
             ->first();
@@ -192,7 +193,7 @@ class ProjectEngineerController extends Controller
                     ->get();
 
             foreach ($data as $item) {
-                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '') . ' ' . ($item->length ?? '') . ' ' . ($item->width ?? '') . ' ' . ($item->thick ?? '') . ' ' . ($item->qty ?? '') . ' ' . ($item->amount ?? '');
+                $item['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '');
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
@@ -270,14 +271,14 @@ class ProjectEngineerController extends Controller
     public function detailpekerjaanPE(Request $request)
     {
         try{
-            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','kode_unik','length','width','thick','amount','unit')
+            $data = ProjectPekerjaan::with('pekerjaan:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','kode_unik','length','width','thick','amount','unit','qty')
                     ->where('id_project', $request->id_project)
                     ->where('kode_unik', $request->kode_unik)
                     ->orderBy('created_at','desc')
                     ->get();
 
             foreach($data as $value){
-                $value['nama_pekerjaan'] = ($item->pekerjaan->name ?? '') . ' ' . ($item->deskripsi_pekerjaan ?? '') . ' ' . ($item->length ?? '') . ' ' . ($item->width ?? '') . ' ' . ($item->thick ?? '') . ' ' . ($item->qty ?? '') . ' ' . ($item->amount ?? '')  . ' ' . ($item->unit ?? '');
+                $value['nama_pekerjaan'] = ($value->pekerjaan->name ?? '') . ' ' . ($value->deskripsi_pekerjaan ?? '');
             }
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);

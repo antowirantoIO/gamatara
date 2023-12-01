@@ -1,24 +1,26 @@
-<h3>List Report Detail Customer</h3>
 <table border="1">
     <thead>
         <tr>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Code Project</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Project Name</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Start Date</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">End Date</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Project Value</th>
-            <th style="border: 1px solid black;background-color: #2c83ca; color:white;" width="200px">Status Project</th>
+            <th colspan="4" height="30" align="center"><strong>Report Project Location - {{ ucwords($data->first()->projects->customer->name ?? '') }}</strong></th>
+        </tr>
+        <tr>
+            <th width="200px" height="30" align="center" style="border: 20px medium black;">Code Project</th>
+            <th width="200px" height="30" align="center" style="border: 20px medium black;">Project Name</th>
+            <th width="200px" height="30" align="center" style="border: 20px medium black;">Start Date</th>
+            <th width="200px" height="30" align="center" style="border: 20px medium black;">End Date</th>
+            <th width="200px" height="30" align="center" style="border: 20px medium black;">Project Value</th>
+            <th width="200px" height="30" align="center" style="border: 20px medium black;">Project Status</th>
         </tr>
     </thead>
     <tbody>
         @foreach($data as $item)
         <tr>
-            <td style="border: 1px solid black;">{{ $item->projects->code ?? '' }}</td>
-            <td style="border: 1px solid black;">{{ $item->projects->nama_project ?? '' }}</td>
-            <td style="border: 1px solid black;">{{ $item->projects->created_at ?? '' }}</td>
-            <td style="border: 1px solid black;">{{ $item->projects->actual_selesai ?? '' }}</td>
-            <td style="border: 1px solid black;">{{ $item->nilai_project ?? '0' }}</td>
-            <td style="border: 1px solid black;">{{ $item->status ?? '' }}</td>
+            <td height="20" style="border: 20px medium black;">{{ $item->projects->code ?? '' }}</td>
+            <td height="20" style="border: 20px medium black;">{{ $item->projects->nama_project ?? '' }}</td>
+            <td height="20" style="border: 20px medium black;">{{ $item->projects->created_at->format('d M Y') ?? '' }}</td>
+            <td height="20" style="border: 20px medium black;">{{ $item->projects->actual_selesai ?? '' }}</td>
+            <td height="20" style="border: 20px medium black;">{{ $item->nilai_project ?? '0' }}</td>
+            <td height="20" style="border: 20px medium black;">{{ $item->status ?? '' }}</td>
         </tr>
         @endforeach
     </tbody>

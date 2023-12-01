@@ -86,9 +86,20 @@ class LaporanProjectManagerController extends Controller
 
                 foreach ($projects as $project) {
                     $name = $project->pm->karyawan->name;
-                    $dateKey = $project->created_at->format('Y-m-d');
+                    switch ($report_by) {
+                        case 'bulan':
+                            $dateKey = $project->created_at->format('Y-m');
+                            break;
+                        case 'tahun':
+                            $dateKey = $project->created_at->format('Y');
+                            break;
+                        case 'tanggal':
+                        default:
+                            $dateKey = $project->created_at->toDateString();
+                            break;
+                    }
 
-                    $data_pm[$name][$dateKey] = [
+                    $data_pm[$name][$dateKey][] = [
                         'onprogress' => $project->onprogress,
                         'complete' => $project->complete,
                     ];
@@ -105,12 +116,16 @@ class LaporanProjectManagerController extends Controller
             ];
 
             foreach ($data_pm as $name => $data) {
-                $onprogressTotal = array_sum(array_column($data, 'onprogress'));
-                $completeTotal = array_sum(array_column($data, 'complete'));
-
+                $onprogressTotal = [];
+                $completeTotal = [];
+                foreach($data as $item) {
+                    $onprogressTotal[] = array_sum(array_column($item, 'onprogress'));
+                    $completeTotal[] = array_sum(array_column($item, 'complete'));
+                }
+           
                 $result['data_pm'][] = [
                     'name' => $name,
-                    'data' => [$onprogressTotal, $completeTotal],
+                    'data' => [array_sum($onprogressTotal), array_sum($completeTotal)],
                 ];
             }
 
@@ -165,7 +180,7 @@ class LaporanProjectManagerController extends Controller
     public function export(Request $request)
     {
         $data = ProjectManager::all();
-        return Excel::download(new ExportLaporanProjectManager($data),'Laporan Pekerjaan PM.xlsx');
+        return Excel::download(new ExportLaporanProjectManager($data),'Report Project Manager.xlsx');
         return view('export.ExportLaporanManager',compact('data'));
     }
 }

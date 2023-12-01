@@ -1,4 +1,3 @@
-<h3>List Report Detail Customer</h3>
 <table border="1">
     <thead>
         <tr>

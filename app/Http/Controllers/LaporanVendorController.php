@@ -8,8 +8,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExportReportVendorDetail;
 use App\Exports\ExportReportVendor;
 use App\Models\Vendor;
-use App\Models\ProjectPekerjaan;
 use App\Models\OnRequest;
+use App\Models\ProjectPekerjaan;
 use DB;
 
 class LaporanVendorController extends Controller
@@ -20,6 +20,11 @@ class LaporanVendorController extends Controller
         ->when($request->filled('vendor_id'), function ($query) use ($request) {
             $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
                 $innerQuery->where('id_vendor', $request->vendor_id);
+            });
+        })
+        ->when($request->filled('project_id'), function ($query) use ($request) {
+            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_project', $request->project_id);
             });
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
@@ -80,7 +85,9 @@ class LaporanVendorController extends Controller
         }
         
         $vendors = Vendor::has('projectPekerjaan')->get();
-        return view('laporan_vendor.index', compact('vendors','datas'));
+        $project = OnRequest::has('progress')->get();
+
+        return view('laporan_vendor.index', compact('vendors','datas','project'));
         
     }
 
@@ -102,6 +109,11 @@ class LaporanVendorController extends Controller
             list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
             return $query->whereBetween('created_at', [$start_date, $end_date]);
         })  
+        ->when($request->filled('project_id'), function ($query) use ($request) {
+        
+                $query->where('id_project', $request->project_id);
+           
+        })
         ->get()
         ->groupBy('id_vendor');
 

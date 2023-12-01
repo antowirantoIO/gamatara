@@ -44,7 +44,16 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-3">
+                                        <label>Project</label>
+                                        <select class="form-control" name="project_id" id="project_id">
+                                            <option value="">-- Select Project --</option>
+                                            @foreach($project as $v)
+                                                <option value="{{ $v->id }}">{{ $v->nama_project }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
                                         <label>Date</label>
                                         <input type="text" class="form-control" name="daterange" id="daterange" autocomplete="off" placeholder="--Select Date--">
                                     </div>
@@ -159,12 +168,13 @@
         $('#btn-search').click(function(e){
             var report_by = $('#report_by').val();
             var vendor_id = $('#vendor_id').val();
+            var project_id = $('#project_id').val();
             var daterange = $('#daterange').val();
 
             $.ajax({
                 url: '{{route('laporan_vendor')}}',
                 type: 'GET',
-                data: { report_by: report_by, vendor_id: vendor_id, daterange: daterange},
+                data: { report_by: report_by, vendor_id: vendor_id, project_id: project_id, daterange: daterange},
                 success: function (response) {
                     table.clear().draw();
                     table.rows.add(response.datas.map(function (item) {

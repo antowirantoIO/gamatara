@@ -86,18 +86,13 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="karyawan">Employee Name</label>
-                                <select name="karyawan" id="karyawan" class="form-control">
-                                    <option value="">Choose Employee</option>
-                                    @foreach($karyawan as $r)
-                                        <option value="{{$r->id}}">{{ $r->name }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="karyawan" id="karyawan" class="form-control">
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="nomor_telpom">Phone</label>
-                                <input type="text" name="nomor_telpom" id="nomor_telpom" class="form-control">
+                                <input type="text" name="nomor_telpon" id="nomor_telpon" class="form-control">
                             </div>
                         </div>  
                         <div class="col-xxl-6 col-md-6">

@@ -62,11 +62,13 @@ class DashboardController extends Controller
             
         $spkrequest = count($spkrequest);
 
-        $onprogress = OnRequest::whereHas('complaint',function($query){
+        $onprogress =   OnRequest::with(['pm','pm.karyawan','customer'])
+                        ->whereHas('keluhan',function($query){
                             $query->whereNotNull(['id_pm_approval','id_bod_approval']);
                         })
-                        ->where('status',2)
+                        ->where('status',1)
                         ->get();
+                        
         $onprogress = count($onprogress);
         $complete = count(OnRequest::where('status',2)->get());
         

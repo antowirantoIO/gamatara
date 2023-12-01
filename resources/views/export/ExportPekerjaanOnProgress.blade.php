@@ -112,6 +112,13 @@
                     <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
                     <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
                 </tr>
+                <tr>
+                    @foreach ($value->beforePhoto as $before)
+                    <td>
+                        <img src="{{ public_path($before->photo)  }}" width="100px" alt="photo">
+                    </td>
+                    @endforeach
+                </tr>
                 @php
                     $prevIndex = $index;
                     $prevSub = $subkategori;

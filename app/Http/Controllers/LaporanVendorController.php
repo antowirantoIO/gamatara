@@ -85,7 +85,7 @@ class LaporanVendorController extends Controller
         }
         
         $vendors = Vendor::has('projectPekerjaan')->get();
-        $project = OnRequest::has('progress')->get();
+        $project = OnRequest::get();
 
         return view('laporan_vendor.index', compact('vendors','datas','project'));
         
@@ -110,9 +110,7 @@ class LaporanVendorController extends Controller
             return $query->whereBetween('created_at', [$start_date, $end_date]);
         })  
         ->when($request->filled('project_id'), function ($query) use ($request) {
-        
-                $query->where('id_project', $request->project_id);
-           
+            $query->where('id_project', $request->project_id);
         })
         ->get()
         ->groupBy('id_vendor');

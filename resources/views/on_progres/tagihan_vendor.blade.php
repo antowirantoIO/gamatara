@@ -138,25 +138,25 @@
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="length" class="form-label">Length</label>
-                                <input type="text" name="length" id="length" class="form-control">
+                                <input type="text" name="length" id="length" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="width" class="form-label">Width</label>
-                                <input type="text" name="width" id="width" class="form-control">
+                                <input type="text" name="width" id="width" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="thick" class="form-label">Thick</label>
-                                <input type="text" name="thick" id="thick" class="form-control">
+                                <input type="text" name="thick" id="thick" class="form-control" readonly>
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="unit" class="form-label">Unit</label>
-                                <input type="text" name="unit" id="unit" class="form-control">
+                                <input type="text" name="unit" id="unit" class="form-control" >
                             </div>
                         </div>
                         <div class="col-xxl-6 col-md-6">

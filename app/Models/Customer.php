@@ -29,17 +29,18 @@ class Customer extends Model
         })->when($filter->email ?? false, function($query) use ($filter) {
             return $query->where('email', 'like', "%$filter->email%");
         })->when($filter->npwp ?? false, function($query) use ($filter) {
-            return $query->where('npwp', 'like', "%$filter->npwp%");
+            return $query->where('tahun', 'like', "%$filter->npwp%");
+        })->when($filter->tahun ?? false, function($query) use ($filter) {
+            $query->whereHas('projects', function($query) use($filter){
+                return $query->whereYear('created_at', '=', $filter->tahun);
+            });
         })->when($filter->keyword ?? false, function($query) use ($filter) {
             return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(nomor_contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(alamat) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhereRaw('LOWER(npwp) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhere(function ($query) use ($filter) {
-                    $query->whereYear('created_at', '=', $filter->keyword);
-                });
+                ->orWhereRaw('LOWER(npwp) LIKE ?', ['%' . strtolower($filter->keyword) . '%']);
         });
     }
 }

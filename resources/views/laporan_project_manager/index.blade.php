@@ -30,14 +30,14 @@
                                     <div class="form-group col-md-3">
                                         <label>Report By</label>
                                         <select class="form-control" name="report_by" id="report_by">
-                                            <option value="tanggal">Days</option>
-                                            <option value="bulan">Month</option>
+                                            <!-- <option value="tanggal">Days</option>
+                                            <option value="bulan">Month</option> -->
                                             <option value="tahun">Year</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>Project Manager Name</label>
-                                        <select class="form-control" name="project_manager_id" id="project_manager_id">
+                                        <select class="form-control select2" name="project_manager_id" id="project_manager_id">
                                             <option value="">-- Select Project Manager --</option>
                                             @foreach($pm as $p)
                                                 <option value="{{ $p->id }}">{{ $p->karyawan->name ?? '-' }}</option>
@@ -256,76 +256,81 @@
     })
 
     function chartData(input) {
-    $.ajax({
-        url: `{{ route('laporan_project_manager.dataChartt') }}`,
-        method: "POST",
-        data: input,
-        success: function (data) {
-            const seriesData = data.data_pm.map(item => {
-            return [
-                {
-                    name: item.name + ' (onprogress)',
-                    data: [
-                        { x: item.name + ' (onprogress)', y: item.data[0] },
-                    ]
-                },
-                {
-                    name: item.name + ' (complete)',
-                    data: [
-                        { x: item.name + ' (complete)', y: item.data[1] },
-                    ]
-                }
-            ];
-        });
-
-        const flattenedSeriesData = seriesData.flat();
-        chartTab.updateOptions({
-            series: flattenedSeriesData,
-                chart: {
-                    type: "bar",
-                    height: 350,
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: "55%",
-                        endingShape: "rounded",
+        $.ajax({
+            url: `{{ route('laporan_project_manager.dataChartt') }}`,
+            method: "POST",
+            data: input,
+            success: function (data) {
+                const seriesData = data.data_pm.map(item => {
+                return [
+                    {
+                        name: item.name + ' (onprogress)',
+                        data: [
+                            { x: item.name + ' (onprogress)', y: item.data[0] },
+                        ]
                     },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ["transparent"],
-                },
-                xaxis: {
-                    categories: data.date,
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toLocaleString();
-                        }
+                    {
+                        name: item.name + ' (complete)',
+                        data: [
+                            { x: item.name + ' (complete)', y: item.data[1] },
+                        ]
                     }
-                },
-                fill: {
-                    opacity: 1,
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return val;
+                ];
+            });
+
+            const flattenedSeriesData = seriesData.flat();
+            chartTab.updateOptions({
+                series: flattenedSeriesData,
+                    chart: {
+                        type: "bar",
+                        height: 350,
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: "55%",
+                            endingShape: "rounded",
                         },
                     },
-                },
-            });
-        },
-        error: function (err) {
-            console.log(err.responseJSON.message);
-        },
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ["transparent"],
+                    },
+                    xaxis: {
+                        categories: data.date,
+                    },
+                    yaxis: {
+                        labels: {
+                            formatter: function (val) {
+                                return val.toLocaleString();
+                            }
+                        }
+                    },
+                    fill: {
+                        opacity: 1,
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val;
+                            },
+                        },
+                    },
+                });
+            },
+            error: function (err) {
+                console.log(err.responseJSON.message);
+            },
+        });
+    }
+
+    $(function () {
+        $(".select2").select2();
     });
-}
+    
 </script>
 @endsection

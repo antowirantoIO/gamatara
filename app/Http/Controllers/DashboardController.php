@@ -87,17 +87,12 @@ class DashboardController extends Controller
                     ->groupBy('id_vendor')
                     ->get();
 
-                    $pm = ProjectManager::with(['projects' => function ($query) {
-                        $query->select('pm_id')
-                            ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
-                            ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
-                            ->groupBy('pm_id');
-                    }])
-                        ->select('pm.*', 'projects.complete') // Select the "complete" column from the subquery
-                        ->leftJoin('projects', 'projects.pm_id', '=', 'pm.id') // Adjust the join condition based on your database schema
-                        ->orderByDesc('complete') // Order by the "complete" column in descending order
-                        ->get();
-                                                            
+        $pm = ProjectManager::with(['projects' => function ($query) {
+            $query->select('pm_id')
+                ->selectRaw('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as onprogress')
+                ->selectRaw('SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as complete')
+                ->groupBy('pm_id');
+        }])->get();                                        
 
         $data       = OnRequest::orderBy('created_at','desc')->get();
 

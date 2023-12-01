@@ -184,10 +184,10 @@
                                             <td>{{ $key + 1}}</td>
                                             <td>{{ $d->code }}</td>
                                             <td>{{ $d->nama_project }}</td>
-                                            <td>{{ $d->customer->name ?? ''}}</td>
-                                            <td>{{ $d->pm->karyawan->name ?? ''}}</td>
-                                            <td>{{ $d->start_project }}</td>
-                                            <td>{{ $d->actual_selesai }}</td>
+                                            <td>{{ $d->customer->name ?? '-'}}</td>
+                                            <td>{{ $d->pm->karyawan->name ?? '-'}}</td>
+                                            <td>{{ $d->created_at->format('d M Y') ?? '-' }}</td>
+                                            <td>{{ $d->actual_selesai ?? '-' }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>

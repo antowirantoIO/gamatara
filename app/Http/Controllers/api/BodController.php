@@ -30,6 +30,7 @@ class BodController extends Controller
             
             $data = Customer::select('id', 'name')->has('projects')
                 ->with('projects', 'projects.progress:harga_customer,qty,id_project')
+                ->filter($request)
                 ->get();
             
             $dataArray = $data->map(function ($value) {

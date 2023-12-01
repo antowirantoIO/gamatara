@@ -169,7 +169,7 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_lokasi_project.detail', '') }}/" + {{$data->id}},
+                url: "{{ route('laporan_lokasi_project.detail', '') }}/" + {{ $data->id_lokasi_project }},
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();
@@ -211,7 +211,7 @@
             var status_project  = $('#status_project').val();
 
             var url = '{{ route("laporan_lokasi_project.exportDetails") }}?' + $.param({
-                id              : {{$data->id}},
+                id              : {{$data->id_lokasi_project}},
                 code            : code,
                 nama_project    : nama_project,
                 tanggal_mulai   : tanggal_mulai,

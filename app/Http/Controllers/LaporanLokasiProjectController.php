@@ -54,7 +54,7 @@ class LaporanLokasiProjectController extends Controller
                         $progress = $project ?? null;
 
                         if ($progress) {
-                            $total = $progress->harga_customer * $progress->qty;
+                            $total += $progress->harga_customer * $progress->qty;
                         }
                     }
                 }
@@ -139,7 +139,7 @@ class LaporanLokasiProjectController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $cek = OnRequest::where('id', $request->id)->get();
+            $cek = OnRequest::where('id_lokasi_project', $request->id)->get();
             $cekIds = $cek->pluck('id')->toArray();
             $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
                     ->addSelect(['total' => OnRequest::selectRaw('count(*)')
@@ -186,7 +186,7 @@ class LaporanLokasiProjectController extends Controller
             ->make(true);                    
         }
 
-        $data = OnRequest::where('id',$request->id)->first();
+        $data = OnRequest::where('id_lokasi_project',$request->id)->first();
 
         return view('laporan_lokasi_project.detail', compact('data'));
     }

@@ -47,6 +47,10 @@ class ProjectManager extends Model
             return $query->where('id_karyawan',$filter->pm);
         })->when($filter->name ?? false, function($query) use($filter) {
             return $query->where('id',$filter->name);
+        })->when($filter->tahun ?? false, function ($query) use ($filter) {
+            return $query->whereHas('projects', function ($query) use ($filter) {
+                $query->whereYear('created_at', '=', $filter->tahun);
+            })->orWhereDoesntHave('projects');
         });
     }
 }

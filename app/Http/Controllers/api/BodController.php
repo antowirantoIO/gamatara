@@ -166,7 +166,8 @@ class BodController extends Controller
             $page = request()->get('page', $request->page);
 
             $data = Vendor::select('id','name')
-                    ->with('projectPekerjaan:id,harga_vendor,qty,id_project')
+                    ->with('projectPekerjaan:id,harga_vendor,qty,id_project,id_vendor')
+                    ->filter($request)
                     ->get();
         
             foreach($data as $value){
@@ -179,15 +180,11 @@ class BodController extends Controller
 
                 $jumlah_tagihan = 0;
             
-                if ($value->projects) {
-                    foreach($value->projects as $values){
-                        foreach ($values->progress as $project) {
-                            $progress = $project ?? null;
-                
-                            if ($progress) {
-                                $jumlah_tagihan += $progress->harga_vendor * $progress->qty;
-                            }
-                        }
+                foreach ($value->projectPekerjaan as $project) {
+                    $progress = $project ?? null;
+        
+                    if ($progress) {
+                        $jumlah_tagihan += $progress->harga_vendor * $progress->qty;
                     }
                 }
             
@@ -257,7 +254,7 @@ class BodController extends Controller
                 $tahun = now()->format('Y');
             }
 
-            $data = ProjectManager::get();
+            $data = ProjectManager::filter($request)->get();
             foreach($data as $item)
             {
                 $item['name'] = $item->karyawan->name ?? '';

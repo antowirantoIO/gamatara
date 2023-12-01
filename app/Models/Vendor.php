@@ -42,6 +42,10 @@ class Vendor extends Model
             return $query->where('npwp', 'like', "%$filter->npwp%");
         })->when($filter->kategori_vendor ?? false, function($query) use ($filter) {
             return $query->where('kategori_vendor', 'like', "%$filter->kategori_vendor%");
+        })->when($filter->tahun ?? false, function ($query) use ($filter) {
+            return $query->whereHas('projectPekerjaan', function ($query) use ($filter) {
+                $query->whereYear('created_at', '=', $filter->tahun);
+            })->orWhereDoesntHave('projectPekerjaan');
         })->when($filter->keyword ?? false, function($query) use ($filter) {
         return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])

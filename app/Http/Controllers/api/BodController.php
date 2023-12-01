@@ -27,43 +27,86 @@ class BodController extends Controller
         try{
             $perPage = 5;
             $page = request()->get('page', 1);
-            
-            $data = Customer::select('id', 'name')->has('projects')
-                ->with('projects', 'projects.progress:harga_customer,qty,id_project')
+
+            $data = Customer::select('id', 'name')
+                ->withCount('projects')
+                ->with('projects.progress:harga_customer,qty,id_project')
+                ->filter($request)
                 ->get();
-            
+
             $dataArray = $data->map(function ($value) {
                 $result = [
                     'id' => $value->id,
                     'name' => $value->name,
                 ];
-            
-                if ($value->projects) {
-                    $result['jumlah_project'] = $value->projects->count();
-                } else {
-                    $result['jumlah_project'] = 0;
-                }
-            
-                $jumlah_tagihan = 0;
-            
-                if ($value->projects) {
-                    foreach ($value->projects as $values) {
-                        foreach ($values->progress as $project) {
-                            $progress = $project ?? null;
-            
-                            if ($progress) {
-                                $jumlah_tagihan += $progress->harga_customer * $progress->qty;
+
+                if ($value->projects_count > 0) {
+                    $result['jumlah_project'] = $value->projects_count;
+
+                    $jumlah_tagihan = 0;
+
+                    // Check if projects exist
+                    if ($value->projects) {
+                        foreach ($value->projects as $values) {
+                            foreach ($values->progress as $project) {
+                                $progress = $project ?? null;
+
+                                if ($progress) {
+                                    $jumlah_tagihan += $progress->harga_customer * $progress->qty;
+                                }
                             }
                         }
                     }
+
+                    $result['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
+                } else {
+                    $result['jumlah_project'] = 0;
+                    $result['jumlah_tagihan'] = 'Rp 0';
                 }
-            
-                $result['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
-            
+
                 return $result;
             });
+
+            $dataArray = $dataArray->sortByDesc('jumlah_tagihan')->values();
+
             
-            $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
+            // $data = Customer::select('id', 'name')->has('projects')
+            //     ->with('projects', 'projects.progress:harga_customer,qty,id_project')
+            //     ->filter($request)
+            //     ->get();
+            
+            // $dataArray = $data->map(function ($value) {
+            //     $result = [
+            //         'id' => $value->id,
+            //         'name' => $value->name,
+            //     ];
+            
+            //     if ($value->projects) {
+            //         $result['jumlah_project'] = $value->projects->count();
+            //     } else {
+            //         $result['jumlah_project'] = 0;
+            //     }
+            
+            //     $jumlah_tagihan = 0;
+            
+            //     if ($value->projects) {
+            //         foreach ($value->projects as $values) {
+            //             foreach ($values->progress as $project) {
+            //                 $progress = $project ?? null;
+            
+            //                 if ($progress) {
+            //                     $jumlah_tagihan += $progress->harga_customer * $progress->qty;
+            //                 }
+            //             }
+            //         }
+            //     }
+            
+            //     $result['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
+            
+            //     return $result;
+            // });
+            
+            // $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
             
             $total = $dataArray->count();
             $start = ($page - 1) * $perPage;
@@ -123,7 +166,8 @@ class BodController extends Controller
             $page = request()->get('page', $request->page);
 
             $data = Vendor::select('id','name')
-                    ->with('projectPekerjaan:id,harga_vendor,qty,id_project')
+                    ->with('projectPekerjaan:id,harga_vendor,qty,id_project,id_vendor')
+                    ->filter($request)
                     ->get();
         
             foreach($data as $value){
@@ -136,15 +180,11 @@ class BodController extends Controller
 
                 $jumlah_tagihan = 0;
             
-                if ($value->projects) {
-                    foreach($value->projects as $values){
-                        foreach ($values->progress as $project) {
-                            $progress = $project ?? null;
-                
-                            if ($progress) {
-                                $jumlah_tagihan += $progress->harga_vendor * $progress->qty;
-                            }
-                        }
+                foreach ($value->projectPekerjaan as $project) {
+                    $progress = $project ?? null;
+        
+                    if ($progress) {
+                        $jumlah_tagihan += $progress->harga_vendor * $progress->qty;
                     }
                 }
             
@@ -214,7 +254,7 @@ class BodController extends Controller
                 $tahun = now()->format('Y');
             }
 
-            $data = ProjectManager::get();
+            $data = ProjectManager::filter($request)->get();
             foreach($data as $item)
             {
                 $item['name'] = $item->karyawan->name ?? '';

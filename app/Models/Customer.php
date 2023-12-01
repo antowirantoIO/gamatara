@@ -29,7 +29,11 @@ class Customer extends Model
         })->when($filter->email ?? false, function($query) use ($filter) {
             return $query->where('email', 'like', "%$filter->email%");
         })->when($filter->npwp ?? false, function($query) use ($filter) {
-            return $query->where('npwp', 'like', "%$filter->npwp%");
+            return $query->where('tahun', 'like', "%$filter->npwp%");
+        })->when($filter->tahun ?? false, function($query) use ($filter) {
+            $query->whereHas('projects.progress', function($query) use($filter){
+                return $query->whereYear('created_at', '=', $filter->tahun);
+            })->orWhereDoesntHave('projects');
         })->when($filter->keyword ?? false, function($query) use ($filter) {
             return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])

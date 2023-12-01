@@ -118,7 +118,7 @@
                         @php
                             $photo = $before->photo;
                         @endphp
-                        <img src="{{ URL::asset($photo) }}" alt="photo">
+                        <img src="{!! URL::asset($photo) !!}" alt="photo">
                     </td>
                     @endforeach
                 </tr>

@@ -1,29 +1,32 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
-use App\Http\Controllers\PekerjaanController;
-use App\Http\Controllers\OnRequestController;
-use App\Http\Controllers\OnProgressController;
-use App\Http\Controllers\CompleteController;
 use App\Http\Controllers\KeluhanController;
+use App\Http\Controllers\CompleteController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OnRequestController;
+use App\Http\Controllers\PekerjaanController;
+use App\Http\Controllers\JenisKapalController;
+use App\Http\Controllers\OnProgressController;
 use App\Http\Controllers\SubkategoriController;
-use App\Http\Controllers\SettingPekerjaanController;
+use App\Http\Controllers\LaporanVendorController;
+use App\Http\Controllers\LokasiProjectController;
+use App\Http\Controllers\CompleteExportController;
 use App\Http\Controllers\ProjectManagerController;
 use App\Http\Controllers\LaporanCustomerController;
-use App\Http\Controllers\LaporanVendorController;
-use App\Http\Controllers\LaporanProjectManagerController;
-use App\Http\Controllers\SatisfactionNoteController;
-use App\Http\Controllers\LokasiProjectController;
-use App\Http\Controllers\JenisKapalController;
 use App\Http\Controllers\OnProgressExportController;
-use App\Http\Controllers\CompleteExportController;
+use App\Http\Controllers\SatisfactionNoteController;
+use App\Http\Controllers\SettingPekerjaanController;
+use App\Http\Controllers\LaporanLokasiProjectController;
+use App\Http\Controllers\LaporanProjectManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -220,6 +223,15 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('export',[LaporanProjectManagerController::class,'export'])->name('laporan_project_manager.export');
         Route::post('/data-chartt', [LaporanProjectManagerController::class, 'dataChartt'])->name('laporan_project_manager.dataChartt');
+    });
+
+    //laporan lokasi project
+    Route::prefix('laporan_lokasi_project')->group(function () {
+        Route::get('/', [LaporanLokasiProjectController::class, 'index'])->name('laporan_lokasi_project');
+        Route::get('/detail/{id}', [LaporanLokasiProjectController::class, 'detail'])->name('laporan_lokasi_project.detail');
+        Route::get('/export', [LaporanLokasiProjectController::class, 'export'])->name('laporan_lokasi_project.export');
+        Route::get('/exportDetails', [LaporanLokasiProjectController::class, 'exportDetail'])->name('laporan_lokasi_project.exportDetails');
+        Route::post('/data-chart', [LaporanLokasiProjectController::class, 'dataChart'])->name('laporan_lokasi_project.dataChart');
     });
 
     //laporan Satisfaction note

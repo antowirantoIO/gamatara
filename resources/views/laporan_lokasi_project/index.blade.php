@@ -8,10 +8,10 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <h4 class="mb-0 ml-2"> &nbsp; Report Customer</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Project Location</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('laporan_customer.export') }}" class="btn btn-danger">
+                            <a href="{{ route('laporan_lokasi_project.export') }}" class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
@@ -36,11 +36,11 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label>Customer Name</label>
-                                        <select class="form-control" name="customer_id" id="customer_id">
-                                            <option value="">-- Select Customer --</option>
-                                            @foreach($customers as $customer)
-                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                        <label>Project Location</label>
+                                        <select class="form-control" name="lokasi_id" id="lokasi_id">
+                                            <option value="">-- Select Project Location --</option>
+                                            @foreach($lokasi as $l)
+                                                <option value="{{ $l->id }}">{{ $l->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -69,7 +69,7 @@
                                     <table class="table" id="tableData">
                                         <thead class="table-light">
                                             <tr>
-                                                <th style="color:#929EAE">Customer Name</th>
+                                                <th style="color:#929EAE">Project Location</th>
                                                 <th style="color:#929EAE">Project Total</th>
                                                 <th style="color:#929EAE">Project Value</th>
                                                 <th style="color:#929EAE">Action</th>
@@ -80,8 +80,8 @@
                                             <tr>
                                                 <td>{{$d->name}}</td>
                                                 <td>{{$d->total_project}}</td>
-                                                <td>{{$d->totalHargaCustomer}}</td>
-                                                <td><a href="{{route('laporan_customer.detail', $d->id)}}" class="btn btn-warning btn-sm">
+                                                <td>{{$d->harga}}</td>
+                                                <td><a href="{{route('laporan_lokasi_project.detail', $d->id)}}" class="btn btn-warning btn-sm">
                                                 <span>
                                                     <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                 </span>
@@ -157,20 +157,20 @@
 
         $('#btn-search').click(function(e){
             var report_by = $('#report_by').val();
-            var customer_id = $('#customer_id').val();
+            var lokasi_id = $('#lokasi_id').val();
             var daterange = $('#daterange').val();
 
             $.ajax({
-                    url: '{{route('laporan_customer')}}',
+                    url: '{{route('laporan_lokasi_project')}}',
                     type: 'GET',
-                    data: { report_by: report_by, customer_id: customer_id,daterange : daterange},
+                    data: { report_by: report_by, lokasi_id: lokasi_id,daterange : daterange},
                     success: function (response) {
                         table.clear().draw();
                         table.rows.add(response.datas.map(function (item) {
                             return [
                                 item.name,
                                 item.total_project,
-                                item.totalHargaCustomer,
+                                item.total,
                                 '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
                                 '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +
                                 '</a>'
@@ -242,7 +242,7 @@
 
     function chartData(input) {
     $.ajax({
-        url: `{{ route('laporan_customer.dataChart') }}`,
+        url: `{{ route('laporan_lokasi_project.dataChart') }}`,
         method: "POST",
         data: input,
         success: function (data) {

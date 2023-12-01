@@ -15,7 +15,7 @@
         <tr>
             <td style="border: 1px solid black;">{{ $item->projects->code ?? '' }}</td>
             <td style="border: 1px solid black;">{{ $item->projects->nama_project ?? '' }}</td>
-            <td style="border: 1px solid black;">{{ $item->project->created_at->format('d M Y') ?? '' }}</td>
+            <td style="border: 1px solid black;">{{ $item->projects->created_at->format('d M Y') ?? '' }}</td>
             <td style="border: 1px solid black;">{{ $item->projects->actual_selesai ?? '' }}</td>
             <td style="border: 1px solid black;">{{ $item->nilai_tagihan ?? '0' }}</td>
             <td style="border: 1px solid black;">{{ $item->status ?? '' }}</td>

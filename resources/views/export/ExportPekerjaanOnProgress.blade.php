@@ -73,6 +73,13 @@
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                     </tr>
+                    @php
+                        if ($prevIndex !== $index) {
+                            $subCount = 1;
+                        } else {
+                            $subCount++;
+                        }
+                    @endphp
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ getLatters($index) }}.{{ $subCount }}.</td>
                         <td height="20">&nbsp;
@@ -91,13 +98,6 @@
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                     </tr>
-                    @php
-                        if ($prevIndex !== $index) {
-                            $subCount++;
-                        } else {
-                            $subCount = 1;
-                        }
-                    @endphp
                 @endif
                 <tr style="font-size: 8px; border:20px medium black;">
                     <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -111,6 +111,13 @@
                     <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->amount }}</td>
                     <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
                     <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
+                </tr>
+                <tr>
+                    @foreach ($value->beforePhoto as $before)
+                    <td>
+                        <img src="{{ URL::asset($before->photo) }}" alt="photo">
+                    </td>
+                    @endforeach
                 </tr>
                 @php
                     $prevIndex = $index;

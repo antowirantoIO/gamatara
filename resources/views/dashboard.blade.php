@@ -213,7 +213,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 380px;">
+                        <div class="card-body" style="height: 700px;">
                             <div class="table-responsive">
                                 <table class="table" id="example2">
                                     <thead class="table-light">
@@ -269,7 +269,7 @@
                             </div>
                         </div>
 
-                        <div class="card-body" style="height: 380px;">
+                        <div class="card-body" style="height: 700px;">
                             <div class="table-responsive">
                                 <table class="table" id="example3">
                                     <thead class="table-light">

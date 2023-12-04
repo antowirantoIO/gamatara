@@ -11,7 +11,7 @@
                             <a href="{{route('complete.pekerjaan',$idProject)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Detail Job</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Job Detail</h4>
                         </div>
                     </div>
                 </div>
@@ -40,16 +40,16 @@
                                     <tbody>
                                         @foreach ($data as $item)
                                             <tr>
-                                                <td>{{ $item->pekerjaan->name }}</td>
-                                                <td>{{ $item->id_lokasi }}</td>
-                                                <td>{{ $item->detail }}</td>
-                                                <td>{{ $item->length }}</td>
-                                                <td>{{ $item->width }}</td>
-                                                <td>{{ $item->thick }}</td>
-                                                <td>{{ $item->qty }}</td>
-                                                <td>{{ $item->amount }}</td>
-                                                <td>{{ $item->unit }}</td>
-                                                <td>{{ $item->vendors->name }}</td>
+                                                <td>{{ $item->pekerjaan->name . ' ' . $item->deskripsi_pekerjaan ?? '-' }}</td>
+                                                <td>{{ $item->id_lokasi ?? '-' }}</td>
+                                                <td>{{ $item->detail ?? '-' }}</td>
+                                                <td>{{ number_format($item->length,2, ',','') ?? 0 }}</td>
+                                                <td>{{ number_format($item->width,2, ',','') ?? 0 }}</td>
+                                                <td>{{ number_format($item->thick,2, ',','') ?? 0 }}</td>
+                                                <td>{{ number_format($item->qty,2, ',','') ?? 0 }}</td>
+                                                <td>{{number_format($item->amount,2, ',','') ?? 0 }}</td>
+                                                <td>{{ $item->unit ?? '-' }}</td>
+                                                <td>{{ $item->vendors->name ?? '-' }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -63,37 +63,64 @@
             <div class="row g-3">
                 <div class="row gy-4">
                     <div class="col-xxl-12 col-md-12">
-                        <p class="fs-4">Foto Sebelum</p>
-                        <div class="d-flex justify-content-around align-items-center">
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                            <a href="{{ asset('assets/images/image-example.png') }}" data-lightbox="{{ asset('assets/images/image-example.png') }}">
-                                <img  class="img-responsive rounded" src="{{ asset('assets/images/image-example.png') }}" alt="picture">
-                            </a>
-                        </div>
+                        <p class="fs-4">Before</p>
+                            @if ($before->count() > 0)
+                                <div class="d-flex justify-content-start align-items-center bg-white p-3 flex-wrap gap-3">
+                                    @foreach ($data as $d)
+                                        @foreach ($d->beforePhoto as $b)
+                                            <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                                <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
+                                            </a>
+                                        @endforeach
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="d-flex justify-content-center align-items-center w-100 bg-white">
+                                    <img src="{{ asset('assets/images/notfound.svg') }}" alt="notfound" height="150" class="img-responsive">
+                                </div>
+                            @endif
                     </div>
                     <div class="col-xxl-12 col-md-12 mt-5">
-                        <p class="fs-4">Foto Sesudah</p>
-                        <div class="d-flex justify-content-around align-items-center">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                            <img src="{{ asset('assets/images/image-example.svg') }}" alt="picture">
-                        </div>
+                        <p class="fs-4">After</p>
+                        @if ($after->count())
+                            <div class="d-flex justify-content-start align-items-center bg-white p-3 flex-wrap gap-3">
+                                @foreach ($after as $a)
+                                    <a href="{{ asset($a->photo) }}" data-lightbox="{{ asset($a->photo) }}">
+                                        <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture" height="200" width="200">
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-center align-items-center w-100 bg-white">
+                                <img src="{{ asset('assets/images/notfound.svg') }}" alt="notfound" height="150" class="img-responsive">
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
+<!--modal -->
+<div class="modal fade" id="modalInput" tabindex="-1" aria-labelledby="exampleModalgridLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form action="{{route('customer.store')}}" id="npwpForm" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+                        <button type="button" class="btn-close fs-3" aria-label="Close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')

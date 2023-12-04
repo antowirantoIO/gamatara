@@ -727,20 +727,24 @@
                             },
                             name : 'amount'
                         },
-                        {
-                            data : function(data) {
-                                let harga_vendor = data.harga_vendor || 0;
-                                return formatRupiah(harga_vendor);
+                        @can('recent-activity-harga-vendor')
+                            {
+                                data : function(data) {
+                                    let harga_vendor = data.harga_vendor || 0;
+                                    return formatRupiah(harga_vendor);
+                                },
+                                name : 'harga_vendor'
                             },
-                            name : 'harga_vendor'
-                        },
-                        {
-                            data : function(data) {
-                                let harga_customer = data.harga_customer || 0 ;
-                                return formatRupiah(harga_customer);
+                        @endcan
+                        @can('recent-activity-harga-customer')
+                            {
+                                data : function(data) {
+                                    let harga_customer = data.harga_customer || 0 ;
+                                    return formatRupiah(harga_customer);
+                                },
+                                name : 'harga_customer'
                             },
-                            name : 'harga_customer'
-                        },
+                        @endcan
                     ]
                 });
 

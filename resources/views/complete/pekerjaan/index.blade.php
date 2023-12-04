@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progress.edit',$id)}}">
+                            <a href="{{route('complete.edit',$id)}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Job Progress</h4>
@@ -34,35 +34,37 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <div class="live-preview">
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade" role="tabpanel">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="fs-5"><strong>Pekerjaan</strong></span>
-                                            <div>
-                                                <button class="btn btn-secondary" id="btn-fillter">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
-                                                    </span> &nbsp; Filter
-                                                </button>
-                                                <button class="btn btn-danger export-button" id="export-button">
-                                                    <span>
-                                                        <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
-                                                    </span> &nbsp; Export
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <table class="table w-100" id="tableData">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th style="color:#929EAE;width:600px;">Pekerjaan</th>
-                                                    <th style="color:#929EAE">Progres</th>
-                                                    <th style="color:#929EAE">Vendor</th>
-                                                    <th style="color:#929EAE">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                                <div class="col-md-12">
+                                    <div>
+                                        <div class="tab-pane" role="tabpanel">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="fs-5"><strong>Pekerjaan</strong></span>
+                                                <div>
+                                                    <button class="btn btn-secondary" id="btn-fillter">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/filter.svg')}}" style="width: 15px;"></i>
+                                                        </span> &nbsp; Filter
+                                                    </button>
+                                                    <button class="btn btn-danger export-button" id="export-button">
+                                                        <span>
+                                                            <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                                        </span> &nbsp; Export
+                                                    </button>
+                                                </div>
 
+                                            </div>
+                                            <table class="table w-100" id="tableData">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="color:#929EAE;">Job</th>
+                                                        <th style="color:#929EAE;">Progress</th>
+                                                        <th style="color:#929EAE;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +161,7 @@
                     previousButton.css('display', 'none');
                 },
                 ajax : {
-                    url : '{{ route('complete.ajax.progres-pekerjaan-vendor') }}',
+                    url : '{{ route('ajax.progres-pekerjaan') }}',
                     method : 'GET',
                     data : function(d){
                         d._token = '{{ csrf_token() }}';
@@ -172,10 +174,8 @@
                 columns : [
                     { data : 'pekerjaan'},
                     { data : 'progres'},
-                    { data : 'vendors.name'},
                     {
                         data : function(data){
-                            console.log(data);
                             let id_kategori = data.id_kategori;
                             let id_project = data.id_project;
                             let id_subkategori = data.id_subkategori;

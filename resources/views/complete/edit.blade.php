@@ -79,7 +79,7 @@
                                         @foreach ($projects as $project)
                                             <tr>
                                                 <td>{{ $project->vendors->name }}</td>
-                                                <td>{{ $project->total_status_2 }} / {{ $project->total_status_1 }}</td>
+                                                <td>{{ getTotalProgressVendor($data->id, $project->id_vendor,3) }} / {{ getTotalProgressVendor($data->id, $project->id_vendor,null) }}</td>
                                                 <td>
                                                     <a href="{{ route('complete.pekerjaan-vendor.all',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
                                                         <span>
@@ -104,10 +104,10 @@
                                             <div class="d-flex justify-content-between align-items-end">
                                                 <div class="fs-4 text-start">
                                                     Job Progress<br>
-                                                    @if (!$pekerjaan->total_status_1)
+                                                    @if (!getTotalProgressPekerjaan($data->id))
                                                         0 / 0
                                                     @else
-                                                        {{ $pekerjaan->total_status_2 }} / {{ $pekerjaan->total_status_1 }}
+                                                        {{ getTotalProgressPekerjaan($data->id,3) }} / {{ getTotalProgressPekerjaan($data->id) }}
                                                     @endif
                                                 </div>
                                                 <div>

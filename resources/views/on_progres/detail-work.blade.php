@@ -65,7 +65,7 @@
                     <div class="col-xxl-12 col-md-12">
                         <p class="fs-4">Before</p>
                             @if ($before->count() > 0)
-                                <div class="d-flex justify-content-around align-items-center bg-white p-3">
+                                <div class="d-flex justify-content-start align-items-center bg-white p-3 flex-wrap gap-3">
                                     @foreach ($data as $d)
                                         @foreach ($d->beforePhoto as $b)
                                             <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
@@ -83,7 +83,7 @@
                     <div class="col-xxl-12 col-md-12 mt-5">
                         <p class="fs-4">After</p>
                         @if ($after->count())
-                            <div class="d-flex justify-content-around align-items-center bg-white p-3">
+                            <div class="d-flex justify-content-start align-items-center bg-white p-3 flex-wrap gap-3">
                                 @foreach ($after as $a)
                                     <a href="{{ asset($a->photo) }}" data-lightbox="{{ asset($a->photo) }}">
                                         <img  class="img-responsive rounded" src="{{ asset($a->photo) }}" alt="picture" height="200" width="200">

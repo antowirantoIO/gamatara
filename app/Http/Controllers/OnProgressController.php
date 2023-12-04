@@ -653,23 +653,19 @@ class OnProgressController extends Controller
 
     public function ajaxProgresPekerjaan(Request $request)
     {
-
         if($request->ajax()){
+            DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
             if(!empty($request->id_kategori)){
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                         ->where('id_kategori',$request->id_kategori)
                                         ->whereNotNull(['id_pekerjaan'])
-                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
-                                        ->groupBy('id_subkategori','id_kategori','id_vendor','id_project','deskripsi_subkategori')
-                                        ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                                        ->distinct();
+                                        ->groupBy('id_subkategori','deskripsi_subkategori')
+                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
             }else {
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
-                        ->whereNotNull(['id_pekerjaan'])
-                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
-                        ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                        ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                        ->distinct();
+                                        ->whereNotNull(['id_pekerjaan'])
+                                        ->groupBy('id_subkategori','deskripsi_subkategori')
+                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
             }
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
@@ -695,7 +691,7 @@ class OnProgressController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,3) . ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,null);
+                return getProgressAll($data->id_project,$data->id_kategori,$data->id_subkategori,3) . ' / ' . getProgressAll($data->id_project,$data->id_kategori,$data->id_subkategori,null);
             })
             ->make(true);
         }
@@ -740,7 +736,6 @@ class OnProgressController extends Controller
             ->make(true);
         }
     }
-
 
     public function ajaxSettingEstimasi(Request $request)
     {

@@ -30,14 +30,14 @@
                                     <div class="form-group col-md-3">
                                         <label>Report By</label>
                                         <select class="form-control" name="report_by" id="report_by">
-                                            <option value="tanggal">Days</option>
-                                            <option value="bulan">Month</option>
+                                            <!-- <option value="tanggal">Days</option>
+                                            <option value="bulan">Month</option> -->
                                             <option value="tahun">Year</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>Customer Name</label>
-                                        <select class="form-control" name="customer_id" id="customer_id">
+                                        <select class="form-control select2" name="customer_id" id="customer_id">
                                             <option value="">-- Select Customer --</option>
                                             @foreach($customers as $customer)
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -241,59 +241,64 @@
     })
 
     function chartData(input) {
-    $.ajax({
-        url: `{{ route('laporan_customer.dataChart') }}`,
-        method: "POST",
-        data: input,
-        success: function (data) {
+        $.ajax({
+            url: `{{ route('laporan_customer.dataChart') }}`,
+            method: "POST",
+            data: input,
+            success: function (data) {
 
-            chartTab.updateOptions({
-                series: data.data_customer,
-                chart: {
-                    type: "bar",
-                    height: 350,
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: "55%",
-                        endingShape: "rounded",
+                chartTab.updateOptions({
+                    series: data.data_customer,
+                    chart: {
+                        type: "bar",
+                        height: 350,
                     },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ["transparent"],
-                },
-                xaxis: {
-                    categories: data.date,
-                },
-                yaxis: {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toLocaleString();
-                        }
-                    }
-                },
-                fill: {
-                    opacity: 1,
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return val;
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: "55%",
+                            endingShape: "rounded",
                         },
                     },
-                },
-            });
-        },
-        error: function (err) {
-            console.log(err.responseJSON.message);
-        },
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ["transparent"],
+                    },
+                    xaxis: {
+                        categories: data.date,
+                    },
+                    yaxis: {
+                        labels: {
+                            formatter: function (val) {
+                                return val.toLocaleString();
+                            }
+                        }
+                    },
+                    fill: {
+                        opacity: 1,
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val;
+                            },
+                        },
+                    },
+                });
+            },
+            error: function (err) {
+                console.log(err.responseJSON.message);
+            },
+        });
+    }
+
+    $(function () {
+        $(".select2").select2();
     });
-}
+    
 </script>
 @endsection

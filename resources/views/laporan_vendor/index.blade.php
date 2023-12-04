@@ -30,21 +30,30 @@
                                     <div class="form-group col-md-3">
                                         <label>Report By</label>
                                         <select class="form-control" name="report_by" id="report_by">
-                                            <option value="tanggal">Days</option>
-                                            <option value="bulan">Month</option>
+                                            <!-- <option value="tanggal">Days</option>
+                                            <option value="bulan">Month</option> -->
                                             <option value="tahun">Year</option>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label>Vendor Name</label>
-                                        <select class="form-control" name="vendor_id" id="vendor_id">
+                                        <select class="form-control select2" name="vendor_id" id="vendor_id">
                                             <option value="">-- Select Vendor --</option>
                                             @foreach($vendors as $v)
                                                 <option value="{{ $v->id }}">{{ $v->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-3">
+                                        <label>Project</label>
+                                        <select class="form-control select2" name="project_id" id="project_id">
+                                            <option value="">-- Select Project --</option>
+                                            @foreach($project as $v)
+                                                <option value="{{ $v->id }}">{{ $v->nama_project }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
                                         <label>Date</label>
                                         <input type="text" class="form-control" name="daterange" id="daterange" autocomplete="off" placeholder="--Select Date--">
                                     </div>
@@ -159,12 +168,13 @@
         $('#btn-search').click(function(e){
             var report_by = $('#report_by').val();
             var vendor_id = $('#vendor_id').val();
+            var project_id = $('#project_id').val();
             var daterange = $('#daterange').val();
 
             $.ajax({
                 url: '{{route('laporan_vendor')}}',
                 type: 'GET',
-                data: { report_by: report_by, vendor_id: vendor_id, daterange: daterange},
+                data: { report_by: report_by, vendor_id: vendor_id, project_id: project_id, daterange: daterange},
                 success: function (response) {
                     table.clear().draw();
                     table.rows.add(response.datas.map(function (item) {
@@ -242,52 +252,56 @@
     })
 
     function chartData(input) {
-    $.ajax({
-        url: `{{ route('laporan_vendor.dataCharts') }}`,
-        method: "POST",
-        data: input,
-        success: function (data) {
-    
-            chartTab.updateOptions({
-                series: data.data_vendor,
-                chart: {
-                    type: "bar",
-                    height: 350,
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: "55%",
-                        endingShape: "rounded",
+        $.ajax({
+            url: `{{ route('laporan_vendor.dataCharts') }}`,
+            method: "POST",
+            data: input,
+            success: function (data) {
+        
+                chartTab.updateOptions({
+                    series: data.data_vendor,
+                    chart: {
+                        type: "bar",
+                        height: 350,
                     },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ["transparent"],
-                },
-                xaxis: {
-                    categories: data.date,
-                },
-                fill: {
-                    opacity: 1,
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return val;
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: "55%",
+                            endingShape: "rounded",
                         },
                     },
-                },
-            });
-        },
-        error: function (err) {
-            console.log(err.responseJSON.message);
-        },
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ["transparent"],
+                    },
+                    xaxis: {
+                        categories: data.date,
+                    },
+                    fill: {
+                        opacity: 1,
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val;
+                            },
+                        },
+                    },
+                });
+            },
+            error: function (err) {
+                console.log(err.responseJSON.message);
+            },
+        });
+    }
+
+    $(function () {
+        $(".select2").select2();
     });
-}
 </script>
 @endsection

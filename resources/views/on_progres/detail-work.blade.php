@@ -66,13 +66,11 @@
                         <p class="fs-4">Before</p>
                             @if ($before->count() > 0)
                                 <div class="d-flex justify-content-start align-items-center bg-white p-3 flex-wrap gap-3">
-                                    @foreach ($data as $d)
-                                        @foreach ($d->beforePhoto as $b)
-                                            <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
-                                                <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
-                                            </a>
-                                        @endforeach
-                                    @endforeach
+                                   @foreach ($before as $b)
+                                    <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                        <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
+                                    </a>
+                                   @endforeach
                                 </div>
                             @else
                                 <div class="d-flex justify-content-center align-items-center w-100 bg-white">

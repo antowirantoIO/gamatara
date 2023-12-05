@@ -76,6 +76,12 @@ class ProjectPekerjaan extends Model
             return $query->WhereHas('projects', function($query) use($filter) {
                 $query->where('status', $filter->status_project);
             });
+        })->when($filter->dates ?? false, function($query) use ($filter) {
+            list($start_date, $end_date) = explode(' - ', $filter->input('dates'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+        })->when($filter->enddates ?? false, function($query) use ($filter) {
+            list($start_date, $end_date) = explode(' - ', $filter->input('enddates'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
         })->when(($filter->start_date ?? false) || ($filter->to_date ?? false), function ($query) use ($filter) {
             return $query->WhereHas('projects', function($query) use($filter) {
                 $query->when($filter->start_date ?? false, function ($query) use ($filter) {

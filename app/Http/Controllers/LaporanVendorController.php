@@ -189,9 +189,9 @@ class LaporanVendorController extends Controller
             })
             ->addColumn('status_project', function($data){
                 if($data->projects->status == 1){
-                    $status = '<span style="color: blue;">Proses</span>';
+                    $status = '<span style="color: blue;">Progress</span>';
                 }else if($data->projects->status == 2){
-                    $status = '<span style="color: green;">Done</span>';
+                    $status = '<span style="color: green;">Complete</span>';
                 }else {
                     $status = '-';
                 }

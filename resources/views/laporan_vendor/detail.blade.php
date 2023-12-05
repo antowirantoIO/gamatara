@@ -91,48 +91,31 @@
                         </div>
                         <div class="col-xxl-6 col-md-6">
                             <div>
-                                <label for="nilai_tagihan">Bill Value</label>
-                                <input type="text" name="nilai_tagihan" id="nilai_tagihan" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
                                 <label for="status_project">Project Status</label>
-                                <select name="status_project" id="status_project" class="form-control">
+                                <select name="status_project" id="status_project" class="form-control form-select select2">
                                     <option value="">Choose Project Status</option>
-                                    <option value="1">Request</option>
-                                    <option value="2">Progress</option>
-                                    <option value="3">Done</option>
+                                    <option value="1">Progress</option>
+                                    <option value="2">Complete</option>
                                 </select>
                             </div>
                         </div>
-                        <label for="tanggal_mulai">Start Date</label>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="start_date">From </label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" >
-                            </div>
+                        <div class="col-xxl-12 col-md-12">
+                        <div>
+                            <label for="dates" class="form-label">Start Date</label>
+                            <input type="text" name="dates" id="dates" class="form-control" autocomplete="off">
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="to_date">To</label>
-                                <input type="date" name="to_date" id="to_date" class="form-control" >
-                            </div>
                         </div>
-                        <label for="tanggal_selesai">End Date</label>
-                        <div class="col-xxl-6 col-md-6">
+                        <div class="col-xxl-12 col-md-12">
                             <div>
-                                <label for="start_date_selesai">From </label>
-                                <input type="date" name="start_date_selesai" id="start_date_selesai" class="form-control" >
-                            </div>
-                        </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="to_date_selesai">To</label>
-                                <input type="date" name="to_date_selesai" id="to_date_selesai" class="form-control" >
+                                <label for="enddates" class="form-label">End Date</label>
+                                <input type="text" name="enddates" id="enddates" class="form-control" autocomplete="off">
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn btn-danger" id="btn-reset" style="margin-right: 10px;">Reset</div>
+                    <button class="btn btn-primary" id="btn-search">Search</button>
                 </div>
             </form>
         </div>
@@ -143,8 +126,62 @@
 
 @section('scripts')
 <script>
-    //datatable
      $(document).ready(function () {
+        $(function () {
+            $(".select2").select2();
+        });
+
+        $('.form-select').select2({
+            theme : "bootstrap-5",
+            search: true
+        });
+
+        $('#dates').daterangepicker({
+            opens: 'right',
+            autoUpdateInput: false,
+            locale: {
+                format: 'YYYY-MM-DD',
+                cancelLabel: 'Clear'
+
+            },
+        });
+
+        $('#dates').on('apply.daterangepicker',function(e,picker){
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        })
+
+        $('#enddates').daterangepicker({
+            opens: 'right',
+            autoUpdateInput: false,
+            locale: {
+                format: 'YYYY-MM-DD',
+                cancelLabel: 'Clear'
+
+            },
+        });
+
+        $('#enddates').on('apply.daterangepicker',function(e,picker){
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        })
+
+        $('#btn-fillter').click(function(){
+            modalInput.modal('show');
+        })
+
+        $('#btn-reset').click(function(e){
+            e.preventDefault();
+            $('.form-control').val('');
+            $('.form-select').val(null).trigger('change');
+            $('#dates').val('');
+            $('#enddates').val('');
+            table.draw()
+        })
+
+        $('#btn-search').click(function(e){
+            e.preventDefault();
+            table.draw()
+        })
+
         let filterSearch = '';
         var table = $('#tableData').DataTable({
             ordering: false,
@@ -181,6 +218,8 @@
                     d.tanggal_selesai   = $('#tanggal_selesai').val();
                     d.nilai_tagihan     = $('#nilai_tagihan').val();
                     d.status_project    = $('#status_project').val();
+                    d.dates             = $('#dates').val();
+                    d.enddates          = $('#enddates').val();
                 }
             },
             columns: [
@@ -213,6 +252,9 @@
             var tanggal_selesai = $('#tanggal_selesai').val();
             var nilai_tagihan   = $('#nilai_tagihan').val();
             var status_project  = $('#status_project').val();
+            var dates           = $('#dates').val();
+            var enddates        = $('#enddates').val();
+
 
             var url = '{{ route("laporan_vendor.exportDetail") }}?' + $.param({
                 id              :  {{ $data->id }},
@@ -222,6 +264,8 @@
                 tanggal_selesai : tanggal_selesai,
                 nilai_tagihan   : nilai_tagihan,
                 status_project  : status_project,
+                dates           : dates,
+                enddates        : enddates,
                 keyword         : filterSearch
             });
 

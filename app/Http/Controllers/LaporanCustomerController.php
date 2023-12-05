@@ -136,76 +136,52 @@ class LaporanCustomerController extends Controller
             'data_customer' => $data_customer
         ]);
     }
-
-    public function chart(Request $request){
-        if($request->year)
-        {
-            $tahun = $request->year;
-        }else{
-            $tahun = now()->format('Y');
-        }
-       
-        $totalHargaPerBulan = array_fill(0, 12, 0);
-
-        $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer) as total_harga')
-            ->whereYear('created_at', $tahun)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-
-            $totalHarga = [];
-
-            foreach ($data as $item) {
-                $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
-            }
-
-        $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
-
-        return response()->json([
-            'totalHargaData' => $totalHargaData
-        ]);
-    }
     
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $cek = OnRequest::where('id_customer', $request->id)->get();
-            $cekIds = $cek->pluck('id')->toArray();
-            $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
-                    ->addSelect(['total' => OnRequest::selectRaw('count(*)')
-                        ->whereColumn('project_pekerjaan.id_project', 'project.id')
-                        ->groupBy('id_customer')
-                    ])
-                    ->filter($request);
+            $data = OnRequest::has('progress')
+                    ->where('id_customer', $request->id)
+                    ->filter($request)
+                    ->get();
+            // $cekIds = $cek->pluck('id')->toArray();
+            // $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
+            //         ->addSelect(['total' => OnRequest::selectRaw('count(*)')
+            //             ->whereColumn('project_pekerjaan.id_project', 'project.id')
+            //             ->groupBy('id_customer')
+            //         ])
+                    
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('code', function($data){
-                return $data->projects->code ?? '';
+                return $data->code ?? '';
             })
             ->addColumn('nama_project', function($data){
-                return $data->projects->nama_project ?? '';
-            })
-            ->addColumn('jumlah_project', function($data){
-                return $data->total;
-            })
-            ->addColumn('nilai_project', function($data){
-                $harga_customer = $data->harga_customer * $data->qty;
-                if (is_numeric($harga_customer)) {
-                    return 'Rp ' . number_format($harga_customer, 0, ',', '.');
+                return $data->nama_project ?? '';
+            })->addColumn('nilai_project', function ($data) {
+                $totalHarga = 0;
+        
+                foreach ($data->progress as $progress) {
+                    $totalHarga += $progress->harga_customer * $progress->qty;
+                }
+
+                if (is_numeric($totalHarga)) {
+                    return 'Rp ' . number_format($totalHarga, 0, ',', '.');
                 } else {
                     return 'Rp 0000';
                 }
+        
             })
             ->addColumn('tanggal_mulai', function($data){
-                return $data->projects ? $data->projects->created_at->format('d M Y') : ''; ;
+                return $data && $data->created_at ? $data->created_at->format('d M Y') : '';
             })
             ->addColumn('tanggal_selesai', function($data){
-                return $data->projects->actual_selesai ?? '-';
-            })
+                return $data && $data->actual_selesai ? $data->actual_selesai->format('d M Y') : '';
+            })            
             ->addColumn('status_project', function($data){
-                if($data->projects->status == 1){
+                if($data->status == 1){
                     $status = '<span style="color: blue;">Progress</span>';
-                }else if($data->projects->status == 2){
+                }else if($data->status == 2){
                     $status = '<span style="color: green;">Complete</span>';
                 }else{
                     $status = '-';
@@ -215,7 +191,7 @@ class LaporanCustomerController extends Controller
             ->addColumn('action', function($data){
                 $btnDetail = '';
                 if(Can('laporan_customer-detail')) {
-                    $btnDetail = '<a href="'.route('laporan_customer_detail.detail', $data->projects->id).'" class="btn btn-warning btn-sm">
+                    $btnDetail = '<a href="'.route('laporan_customer_detail.detail', $data->id).'" class="btn btn-warning btn-sm">
                                     <span>
                                         <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
                                     </span>
@@ -295,4 +271,34 @@ class LaporanCustomerController extends Controller
 
         return Excel::download(new ExportReportCustomerDetail($data), 'Report Customer Detail.xlsx');
     }
+
+    
+    // public function chart(Request $request){
+    //     if($request->year)
+    //     {
+    //         $tahun = $request->year;
+    //     }else{
+    //         $tahun = now()->format('Y');
+    //     }
+       
+    //     $totalHargaPerBulan = array_fill(0, 12, 0);
+
+    //     $data = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer) as total_harga')
+    //         ->whereYear('created_at', $tahun)
+    //         ->groupBy('month')
+    //         ->orderBy('month')
+    //         ->get();
+
+    //         $totalHarga = [];
+
+    //         foreach ($data as $item) {
+    //             $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
+    //         }
+
+    //     $totalHargaData = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
+
+    //     return response()->json([
+    //         'totalHargaData' => $totalHargaData
+    //     ]);
+    // }
 }

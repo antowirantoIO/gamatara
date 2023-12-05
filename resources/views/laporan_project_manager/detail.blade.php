@@ -87,6 +87,16 @@
                             <input type="text" name="nama_project" id="nama_project" class="form-control">
                         </div>
                     </div>
+                    <div class="col-xxl-6 col-md-6">
+                        <div>
+                            <label for="status_project">Project Status</label>
+                            <select name="status_project" id="status_project" class="form-control form-select select2">
+                                <option value="">Choose Project Status</option>
+                                <option value="1">Progress</option>
+                                <option value="2">Complete</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-xxl-12 col-md-12">
                         <div>
                             <label for="dates" class="form-label">Start Date</label>
@@ -102,8 +112,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="btn btn-danger btn-sm" id="btn-reset" style="margin-right: 10px;">Reset</div>
-                <button class="btn btn-primary btn-sm" id="btn-search">Search</button>
+                <div class="btn btn-danger" id="btn-reset" style="margin-right: 10px;">Reset</div>
+                <button class="btn btn-primary" id="btn-search">Search</button>
             </div>
         </div>
     </div>
@@ -205,6 +215,7 @@
                         d.nama_project      = $('#nama_project').val();
                         d.dates             = $('#dates').val();
                         d.enddates          = $('#enddates').val();
+                        d.status_project    = $('#status_project').val();
                     }
                 },
                 columns : [
@@ -291,6 +302,7 @@
                 var status_project  = $('#status_project').val();
                 var dates           = $('#dates').val();
                 var enddates        = $('#enddates').val();
+                var status_project  = $('#status_project').val();
 
                 var url = '{{ route("laporan_project_manager.exportDetail") }}?' + $.param({
                     id              : {{$pm->id}},
@@ -302,6 +314,7 @@
                     status_project  : status_project,
                     dates           : dates,
                     enddates        : enddates,
+                    status_project  : status_project,
                     keyword         : filterSearch
                 });
 

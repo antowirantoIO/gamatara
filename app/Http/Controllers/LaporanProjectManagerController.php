@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ExportLaporanProjectManager;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Http\Request;
-use App\Exports\ExportLaporanVendor;
+use App\Exports\ExportLaporanProjectManager;
+use App\Exports\ExportReportProjectManagerDetail;
 use App\Models\OnRequest;
 use App\Models\ProjectManager;
+use App\Models\ProjectPekerjaan;
 
 class LaporanProjectManagerController extends Controller
 {
@@ -134,53 +135,90 @@ class LaporanProjectManagerController extends Controller
 
     public function detail(Request $request, $id)
     {
-        $pm = ProjectManager::where('id',$id)->first();
         if($request->ajax()){
-            $data = OnRequest::where('pm_id',$id)
-                            ->with(['pm','pm.karyawan','customer','progress']);
+            $data = OnRequest::has('progress')
+                    ->where('pm_id',$id)
+                    ->with(['pm','pm.karyawan','customer','progress'])
+                    ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
             ->make(true);
         }
 
+        $pm = ProjectManager::where('id',$id)->first();
+
         return view('laporan_project_manager.detail',compact('id','pm'));
-    }
-
-    public function chart(Request $request)
-    {
-        if($request->year)
-        {
-            $tahun = $request->year;
-        }else{
-            $tahun = now()->format('Y');
-        }
-
-        $data = OnRequest::select('pm_id', 'status')
-                        ->with(['pm','pm.karyawan'])
-                        ->whereYear('created_at',$tahun)
-                        ->get();
-
-        $chartData = $data->groupBy('pm_id')->map(function (&$groupedData) {
-            $onProgressCount = $groupedData->where('status', 2)->count();
-            $completeCount = $groupedData->where('status', 3)->count();
-
-            $employeeName = $groupedData->first()->pm->karyawan->name;
-
-            return [
-                'Employee' => $employeeName,
-                'On Progress' => $onProgressCount,
-                'Complete' => $completeCount,
-            ];
-
-        });
-
-        return response()->json($chartData);
     }
 
     public function export(Request $request)
     {
         $data = ProjectManager::all();
+
         return Excel::download(new ExportLaporanProjectManager($data),'Report Project Manager.xlsx');
         return view('export.ExportLaporanManager',compact('data'));
     }
+
+    public function exportDetail(Request $request)
+    {
+        $data = OnRequest::has('progress')
+                ->where('pm_id', $request->id)
+                ->filter($request)
+                ->get();
+
+        foreach ($data as $value) {
+            $totalHarga = 0;
+
+            foreach ($value->progress as $item) {
+                $harga_customer = $item->harga_customer * $item->qty;
+                
+                if (is_numeric($harga_customer)) {
+                    $totalHarga += $harga_customer;
+                }
+            }
+
+            $value['nilai_project'] = 'Rp ' . number_format($totalHarga, 0, ',', '.');
+
+            if ($value->status == 2) {
+                $value['status'] = 'Progress';
+            } else if ($value->status == 3) {
+                $value['status'] = 'Complete';
+            } else {
+                $value['status'] = '-';
+            }
+        }
+
+        return Excel::download(new ExportReportProjectManagerDetail($data),'Report Project Manager Detail.xlsx');
+    }
+
+    
+    // public function chart(Request $request)
+    // {
+    //     if($request->year)
+    //     {
+    //         $tahun = $request->year;
+    //     }else{
+    //         $tahun = now()->format('Y');
+    //     }
+
+    //     $data = OnRequest::select('pm_id', 'status')
+    //                     ->with(['pm','pm.karyawan'])
+    //                     ->whereYear('created_at',$tahun)
+    //                     ->get();
+
+    //     $chartData = $data->groupBy('pm_id')->map(function (&$groupedData) {
+    //         $onProgressCount = $groupedData->where('status', 2)->count();
+    //         $completeCount = $groupedData->where('status', 3)->count();
+
+    //         $employeeName = $groupedData->first()->pm->karyawan->name;
+
+    //         return [
+    //             'Employee' => $employeeName,
+    //             'On Progress' => $onProgressCount,
+    //             'Complete' => $completeCount,
+    //         ];
+
+    //     });
+
+    //     return response()->json($chartData);
+    // }
 }

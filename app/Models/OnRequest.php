@@ -82,6 +82,12 @@ class OnRequest extends Model
             })->when($filter->to_date ?? false, function ($query) use ($filter) {
                 return $query->whereDate('created_at', '<=', $filter->to_date);
             });
+        })->when($filter->dates ?? false, function($query) use ($filter) {
+            list($start_date, $end_date) = explode(' - ', $filter->input('dates'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+        })->when($filter->enddates ?? false, function($query) use ($filter) {
+            list($start_date, $end_date) = explode(' - ', $filter->input('enddates'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
         })->when($filter->displacement ?? false, function($query) use ($filter) {
             return $query->where('displacement', 'like', "%$filter->displacement%");
         })->when($filter->jenis_kapal ?? false, function($query) use ($filter) {

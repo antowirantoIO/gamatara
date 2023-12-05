@@ -217,11 +217,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/detail/{id}', [LaporanProjectManagerController::class, 'detail'])->name('laporan_project_manager.detail');
         Route::get('/export', [LaporanProjectManagerController::class, 'export'])->name('laporan_project_manager.export');
 
-        Route::prefix('chart')->group(function(){
-            Route::get('data',[LaporanProjectManagerController::class,'chart'])->name('laporan_project_manager.charts');
-        });
+        // Route::prefix('chart')->group(function(){
+        //     Route::get('data',[LaporanProjectManagerController::class,'chart'])->name('laporan_project_manager.charts');
+        // });
 
-        Route::get('export',[LaporanProjectManagerController::class,'export'])->name('laporan_project_manager.export');
+        Route::get('/exportDetail',[LaporanProjectManagerController::class,'exportDetail'])->name('laporan_project_manager.exportDetail');
         Route::post('/data-chartt', [LaporanProjectManagerController::class, 'dataChartt'])->name('laporan_project_manager.dataChartt');
     });
 

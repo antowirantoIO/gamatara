@@ -147,6 +147,7 @@
      $(document).ready(function () {
         let filterSearch = '';
         var table = $('#tableData').DataTable({
+            ordering: false,
             fixedHeader:true,
             lengthChange: false,
             scrollX: false,

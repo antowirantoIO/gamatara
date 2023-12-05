@@ -12,7 +12,7 @@
                             <a href="{{route('laporan_project_manager')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Laporan Project Manager Detail</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Project Manager Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" id="btn-fillter">
@@ -41,23 +41,21 @@
                         </div>
 
                         <div class="card-body">
-                            <div class="container">
-                                <table class="table w-100" id="example1">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th style="color:#929EAE">Project Code</th>
-                                            <th style="color:#929EAE">Project Name</th>
-                                            <th style="color:#929EAE">Start Date</th>
-                                            <th style="color:#929EAE">End Date</th>
-                                            <th style="color:#929EAE">Project Value</th>
-                                            <th style="color:#929EAE">Status Project</th>
-                                            {{-- <th style="color:#929EAE">Action</th> --}}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table w-100" id="example1">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="color:#929EAE">Project Code</th>
+                                        <th style="color:#929EAE">Project Name</th>
+                                        <th style="color:#929EAE">Start Date</th>
+                                        <th style="color:#929EAE">End Date</th>
+                                        <th style="color:#929EAE">Project Value</th>
+                                        <th style="color:#929EAE">Status Project</th>
+                                        {{-- <th style="color:#929EAE">Action</th> --}}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -66,7 +64,9 @@
         </div>
     </div>
 </div>
-{{-- <div id="modalFillter" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+
+<!--modal -->
+<div id="modalFillter" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-top-right">
         <div class="modal-content">
             <div class="modal-header">
@@ -83,48 +83,33 @@
                     </div>
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="nama_project" class="form-label">Nama Project</label>
+                            <label for="nama_project" class="form-label">Project Name</label>
                             <input type="text" name="nama_project" id="nama_project" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-xxl-6 col-md-6">
-                        <div>
-                            <label for="nama_customer" class="form-label">Nama Customer</label>
-                            <select name="nama_customer" id="nama_customer" class="form-select">
-                                <option value="">Pilih Nama Customer</option>
-                                @foreach($customer as $k)
-                                <option value="{{$k->id}}">{{$k->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xxl-6 col-md-6">
-                        <div>
-                            <label for="nama_pm" class="form-label">Nama PM</label>
-                            <select name="nama_pm" id="nama_pm" class="form-select">
-                                <option value="">Pilih Nama PM</option>
-                                @foreach($pm as $p)
-                                <option value="{{$p->id}}">{{$p->name}}</option>
-                                @endforeach
-                            </select>
                         </div>
                     </div>
                     <div class="col-xxl-12 col-md-12">
                         <div>
-                            <label for="date" class="form-label">Dari </label>
-                            <input type="text" name="date" id="date" class="form-control" >
+                            <label for="dates" class="form-label">Start Date</label>
+                            <input type="text" name="dates" id="dates" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-xxl-12 col-md-12">
+                        <div>
+                            <label for="enddates" class="form-label">End Date</label>
+                            <input type="text" name="enddates" id="enddates" class="form-control" autocomplete="off">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="btn btn-danger" id="btn-reset" style="margin-right: 10px;">Reset</div>
-                <button class="btn btn-primary" id="btn-search">Search</button>
+                <div class="btn btn-danger btn-sm" id="btn-reset" style="margin-right: 10px;">Reset</div>
+                <button class="btn btn-primary btn-sm" id="btn-search">Search</button>
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 @endsection
+
 @section('scripts')
 <script>
     $(function() {
@@ -135,7 +120,7 @@
                 search: true
             });
 
-            $('#date').daterangepicker({
+            $('#dates').daterangepicker({
                 opens: 'right',
                 autoUpdateInput: false,
                 locale: {
@@ -145,7 +130,21 @@
                 },
             });
 
-            $('#date').on('apply.daterangepicker',function(e,picker){
+            $('#dates').on('apply.daterangepicker',function(e,picker){
+                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+            })
+
+            $('#enddates').daterangepicker({
+                opens: 'right',
+                autoUpdateInput: false,
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    cancelLabel: 'Clear'
+
+                },
+            });
+
+            $('#enddates').on('apply.daterangepicker',function(e,picker){
                 $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
             })
 
@@ -157,15 +156,23 @@
                 e.preventDefault();
                 $('.form-control').val('');
                 $('.form-select').val(null).trigger('change');
-                $('#date').val('');
+                $('#dates').val('');
+                $('#enddates').val('');
+                table.draw()
+            })
+
+            $('#btn-search').click(function(e){
+                e.preventDefault();
                 table.draw()
             })
 
             let id = '{{ $id }}';
             let url = '{{ route('laporan_project_manager.detail',':id') }}';
             let urlReplace = url.replace(':id',id);
+            let filterSearch = '';
 
             let table = $("#example1").DataTable({
+                ordering: false,
                 fixedHeader:true,
                 scrollX: false,
                 processing: true,
@@ -191,14 +198,14 @@
                     previousButton.css('display', 'none');
                 },
                 ajax : {
-                    url : urlReplace
-                    // data : function (d) {
-                    //     d.code = $('#code').val();
-                    //     d.nama_project = $('#nama_project').val();
-                    //     d.nama_customer = $('#nama_customer').val();
-                    //     d.nama_pm = $('#nama_pm').val();
-                    //     d.date =  $('#date').val();
-                    // }
+                    url : urlReplace,
+                    data : function (d) {
+                        filterSearch    = d.search?.value;
+                        d.code              = $('#code').val();
+                        d.nama_project      = $('#nama_project').val();
+                        d.dates             = $('#dates').val();
+                        d.enddates          = $('#enddates').val();
+                    }
                 },
                 columns : [
                     { data : 'code', name : 'code'},
@@ -220,7 +227,7 @@
                         , name : 'created_at'},
                     {
                         data : function(data) {
-                            let end = data.target_selesai || '';
+                            let end = data.actual_selesai || '';
 
                             if (end) {
                                 let endDate = moment(end);
@@ -232,7 +239,7 @@
 
                             return '';
                         },
-                        name : 'target_selesai'},
+                        name : 'actual_selesai'},
                     {
                         data : function(data) {
                             let harga = data.progress.reduce((accumulator, currentValue) => {
@@ -244,29 +251,15 @@
 
                     },
                     { data : function(data) {
-                            if(data.status === 1){
-                                return '<div class="text-info">Request</div>'
-                            }else if(data.status === 2) {
-                                return '<div class="text-warning">On Progres</div>'
-                            }else if(data.status === 3){
-                                return '<div class="text-success">Complete</div>'
+                            if(data.status === 1) {
+                                return '<div style="color:blue;">On Progres</div>'
+                            }else if(data.status === 2){
+                                return '<div style="color:green;">Complete</div>'
                             }else {
                                 return ''
                             }
                         }, name : 'status'
                     },
-                    // {
-                    //     data : function(data) {
-                    //         let id = data.id;
-                    //         let url = '{{ route('on_progress.edit',':id') }}';
-                    //         let urlReplace = url.replace(':id',id);
-                    //         return ` <a href="#" class="btn btn-warning btn-sm">
-                    //             <span>
-                    //                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                    //             </span>
-                    //         </a>`
-                    //     }
-                    // }
                 ]
             });
 
@@ -277,41 +270,51 @@
                 return ribuan;
             }
 
-            // $('#btn-search').click(function(e){
-            //     e.preventDefault();
-            //     modalInput.modal('hide');
-            //     table.draw();
-            // })
+            $('.form-control').on('change', function() {
+                table.draw();
+            });
 
-            // function hideOverlay() {
-            //     $('.loading-overlay').fadeOut('slow', function() {
-            //         $(this).remove();
-            //     });
-            // }
+            function hideOverlay() {
+                $('.loading-overlay').fadeOut('slow', function() {
+                    $(this).remove();
+                });
+            }
 
-            // $('#export-button').on('click', function(event) {
-            //     event.preventDefault();
+            $('#export-button').on('click', function(event) {
+                event.preventDefault(); 
 
-            //     var code            = $('#code').val();
-            //     var nama_project    = $('#nama_project').val();
-            //     var nama_customer   = $('#nama_customer').val();
-            //     var nama_pm         = $('#nama_pm').val();
-            //     var date            = $('#date').val();
+                var code            = $('#code').val();
+                var nama_project    = $('#nama_project').val();
+                var tanggal_mulai   = $('#tanggal_mulai').val();
+                var tanggal_selesai = $('#tanggal_selesai').val();
+                var nilai_project   = $('#nilai_project').val();
+                var status_project  = $('#status_project').val();
+                var dates           = $('#dates').val();
+                var enddates        = $('#enddates').val();
 
-            //     var url = '{{ route("on_progres.export-data") }}?' + $.param({
-            //         code: code,
-            //         nama_project: nama_project,
-            //         nama_customer: nama_customer,
-            //         nama_pm: nama_pm,
-            //         date: date
-            //     });
+                var url = '{{ route("laporan_project_manager.exportDetail") }}?' + $.param({
+                    id              : {{$pm->id}},
+                    code            : code,
+                    nama_project    : nama_project,
+                    tanggal_mulai   : tanggal_mulai,
+                    tanggal_selesai : tanggal_selesai,
+                    nilai_project   : nilai_project,
+                    status_project  : status_project,
+                    dates           : dates,
+                    enddates        : enddates,
+                    keyword         : filterSearch
+                });
 
-            //     $('.loading-overlay').show();
+                $('.loading-overlay').show();
 
-            //     window.location.href = url;
+                window.location.href = url;
 
-            //     setTimeout(hideOverlay, 2000);
-            // });
+                setTimeout(hideOverlay, 2000);
+            });
+
+            $(document).ready(function() {
+                $('.loading-overlay').hide();
+            });
         })
 </script>
 @endsection

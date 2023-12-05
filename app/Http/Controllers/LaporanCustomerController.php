@@ -243,31 +243,40 @@ class LaporanCustomerController extends Controller
 
     public function exportDetail(Request $request)
     {
-        $cek = OnRequest::where('id_customer', $request->id)->get();
-        $cekIds = $cek->pluck('id')->toArray();
-        $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
-                ->addSelect(['total' => OnRequest::selectRaw('count(*)')
-                    ->whereColumn('project_pekerjaan.id_project', 'project.id')
-                    ->groupBy('id_customer')
-                ])
-                ->filter($request)->get();
+        $data = OnRequest::has('progress')
+                ->where('id_customer', $request->id)
+                ->filter($request)
+                ->get();
+
+        // $cekIds = $cek->pluck('id')->toArray();
+        // $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
+        //         ->addSelect(['total' => OnRequest::selectRaw('count(*)')
+        //             ->whereColumn('project_pekerjaan.id_project', 'project.id')
+        //             ->groupBy('id_customer')
+        //         ])
+        //         ->filter($request)->get();
 
         foreach($data as $value){
-            $harga_customer = $value->harga_customer * $value->qty;
-            if (is_numeric($harga_customer)) {
-                 $value['nilai_project'] = 'Rp ' . number_format($harga_customer, 0, ',', '.');
-            } else {
-                 $value['nilai_project'] = 'Rp 0000';
+            $totalHarga = 0;
+            foreach ($value->progress as $progress) {
+                $totalHarga += $progress->harga_customer * $progress->qty;
             }
 
-            if($value->projects->status == 2){
-                $value['status'] = 'Progress';
-            }else if($value->projects->status == 3){
-                $value['status'] = 'Complete';
+            if (is_numeric($totalHarga)) {
+                $value['nilai_project'] = 'Rp ' . number_format($totalHarga, 0, ',', '.');
+            } else {
+                $value['nilai_project'] = 'Rp 0000';
+            }
+
+            if($value->status == 1){
+                $value['stat'] = 'Progress';
+            }else if($value->status == 2){
+                $value['stat'] = 'Complete';
             }else{
-                $value['status'] = '-';
+                $value['stat'] = '-';
             }
         }
+  
 
         return Excel::download(new ExportReportCustomerDetail($data), 'Report Customer Detail.xlsx');
     }

@@ -11,7 +11,7 @@
                             <a href="{{route('laporan_vendor')}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
-                            <h4 class="mb-0 ml-2"> &nbsp; Report Customer Detail</h4>
+                            <h4 class="mb-0 ml-2"> &nbsp; Report Vendor Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#advance">

@@ -16,8 +16,8 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $data = User::with(['role'])->orderBy('name','asc')
-                    ->where('status',0)
-                    ->filter($request);
+                    ->filter($request)
+                    ->get();
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('name', function($data){

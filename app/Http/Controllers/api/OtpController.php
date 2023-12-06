@@ -51,17 +51,16 @@ class OtpController extends Controller
         ]);
 
         if($validasi->fails()){
-            return response()->json(['status' => 500,'message' => $validasi->errors()->first()],500);
+            return response()->json(['status' => 400,'message' => $validasi->errors()->first()],500);
         }
 
         $otp = OtpUser::where('otp', $request->otp)->first();
+        if(empty($otp)){
+            return response()->json(['status' => 400,'message' => 'OTP Tidak Valid'],400);
+        }
         $email = $request->email;
         if($email != $otp->email){
-            return response()->json(['status' => 500,'message' => 'OTP Tidak Valid']);
-        }
-
-        if(empty($otp)){
-            return response()->json(['status' => 500,'message' => 'OTP Tidak Valid'],500);
+            return response()->json(['status' => 400,'message' => 'OTP Tidak Valid']);
         }
 
         return response()->json(['status' => 200,'message' => 'OTP Valid'],200);

@@ -345,7 +345,7 @@ class OnProgressController extends Controller
             }
         }
 
-        return back()->with('success','Data Berhasil Di Simpan');
+        return back()->with('success','Data Successfuly Saved');
 
     }
 
@@ -395,21 +395,52 @@ class OnProgressController extends Controller
         return view('on_progres.detail',compact('id','kategori','vendor','subKategori','workers'));
     }
 
-    public function subDetailWorker($id,$idProject,$subKategori, $kodeUnik)
+    public function subDetailWorker(Request $request, $id,$idProject,$subKategori, $kodeUnik)
     {
-        $data = ProjectPekerjaan::where('id_project',$idProject)
-                                ->where('id_kategori',$id)
-                                ->where('id_subkategori',$subKategori)
-                                ->whereNotNull(['id_pekerjaan'])
-                                ->get();
+        if($request->ajax){
+            $data = ProjectPekerjaan::where('id_project',$idProject)
+                                    ->where('id_kategori',$id)
+                                    ->where('id_subkategori',$subKategori)
+                                    ->whereNotNull(['id_pekerjaan'])
+                                    // ->with('vendors','subKategori')
+                                    ->get();
+
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('pekerjaan', function($data) {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->addColumn('length', function($data){
+                return $data->length ?  number_format($data->length,2, ',','') : 0 ;
+            })
+            ->addColumn('width', function($data){
+                return $data->width ?  number_format($data->width,2, ',','') : 0 ;
+            })
+            ->addColumn('thick', function($data){
+                return $data->thick ?  number_format($data->thick,2, ',','') : 0 ;
+            })
+            ->addColumn('qty', function($data){
+                return $data->qty ?  number_format($data->qty,2, ',','') : 0 ;
+            })
+            ->addColumn('amount', function($data){
+                return $data->amount ?  number_format($data->amount,2, ',','') : 0 ;
+            })
+            ->addColumn('vendor', function($data){
+                return $data->vendors->name;
+            })
+            ->make(true);
+
+        }
         $before = BeforePhoto::where('id_project',$idProject)
                             ->where('kode_unik',$kodeUnik)
                             ->get();
         $after = AfterPhoto::where('id_project',$idProject)
                             ->where('kode_unik',$kodeUnik)
                             ->get();
-        // dd($before,$after);
-        return view('on_progres.detail-work',compact('data','idProject','before','after'));
+        return view('on_progres.detail-work',compact('idProject','before','after','id','subKategori','kodeUnik'));
     }
 
     public function setting($id)

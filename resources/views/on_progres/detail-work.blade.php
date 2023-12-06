@@ -37,22 +37,7 @@
                                             <th style="color:#929EAE">Vendor</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->pekerjaan->name . ' ' . $item->deskripsi_pekerjaan ?? '-' }}</td>
-                                                <td>{{ $item->id_lokasi ?? '-' }}</td>
-                                                <td>{{ $item->detail ?? '-' }}</td>
-                                                <td>{{ number_format($item->length,2, ',','') ?? 0 }}</td>
-                                                <td>{{ number_format($item->width,2, ',','') ?? 0 }}</td>
-                                                <td>{{ number_format($item->thick,2, ',','') ?? 0 }}</td>
-                                                <td>{{ number_format($item->qty,2, ',','') ?? 0 }}</td>
-                                                <td>{{number_format($item->amount,2, ',','') ?? 0 }}</td>
-                                                <td>{{ $item->unit ?? '-' }}</td>
-                                                <td>{{ $item->vendors->name ?? '-' }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -133,6 +118,54 @@
                 'resizeDuration': 200,
                 'fitImagesInViewport' : true,
                 'wrapAround': true
+            });
+            let id_kategori = '{{ $id }}';
+            let id_project = '{{ $idProject }}';
+            let id_subkategori = '{{ $subKategori }}';
+            let kode_unik = '{{ $kodeUnik }}';
+            let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori',':kode_unik']) }}';
+            let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':kode_unik',kode_unik);
+
+            let table = $("#example1").DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
+                ajax : {
+                    url : urlReplace,
+                    method : 'GET',
+                },
+                column : [
+                    { data : 'pekerjaan', name : 'pekerjaan'},
+                    { data : 'id_lokasi', name : 'id_lokasi'},
+                    { data : 'detail', name : 'detail'},
+                    { data : 'length', name : 'length'},
+                    { data : 'width', name : 'width'},
+                    { data : 'thick', name : 'thick'},
+                    { data : 'qty', name : 'qty'},
+                    { data : 'amount', name : 'amount'},
+                    { data : 'unit', name : 'unit'},
+                    { data : 'vendor', name : 'vendor'},
+                ]
             })
         })
     </script>

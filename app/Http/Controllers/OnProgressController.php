@@ -43,7 +43,10 @@ class OnProgressController extends Controller
                 $data->where('id_customer',$request->nama_customer);
             }
             if($request->has('nama_pm') && !empty($request->nama_pm)){
-                $data->where('pm_id',$request->nama_pm);
+                $pm = $request->nama_pm;
+                $data->whereHas('pm.karyawan',function($query) use($pm){
+                    $query->where('id', $pm);
+                });
             }
 
             if ($request->has('date') && !empty($request->date)) {
@@ -731,7 +734,7 @@ class OnProgressController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,3). ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,null);
+                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,3). ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,null);
             })
             ->make(true);
         }

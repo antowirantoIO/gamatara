@@ -13,7 +13,7 @@ class Vendor extends Model
 
     public function kategori()
     {
-        return $this->hasMany(kategoriVendor::class, 'id','kategori_vendor');
+        return $this->hasOne(kategoriVendor::class, 'id','kategori_vendor');
     }
 
     public function projectPekerjaan()
@@ -41,18 +41,17 @@ class Vendor extends Model
         })->when($filter->npwp ?? false, function($query) use ($filter) {
             return $query->where('npwp', 'like', "%$filter->npwp%");
         })->when($filter->kategori_vendor ?? false, function($query) use ($filter) {
-            return $query->where('kategori_vendor', 'like', "%$filter->kategori_vendor%");
+            return $query->where('kategori_vendor', 1);
         })->when($filter->tahun ?? false, function ($query) use ($filter) {
             return $query->whereHas('projectPekerjaan', function ($query) use ($filter) {
                 $query->whereYear('created_at', '=', $filter->tahun);
             })->orWhereDoesntHave('projectPekerjaan');
         })->when($filter->keyword ?? false, function($query) use ($filter) {
-        return $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhereRaw('LOWER(contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhereRaw('LOWER(nomor_contact_person) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhereRaw('LOWER(alamat) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
-                ->orWhereRaw('LOWER(npwp) LIKE ?', ['%' . strtolower($filter->keyword) . '%']);
+        return $query->Where('contact_person ' ,'like', "%$filter->keyword%")
+                ->orWhere('nomor_contact_person' ,'like', "%$filter->keyword%")
+                ->orWhere('alamat' ,'like', "%$filter->keyword%")
+                ->orWhere('email ' ,'like', "%$filter->keyword%")
+                ->orWhere('npwp ' ,'like', "%$filter->keyword%");
             })->orWhereHas('kategori', function($query) use($filter) {
                 $query->where('name', 'like', "%$filter->keyword%");
         });

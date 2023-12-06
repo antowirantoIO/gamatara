@@ -16,7 +16,8 @@ class VendorController extends Controller
         if ($request->ajax()) {
             $data = Vendor::with(['kategori'])
                     ->filter($request)
-                    ->orderBy('name','asc');
+                    ->orderBy('name','asc')
+                    ->get();
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('kategori_vendor', function($data){

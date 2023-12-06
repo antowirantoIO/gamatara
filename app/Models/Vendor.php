@@ -53,6 +53,9 @@ class Vendor extends Model
                 ->orWhereRaw('LOWER(alamat) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($filter->keyword) . '%'])
                 ->orWhereRaw('LOWER(npwp) LIKE ?', ['%' . strtolower($filter->keyword) . '%']);
+            })->orWhereHas('kategori', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->keyword%");
         });
+      
     }
 }

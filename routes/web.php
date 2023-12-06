@@ -322,6 +322,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store', [CompleteController::class, 'store'])->name('complete.store');
         Route::post('/updated/{id}', [CompleteController::class, 'updated'])->name('complete.updated');
         Route::get('/delete/{id}', [CompleteController::class, 'delete'])->name('complete.delete');
+        Route::get('table-data/{id}',[CompleteController::class,'tableData'])->name('complete.table-data');
 
         Route::prefix('pekerjaan')->group(function(){
             Route::get('detail/{id}',[CompleteController::class,'detailPekerjaan'])->name('complete.pekerjaan');

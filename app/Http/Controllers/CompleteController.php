@@ -12,9 +12,11 @@ use App\Models\SubKategori;
 use App\Models\Pekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use App\Models\Keluhan;
 use App\Models\LokasiProject;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -410,14 +412,13 @@ class CompleteController extends Controller
 
     public function ajaxProgresPekerjaanVendor(Request $request)
     {
-
         if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project',$request->id_project)
                                     ->where('id_kategori', $request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->with(['subKategori', 'vendors'])
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori','kode_unik')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori','kode_unik', DB::raw('MAX(id) as id'))
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
                                     ->distinct();
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
@@ -436,18 +437,27 @@ class CompleteController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
                     return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
                 } else {
                     return $data->subKategori->name;
                 }
             })
             ->addColumn('progres', function($data){
-                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
-                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,3). ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,null);
             })
             ->make(true);
         }
+    }
+
+    public function tableData($id)
+    {
+        $pmAuth         = Auth::user()->role->name ?? '';
+        $keluhans        = Keluhan::where('on_request_id',$id)->get();
+        $count          = $keluhans->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+        $keluhan        = count($keluhans);
+
+        return view('complete.tabledata', compact('keluhan','count', 'pmAuth','keluhans'));
     }
 
 }

@@ -172,7 +172,7 @@
             let idData = "{{$data->id}}";
             console.log(idData);
             function getTableData(id) {
-                let url = "{{route('on_progres.table-data', ':id')}}";
+                let url = "{{route('complete.table-data', ':id')}}";
                 url = url.replace(':id', id);
                 $.ajax({
                     url: url,

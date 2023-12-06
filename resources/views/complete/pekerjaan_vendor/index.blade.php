@@ -139,7 +139,7 @@
                     previousButton.css('display', 'none');
                 },
                 ajax : {
-                    url : '{{ route('ajax.progres-pekerjaan-vendor') }}',
+                    url : '{{ route('complete.ajax.progres-pekerjaan-vendor') }}',
                     method : 'GET',
                     data : function(d){
                         d._token = '{{ csrf_token() }}';
@@ -160,7 +160,7 @@
                             let id_project = data.id_project;
                             let id_subkategori = data.id_subkategori;
                             let id_kategori = data.id_kategori;
-                            let url = '{{ route('on_progres.vendor-worker',[':id',':project',':subkategori',':idKategori']) }}';
+                            let url = '{{ route('complete.pekerjaan-vendor',[':id',':project',':subkategori',':idKategori']) }}';
                             let urlReplace = url.replace(':id',id_vendor).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':idKategori',id_kategori);
                             return `<a href="${urlReplace}" class="btn btn-warning btn-sm">
                                 <span>

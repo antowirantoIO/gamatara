@@ -30,8 +30,8 @@
                                     <div class="form-group col-md-3">
                                         <label>Report By</label>
                                         <select class="form-control" name="report_by" id="report_by">
-                                            <!-- <option value="tanggal">Days</option>
-                                            <option value="bulan">Month</option> -->
+                                            <!-- <option value="tanggal">Days</option>-->
+                                            <option value="bulan">Month</option> 
                                             <option value="tahun">Year</option>
                                         </select>
                                     </div>

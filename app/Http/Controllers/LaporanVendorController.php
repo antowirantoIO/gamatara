@@ -156,61 +156,6 @@ class LaporanVendorController extends Controller
         ]);
     }
 
-    public function chart(Request $request)
-    {
-        if($request->year)
-        {
-            $tahun = $request->year;
-        }else{
-            $tahun = now()->format('Y');
-        }
-
-        if($request->type != null){
-            $type = $request->type;
-        }else{
-            $type = "Tonase";
-        }
-
-        if($type == 'Tonase' )
-        {
-            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
-                        ->join('project as C', function ($join) use ($tahun) {
-                            $join->on('B.id_project', '=', 'C.id')
-                                ->where('B.id_kategori', '=', 3)
-                                ->whereYear('C.created_at', '=', $tahun);
-                        })
-                        ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
-                        ->groupBy('vendor.id', 'vendor.name')
-                        ->orderByDesc(DB::raw('SUM(B.amount)'))
-                        ->get();
-        }else{
-            $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
-                    ->join('project as C', function ($join) use ($tahun) {
-                        $join->on('B.id_project', '=', 'C.id')
-                            ->where('B.id_kategori', '=', 2)
-                            ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
-                    })
-                    ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as tonase'))
-                    ->groupBy('vendor.id', 'vendor.name')
-                    ->orderByDesc(\DB::raw('SUM(B.amount)'))
-                    ->get();
-        }
-
-        if(count($result) === 0){
-            $result = [
-                [
-                    'id' => 0,
-                    'name' => 'Not Available',
-                    'tonase' => '0.00'
-                ]
-            ];
-        }else{
-            $result = $result;
-        }
-
-        return response()->json($result);
-    }
-
     public function detail(Request $request)
     {
         if ($request->ajax()) {
@@ -244,9 +189,9 @@ class LaporanVendorController extends Controller
             })
             ->addColumn('status_project', function($data){
                 if($data->projects->status == 1){
-                    $status = '<span style="color: blue;">Proses</span>';
+                    $status = '<span style="color: blue;">Progress</span>';
                 }else if($data->projects->status == 2){
-                    $status = '<span style="color: green;">Done</span>';
+                    $status = '<span style="color: green;">Complete</span>';
                 }else {
                     $status = '-';
                 }
@@ -319,4 +264,60 @@ class LaporanVendorController extends Controller
 
         return Excel::download(new ExportReportVendorDetail($data), 'Report Vendor Detail.xlsx');
     }
+
+    
+    // public function chart(Request $request)
+    // {
+    //     if($request->year)
+    //     {
+    //         $tahun = $request->year;
+    //     }else{
+    //         $tahun = now()->format('Y');
+    //     }
+
+    //     if($request->type != null){
+    //         $type = $request->type;
+    //     }else{
+    //         $type = "Tonase";
+    //     }
+
+    //     if($type == 'Tonase' )
+    //     {
+    //         $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+    //                     ->join('project as C', function ($join) use ($tahun) {
+    //                         $join->on('B.id_project', '=', 'C.id')
+    //                             ->where('B.id_kategori', '=', 3)
+    //                             ->whereYear('C.created_at', '=', $tahun);
+    //                     })
+    //                     ->select('vendor.id', 'vendor.name', DB::raw('SUM(B.amount) as tonase'))
+    //                     ->groupBy('vendor.id', 'vendor.name')
+    //                     ->orderByDesc(DB::raw('SUM(B.amount)'))
+    //                     ->get();
+    //     }else{
+    //         $result = Vendor::join('project_pekerjaan as B', 'vendor.id', '=', 'B.id_vendor')
+    //                 ->join('project as C', function ($join) use ($tahun) {
+    //                     $join->on('B.id_project', '=', 'C.id')
+    //                         ->where('B.id_kategori', '=', 2)
+    //                         ->whereRaw('YEAR(C.created_at) = ?', [$tahun]);
+    //                 })
+    //                 ->select('vendor.id', 'vendor.name', \DB::raw('SUM(B.amount) as tonase'))
+    //                 ->groupBy('vendor.id', 'vendor.name')
+    //                 ->orderByDesc(\DB::raw('SUM(B.amount)'))
+    //                 ->get();
+    //     }
+
+    //     if(count($result) === 0){
+    //         $result = [
+    //             [
+    //                 'id' => 0,
+    //                 'name' => 'Not Available',
+    //                 'tonase' => '0.00'
+    //             ]
+    //         ];
+    //     }else{
+    //         $result = $result;
+    //     }
+
+    //     return response()->json($result);
+    // }
 }

@@ -30,8 +30,8 @@
                                     <div class="form-group col-md-3">
                                         <label>Report By</label>
                                         <select class="form-control" name="report_by" id="report_by">
-                                            <!-- <option value="tanggal">Days</option>
-                                            <option value="bulan">Month</option> -->
+                                            <!-- <option value="tanggal">Days</option> -->
+                                            <option value="bulan">Month</option>
                                             <option value="tahun">Year</option>
                                         </select>
                                     </div>
@@ -129,14 +129,6 @@
         $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
-
-
-        // $.ajax({
-        //     url : '{{ route('laporan_project_manager.charts') }}',
-        //     success : function(data){
-        //         charts(data);
-        //     }
-        // });
 
         $('#daterange').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));

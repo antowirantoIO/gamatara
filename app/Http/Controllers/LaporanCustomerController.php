@@ -37,7 +37,7 @@ class LaporanCustomerController extends Controller
             if ($value->projects) {
                 $id = '';
                 foreach ($value->projects as $project) {
-                    $id = $project->id;
+                    $id = $project->id_customer;
                 }
                 $value['total_project'] = $value->projects->count();
                 $value['detail_url'] = route('laporan_customer.detail', $id);

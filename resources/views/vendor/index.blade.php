@@ -72,6 +72,7 @@
         </div> 
     </div>
 </div>
+
 <!--modal-->
 <div id="advance" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
@@ -135,10 +136,6 @@
                         </div> 
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
-                    <button class="btn btn-primary">Search</button>
-                </div> -->
             </form>
         </div>
     </div>
@@ -148,7 +145,7 @@
 
 @section('scripts')
 <script>
-     $(document).ready(function () {
+    $(function() {
         let filterSearch = '';
         var table = $('#tableData').DataTable({
             ordering: false,

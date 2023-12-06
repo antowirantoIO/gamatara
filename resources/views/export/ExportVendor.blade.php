@@ -20,7 +20,7 @@
                 <td style="border: 1px solid black;">{{ $item->nomor_contact_person }}</td>
                 <td style="border: 1px solid black;">{{ $item->email }}</td>
                 <td style="border: 1px solid black;">{{ $item->npwp }}</td>
-                <td style="border: 1px solid black;">{{ $item->kategori_vendor->name ?? '' }}</td>
+                <td style="border: 1px solid black;">{{ $item->kategori->name ?? '' }}</td>
             </tr>
        @endforeach
     </tbody>

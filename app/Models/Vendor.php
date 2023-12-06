@@ -13,7 +13,7 @@ class Vendor extends Model
 
     public function kategori()
     {
-        return $this->hasOne(kategoriVendor::class, 'id','kategori_vendor');
+        return $this->hasMany(kategoriVendor::class, 'id','kategori_vendor');
     }
 
     public function projectPekerjaan()

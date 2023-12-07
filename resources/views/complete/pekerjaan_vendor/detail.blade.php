@@ -43,6 +43,9 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
+                                            @can('edit-pekerjaan-vendor')
+                                            <th style="color:#929EAE">Action</th>
+                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -208,6 +211,7 @@
                 theme : "bootstrap-5",
                 dropdownParent: $("#modalFillter")
             });
+
             $('.form-select-edit').select2({
                 theme : "bootstrap-5",
                 dropdownParent: $("#modalEdit")
@@ -270,6 +274,19 @@
                     { data : 'qty' },
                     { data : 'amount' },
                     { data : 'unit' },
+                    @can('edit-pekerjaan-vendor')
+                    {
+                        data : function (data) {
+                            let id = data.id;
+                            console.log(data);
+                            return   `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
+                                <span>
+                                    <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                </span>
+                            </button>`
+                        }
+                    }
+                    @endcan
                 ]
 
             });
@@ -371,7 +388,7 @@
                     { data : 'qty', name : 'qty' },
                     { data : 'amount', name : 'amount' },
                     { data : 'harga_vendor', name : 'harga_vendor' },
-                    { data : 'harga_customer', name : 'harga_customer' },
+                    { data : 'harga_customer', name : 'harga_customer' }
                 ]
             })
 

@@ -152,6 +152,81 @@
     </div>
 </div>
 
+<div id="modalEdit" class="modal fade zoomIn" aria-labelledby="zoomInModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-top-right">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomInModalLabel">Edit Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('on_progress.pekerjaan-vendor.update') }}" method="post">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="id" class="id" id="id">
+                    <div class="row gy-4">
+                        <input type="hidden" name="conversion" id="conversion" class="conversion">
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="length" class="form-label">Length</label>
+                                <input type="text" name="length" id="length" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="width" class="form-label">Width</label>
+                                <input type="text" name="width" id="width" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="thick" class="form-label">Thick</label>
+                                <input type="text" name="thick" id="thick" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="unit" class="form-label">Unit</label>
+                                <input type="text" name="unit" id="unit" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="qty" class="form-label">Qty</label>
+                                <input type="text" name="qty" id="qty" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div>
+                                <label for="amount" class="form-label">Amount</label>
+                                <input type="text" name="amount" id="amount" class="form-control">
+                            </div>
+                        </div>
+                        @can('edit-harga-vendor')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="harga_vendor" class="form-label">Vendor Price</label>
+                                    <input type="text" name="harga_vendor" id="harga_vendor" class="form-control">
+                                </div>
+                            </div>
+                        @endcan
+                        @can('edit-harga-customer')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="harga_customer" class="form-label">Customer Price</label>
+                                    <input type="text" name="harga_customer" id="harga_customer" class="form-control">
+                                </div>
+                            </div>
+                        @endcan
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="btn-search">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -160,6 +235,7 @@
             let filterData = {};
             let modalInput = $('#modalFillter');
             let btnFilterCategory = $('.btn-filter-category');
+            let modalEdit = $('#modalEdit');
             let modalHistory = $('#modalHistory');
 
             var table = $('#tableData').DataTable({
@@ -322,6 +398,11 @@
                             data : function(data){
                                 let id = data.id;
                                 return `<div class="d-flex justify-content-around gap-3">
+                                    <button data-id="${id}" class="btn btn-info btn-sm btn-edit">
+                                        <span>
+                                            <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                        </span>
+                                    </button>
                                     <button class="btn btn-warning btn-history btn-sm" data-id=${id}>
                                         <span>
                                             <i><img src="{{asset('assets/images/history.svg')}}" style="width: 20px; color:white;"></i>
@@ -333,6 +414,29 @@
                     @endcan
                 ]
             })
+
+            $(document).delegate('.btn-edit','click',function(){
+                let id = $(this).data('id');
+                let url = '{{ route('on_progres.request.edit',':id') }}';
+                let urlReplace = url.replace(':id',id);
+                $.ajax({
+                    url : urlReplace,
+                    method : 'GET'
+                }).then(ress => {
+                    $('#id').val(id);
+                    $('#length').val(ress.data.length);
+                    $('#width').val(ress.data.width);
+                    $('#thick').val(ress.data.thick);
+                    $('#unit').val(ress.data.unit);
+                    $('#qty').val(ress.data.qty);
+                    $('#amount').val(ress.data.amount);
+                    $('#conversion').val(ress.data.conversion);
+                    $('#harga_vendor').val(rupiah(ress.data.harga_vendor));
+                    $('#harga_customer').val(ress.data.pekerjaan ? rupiah(ress.data.pekerjaan.harga_customer) : 0);
+                    modalEdit.modal('show');
+                })
+            });
+
 
             handleFiltertab($('.btn-filter-category.active'));
 

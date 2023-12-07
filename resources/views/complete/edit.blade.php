@@ -81,11 +81,20 @@
                                                 <td>{{ $project->vendors->name }}</td>
                                                 <td>{{ getTotalProgressVendor($data->id, $project->id_vendor,3) }} / {{ getTotalProgressVendor($data->id, $project->id_vendor,null) }}</td>
                                                 <td>
-                                                    <a href="{{ route('complete.pekerjaan-vendor.all',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
-                                                        <span>
-                                                            <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
-                                                        </span>
-                                                    </a>
+                                                    <div class="d-flex justify-contetn-center gap-3">
+                                                        <a href="{{ route('complete.pekerjaan-vendor.all',[$project->id_vendor,$data->id]) }}" class="btn btn-warning btn-sm">
+                                                            <span>
+                                                                <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
+                                                            </span>
+                                                        </a>
+                                                        @can('edit-pekerjaan-vendor')
+                                                        <a href="{{ route('complete.request.tambah-kategori',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
+                                                            <span>
+                                                                <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
+                                                            </span>
+                                                        </a>
+                                                        @endcan
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach

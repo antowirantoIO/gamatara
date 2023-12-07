@@ -330,6 +330,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('sub-detail/{id}/{idProject}/{idSub}/{kodeUnik}',[CompleteController::class,'subDetailPekerjaan'])->name('complete.sub-detail-pekerjaan');
         });
 
+        Route::prefix('request')->group(function(){
+            Route::get('tambah-pekerjaan/{id}/{vendor}/{kategori}/{subkategori}/{kodeUnik}',[CompleteController::class,'addWork'])->name('complete.request-pekerjaan');
+            Route::post('tambah-pekerjaan/{id}',[CompleteController::class,'requestPost'])->name('complete.work');
+            Route::get('tambah-kategori/{id}/{vendor}',[CompleteController::class,'tambahKategori'])->name('complete.request.tambah-kategori');
+            Route::post('tambah-kategori',[CompleteController::class,'storeTambahKategori'])->name('complete.store-kategori');
+            Route::post('delete-request',[CompleteController::class,'deleteRequest'])->name('complete.request-delete');
+
+        });
+
         Route::prefix('tagihan')->group(function(){
             Route::get('list/tagihan-vendor/{id}',[CompleteController::class,'dataTagihan'])->name('complete.tagihan.all');
             Route::get('vendor/{id}/{vendor}',[CompleteController::class,'tagihanVendor'])->name('complete.tagihan-vendor');

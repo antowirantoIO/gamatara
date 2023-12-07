@@ -442,19 +442,19 @@ class OnProgressController extends Controller
                 }
             })
             ->addColumn('length', function($data){
-                return $data->length ?  number_format($data->length,2, ',','') : 0 ;
+                return $data->length ?  number_format($data->length,2, '.','') : 0 ;
             })
             ->addColumn('width', function($data){
-                return $data->width ?  number_format($data->width,2, ',','') : 0 ;
+                return $data->width ?  number_format($data->width,2, '.','') : 0 ;
             })
             ->addColumn('thick', function($data){
-                return $data->thick ?  number_format($data->thick,2, ',','') : 0 ;
+                return $data->thick ?  number_format($data->thick,2, '.','') : 0 ;
             })
             ->addColumn('qty', function($data){
-                return $data->qty ?  number_format($data->qty,2, ',','') : 0 ;
+                return $data->qty ?  number_format($data->qty,2, '.','') : 0 ;
             })
             ->addColumn('amount', function($data){
-                return $data->amount ?  number_format($data->amount,2, ',','') : 0 ;
+                return $data->amount ?  number_format($data->amount,2, '.','') : 0 ;
             })
             ->addColumn('vendor', function($data){
                 return $data->vendors->name;
@@ -799,38 +799,38 @@ class OnProgressController extends Controller
         }
     }
 
-    public function ajaxSettingEstimasi(Request $request)
-    {
-        if($request->ajax()){
-            $data = ProjectPekerjaan::where('id_project',$request->id_project)
-                                    ->where('id_kategori', $request->id_kategori)
-                                    ->with(['subKategori', 'vendors'])
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                                    ->distinct();
+    // public function ajaxSettingEstimasi(Request $request)
+    // {
+    //     if($request->ajax()){
+    //         $data = ProjectPekerjaan::where('id_project',$request->id_project)
+    //                                 ->where('id_kategori', $request->id_kategori)
+    //                                 ->with(['subKategori', 'vendors'])
+    //                                 ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+    //                                 ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+    //                                 ->distinct();
 
-            if($request->has('nama_customer') && !empty($request->nama_customer)){
-                $data->where('id_subkategori',$request->id_subkategori);
-                $data->where('id_pekerjaan',$request->nama_customer);
-            }
+    //         if($request->has('nama_customer') && !empty($request->nama_customer)){
+    //             $data->where('id_subkategori',$request->id_subkategori);
+    //             $data->where('id_pekerjaan',$request->nama_customer);
+    //         }
 
-            $data = $data->get();
+    //         $data = $data->get();
 
-            return DataTables::of($data)->addIndexColumn()
-            ->addColumn('pekerjaan', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
-                } else {
-                    return $data->subKategori->name;
-                }
-            })
-            ->addColumn('progres', function($data){
-                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
-                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
-            })
-            ->make(true);
-        }
-    }
+    //         return DataTables::of($data)->addIndexColumn()
+    //         ->addColumn('pekerjaan', function($data) {
+    //             if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+    //                 return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+    //             } else {
+    //                 return $data->subKategori->name;
+    //             }
+    //         })
+    //         ->addColumn('progres', function($data){
+    //             $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
+    //             return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+    //         })
+    //         ->make(true);
+    //     }
+    // }
 
     public function ajaxTagihanVendor(Request $request)
     {

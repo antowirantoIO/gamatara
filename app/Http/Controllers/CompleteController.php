@@ -14,10 +14,11 @@ use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Keluhan;
 use App\Models\LokasiProject;
-
+use App\Models\RecentActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class CompleteController extends Controller
@@ -97,6 +98,285 @@ class CompleteController extends Controller
         $vendor = Vendor::all();
         $subKategori = SubKategori::all();
         return view('complete.pekerjaan.index',compact('id','kategori','vendor','subKategori','workers'));
+    }
+
+    public function tambahKategori(Request $request, $id,$vendor)
+    {
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project',$id)
+                                    ->where('id_vendor',$vendor)
+                                    ->with('kategori','subKategori')
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori','kode_unik')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori','kode_unik', DB::raw('MAX(kode_unik) as kode_unik'))
+                                    ->distinct();
+            $data = $data->get();
+
+            return DataTables::of($data)->addIndexColumn()
+                            ->addColumn('subkategori',function($data){
+                                return strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan' ? ($data->deskripsi_subkategori ? $data->subKategori->name . ' ' .  $data->deskripsi_subkategori : $data->subKategori->name) : $data->subKategori->name ;
+                            })
+                            ->addColumn('action', function($data) {
+                               return ' <div class="d-flex justify-contetn-center gap-3">
+                               <a href="'.route('complete.request-pekerjaan',[$data->id_project,$data->id_vendor,$data->id_kategori,$data->id_subkategori, $data->kode_unik ?? 0]).'" class="btn btn-info btn-sm">
+                                   <span>
+                                       <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
+                                   </span>
+                               </a>
+                           </div>';
+                            })
+                            ->make(true);
+        }
+        $categories = Kategori::all();
+        return view('complete.tagihan.tambah_kategori',compact('id','vendor','categories'));
+    }
+
+    public function storeTambahKategori(Request $request)
+    {
+        $validation = Validator::make($request->all(),[
+            'id_vendor' => 'required',
+            'id_project' => 'required',
+            'kategori' => 'required',
+            'subkategori' => 'required'
+        ]);
+
+        if($validation->fails()){
+            return back()->with('error',$validation->errors()->first());
+        }
+
+        ProjectPekerjaan::create([
+            'id_project' => $request->id_project,
+            'id_kategori' => $request->kategori,
+            'id_subkategori' => $request->subkategori,
+            'id_vendor' => $request->id_vendor,
+            'kode_unik' => generateBarcodeNumber()
+        ]);
+
+        return back()->with('success','Data saved successfully !');
+    }
+
+    public function addWork($id, $vendor,$kategori,$subKategori, $kodeUnik)
+    {
+        $works = Kategori::all();
+        $vendor = Vendor::where('id',$vendor)->first();
+        $pekerjaan = ProjectPekerjaan::where('id_project',$id)
+                                    ->where('id_kategori',$kategori)
+                                    ->where('id_subkategori',$subKategori)
+                                    ->where('id_vendor',$vendor->id)
+                                    ->where('kode_unik',$kodeUnik)
+                                    ->get();
+        $kode_unik = $pekerjaan->pluck('kode_unik')->first();
+        $kategori_id = $pekerjaan->pluck('id_kategori')->first();
+        $subkategori_id = $pekerjaan->pluck('id_subkategori')->first();
+        $subkategori = collect();
+        $settingPekerjaan = collect();
+        $desc = $pekerjaan->pluck('deskripsi_subkategori')->first();
+        if(!empty($kategori_id)){
+            $subkategori = SubKategori::where('id_kategori',$kategori_id)->get();
+        }
+
+        $pekerjaans = Pekerjaan::all();
+
+        return view('complete.request',compact('id','works','vendor','pekerjaan','kategori_id','subkategori_id','subkategori','settingPekerjaan','desc','kategori','pekerjaans','subKategori','kode_unik'));
+    }
+
+    public function requestPost(Request $request)
+    {
+        $validasi = Validator::make($request->all(),[
+            'kategori' => 'required',
+            'sub_kategori' => 'required',
+            'pekerjaan' => 'required|array',
+            'length' =>  'required|array',
+            'width' => 'required|array',
+            'thick' => 'required|array',
+            'unit' => 'required|array',
+            'qty' => 'required|array',
+            'amount' => 'required'
+        ]);
+
+        if($validasi->fails()){
+            return back()->with('error',$validasi->errors()->first());
+        }
+        $number = $request->kode_unik;
+
+        foreach($request->pekerjaan as $key => $item){
+            // dd($request->amount[$key]);
+            $ids = $request->id[$key];
+            if($ids !== null){
+                $idProject = $request->id[$key];
+                $currentData = RecentActivity::where('project_pekerjaan_id',$idProject)
+                ->orderBy('created_at','desc')
+                ->first();
+                $project = ProjectPekerjaan::where('id',$idProject)->first();
+                $pekerjaan = Pekerjaan::where('id',$item)->first();
+                $isDifferent = false;
+                if ($currentData) {
+                    if ($currentData->deskripsi_pekerjaan !== $request->deskripsi[$key] ||
+                        $currentData->id_lokasi !== $request->lokasi[$key] ||
+                        intval($currentData->length) !== intval($request->length[$key]) ||
+                        intval($currentData->width) !== intval($request->width[$key]) ||
+                        intval($currentData->thick) !== intval($request->thick[$key]) ||
+                        $currentData->unit !== $request->unit[$key] ||
+                        intval($currentData->qty) !== intval($request->qty[$key]) ||
+                        $currentData->amount != floatval($request->amount[$key]) ) {
+                        $isDifferent = true;
+                    }else{
+                        $isDifferent = false;
+                    }
+                }
+                ProjectPekerjaan::where('id',$idProject)->update([
+                    'id_project' => $request->id_project ?? null,
+                    'id_kategori' => $request->kategori ?? null,
+                    'id_subkategori' => $request->sub_kategori ?? null,
+                    'id_pekerjaan' => $item ?? null,
+                    'id_vendor' => $request->vendor ?? null,
+                    'deskripsi_subkategori' => $request->nama_pekerjaan ?? null,
+                    'deskripsi_pekerjaan' => $request->deskripsi[$key] ?? null,
+                    'conversion' => $request->convertion[$key] ?? null,
+                    'id_lokasi' => $request->lokasi[$key] ?? null,
+                    'detail' => $request->detail[$key] ?? null,
+                    'length' => $request->length[$key] ?? null,
+                    'width' => $request->width[$key] ?? null,
+                    'thick' => $request->thick[$key] ?? null,
+                    'unit' => $request->unit[$key] ?? null,
+                    'qty' => $request->qty[$key] ?? null,
+                    'amount' => $request->amount[$key] ?? null,
+                    'harga_vendor' => $project->harga_vendor ?? $pekerjaan->harga_vendor,
+                    'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
+                    'kode_unik' => $number
+                ]);
+                $recent = RecentActivity::where('project_pekerjaan_id',$request->id[$key])->first();
+
+                if($recent){
+                    if ($isDifferent === true) {
+                        RecentActivity::create([
+                            'project_pekerjaan_id' => $idProject,
+                            'id_project' => $request->id_project,
+                            'id_subkategori' => $request->sub_kategori,
+                            'id_pekerjaan' => $item,
+                            'id_vendor' => $request->vendor,
+                            'id_kategori' => $request->kategori,
+                            'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                            'id_lokasi' => $request->lokasi[$key],
+                            'detail' => $request->detail[$key],
+                            'length' => $request->length[$key],
+                            'width' => $request->width[$key],
+                            'thick' => $request->thick[$key],
+                            'unit' => $request->unit[$key],
+                            'qty' => $request->qty[$key],
+                            'amount' => $request->amount[$key],
+                            'harga_vendor' => $project->harga_vendor ?? $pekerjaan->harga_vendor,
+                            'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
+                            'description' => 'Updated Data',
+                            'status' => 2,
+                            'updated_at' => date('Y-m-d H:i:s'),
+                            'kode_unik' => $number
+                        ]);
+                    }
+                }else{
+                    RecentActivity::create([
+                        'project_pekerjaan_id' => $idProject,
+                        'id_project' => $request->id_project,
+                        'id_subkategori' => $request->sub_kategori,
+                        'id_vendor' => $request->vendor,
+                        'id_pekerjaan' => $item,
+                        'id_kategori' => $request->kategori,
+                        'deskripsi_pekerjaan' => $request->deskripsi[$key],
+                        'id_lokasi' => $request->lokasi[$key],
+                        'length' => $request->length[$key],
+                        'width' => $request->width[$key],
+                        'thick' => $request->thick[$key] ?? null,
+                        'unit' => $request->unit[$key] ?? null,
+                        'qty' => $request->qty[$key] ?? null,
+                        'detail' => $request->detail[$key] ?? null,
+                        'amount' => $request->amount[$key] ?? null,
+                        'harga_vendor' => $project->harga_vendor ?? $pekerjaan->harga_vendor,
+                        'harga_customer' => $project->harga_customer ?? $pekerjaan->harga_customer,
+                        'description' => 'Created New Data',
+                        'status' => 1,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'kode_unik' => $number
+                    ]);
+                }
+            }else {
+                $harga_pekerjaan = Pekerjaan::where('id',$item)->first();
+                $pekerjaan = ProjectPekerjaan::create([
+                    'id_project' => $request->id_project ?? null,
+                    'id_kategori' => $request->kategori ?? null,
+                    'id_subkategori' => $request->sub_kategori ?? null,
+                    'id_pekerjaan' => $item ?? null,
+                    'id_vendor' => $request->vendor ?? null,
+                    'deskripsi_subkategori' => $request->nama_pekerjaan ?? null,
+                    'deskripsi_pekerjaan' => $request->deskripsi[$key] ?? null,
+                    'conversion' => $request->convertion[$key] ?? null,
+                    'id_lokasi' => $request->lokasi[$key] ?? null,
+                    'detail' => $request->detail[$key] ?? null,
+                    'length' => $request->length[$key] ?? null,
+                    'width' => $request->width[$key] ?? null,
+                    'thick' => $request->thick[$key] ?? null,
+                    'unit' => $request->unit[$key] ?? null,
+                    'qty' => $request->qty[$key] ?? null,
+                    'amount' => $request->amount[$key] ?? null,
+                    'harga_vendor' => $harga_pekerjaan->harga_vendor ?? null,
+                    'harga_customer' => $harga_pekerjaan->harga_customer ?? null,
+                    'kode_unik' => $number
+                ]);
+
+                RecentActivity::create([
+                    'project_pekerjaan_id' => $pekerjaan->id,
+                    'id_project' => $request->id_project,
+                    'id_subkategori' => $request->sub_kategori,
+                    'id_pekerjaan' => $item,
+                    'id_vendor' => $request->vendor,
+                    'id_kategori' => $request->kategori,
+                    'deskripsi_pekerjaan' => $request->deskripsi[$key] ?? null,
+                    'detail' => $request->detail[$key] ?? null,
+                    'id_lokasi' => $request->lokasi[$key] ?? null,
+                    'length' => $request->length[$key] ?? null,
+                    'width' => $request->width[$key] ?? null,
+                    'thick' => $request->thick[$key] ?? null,
+                    'unit' => $request->unit[$key] ?? null,
+                    'qty' => $request->qty[$key] ?? null,
+                    'amount' => $request->amount[$key] ?? null,
+                    'harga_vendor' => $harga_pekerjaan->harga_vendor ?? null,
+                    'harga_customer' => $harga_pekerjaan->harga_customer ?? null,
+                    'description' => 'Created New Data',
+                    'status' => 1,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
+
+        return back()->with('success','Data Successfuly Saved');
+
+    }
+
+    public function deleteRequest(Request $request)
+    {
+        $data = ProjectPekerjaan::where('id',$request->id)->first();
+        ProjectPekerjaan::where('id',$request->id)->delete();
+        RecentActivity::create([
+            'project_pekerjaan_id' => $data->id,
+            'id_project' => $data->id_project,
+            'id_pekerjaan' => $data->id_pekerjaan,
+            'id_kategori' => $data->id_kategori,
+            'deskripsi_pekerjaan' => $data->deskripsi,
+            'id_lokasi' => $data->lokasi,
+            'detail' => $data->detail,
+            'length' => $data->length,
+            'width' => $data->width,
+            'thick' => $data->thick,
+            'unit' => $data->unit,
+            'qty' => $data->qty,
+            'amount' => str_replace(",", ".", $data->amount),
+            'harga_vendor' => str_replace(",", "", $data->harga_vendor) ,
+            'harga_customer' =>  str_replace(",", "", $data->harga_customer),
+            'description' => 'Deleted Data',
+            'status' => 3,
+            'deleted_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return response()->json(['status' => 200, 'msg' => 'Data Berhasil Di Hapus !']);
+
     }
 
     public function subDetailPekerjaan($id,$idProject,$subKategori,$kodeUnik)
@@ -283,45 +563,45 @@ class CompleteController extends Controller
         }
     }
 
-    public function ajaxSettingEstimasi(Request $request)
-    {
-        if($request->ajax()){
-            $data = ProjectPekerjaan::where('id_project',$request->id_project)
-                                    ->where('id_kategori', $request->id_kategori)
-                                    ->with(['subKategori', 'vendors'])
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                                    ->distinct();
+    // public function ajaxSettingEstimasi(Request $request)
+    // {
+    //     if($request->ajax()){
+    //         $data = ProjectPekerjaan::where('id_project',$request->id_project)
+    //                                 ->where('id_kategori', $request->id_kategori)
+    //                                 ->with(['subKategori', 'vendors'])
+    //                                 ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
+    //                                 ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+    //                                 ->distinct();
 
-            if($request->has('sub_kategori') && !empty($request->sub_kategori)){
-                $data->where('id_subkategori',$request->sub_kategori);
-            }
+    //         if($request->has('sub_kategori') && !empty($request->sub_kategori)){
+    //             $data->where('id_subkategori',$request->sub_kategori);
+    //         }
 
-            if($request->has('nama_vendor') && !empty($request->nama_vendor)){
-                $vendor = $request->nama_vendor;
-                $data->whereHas('vendors',function($item) use(&$vendor){
-                    $item->where('id',$vendor);
-                });
-            }
+    //         if($request->has('nama_vendor') && !empty($request->nama_vendor)){
+    //             $vendor = $request->nama_vendor;
+    //             $data->whereHas('vendors',function($item) use(&$vendor){
+    //                 $item->where('id',$vendor);
+    //             });
+    //         }
 
 
-            $data = $data->get();
+    //         $data = $data->get();
 
-            return DataTables::of($data)->addIndexColumn()
-            ->addColumn('pekerjaan', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
-                } else {
-                    return $data->subKategori->name;
-                }
-            })
-            ->addColumn('progres', function($data){
-                $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
-                return $progres->total_status_2 . ' / ' . $progres->total_status_1;
-            })
-            ->make(true);
-        }
-    }
+    //         return DataTables::of($data)->addIndexColumn()
+    //         ->addColumn('pekerjaan', function($data) {
+    //             if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
+    //                 return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+    //             } else {
+    //                 return $data->subKategori->name;
+    //             }
+    //         })
+    //         ->addColumn('progres', function($data){
+    //             $progres = getProgress($data->id_project,$data->id_kategori,$data->id_vendor);
+    //             return $progres->total_status_2 . ' / ' . $progres->total_status_1;
+    //         })
+    //         ->make(true);
+    //     }
+    // }
 
     public function ajaxAllTagihan (Request $request)
     {

@@ -456,8 +456,7 @@ class CompleteController extends Controller
         $keluhans        = Keluhan::where('on_request_id',$id)->get();
         $count          = $keluhans->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
         $keluhan        = count($keluhans);
-
-        return view('complete.tabledata', compact('keluhan','count', 'pmAuth','keluhans'));
+        return view('complete.tabledata', compact('keluhan','count', 'pmAuth','keluhans','id'));
     }
 
 }

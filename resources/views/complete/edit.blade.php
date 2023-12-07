@@ -166,11 +166,14 @@
 
 @section('scripts')
     <script>
+        function openNewTab() {
+            var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";
+            window.open(urlToOpen, '_blank');
+        }
         $(document).ready(function(){
             let modalInput = $('#modalInput');
 
             let idData = "{{$data->id}}";
-            console.log(idData);
             function getTableData(id) {
                 let url = "{{route('complete.table-data', ':id')}}";
                 url = url.replace(':id', id);

@@ -105,7 +105,8 @@
 
         $('.form-select').select2({
             search: true,
-            dropdownParent: $("#modalFillter")
+            dropdownParent: $("#modalFillter"),
+            theme : 'bootstrap5'
         });
 
         $('#btn-plus').on('click',function(){

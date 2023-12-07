@@ -121,14 +121,16 @@ class OnRequestController extends Controller
             'jenis_kapal'           => 'required'
         ]);
 
-        $code = 'PJ'.now()->format('Y')."-";
-        $projectCode = OnRequest::where('code', 'LIKE', '%'.$code.'%')->count();
+        $code = 'PJ' . now()->format('Y') . "-";
+        $projectCode = OnRequest::where('code', 'LIKE', $code . '%')->count();
+        
         $randInt = '0001';
         if ($projectCode >= 1) {
-            $count = $projectCode+1;
-            $randInt = '000'.(string)$count;
+            $count = $projectCode + 1;
+            $randInt = str_pad($count, 4, '0', STR_PAD_LEFT);
         }
-        $randInt = substr($randInt, -5);
+        
+        $randInt = substr($randInt, -4);
 
         $getPM = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
         

@@ -13,6 +13,8 @@ use App\Models\LokasiProject;
 use App\Models\ProjectPekerjaan;
 use App\Models\RecentActivity;
 use App\Models\SettingPekerjaan;
+use App\Models\ProjectManager;
+use App\Models\ProjectAdmin;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Vendor;
@@ -26,12 +28,34 @@ class OnProgressController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = OnRequest::with(['pm','pm.karyawan','customer'])
-                            ->whereHas('keluhan',function($query){
-                                $query->whereNotNull(['id_pm_approval','id_bod_approval']);
-                            })
-                            ->where('status',1)
-                            ->orderBy('created_at','desc');
+            $cekRole = auth()->user()->role->name;
+            $cekId = auth()->user()->id_karyawan;
+            $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+            $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $result = ProjectManager::get()->toArray();
+
+            $data = OnRequest::with(['pm','pm.karyawan','customer']);
+
+
+            if ($cekRole == 'Project Manager') {
+                $data->where('pm_id', $cekPa->id);
+            }else if ($cekRole == 'Project Admin') {
+                if($cekPm){
+                    $data->where('pm_id', $cekPm->id_pm);
+                }
+            }else if ($cekRole == 'BOD'
+                        || $cekRole == 'Super Admin'
+                        || $cekRole == 'Administator'
+                        || $cekRole == 'Staff Finance'
+                        || $cekRole == 'SPV Finance') {
+                if($result){
+                    $data->whereIn('pm_id', array_column($result, 'id'));
+                }
+            }else{
+                $data->where('pm_id', '');
+            }
+
+
             if($request->has('code') && !empty($request->code)){
                 $data->where('code','like','%'.$request->code.'%');
             }
@@ -57,7 +81,12 @@ class OnProgressController extends Controller
                 $data->whereDate('target_selesai', '<=', $end);
             }
 
-            $data = $data->get();
+            $data = $data->whereHas('keluhan',function($query){
+                            $query->whereNotNull(['id_pm_approval','id_bod_approval']);
+                        })
+                        ->where('status',1)
+                        ->orderBy('created_at','desc')
+                        ->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('progres', function($data){
                 return getTotalProgressPekerjaan($data->id,3) . ' / ' . getTotalProgressPekerjaan($data->id);
@@ -397,14 +426,13 @@ class OnProgressController extends Controller
 
     public function subDetailWorker(Request $request, $id,$idProject,$subKategori, $kodeUnik)
     {
-        if($request->ajax){
+        if($request->ajax()){
             $data = ProjectPekerjaan::where('id_project',$idProject)
                                     ->where('id_kategori',$id)
                                     ->where('id_subkategori',$subKategori)
                                     ->whereNotNull(['id_pekerjaan'])
-                                    // ->with('vendors','subKategori')
+                                    ->with('vendors','subKategori')
                                     ->get();
-
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
                 if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {

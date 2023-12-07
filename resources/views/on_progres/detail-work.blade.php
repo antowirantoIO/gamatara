@@ -154,7 +154,7 @@
                     url : urlReplace,
                     method : 'GET',
                 },
-                column : [
+                columns : [
                     { data : 'pekerjaan', name : 'pekerjaan'},
                     { data : 'id_lokasi', name : 'id_lokasi'},
                     { data : 'detail', name : 'detail'},
@@ -164,7 +164,7 @@
                     { data : 'qty', name : 'qty'},
                     { data : 'amount', name : 'amount'},
                     { data : 'unit', name : 'unit'},
-                    { data : 'vendor', name : 'vendor'},
+                    { data : 'vendor', name : 'vendor'}
                 ]
             })
         })

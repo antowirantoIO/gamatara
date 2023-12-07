@@ -12,6 +12,8 @@ use App\Models\SubKategori;
 use App\Models\Pekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use App\Models\ProjectAdmin;
+use App\Models\ProjectManager;
 use App\Models\Keluhan;
 use App\Models\LokasiProject;
 use App\Models\RecentActivity;
@@ -26,7 +28,33 @@ class CompleteController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = OnRequest::with(['pm','pm.karyawan','customer'])->where('status',2);
+            $cekRole = auth()->user()->role->name;
+            $cekId = auth()->user()->id_karyawan;
+            $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+            $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $result = ProjectManager::get()->toArray();
+
+            $data = OnRequest::with(['pm','pm.karyawan','customer']);
+
+            if ($cekRole == 'Project Manager') {
+                $data->where('pm_id', $cekPa->id);
+            }else if ($cekRole == 'Project Admin') {
+                if($cekPm){
+                    $data->where('pm_id', $cekPm->id_pm);
+                }
+            }else if ($cekRole == 'BOD'
+                        || $cekRole == 'Super Admin'
+                        || $cekRole == 'Administator'
+                        || $cekRole == 'Staff Finance'
+                        || $cekRole == 'SPV Finance') {
+                if($result){
+                    $data->whereIn('pm_id', array_column($result, 'id'));
+                }
+            }else{
+                $data->where('pm_id', '');
+            }
+
+
             if($request->has('code') && !empty($request->code)){
                 $data->where('code','like','%'.$request->code.'%');
             }
@@ -49,7 +77,7 @@ class CompleteController extends Controller
                 $data->whereDate('target_selesai', '<=', $end);
             }
 
-            $data = $data->get();
+            $data = $data->where('status',2)->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('progres', function($data){
                 return getProgresProject($data->id) . ' / ' . getCompleteProject($data->id);

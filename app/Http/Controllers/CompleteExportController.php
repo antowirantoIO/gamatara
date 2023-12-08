@@ -6,6 +6,8 @@ use App\Exports\ExportDataComplete;
 use App\Exports\ExportPekerjaanComplete;
 use App\Exports\ExportPekerjaanVendor;
 use App\Models\OnRequest;
+use App\Models\ProjectAdmin;
+use App\Models\ProjectManager;
 use App\Models\ProjectPekerjaan;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -15,7 +17,32 @@ class CompleteExportController extends Controller
 {
     public function allData(Request $request)
     {
-        $data = OnRequest::where('status',1);
+        $data = OnRequest::where('status',2);
+        $cekRole = auth()->user()->role->name;
+        $cekId = auth()->user()->id_karyawan;
+        $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+        $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+        $result = ProjectManager::get()->toArray();
+
+        if ($cekRole == 'Project Manager') {
+            $data->where('pm_id', $cekPa->id);
+        }else if ($cekRole == 'Project Admin') {
+            if($cekPm){
+                $data->where('pm_id', $cekPm->id_pm);
+            }
+        }else if ($cekRole == 'BOD'
+                    || $cekRole == 'Super Admin'
+                    || $cekRole == 'Administator'
+                    || $cekRole == 'Staff Finance'
+                    || $cekRole == 'SPV Finance') {
+            if($result){
+                $data->whereIn('pm_id', array_column($result, 'id'));
+            }
+        }else{
+            $data->where('pm_id', '');
+        }
+
+
         if($request->has('code') && !empty($request->code)){
             $data->where('code',$request->code);
         }

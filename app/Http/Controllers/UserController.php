@@ -21,11 +21,11 @@ class UserController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('name', function($data){
-                return optional($data->karyawan)->name ?? '';
+                return  $data->karyawan ? $data->karyawan->name : '-' ;
             })
             ->addColumn('role', function($data){
-                return optional($data->role)->name ?? '';
-            })            
+                return $data->role ? $data->role->name : '-';
+            })
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';
@@ -37,7 +37,7 @@ class UserController extends Controller
                 </a>';
                 }
                 if(Can('user-delete')){
-                    $btnDelete = '<a data-id="'.$data->id.'" data-name="User '.$data->karyawan->name.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
+                    $btnDelete = '<a data-id="'.$data->id.'" data-name="User '.$data->id.'" data-form="form-user" class="btn btn-danger btn-sm deleteData">
                                     <span>
                                         <i><img src="'.asset('assets/images/trash.svg').'" style="width: 15px;"></i>
                                     </span>

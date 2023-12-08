@@ -214,8 +214,10 @@ class OnRequestController extends Controller
 
     public function export(Request $request)
     {
-        $data = OnRequest::orderBy('created_at','desc')
+        $data = OnRequest::where('status',1)
+                ->orWhere('status',null)
                 ->filter($request)
+                ->orderBy('created_at', 'desc')
                 ->get();
 
         return Excel::download(new ExportListOnRequest($data), 'List On Request.xlsx');

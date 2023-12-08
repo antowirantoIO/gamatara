@@ -214,9 +214,37 @@ class OnRequestController extends Controller
 
     public function export(Request $request)
     {
-        $data = OnRequest::orderBy('created_at','desc')
-                ->filter($request)
-                ->get();
+        $cekRole = Auth::user()->role->name;
+        $cekId = Auth::user()->id_karyawan;
+        $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
+        $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+        $result = ProjectManager::get()->toArray();
+
+        $data = OnRequest::with(['kapal', 'customer']);
+         
+        if ($cekRole == 'Project Manager') {
+            $data->where('pm_id', $cekPa->id);
+        }else if ($cekRole == 'Project Admin') {
+            if($cekPm){
+                $data->where('pm_id', $cekPm->id_pm);
+            }
+        }else if ($cekRole == 'BOD' 
+                    || $cekRole == 'Super Admin' 
+                    || $cekRole == 'Administator' 
+                    || $cekRole == 'Staff Finance'
+                    || $cekRole == 'SPV Finance') {
+            if($result){
+                $data->whereIn('pm_id', array_column($result, 'id'));
+            }
+        }else{
+            $data->where('pm_id', '');
+        }
+        
+        $data = $data->where('status',1)
+                    ->orWhere('status',null)
+                    ->filter($request)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
         return Excel::download(new ExportListOnRequest($data), 'List On Request.xlsx');
     }

@@ -1,4 +1,3 @@
-@if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
 <div class="flex-grow-1 d-flex align-items-center justify-content-end">
     <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
         <span>
@@ -7,7 +6,6 @@
         Rekap SPK
     </button>
 </div>
-@endif
 
 <table id="tabelKeluhan" class="table table-bordered">
     <thead style="background-color:#194BFB;color:#FFFFFF">

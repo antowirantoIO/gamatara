@@ -79,7 +79,7 @@
                                 <div class="ml-3 card-body flex-column align-items-center justify-content-center">
                                     <a>
                                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> SN Approval</p>
-                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$spkrequest}}"></span></h4>
+                                        <h4 class="fs-22 fw-semibold ff-secondary"><span class="counter-value" data-target="{{$pekerjaan->count()}}"></span></h4>
                                     </a>
                                 </div>
                             </div>

@@ -42,8 +42,7 @@ class DashboardController extends Controller
             }
         })->get();
 
-        $pekerjaan = OnRequest::whereNotNull(['approval_pm'])->get();
-
+        $pekerjaan = OnRequest::whereNull('approval_bod')->whereNotNull(['approval_pm'])->get();
         $keluhan = $spkrequest->map(function ($item) use ($cekRole) {
             $jumlahKeluhan = $item->complaint->filter(function ($complaint) use ($cekRole) {
                 if ($cekRole == 'Project Manager') {

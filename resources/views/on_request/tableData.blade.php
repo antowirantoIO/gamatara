@@ -1,13 +1,11 @@
-    @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
-        <div class="flex-grow-1 d-flex align-items-center justify-content-end">
-            <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
-                <span>
-                    <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
-                </span>
-                Rekap SPK
-            </button>
-        </div>
-    @endif
+    <div class="flex-grow-1 d-flex align-items-center justify-content-end">
+        <button type="button" id="printSPK" data-id-keluhan="" class="btn btn-danger" onclick="openNewTab()">
+            <span>
+                <i><img src="{{asset('assets/images/directbox.svg')}}" style="width: 15px;"></i>
+            </span>
+            Rekap SPK
+        </button>
+    </div>
 
     <table id="tabelKeluhan" class="table table-bordered">
         <thead style="background-color:#194BFB;color:#FFFFFF">
@@ -24,8 +22,8 @@
             @foreach($keluhans as $key => $complaint)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td> 
-                        <a type="button" data-bs-toggle="modal" data-bs-target="#opo-{{$complaint->id}}"> 
+                    <td>
+                        <a type="button" data-bs-toggle="modal" data-bs-target="#opo-{{$complaint->id}}">
                             {{ explode('<br>', $complaint->keluhan)[0] ?? '' }}
                         </a>
                     </td>
@@ -57,36 +55,36 @@
                             @endif
                         @endif
                     </td>
-                    <td> 
+                    <td>
                         @if($pmAuth == 'BOD')
                             @if($complaint->id_bod_approval == null && $complaint->id_pm_approval != null)
                                 <button type="button" class="btn btn-primary btn-sm" data-keluhan-id="{{ $complaint->id }}" onclick="approve({{$complaint->id}}, 'BOD')">
                                     Approve
                                 </button>
                             @elseif($complaint->id_bod_approval == null && $complaint->id_pm_approval == null)
-                                
+
                             @else
                                 <button type="button" class="btn" style="background-color:grey;" disabled data-keluhan-id="{{ $complaint->id }}">
                                     Approved
                                 </button>
                             @endif
                         @elseif($pmAuth == 'Project Manager')
-                        
+
                         @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             @if($complaint->id_bod_approval != null)
-                                Approved  
+                                Approved
                             @endif
                         @endif
                     </td>
                     <td>
                         @if($pmAuth == 'Project Admin' || $pmAuth == 'PA' || $pmAuth == 'BOD')
-                            <button type="button" class="btn btn-sm btnEdit" 
-                                @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
-                                    style="background-color:grey; 
-                                    disabled 
-                                @else 
-                                    style="background-color:#FFBC39;" 
-                                @endif 
+                            <button type="button" class="btn btn-sm btnEdit"
+                                @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null)
+                                    style="background-color:grey;
+                                    disabled
+                                @else
+                                    style="background-color:#FFBC39;"
+                                @endif
                                 onclick="setEditData({{$complaint->id}}, {{$complaint->id_vendor}})"
                                 >
                                 <span>
@@ -96,15 +94,15 @@
                         @endif
                         @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             <a type="button" class="btn btn-sm btnPrint"
-                                @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
-                                    style="background-color:blue;" 
+                                @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null)
+                                    style="background-color:blue;"
                                     id="printSPKsatuan"
                                     target="_blank"
                                     href="{{route('keluhan.satuan',$complaint->id)}}"
-                                @else 
-                                    style="background-color:grey; 
-                                    disabled 
-                                @endif 
+                                @else
+                                    style="background-color:grey;
+                                    disabled
+                                @endif
                                 data-keluhan-id="{{ $complaint->id }}"
                             >
                                 <span>
@@ -126,14 +124,14 @@
                                 </span>
                             </button>
                         @elseif($pmAuth == 'Project Admin')
-                            <button type="button" class="btn btn-sm" 
-                                @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null) 
-                                    style="background-color:grey; 
-                                    disabled 
-                                @else 
-                                    style="background-color:#FF6666;" 
+                            <button type="button" class="btn btn-sm"
+                                @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null)
+                                    style="background-color:grey;
+                                    disabled
+                                @else
+                                    style="background-color:#FF6666;"
                                     onclick="hapusKeluhan({{$complaint->id}})"
-                                @endif 
+                                @endif
                                 data-keluhan-id="{{ $complaint->id }}"
                                 >
                                 <span>

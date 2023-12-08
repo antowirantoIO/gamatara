@@ -49,7 +49,7 @@
                                             <table class="table w-100" id="tableData">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;">Kategori</th>
+                                                        <th style="color:#929EAE;">Sub Category</th>
                                                         <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE">Location</th>
                                                         <th style="color:#929EAE">Detail / Other</th>

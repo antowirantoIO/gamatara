@@ -41,7 +41,7 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="color:#929EAE">Project Code</th>
-                                                <th style="color:#929EAE">Project Manager</th>
+                                                <th style="color:#929EAE">Project Name</th>
                                                 <th style="color:#929EAE">Customer</th>
                                                 <th style="color:#929EAE">Contact Person</th>
                                                 <th style="color:#929EAE">Number Contact Person</th>

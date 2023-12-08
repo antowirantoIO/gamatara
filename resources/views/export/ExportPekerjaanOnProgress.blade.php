@@ -118,7 +118,7 @@
                     $prevKodeUnik = $kodeUnik;
                 @endphp
             @endforeach
-            <tr>
+            {{-- <tr>
                 <td colspan="10">
                     <strong>Before</strong>
                 </td>
@@ -135,7 +135,7 @@
                     @endif
                 @endforeach
                 <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr>
+            </tr> --}}
             {{-- <tr>
                 <td colspan="10">
                     <strong>After</strong>

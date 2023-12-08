@@ -56,6 +56,7 @@
                                             <table class="table w-100" id="tableData">
                                                 <thead class="table-light">
                                                     <tr>
+                                                        <th style="color:#929EAE;">Sub Category</th>
                                                         <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE;">Vendor</th>
                                                         <th style="color:#929EAE;">Description</th>
@@ -294,6 +295,7 @@
                     }
                 },
                 columns : [
+                    { data : 'subKategori', name : 'subKategori'},
                     {
                         data : function(data) {
                             let pekerjaan = data.pekerjaan || '';

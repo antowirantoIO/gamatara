@@ -327,7 +327,7 @@
                             })
                             return ` <input type="text" class="form-control ${status}" name="amount[]" value="${amount}">`;
                         },
-                        width : '70px'
+                        width : '80px'
                     },
                     {
                         data : function (data) {

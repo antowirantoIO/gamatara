@@ -38,20 +38,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->pekerjaan->name . ' ' . $item->deskripsi_pekerjaan ?? '-' }}</td>
-                                                <td>{{ $item->id_lokasi ?? '-' }}</td>
-                                                <td>{{ $item->detail ?? '-' }}</td>
-                                                <td>{{ number_format($item->length,2, ',','') ?? 0 }}</td>
-                                                <td>{{ number_format($item->width,2, ',','') ?? 0 }}</td>
-                                                <td>{{ number_format($item->thick,2, ',','') ?? 0 }}</td>
-                                                <td>{{ number_format($item->qty,2, ',','') ?? 0 }}</td>
-                                                <td>{{number_format($item->amount,2, ',','') ?? 0 }}</td>
-                                                <td>{{ $item->unit ?? '-' }}</td>
-                                                <td>{{ $item->vendors->name ?? '-' }}</td>
-                                            </tr>
-                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -66,13 +52,11 @@
                         <p class="fs-4">Before</p>
                             @if ($before->count() > 0)
                                 <div class="d-flex justify-content-start align-items-center bg-white p-3 flex-wrap gap-3">
-                                    @foreach ($data as $d)
-                                        @foreach ($d->beforePhoto as $b)
-                                            <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
-                                                <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
-                                            </a>
-                                        @endforeach
-                                    @endforeach
+                                    @foreach ($before as $b)
+                                    <a href="{{ asset($b->photo) }}" data-lightbox="{{ asset($b->photo) }}">
+                                        <img  class="img-responsive rounded" src="{{ asset($b->photo) }}" alt="picture" height="200" width="200">
+                                    </a>
+                                   @endforeach
                                 </div>
                             @else
                                 <div class="d-flex justify-content-center align-items-center w-100 bg-white">
@@ -135,6 +119,55 @@
                 'resizeDuration': 200,
                 'fitImagesInViewport' : true,
                 'wrapAround': true
+            })
+
+            let id_kategori = '{{ $id }}';
+            let id_project = '{{ $idProject }}';
+            let id_subkategori = '{{ $subKategori }}';
+            let kode_unik = '{{ $kodeUnik }}';
+            let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori',':kode_unik']) }}';
+            let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':kode_unik',kode_unik);
+
+            let table = $("#example1").DataTable({
+                fixedHeader:true,
+                scrollX: false,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                bLengthChange: false,
+                language: {
+                    processing:
+                        '<div class="spinner-border text-info" role="status">' +
+                        '<span class="sr-only">Loading...</span>' +
+                        "</div>",
+                    paginate: {
+                        Search: '<i class="icon-search"></i>',
+                        first: "<i class='fas fa-angle-double-left'></i>",
+                        next: "Next <span class='mdi mdi-chevron-right'></span>",
+                        last: "<i class='fas fa-angle-double-right'></i>",
+                    },
+                    "info": "Displaying _START_ - _END_ of _TOTAL_ result",
+                },
+                drawCallback: function() {
+                    var previousButton = $('.paginate_button.previous');
+                    previousButton.css('display', 'none');
+                },
+                ajax : {
+                    url : urlReplace,
+                    method : 'GET',
+                },
+                columns : [
+                    { data : 'pekerjaan', name : 'pekerjaan'},
+                    { data : 'id_lokasi', name : 'id_lokasi'},
+                    { data : 'detail', name : 'detail'},
+                    { data : 'length', name : 'length'},
+                    { data : 'width', name : 'width'},
+                    { data : 'thick', name : 'thick'},
+                    { data : 'qty', name : 'qty'},
+                    { data : 'amount', name : 'amount'},
+                    { data : 'unit', name : 'unit'},
+                    { data : 'vendor', name : 'vendor'}
+                ]
             })
         })
     </script>

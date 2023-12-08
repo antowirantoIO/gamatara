@@ -407,20 +407,58 @@ class CompleteController extends Controller
 
     }
 
-    public function subDetailPekerjaan($id,$idProject,$subKategori,$kodeUnik)
+    public function subDetailPekerjaan(Request $request,$id,$idProject,$subKategori,$kodeUnik)
     {
         $data = ProjectPekerjaan::where('id_project',$idProject)
-                                ->where('id_kategori',$id)
-                                ->where('id_subkategori',$subKategori)
-                                ->whereNotNull(['id_pekerjaan'])
-                                ->get();
+                                    ->where('id_kategori',$id)
+                                    ->where('id_subkategori',$subKategori)
+                                    ->whereNotNull(['id_pekerjaan'])
+                                    ->with('vendors','subKategori')
+                                    ->get();
+        if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project',$idProject)
+                                    ->where('id_kategori',$id)
+                                    ->where('id_subkategori',$subKategori)
+                                    ->whereNotNull(['id_pekerjaan'])
+                                    ->with('vendors','subKategori')
+                                    ->get();
+            return DataTables::of($data)->addIndexColumn()
+            ->addColumn('pekerjaan', function($data) {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
+                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                } else {
+                    return $data->subKategori->name;
+                }
+            })
+            ->addColumn('length', function($data){
+                return $data->length ?  number_format($data->length,2, '.','') : 0 ;
+            })
+            ->addColumn('width', function($data){
+                return $data->width ?  number_format($data->width,2, '.','') : 0 ;
+            })
+            ->addColumn('thick', function($data){
+                return $data->thick ?  number_format($data->thick,2, '.','') : 0 ;
+            })
+            ->addColumn('qty', function($data){
+                return $data->qty ?  number_format($data->qty,2, '.','') : 0 ;
+            })
+            ->addColumn('amount', function($data){
+                return $data->amount ?  number_format($data->amount,2, '.','') : 0 ;
+            })
+            ->addColumn('vendor', function($data){
+                return $data->vendors->name;
+            })
+            ->make(true);
+
+        }
         $before = BeforePhoto::where('id_project',$idProject)
                             ->where('kode_unik',$kodeUnik)
                             ->get();
+        // dd($before);
         $after = AfterPhoto::where('id_project',$idProject)
                             ->where('kode_unik',$kodeUnik)
                             ->get();
-        return view('complete.pekerjaan.detail',compact('data','idProject','before','after'));
+        return view('complete.pekerjaan.detail',compact('idProject','before','after','id','subKategori','kodeUnik'));
     }
 
     public function dataTagihan(Request $request, $id)

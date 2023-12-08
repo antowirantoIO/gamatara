@@ -267,6 +267,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('tambah-pekerjaan/{id}/{vendor}/{kategori}/{subkategori}/{kodeUnik}',[OnProgressController::class,'addWork'])->name('on_progres.request-pekerjaan');
             Route::post('tambah-pekerjaan/{id}',[OnProgressController::class,'requestPost'])->name('on_progres.work');
             Route::get('tambah-kategori/{id}/{vendor}',[OnProgressController::class,'tambahKategori'])->name('on_progres.request.tambah-kategori');
+            Route::post('delete-kategori',[OnProgressController::class,'deleteKategori'])->name('on_progres.request.delete-kategori');
             Route::post('tambah-kategori',[OnProgressController::class,'storeTambahKategori'])->name('on_progres.store-kategori');
             Route::post('delete-request',[OnProgressController::class,'deleteRequest'])->name('on_progres.request-delete');
 

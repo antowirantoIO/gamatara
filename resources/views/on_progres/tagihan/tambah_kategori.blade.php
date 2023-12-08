@@ -177,7 +177,6 @@
             columns: [
                 {
                     data: function(data) {
-                        console.log(data);
                         return data.kategori.name
                     },
                     code: 'kategori'
@@ -186,6 +185,54 @@
                 {data: 'action', name: 'action'}
             ]
         });
+
+        table.on('click','.btn-hapus',function(){
+            let kode = $(this).data('kode');
+            Swal.fire({
+                title: 'Are You Sure Deleted Data?',
+                text: "Data will be deleted permanently!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Deleted!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url : '{{ route('on_progres.request.delete-kategori') }}',
+                        method : 'POST',
+                        data :{
+                            _token : '{{ csrf_token() }}',
+                            kode : kode
+                        }
+                    }).then(ress => {
+                        if(ress.status == 200){
+                            alertToast('success',ress.msg);
+                            location.reload();
+                        }
+                    })
+                }
+            })
+        });
+
+        const alertToast = (icon, message) => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: icon,
+                title: message
+            })
+        }
 
         // $('.form-control').on('change', function() {
         //     table.draw();

@@ -305,7 +305,7 @@
                             })
                             return ` <input type="text" class="form-control ${status}" name="thick[]" value="${thick}">`;
                         },
-                        width : '70px'
+                        width : '50px'
                     },
                     {
                         data : function (data) {
@@ -327,7 +327,7 @@
                             })
                             return ` <input type="text" class="form-control ${status}" name="amount[]" value="${amount}">`;
                         },
-                        width : '80px'
+                        width : '100px'
                     },
                     {
                         data : function (data) {

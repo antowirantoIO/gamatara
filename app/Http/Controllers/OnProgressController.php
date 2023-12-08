@@ -150,12 +150,23 @@ class OnProgressController extends Controller
                                        <i><img src="'.asset('assets/images/edit.svg').'" style="width: 15px;"></i>
                                    </span>
                                </a>
+                               <div class="btn btn-danger btn-sm btn-hapus" data-kode="'.$data->kode_unik.'">
+                                   <span>
+                                       <i><img src="'.asset('assets/images/trash2.svg').'" style="width: 15px;"></i>
+                                   </span>
+                               </div>
                            </div>';
                             })
                             ->make(true);
         }
         $categories = Kategori::all();
         return view('on_progres.tagihan.tambah_kategori',compact('id','vendor','categories'));
+    }
+
+    public function deleteKategori(Request $request)
+    {
+        ProjectPekerjaan::where('kode_unik', $request->kode)->delete();
+        return response()->json(['status' => 200, 'msg' => 'Data Successfuly Delete !'],200);
     }
 
     public function storeTambahKategori(Request $request)

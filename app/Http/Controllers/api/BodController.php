@@ -256,13 +256,13 @@ class BodController extends Controller
 
             $data = ProjectManager::with('karyawan')->filter($request)->get();
 
-            if($data){
+            if ($data) {
                 foreach ($data as $item) {
-                    $item['name'] = $item->karyawan ? $item->karyawan->name : '-';
+                    $item['name'] = $item->karyawan && is_object($item->karyawan) ? $item->karyawan->name : '-';
                     $item['onprogress'] = $item->projects->where('status', 1)->count();
                     $item['complete'] = $item->projects->where('status', 2)->count();
                 }
-            }
+            }            
             
             $total = $data->count();
             $start = ($page - 1) * $perPage;

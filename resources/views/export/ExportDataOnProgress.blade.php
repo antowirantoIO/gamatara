@@ -21,11 +21,11 @@
         @foreach ($data as $item)
             <tr>
                 <td style="height: 30px;">{{ $item->code }}</td>
-                <td style="height: 30px;">{{ $item->nama_project }}</td>
-                <td style="height: 30px;">{{ $item->customer->name }}</td>
-                <td style="height: 30px;">{{ $item->pm->karyawan->name }}</td>
-                <td style="height: 30px;">{{ $item->start_project }}</td>
-                <td style="height: 30px;">{{ $item->actual_selesai }}</td>
+                <td style="height: 30px;">{{ $item->nama_project ?? '' }}</td>
+                <td style="height: 30px;">{{ $item->customer->name ?? '' }}</td>
+                <td style="height: 30px;">{{ $item->pm ? ($item->pm->karyawan ? $item->pm->karyawan->name : '') : '' }}</td>
+                <td style="height: 30px;">{{ $item->start_project ?? '' }}</td>
+                <td style="height: 30px;">{{ $item->actual_selesai ?? '' }}</td>
             </tr>
         @endforeach
     </tbody>

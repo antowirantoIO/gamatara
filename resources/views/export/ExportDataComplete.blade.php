@@ -21,13 +21,13 @@
     <tbody>
         @foreach ($data as $item)
             <tr>
-                <td style="height: 30px;">{{ $item->code }}</td>
-                <td style="height: 30px;">{{ $item->nama_project }}</td>
-                <td style="height: 30px;">{{ $item->customer->name }}</td>
-                <td style="height: 30px;">{{ $item->pm->karyawan->name }}</td>
-                <td style="height: 30px;">{{ $item->customer->nomor_contact_person }}</td>
-                <td style="height: 30px;">{{ $item->start_project }} - {{ $item->target_selesai }}</td>
-                <td style="height: 30px;">{{ $item->target_selesai }}</td>
+                <td style="height: 30px;">{{ $item->code ?? null }}</td>
+                <td style="height: 30px;">{{ $item->nama_project ?? null }}</td>
+                <td style="height: 30px;">{{ $item->customer->name ?? null }}</td>
+                <td style="height: 30px;">{{ $item->pm ? ($item->pm->karyawan ? $item->pm->karyawan->name : '') : '' }}</td>
+                <td style="height: 30px;">{{ $item->customer->nomor_contact_person ?? null }}</td>
+                <td style="height: 30px;">{{ $item->start_project ?? null }} - {{ $item->target_selesai ?? null }}</td>
+                <td style="height: 30px;">{{ $item->target_selesai ?? null }}</td>
             </tr>
         @endforeach
     </tbody>

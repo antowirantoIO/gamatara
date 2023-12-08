@@ -564,7 +564,11 @@ class OnProgressController extends Controller
 
     public function approvalProject($id)
     {
-        OnRequest::where('id',$id)->update(['status' => 2]);
+        OnRequest::where('id',$id)
+                ->update([
+                    'status' => 2,
+                    'approval_bod' => auth()->user()->id
+                ]);
         return response()->json(['status' => 200,'msg' => 'success']);
     }
 

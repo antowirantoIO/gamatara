@@ -118,42 +118,42 @@
                     $prevKodeUnik = $kodeUnik;
                 @endphp
             @endforeach
-            {{-- <tr>
-                <td colspan="10">
+            <tr>
+                <td colspan="10" height="30">
                     <strong>Before</strong>
                 </td>
             </tr>
             <tr>
-                <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                <td height="150" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 @foreach ($items as $keys => $value)
-                    @if ($value->beforePhoto->count() > 0)
-                        @foreach ($value->beforePhoto as $before)
-                        <td height="100">
-                            <img src="{{ public_path($before->photo)  }}" width="100px" alt="photo">
-                        </td>
-                        @endforeach
-                    @endif
+                    <td height="100">
+                        @if ($value->beforePhoto->count() > 0)
+                            @foreach ($value->beforePhoto as $before)
+                                <img src="{{ public_path($before->photo)  }}" width="100px" alt="photo">
+                            @endforeach
+                        @endif
+                    </td>
                 @endforeach
-                <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr> --}}
-            {{-- <tr>
-                <td colspan="10">
+                <td height="150" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+            </tr>
+            <tr>
+                <td colspan="10" height="30">
                     <strong>After</strong>
                 </td>
             </tr>
             <tr>
-                <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                <td height="150" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 @foreach ($items as $keys => $value)
-                    @if ($value->beforePhoto->count() > 0)
-                        @foreach ($value->beforePhoto as $before)
-                        <td height="50">
-                            <img src="{{ public_path($before->photo)  }}" width="100px" alt="photo">
-                        </td>
-                        @endforeach
-                    @endif
+                    <td height="150">
+                        @if ($value->afterPhoto->count() > 0)
+                            @foreach ($value->afterPhoto as $after)
+                                <img src="{{ public_path($after->photo)  }}" width="100px" alt="photo">
+                                @endforeach
+                        @endif
+                    </td>
                 @endforeach
-                <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr> --}}
+                <td height="150" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+            </tr>
                 @if($item->count() > 0)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>

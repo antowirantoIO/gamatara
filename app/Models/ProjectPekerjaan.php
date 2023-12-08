@@ -21,6 +21,10 @@ class ProjectPekerjaan extends Model
     {
         return $this->hasMany(BeforePhoto::class,'kode_unik','kode_unik');
     }
+    public function afterPhoto()
+    {
+        return $this->hasMany(AfterPhoto::class,'kode_unik','kode_unik');
+    }
 
     public function lokasi ()
     {

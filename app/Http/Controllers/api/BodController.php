@@ -288,7 +288,9 @@ class BodController extends Controller
                 $onProgressCount = $groupedData->where('status', 1)->count();
                 $completeCount = $groupedData->where('status', 2)->count();
             
-                $employeeName = optional($groupedData->first()->pm->karyawan)->name ?? '-';
+                $employeeName = optional(optional($groupedData->first())->pm)->karyawan
+                                ? $groupedData->first()->pm->karyawan->name
+                                : '-';
             
                 return [
                     'name' => $employeeName,

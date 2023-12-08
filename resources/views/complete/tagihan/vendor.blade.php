@@ -59,7 +59,7 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Unit Price</th>
                                                         <th style="color:#929EAE">Total Bills</th>
-                                                        @can('edit-pekerjaan-vendor')
+                                                        @can('complete-edit-pekerjaan-vendor')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
                                                     </tr>
@@ -201,7 +201,7 @@
                                 <input type="text" name="amount" id="amount" class="form-control">
                             </div>
                         </div>
-                        @can('edit-harga-vendor')
+                        @can('complete-edit-harga-vendor')
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="harga_vendor" class="form-label">Vendor Price</label>
@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                         @endcan
-                        @can('edit-harga-customer')
+                        @can('complete-edit-harga-customer')
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <label for="harga_customer" class="form-label">Customer Price</label>
@@ -393,7 +393,7 @@
                             }
                         }
                     },
-                    @can('edit-pekerjaan-vendor')
+                    @can('complete-edit-pekerjaan-vendor')
                         {
                             data : function(data){
                                 let id = data.id;

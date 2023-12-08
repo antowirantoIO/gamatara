@@ -259,6 +259,10 @@
 
 @section('scripts')
     <script>
+        function openNewTab() {
+            var urlToOpen = "{{ route('keluhan.spk',$data->id)}}";
+            window.open(urlToOpen, '_blank');
+        }
         $(document).ready(function(){
             let modalInput = $('#modalInput');
 

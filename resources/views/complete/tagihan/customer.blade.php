@@ -69,7 +69,7 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Customer Price</th>
                                                         <th style="color:#929EAE">Total Price</th>
-                                                        @can('edit-pekerjaan-vendor')
+                                                        @can('complete-edit-pekerjaan-vendor')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
                                                     </tr>
@@ -423,7 +423,7 @@
                             }
                         }
                     },
-                    @can('edit-pekerjaan-vendor')
+                    @can('complete-edit-pekerjaan-vendor')
                         {
                             data : function(data){
                                 let id = data.id;

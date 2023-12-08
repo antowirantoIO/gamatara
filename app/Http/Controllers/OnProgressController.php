@@ -509,9 +509,11 @@ class OnProgressController extends Controller
 
     public function tableData($id)
     {
+        $pmAuth         = auth()->user()->role->name ?? '';
         $keluhans        = Keluhan::where('on_request_id',$id)->get();
-
-        return view('on_progres.tableData', compact('keluhans'));
+        $count          = $keluhans->whereNotNull('id_pm_approval')->whereNotNull('id_bod_approval')->count();
+        $keluhan        = count($keluhans);
+        return view('on_progres.tableData', compact('keluhan','count', 'pmAuth','keluhans','id'));
     }
 
     public function tagihanVendor(Request $request, $id, $vendor)

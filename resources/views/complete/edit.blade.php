@@ -87,7 +87,7 @@
                                                                 <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
                                                             </span>
                                                         </a>
-                                                        @can('edit-pekerjaan-vendor')
+                                                        @can('complete-edit-pekerjaan-vendor')
                                                         <a href="{{ route('complete.request.tambah-kategori',[$data->id,$project->id_vendor]) }}" class="btn btn-info btn-sm">
                                                             <span>
                                                                 <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
@@ -125,28 +125,32 @@
                                             </div>
                                         </a>
                                         <div class="d-flex gap-3">
-                                            <a href="{{ route('complete.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
-                                                <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5 text-start">
-                                                        Bills <br>
-                                                       <strong>Vendor</strong>
+                                            @can('complete-laporan-vendor')
+                                                <a href="{{ route('complete.tagihan.all',$data->id) }}" class="btn btn-primary flex-fill btn-block  rounded-3 border-0" style="background: #FFBC39;">
+                                                    <div class="d-flex justify-content-between align-items-end">
+                                                        <div class="fs-5 text-start">
+                                                            Bills <br>
+                                                        <strong>Vendor</strong>
+                                                        </div>
+                                                        <div>
+                                                            <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                </a>
+                                            @endcan
+                                            @can('complete-laporan-customer')
+                                                <a href="{{ route('complete.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
+                                                    <div class="d-flex justify-content-between align-items-end">
+                                                        <div class="fs-5 text-start">
+                                                            Bills <br>
+                                                            <strong>Customer</strong>
+                                                        </div>
+                                                        <div>
+                                                            <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </a>
-                                            <a href="{{ route('complete.tagihan-customer',$data->id) }}" class="btn btn-primary flex-fill btn-block rounded-3 border-0" style="background: #FFBC39;">
-                                                <div class="d-flex justify-content-between align-items-end">
-                                                    <div class="fs-5 text-start">
-                                                        Bills <br>
-                                                        <strong>Customer</strong>
-                                                    </div>
-                                                    <div>
-                                                        <i><img src="{{asset('assets/images/login.svg')}}" style="width: 30px;"></i>
-                                                    </div>
-                                                </div>
-                                            </a>
+                                                </a>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>

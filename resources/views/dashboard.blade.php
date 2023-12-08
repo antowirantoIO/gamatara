@@ -62,9 +62,10 @@
                 </div>
 
                 <div class="col-lg-3" style="flex:1;"
-                        @if(auth()->user()->role->name == 'Project Manager' || auth()->user()->role->name == 'BOD')
-                            data-bs-toggle="modal" data-bs-target="#advance"
-                        @endif>
+                        @if(auth()->user()->role->name == 'BOD')
+                            data-bs-toggle="modal" data-bs-target="#advanceSN"
+                        @endif
+                        >
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -363,6 +364,49 @@
                                         <td>{{ $k['jumlah'] }}</td>
                                         <td>
                                             <a href="{{ route('on_request.detail',$k['id']) }}" type="button" class="btn btn-primary">Approve</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <a class="btn btn-danger" type="button" data-bs-dismiss="modal" aria-label="Close" style="margin-right: 10px;">close</a>
+                    <button class="btn btn-primary">Search</button>
+                </div> -->
+            </form>
+        </div>
+    </div>
+</div>
+<div id="advanceSN" class="modal fade zoomIn" tabindex="-1" aria-labelledby="zoomInModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form  id="formOnRequest" method="get" enctype="multipart/form-data">
+            @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="zoomInModalLabel">SN Approval</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-4">
+                        <table id="tabelKeluhan" class="table table-bordered">
+                            <thead style="background-color:#194BFB;color:#FFFFFF">
+                                <tr>
+                                    <th width="10px">No.</th>
+                                    <th>Code</th>
+                                    <th>Project Name</th>
+                                    <th>Approval</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($pekerjaan as $keys => $p)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $p->code }}</td>
+                                        <td>{{ $p->nama_project }}</td>
+                                        <td>
+                                            <a href="{{ route('on_progress.edit',$p->id) }}" type="button" class="btn btn-primary">Approve</a>
                                         </td>
                                     </tr>
                                 @endforeach

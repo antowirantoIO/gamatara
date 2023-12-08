@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $result = ProjectManager::get()->toArray();
 
         $spkrequest = OnRequest::with(['kapal', 'customer']);
-        
+
         if ($cekRole == 'Project Manager') {
             $spkrequest->where('pm_id', $cekPa->id ?? '');
         }else if ($cekRole == 'BOD') {
@@ -33,7 +33,7 @@ class DashboardController extends Controller
         }else{
             $spkrequest->where('pm_id', '');
         }
-        
+
         $spkrequest = $spkrequest->whereHas('complaint', function ($query) use ($cekRole) {
             if ($cekRole == 'Project Manager') {
                 $query->whereNull('id_pm_approval')->whereNull('id_bod_approval');
@@ -41,7 +41,9 @@ class DashboardController extends Controller
                 $query->whereNotNull('id_pm_approval')->whereNull('id_bod_approval');
             }
         })->get();
-        
+
+        $pekerjaan = OnRequest::whereNotNull(['approval_pm'])->get();
+
         $keluhan = $spkrequest->map(function ($item) use ($cekRole) {
             $jumlahKeluhan = $item->complaint->filter(function ($complaint) use ($cekRole) {
                 if ($cekRole == 'Project Manager') {
@@ -51,15 +53,15 @@ class DashboardController extends Controller
                 }
                 return false;
             })->count();
-        
+
             return [
                 'id' => $item->id,
                 'code' => $item->code,
                 'nama_project' => $item->nama_project,
                 'jumlah' => $jumlahKeluhan,
             ];
-        })->toArray();        
-            
+        })->toArray();
+
         $spkrequest = count($spkrequest);
 
         $onprogress =   OnRequest::with(['pm','pm.karyawan','customer'])
@@ -71,7 +73,7 @@ class DashboardController extends Controller
 
         $onprogress = count($onprogress);
         $complete = count(OnRequest::where('status',2)->get());
-        
+
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 
@@ -91,10 +93,10 @@ class DashboardController extends Controller
             }])
             ->selectRaw('pm.*, (SELECT SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) FROM project WHERE project.pm_id = pm.id) as complete')
             ->orderByDesc('complete')
-            ->get();                  
+            ->get();
 
         $data       = OnRequest::orderBy('created_at','desc')->get();
 
-        return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','progress','pm'));
+        return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','progress','pm','pekerjaan'));
     }
 }

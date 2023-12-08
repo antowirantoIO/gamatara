@@ -21,11 +21,11 @@ class UserController extends Controller
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('name', function($data){
-                return $data->karyawan->name ?? '';
+                return optional($data->karyawan)->name ?? '';
             })
             ->addColumn('role', function($data){
-                return $data->role->name ?? '';
-            })
+                return optional($data->role)->name ?? '';
+            })            
             ->addColumn('action', function($data){
                 $btnEdit = '';
                 $btnDelete = '';

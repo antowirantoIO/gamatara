@@ -254,14 +254,16 @@ class BodController extends Controller
                 $tahun = now()->format('Y');
             }
 
-            $data = ProjectManager::filter($request)->get();
-            foreach($data as $item)
-            {
-                $item['name'] = $item->karyawan->name ?? '';
-                $item['onprogress'] = $item->projects->where('status', 1)->count();
-                $item['complete'] = $item->projects->where('status', 2)->count();
-            }
+            $data = ProjectManager::with('karyawan')->filter($request)->get();
 
+            if ($data) {
+                foreach ($data as $item) {
+                    $item['name'] = $item->karyawan && is_object($item->karyawan) ? $item->karyawan->name : '-';
+                    $item['onprogress'] = $item->projects->where('status', 1)->count();
+                    $item['complete'] = $item->projects->where('status', 2)->count();
+                }
+            }            
+            
             $total = $data->count();
             $start = ($page - 1) * $perPage;
             $currentPageItems = $data->slice($start, $perPage)->values();

@@ -51,7 +51,6 @@ class OnRequestController extends Controller
             }
             
             $data = $data->where('status',1)
-                        ->orWhere('status',null)
                         ->filter($request)
                         ->orderBy('created_at', 'desc')
                         ->get();

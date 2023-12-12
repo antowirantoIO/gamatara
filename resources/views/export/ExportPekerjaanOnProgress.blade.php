@@ -133,15 +133,15 @@
             </tr>
             <tr>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                @foreach ($items as $keys => $value)
+                @foreach ($value->beforePhoto as $photo => $b)
                     @php
-                        $indexNow = $keys + 1;
-                        $photoNow = $value->beforePhoto ? ($value->beforePhoto->photo ? $value->beforePhoto->photo : null ) : null;
+                        $indexNow = $photo + 1;
+                        $photoNow = $b ? $b->photo : null
                     @endphp
-                    @isset ($value->beforePhoto->photo)
+                    @isset ($b->photo)
                         @if ($photoNow !== $currentPhoto)
                             <td height="100">
-                                <img src="{{ public_path($value->beforePhoto->photo)  }}" width="100px" alt="photo">
+                                <img src="{{ public_path($b->photo)  }}" width="100px" alt="photo">
                             </td>
                         @endif
                     @endisset
@@ -157,7 +157,7 @@
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td colspan="9" height="30" align="center" style="border: 20px medium black;border-left: 20px medium black;">
                     <strong>After</strong>
@@ -189,7 +189,7 @@
                 @endif
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr>
+            </tr> --}}
                 @if($item->count() > 0)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>

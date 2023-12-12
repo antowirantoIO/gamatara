@@ -19,11 +19,11 @@ class ProjectPekerjaan extends Model
 
     public function beforePhoto()
     {
-        return $this->belongsTo(BeforePhoto::class,'kode_unik','kode_unik');
+        return $this->hasMany(BeforePhoto::class,'kode_unik','kode_unik');
     }
     public function afterPhoto()
     {
-        return $this->belongsTo(AfterPhoto::class,'kode_unik','kode_unik');
+        return $this->hasMany(AfterPhoto::class,'kode_unik','kode_unik');
     }
 
     public function lokasi ()

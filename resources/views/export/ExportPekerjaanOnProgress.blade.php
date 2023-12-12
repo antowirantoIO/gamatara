@@ -118,7 +118,6 @@
                     <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{  number_format($value->amount,2, ',','') }}</td>
                     <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
                     <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
-                    <td>{{ $value->kode_unik }}</td>
                 </tr>
                 @php
                     $prevIndex = $index;

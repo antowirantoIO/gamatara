@@ -2,6 +2,8 @@
 
 use App\Models\Kategori;
 use App\Models\ProjectPekerjaan;
+use App\Models\BeforePhoto;
+use App\Models\AfterPhoto;
 use Carbon\Carbon;
 
 
@@ -319,5 +321,23 @@ function getLatters($name)
             return $latter;
             break;
     }
+}
+
+function getBeforePhoto($idProject, $kodeUnik)
+{
+    $before = BeforePhoto::where('id_project',$idProject)
+    ->where('kode_unik',$kodeUnik)
+    ->get();
+
+    return $before;
+}
+
+function getAfterPhoto($idProject, $kodeUnik)
+{
+    $after = AfterPhoto::where('id_project',$idProject)
+    ->where('kode_unik',$kodeUnik)
+    ->get();
+
+    return $after;
 }
 

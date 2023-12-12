@@ -157,7 +157,7 @@
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
             </tr>
-            {{-- <tr>
+            <tr>
                 <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td colspan="9" height="30" align="center" style="border: 20px medium black;border-left: 20px medium black;">
                     <strong>After</strong>
@@ -165,31 +165,30 @@
             </tr>
             <tr>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                @foreach ($items as $keys => $value)
-                        @php
-                            $indexNow = $keys + 1;
-                            $photoNow = $value->afterPhoto ? ($value->afterPhoto->photo ? $value->afterPhoto->photo : null ) : null;
-                        @endphp
-                        @isset ($value->afterPhoto->photo)
-                            @if ($photoNow !== $currentPhoto)
-                                <td height="100">
-                                    <img src="{{ public_path($value->afterPhoto->photo)  }}" width="100px" alt="photo">
-                                </td>
-                            @endif
-                        @endisset
-                        @php
-                            $currentPhoto = $photoNow;
-                            $currentIndex = $indexNow;
-                            $totalIndex = max(7, 7 - $currentIndex);
-
-                        @endphp
+                @foreach ($value->afterPhoto as $photo => $a)
+                    @php
+                        $indexNow = $photo + 1;
+                        $photoNow = $a ? $a->photo : null
+                    @endphp
+                    @isset ($a->photo)
+                        @if ($photoNow !== $currentPhoto)
+                            <td height="100">
+                                <img src="{{ public_path($a->photo)  }}" width="100px" alt="photo">
+                            </td>
+                        @endif
+                    @endisset
+                    @php
+                        $currentPhoto = $photoNow;
+                        $currentIndex = $indexNow;
+                        $totalIndex = max(7, 7 - $currentIndex);
+                    @endphp
                 @endforeach
                 @if ($currentIndex !== 7)
                     {!! str_repeat('<td></td>', $totalIndex) !!}
                 @endif
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr> --}}
+            </tr>
                 @if($item->count() > 0)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>

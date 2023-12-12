@@ -109,7 +109,7 @@ class OnProgressController extends Controller
         $data = OnRequest::find($id);
         $status = ProjectPekerjaan::where('id_project',$id)
                                 ->whereNotNull(['id_pekerjaan'])
-                                ->where('status',1)->count();
+                                ->whereIn('status',[1,2])->count();
         $projects = Keluhan::where('on_request_id',$id)
                                     ->whereNotNull(['id_pm_approval','id_bod_approval'])
                                     ->select('id_vendor')

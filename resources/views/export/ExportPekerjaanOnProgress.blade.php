@@ -152,7 +152,11 @@
                     @endphp
                 @endforeach
                 @if ($currentIndex !== 7)
-                    {!! str_repeat('<td></td>', $totalIndex) !!}
+                    @if (intval($totalIndex) === 0)
+                    {!! str_repeat('<td></td>', 7) !!}
+                    @else
+                    {!! str_repeat('<td></td>', intval($totalIndex)) !!}
+                    @endif
                 @endif
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -184,7 +188,11 @@
                     @endphp
                 @endforeach
                 @if ($currentIndex !== 7)
-                    {!! str_repeat('<td></td>', $totalIndex) !!}
+                    @if (intval($totalIndex) === 0)
+                    {!! str_repeat('<td></td>', 7) !!}
+                    @else
+                    {!! str_repeat('<td></td>', intval($totalIndex)) !!}
+                    @endif
                 @endif
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>

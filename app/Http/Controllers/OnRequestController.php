@@ -36,7 +36,7 @@ class OnRequestController extends Controller
                 $data->where('pm_id', $cekPa->id);
             }else if ($cekRole == 'Project Admin') {
                 if($cekPm){
-                    $data->where('pm_id', $cekPm->id_pm);
+                    $data->where('pa_id', $cekPm->id);
                 }
             }else if ($cekRole == 'BOD' 
                         || $cekRole == 'Super Admin' 
@@ -51,7 +51,6 @@ class OnRequestController extends Controller
             }
             
             $data = $data->where('status',1)
-                        ->orWhere('status',null)
                         ->filter($request)
                         ->orderBy('created_at', 'desc')
                         ->get();

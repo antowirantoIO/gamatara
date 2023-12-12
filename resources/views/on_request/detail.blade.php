@@ -37,7 +37,7 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    @if($pmAuth == 'Project Admin')
+                                    @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
@@ -65,7 +65,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label>Project Manajer</label>
+                                                <label>Project Manager</label>
                                                 <input type="text" value="{{ $data->pm->karyawan->name ?? '' }}" class="form-control" readonly>
                                             </div>
                                         </div>
@@ -100,7 +100,7 @@
                                                         <option value="{{$k->id}}" {{ $k->id == $data->id_customer ? 'selected' : '' }}>{{$k->name}}</option>
                                                     @endforeach
                                                 </select>
-                                                @if($pmAuth == 'Project Admin')
+                                                @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                                                     <button style="width: 7%; height: 110%;" class="btn btn-primary btn-sm position-absolute top-0 end-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
                                                 @endif
                                             </div>
@@ -158,7 +158,7 @@
                                             </div>
                                         </div> 
 
-                                        @if($pmAuth == 'Project Admin' || $pmAuth == 'BOD')
+                                        @if($pmAuth == 'Project Admin' || $pmAuth == 'PA' || $pmAuth == 'BOD')
                                         <div class="col-xxl-6 col-md-6">
                                             <label>Request</label>
                                             <input type="hidden" name="keluhan" id="keluhanInput" value="">
@@ -174,7 +174,7 @@
                                                     @endforeach
                                                 </select>
                                                 <br><br>
-                                                @if($pmAuth == 'Project Admin')
+                                                @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                                                 <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                                     <button type="button" id="tambahKeluhan" data-id-keluhan="" class="btn btn-primary">Save</button>
                                                 </div>

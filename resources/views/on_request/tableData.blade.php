@@ -68,7 +68,7 @@
                                     Approved
                                 </button>
                             @endif
-                        @elseif($pmAuth == 'Project Manager')
+                        @elseif($pmAuth == 'Project Manager' || $pmAuth == 'PM')
 
                         @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             @if($complaint->id_bod_approval != null)
@@ -123,7 +123,7 @@
                                     <i><img src="{{asset('assets/images/trash.svg')}}" style="width: 15px;"></i>
                                 </span>
                             </button>
-                        @elseif($pmAuth == 'Project Admin')
+                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
                             <button type="button" class="btn btn-sm"
                                 @if($complaint->id_pm_approval != null && $complaint->id_bod_approval != null)
                                     style="background-color:grey;

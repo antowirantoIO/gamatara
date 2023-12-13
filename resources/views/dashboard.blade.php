@@ -13,11 +13,8 @@
             </div>
 
             <div class="row">
-
-                <div class="col-lg-3" style="flex:1;"
-                        @if(auth()->user()->role->name == 'Project Manager' || auth()->user()->role->name == 'BOD')
-                            data-bs-toggle="modal" data-bs-target="#advance"
-                        @endif>
+                @if(auth()->user()->role->name == 'Project Manager' || auth()->user()->role->name == 'BOD')
+                <div class="col-lg-3" style="flex:1;" data-bs-toggle="modal" data-bs-target="#advance">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -38,6 +35,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <div class="col-lg-3" style="flex:1;">
                     <div class="card card-animate card-rad">
@@ -61,11 +59,8 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3" style="flex:1;"
-                        @if(auth()->user()->role->name == 'BOD')
-                            data-bs-toggle="modal" data-bs-target="#advanceSN"
-                        @endif
-                        >
+                @if(auth()->user()->role->name == 'BOD')
+                <div class="col-lg-3" style="flex:1;" data-bs-toggle="modal" data-bs-target="#advanceSN">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -86,6 +81,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <div class="col-lg-3" style="flex:1;">
                     <div class="card card-animate card-rad">

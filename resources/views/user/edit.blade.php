@@ -92,7 +92,7 @@
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="konfirmasi_password" class="form-label">Konfirmasi Password</label>
+                                            <label for="konfirmasi_password" class="form-label">Confirm Password</label>
                                             <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control" placeholder="Enter Confirm Password">
                                             <div class="col-12">
                                                 <span id="passwordMismatchError" class="text-danger" style="display:none;">Password does not match.</span>

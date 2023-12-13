@@ -102,7 +102,29 @@ class DashboardController extends Controller
             ->orderByDesc('complete')
             ->get();
 
-        $data       = OnRequest::orderBy('created_at','desc')->get();
+            $data = OnRequest::with(['kapal', 'customer']);
+         
+                if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
+                    $data->where('pm_id', $cekPa->id);
+                }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
+                    if($cekPm){
+                        $data->where('pa_id', $cekPm->id);
+                    }
+                }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
+                            || $cekRole == 'Super Admin' 
+                            || $cekRole == 'Administator' 
+                            || $cekRole == 'Staff Finance'
+                            || $cekRole == 'SPV Finance') {
+                    if($result){
+                        $data->whereIn('pm_id', array_column($result, 'id'));
+                    }
+                }else{
+                    $data->where('pm_id', '');
+                }
+                    
+            $data = $data->where('status',1)
+                        ->orderBy('created_at', 'desc')
+                        ->get();
 
         return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','data','progress','pm','pekerjaan'));
     }

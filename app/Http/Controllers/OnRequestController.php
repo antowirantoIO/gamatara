@@ -92,7 +92,7 @@ class OnRequestController extends Controller
 
     public function create()
     {
-        $pm = ProjectManager::where('id_karyawan',Auth::user()->id_karyawan)->first();
+        $pm = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
         
         if($pm == null){
             if(Auth::user()->role->name = 'BOD' || Auth::user()->role->name = 'Super Admin' || Auth::user()->role->name = 'Administator'){

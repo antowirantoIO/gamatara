@@ -107,7 +107,7 @@ class OnRequestController extends Controller
         $jenis_kapal= JenisKapal::orderBy('name','asc')->get();
         $status     = StatusSurvey::orderBy('name','asc')->get();
         $pmAuth     = Auth::user()->role->name ?? '';
-        $pm         = ProjectManager::where('id_karyawan',$pms->id_pm)->first();
+        $pm         = ProjectManager::where('id',$pms->id_pm)->first();
         $pe         = ProjectEngineer::where('id_pm',$pms->id_pm)->with(['karyawan'])->get();
        
         return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe'));

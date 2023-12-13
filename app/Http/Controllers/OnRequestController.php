@@ -95,7 +95,11 @@ class OnRequestController extends Controller
         $pm = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
         
         if($pm == null){
-            return redirect()->back()->with('error', 'Untuk Akun '.Auth::user()->role->name.', Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
+            if(Auth::user()->role->name = 'BOD' || Auth::user()->role->name = 'Super Admin' || Auth::user()->role->name = 'Administator'){
+                return redirect()->back()->with('error', 'Hanya Project Admin yang bisa menambahkan Project Baru');
+            }else{
+                return redirect()->back()->with('error', 'Untuk Akun '.Auth::user()->role->name.', Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
+            }
         }
 
         $customer   = Customer::orderBy('name','asc')->get();

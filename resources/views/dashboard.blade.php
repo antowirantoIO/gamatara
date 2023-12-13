@@ -201,7 +201,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($data as $key => $d)
+                                        @foreach($datas as $key => $d)
                                         <tr>
                                             <td>{{ $key + 1}}</td>
                                             <td>{{ $d->code }}</td>

@@ -92,13 +92,20 @@ class OnRequestController extends Controller
 
     public function create()
     {
+        $pm = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
+        
+        if($pm == null){
+            return redirect()->back()->with('error', 'Untuk Akun '.Auth::user()->role->name.', Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
+        }
+
         $customer   = Customer::orderBy('name','asc')->get();
         $lokasi     = LokasiProject::orderBy('name','asc')->get();
         $jenis_kapal= JenisKapal::orderBy('name','asc')->get();
         $status     = StatusSurvey::orderBy('name','asc')->get();
         $pmAuth     = Auth::user()->role->name ?? '';
+        $pe         = ProjectEngineer::where('id_pm',$pm->id_pm)->with(['karyawan'])->get();
 
-        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth'));
+        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe'));
     }
 
     public function edits(Request $request)
@@ -149,7 +156,9 @@ class OnRequestController extends Controller
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pa_id                = $pa->id ?? '';
         $data->pm_id                = $getPM->id_pm ?? '';
+        $data->pe_id_1              = $request->input('pe_id_1');
         $data->status_survey        = $request->input('status_survey');
+        $data->status               = 1;
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $data->id])
@@ -202,9 +211,6 @@ class OnRequestController extends Controller
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pe_id_1              = $request->input('pe_id_1');
         $data->status_survey        = $request->input('status_survey');
-        if($request->input('pe_id_1')){
-            $data->status = 1;
-        }
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $request->id])

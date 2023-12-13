@@ -72,7 +72,7 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Engineer</label>
-                                                <select name="pe_id_1" id="pe_id_1" class="form-control select">
+                                                <select name="pe_id_1" id="pe_id_1" class="form-control select2">
                                                     <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
                                                     <option value="{{$p->id}}" {{ $p->id == $data->pe_id_1 ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>

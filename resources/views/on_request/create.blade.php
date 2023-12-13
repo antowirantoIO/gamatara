@@ -46,6 +46,23 @@
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label>Project Manager</label>
+                                                <input type="text" value="{{ $pm->karyawan->name ?? '' }}" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
+                                                <label>Project Engineer</label>
+                                                <select name="pe_id_1" id="pe_id_1" class="form-control select2">
+                                                    <option value="">Choose Project Engineer</option>
+                                                    @foreach($pe as $p)
+                                                    <option value="{{$p->id}}">{{ $p->karyawan->name ?? '' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
                                             <label for="customer_name" class="form-label">Customer Name</label>
                                             <div class="position-relative">
                                                 <select id="customer_name" name="id_customer" class="form-control select2" aria-label="Customer Name">

@@ -32,13 +32,13 @@ class OnRequestController extends Controller
 
             $data = OnRequest::with(['kapal', 'customer']);
          
-            if ($cekRole == 'Project Manager') {
+            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
                 $data->where('pm_id', $cekPa->id);
-            }else if ($cekRole == 'Project Admin') {
+            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
                 if($cekPm){
                     $data->where('pa_id', $cekPm->id);
                 }
-            }else if ($cekRole == 'BOD' 
+            }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
                         || $cekRole == 'Super Admin' 
                         || $cekRole == 'Administator' 
                         || $cekRole == 'Staff Finance'

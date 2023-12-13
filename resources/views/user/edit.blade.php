@@ -69,7 +69,7 @@
                                         </div> 
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="ttd">Signature <span style='font-size:10px'>(PNG format only Max 1Mb)</span></label>
+                                                <label for="ttd">Signature <span style='font-size:10px'>(PNG,JPEG,JPG format only Max 1Mb)</span></label>
                                                 <br>
                                                     <img src="data:image/png;base64,{{ $data->ttd }}" alt="Signature Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
                                                 <br><br>
@@ -129,14 +129,14 @@
 
         if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
-            const allowedTypes = ['image/png'];
-            const maxSize = 1024 * 1024; // 1MB
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            const maxSize = 1024 * 1024;
 
             if (file.size > maxSize) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'File Terlalu Besar',
-                    text: 'Ukuran file melebihi batas maksimum (1MB).',
+                    title: 'Files Too Big',
+                    text: 'File size exceeds the maximum limit (1MB).',
                 });
                 fileInput.value = "";
                 return;
@@ -145,10 +145,10 @@
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Format File Tidak Valid',
-                    text: 'Hanya file PNG yang diizinkan.',
+                    title: 'Invalid File Format',
+                    text: 'Only PNG, JPG, JPEG files are allowed.',
                 });
-                fileInput.value = ""; // Reset input jika file tidak valid
+                fileInput.value = "";
                 return;
             }
 

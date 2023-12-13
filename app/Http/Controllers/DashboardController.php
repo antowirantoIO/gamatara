@@ -74,7 +74,6 @@ class DashboardController extends Controller
 
         $spkrequest = count($spkrequest);
 
-
         $totalcustomer = count(Customer::get());
         $totalvendor = count(Vendor::get());
 
@@ -115,6 +114,10 @@ class DashboardController extends Controller
             }else{
                 $data->where('pm_id', '');
             }
+                  
+        $datas = $data->where('status',1)
+        ->orderBy('created_at', 'desc')
+        ->get();
          
         $onprogress =   $data->whereHas('keluhan',function($query){
                 $query->whereNotNull(['id_pm_approval','id_bod_approval']);
@@ -124,10 +127,7 @@ class DashboardController extends Controller
             ->get();
 
         $onprogress = count($onprogress);
-      
-        $datas = $data->where('status',1)
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+
 
         return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','datas','progress','pm','pekerjaan'));
     }

@@ -92,9 +92,9 @@ class OnRequestController extends Controller
 
     public function create()
     {
-        $pm = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
+        $pms = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
         
-        if($pm == null){
+        if($pms == null){
             if(Auth::user()->role->name = 'BOD' || Auth::user()->role->name = 'Super Admin' || Auth::user()->role->name = 'Administator'){
                 return redirect()->back()->with('error', 'Hanya Project Admin yang bisa menambahkan Project Baru');
             }else{
@@ -107,8 +107,9 @@ class OnRequestController extends Controller
         $jenis_kapal= JenisKapal::orderBy('name','asc')->get();
         $status     = StatusSurvey::orderBy('name','asc')->get();
         $pmAuth     = Auth::user()->role->name ?? '';
+        $pm         = ProjectManager::where('id_karyawan',Auth::user()->id_karyawan)->first();
         $pe         = ProjectEngineer::where('id_pm',$pm->id_pm)->with(['karyawan'])->get();
-
+       
         return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe'));
     }
 

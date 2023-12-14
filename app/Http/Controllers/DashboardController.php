@@ -41,9 +41,7 @@ class DashboardController extends Controller
             }else{
                 $spkrequest->where('pm_id', '');
             }
-    
-        $complete = $spkrequest->where('status',2)->get();
-        $complete = count($complete);
+   
 
         $spkrequest = $spkrequest->whereHas('complaint', function ($query) use ($cekRole) {
             if ($cekRole == 'Project Manager') {
@@ -128,7 +126,29 @@ class DashboardController extends Controller
 
         $onprogress = count($onprogress);
 
+        $datap = OnRequest::with(['kapal', 'customer']);
+        
+        if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
+            $datap->where('pm_id', $cekPa->id);
+        }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
+            if($cekPm){
+                $datap->where('pa_id', $cekPm->id);
+            }
+        }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
+                    || $cekRole == 'Super Admin' 
+                    || $cekRole == 'Administator' 
+                    || $cekRole == 'Staff Finance'
+                    || $cekRole == 'SPV Finance') {
+            if($result){
+                $datap->whereIn('pm_id', array_column($result, 'id'));
+            }
+        }else{
+            $datap->where('pm_id', '');
+        }
 
+        $complete = $datap->where('status',2)->get();
+        $complete = count($complete);
+        
         return view('dashboard',compact('keluhan','spkrequest','onprogress','complete','totalcustomer','totalvendor','datas','progress','pm','pekerjaan'));
     }
 }

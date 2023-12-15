@@ -118,6 +118,7 @@
     $(document).ready(function() {
         $('#daterange').daterangepicker({
             autoUpdateInput: false,
+            showDropdowns: true,
             locale: {
                 cancelLabel: 'Clear'
             }
@@ -130,6 +131,7 @@
         $('#daterange').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
+
 
         var table = $('#tableData').DataTable({
             ordering: false,

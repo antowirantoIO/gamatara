@@ -58,7 +58,6 @@
                                                     <tr>
                                                         <th style="color:#929EAE;">Sub Category</th>
                                                         <th style="color:#929EAE;">Job</th>
-                                                        <th style="color:#929EAE;">Vendor</th>
                                                         <th style="color:#929EAE;">Description</th>
                                                         <th style="color:#929EAE">Location</th>
                                                         <th style="color:#929EAE">Detail / Other</th>
@@ -70,6 +69,7 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Customer Price</th>
                                                         <th style="color:#929EAE">Total Price</th>
+                                                        <th style="color:#929EAE;">Vendor</th>
                                                         @can('edit-pekerjaan-vendor')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
@@ -253,6 +253,7 @@
 
             var table = $('#tableData').DataTable({
                 fixedHeader:true,
+                ordering : false,
                 scrollX: true,
                 processing: true,
                 serverSide: true,

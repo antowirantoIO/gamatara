@@ -896,7 +896,8 @@ class OnProgressController extends Controller
             }else {
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
                         ->whereNotNull(['id_pekerjaan'])
-                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
+                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
+                        ->orderBy('id_kategori','asc');
             }
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
@@ -907,7 +908,7 @@ class OnProgressController extends Controller
                 $data->where('id_lokasi',$request->id_lokasi);
             }
 
-            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
+            $data = $data->get();
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {

@@ -140,7 +140,7 @@
                     @endphp
                     @isset ($b->photo)
                         @if ($photoNow !== $currentPhoto)
-                            <td height="100">
+                            <td height="100" style="transform: rotate(90deg)">
                                 <img src="{{ public_path($b->photo)  }}" width="100px" alt="photo">
                             </td>
                         @endif
@@ -176,7 +176,7 @@
                     @endphp
                     @isset ($a->photo)
                         @if ($photoNow !== $currentPhoto)
-                            <td height="100">
+                            <td height="100" style="transform: rotate(90deg)">
                                 <img src="{{ public_path($a->photo)  }}" width="100px" alt="photo">
                             </td>
                         @endif

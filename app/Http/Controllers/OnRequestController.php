@@ -32,13 +32,13 @@ class OnRequestController extends Controller
 
             $data = OnRequest::with(['kapal', 'customer']);
          
-            if ($cekRole == 'Project Manager') {
+            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
                 $data->where('pm_id', $cekPa->id);
-            }else if ($cekRole == 'Project Admin') {
+            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
                 if($cekPm){
                     $data->where('pa_id', $cekPm->id);
                 }
-            }else if ($cekRole == 'BOD' 
+            }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
                         || $cekRole == 'Super Admin' 
                         || $cekRole == 'Administator' 
                         || $cekRole == 'Staff Finance'
@@ -92,13 +92,25 @@ class OnRequestController extends Controller
 
     public function create()
     {
+        $pms = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
+        
+        if($pms == null){
+            if(Auth::user()->role->name = 'BOD' || Auth::user()->role->name = 'Super Admin' || Auth::user()->role->name = 'Administator'){
+                return redirect()->back()->with('error', 'Hanya Project Admin yang bisa menambahkan Project Baru');
+            }else{
+                return redirect()->back()->with('error', 'Untuk Akun '.Auth::user()->role->name.', Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
+            }
+        }
+
         $customer   = Customer::orderBy('name','asc')->get();
         $lokasi     = LokasiProject::orderBy('name','asc')->get();
         $jenis_kapal= JenisKapal::orderBy('name','asc')->get();
         $status     = StatusSurvey::orderBy('name','asc')->get();
         $pmAuth     = Auth::user()->role->name ?? '';
-
-        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth'));
+        $pm         = ProjectManager::where('id',$pms->id_pm)->first();
+        $pe         = ProjectEngineer::where('id_pm',$pms->id_pm)->with(['karyawan'])->get();
+       
+        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe'));
     }
 
     public function edits(Request $request)
@@ -149,7 +161,9 @@ class OnRequestController extends Controller
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pa_id                = $pa->id ?? '';
         $data->pm_id                = $getPM->id_pm ?? '';
+        $data->pe_id_1              = $request->input('pe_id_1');
         $data->status_survey        = $request->input('status_survey');
+        $data->status               = 1;
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $data->id])
@@ -202,9 +216,6 @@ class OnRequestController extends Controller
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pe_id_1              = $request->input('pe_id_1');
         $data->status_survey        = $request->input('status_survey');
-        if($request->input('pe_id_1')){
-            $data->status = 1;
-        }
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $request->id])

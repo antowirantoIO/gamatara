@@ -73,7 +73,7 @@
                                         </div>  
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="ttd">Signature <span style='font-size:10px'>(PNG format only Max 1Mb)</span></label>
+                                                <label for="ttd">Signature <span style='font-size:10px'>(PNG,JPEG,JPG format only Max 1Mb)</span></label>
                                                 <br>
                                                     <img src="{{ asset('assets/images/nophoto.jpg') }}" alt="Tanda Tangan Preview" class="img-thumbnail" id="ttd_preview" style="max-width: 150px;">
                                                 <br><br>
@@ -96,7 +96,7 @@
                                             @endif
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
-                                            <label for="konfirmasi_password">Konfirmasi Password</label>
+                                            <label for="konfirmasi_password">Confirm Password</label>
                                             <input type="password" name="konfirmasi_password" id="konfirmasi_password" class="form-control" placeholder="Enter Confirm Password">
                                             <div class="col-12">
                                                 <span id="passwordMismatchError" class="text-danger" style="display:none;">Password does not match.</span>
@@ -160,26 +160,26 @@
 
         if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
-            const allowedTypes = ['image/png'];
-            const maxSize = 1024 * 1024; // 1MB
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            const maxSize = 1024 * 1024;
 
             if (file.size > maxSize) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'File Terlalu Besar',
-                    text: 'Ukuran file melebihi batas maksimum (1MB).',
+                    title: 'Files Too Big',
+                    text: 'File size exceeds the maximum limit (1MB).',
                 });
-                fileInput.value = ""; // Reset input jika file melebihi ukuran maksimum
+                fileInput.value = "";
                 return;
             }
 
             if (!allowedTypes.includes(file.type)) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Format File Tidak Valid',
-                    text: 'Hanya file PNG yang diizinkan.',
+                    title: 'Invalid File Format',
+                    text: 'Only PNG, JPG, JPEG files are allowed.',
                 });
-                fileInput.value = ""; // Reset input jika file tidak valid
+                fileInput.value = "";
                 return;
             }
 
@@ -187,14 +187,13 @@
 
             reader.onload = function (e) {
                 ttdPreview.src = e.target.result;
-                ttdBase64Input.value = e.target.result.split(',')[1]; // Simpan base64 dalam input tersembunyi
+                ttdBase64Input.value = e.target.result.split(',')[1];
             };
 
             reader.readAsDataURL(file);
         } else {
-            // Jika tidak ada gambar yang dipilih, tampilkan gambar default
             ttdPreview.src = "{{ asset('assets/nophoto.jpg') }}";
-            ttdBase64Input.value = ""; // Hapus base64 jika tidak ada gambar yang dipilih
+            ttdBase64Input.value = "";
         }
     });
 

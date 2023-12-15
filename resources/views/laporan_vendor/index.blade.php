@@ -128,6 +128,8 @@
     $(document).ready(function () {
         $('#daterange').daterangepicker({
             autoUpdateInput: false,
+            showDropdowns: true,
+            linkedCalendars: false,
             locale: {
                 cancelLabel: 'Clear'
             }

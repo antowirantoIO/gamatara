@@ -12,6 +12,7 @@ use App\Models\ProjectAdmin;
 use App\Models\ProjectManager;
 use App\Models\ProjectPekerjaan;
 use App\Models\Vendor;
+use App\Models\ViewSN;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -89,7 +90,8 @@ class OnProgressExportController extends Controller
 
     public function dataPekerjaan(Request $request)
     {
-        $data = groupDataPekerjaan($request);
+        $data = ViewSN::where('id_project',$request->id_project)->get();
+        $data = $data->groupBy(['nama_kategori','subkategori_concat']);
         $project = OnRequest::where('id',$request->id_project)->first();
         return Excel::download(new ExportDataPekerjaan($data, $project),'SN-' . $project->nama_project . '.xlsx');
         // return view('export.ExportPekerjaanOnProgress', compact('data','project'));

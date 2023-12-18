@@ -125,7 +125,7 @@
             let id_project = '{{ $idProject }}';
             let id_subkategori = '{{ $subKategori }}';
             let kode_unik = '{{ $kodeUnik }}';
-            let url = '{{ route('on_progres.sub-detail',[':id',':project',':subkategori',':kode_unik']) }}';
+            let url = '{{ route('complete.sub-detail-pekerjaan',[':id',':project',':subkategori',':kode_unik']) }}';
             let urlReplace = url.replace(':id',id_kategori).replace(':project',id_project).replace(':subkategori',id_subkategori).replace(':kode_unik',kode_unik);
 
             let table = $("#example1").DataTable({
@@ -157,7 +157,7 @@
                     method : 'GET',
                 },
                 columns : [
-                    { data : 'pekerjaan', name : 'pekerjaan'},
+                    { data : 'pekerjaan.name', name : 'pekerjaan.name'},
                     { data : 'id_lokasi', name : 'id_lokasi'},
                     { data : 'detail', name : 'detail'},
                     { data : 'length', name : 'length'},

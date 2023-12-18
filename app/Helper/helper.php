@@ -4,6 +4,8 @@ use App\Models\Kategori;
 use App\Models\ProjectPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
+use App\Models\ViewAfterPhoto;
+use App\Models\ViewBeforePhoto;
 use Carbon\Carbon;
 
 
@@ -339,5 +341,13 @@ function getAfterPhoto($idProject, $kodeUnik)
     ->get();
 
     return $after;
+}
+
+function getAfterPhotoSM($idProject, $subkategori_concat){
+    return ViewAfterPhoto::where('id_project', $idProject)->where('subkategori_concat',$subkategori_concat)->get();
+}
+
+function getBeforePhotoSM($idProject, $subkategori_concat){
+    return ViewBeforePhoto::where('id_project', $idProject)->where('subkategori_concat',$subkategori_concat)->get();
 }
 

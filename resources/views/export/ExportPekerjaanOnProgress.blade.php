@@ -1,4 +1,13 @@
-<table></table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <table></table>
 <table>
     <tr style="font-size: 8px;">
         <td rowspan="4"></td>
@@ -52,6 +61,8 @@
         $currentIndex = '';
         $indexNow = '';
         $totalIndex = '';
+        $before = [];
+        $after = [];
     @endphp
     @foreach ($data as $index => $item)
 
@@ -59,145 +70,138 @@
             <td style="font-weight: bold; border:20px medium black;" align="center"  height="20">{{ getLatters($index) }}.</td>
             <td colspan="9" style="font-weight: bold; border:20px medium black;"  height="20">&nbsp;{{ $index }}</td>
         </tr>
-        @foreach ($item as $indexs => $items)
-            @foreach ($items as $key => $value)
+       @foreach ($item as $indexs => $items)
                 @php
-                    $subkategori = $value->subKategori->name . $value->deskripsi_subkategori;
-                    $kodeUnik = $value->kode_unik;
+                    // $subkategori = $items->subkategori_concat;
+                    if ($prevIndex !== $indexs) {
+                        $subCount = 1;
+                    } else {
+                        $subCount++;
+                    }
                 @endphp
-                @if ($prevKodeUnik !== $kodeUnik)
-                    @php
-                        if ($prevIndex !== $index) {
-                            $subCount = 1;
-                        } else {
-                            $subCount++;
-                        }
-                    @endphp
-                    @if ($subkategori !== $prevSub)
-                        <tr style="font-size: 8px;">
-                            <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td height="20"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        </tr>
-                        <tr style="font-size: 8px;">
-                            <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ getLatters($index) }}.{{ $subCount }}.</td>
-                            <td height="20">&nbsp;
-                                @if (strtolower($value->subKategori->name) === 'telah dilaksanakan pekerjaan')
-                                    <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
-                                @else
-                                    <strong>{{ $value->subKategori->name }}</strong>
-                                @endif
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                        </tr>
-                    @endif
-                @endif
-                <tr style="font-size: 8px; border:20px medium black;">
-                    <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                    <td height="20"> &nbsp;{{ $value->pekerjaan ? ($value->pekerjaan->name ? ($value->deskripsi_pekerjaan ? $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan : $value->pekerjaan->name) : '') : '' }}</td>
-                    <td height="20" align="center">{{ $value->id_lokasi }}</td>
-                    <td height="20" align="center">{{ $value->detail }}</td>
-                    <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>
-                    <td height="20" align="center">{{ number_format($value->width,2, ',','') }}</td>
-                    <td height="20" align="center">{{ number_format($value->thick,2, ',','') }}</td>
-                    <td height="20" align="center">{{ number_format($value->qty,2, ',','') }}</td>
-                    <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{  number_format($value->amount,2, ',','') }}</td>
-                    <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
-                    <td height="20" align="left">{{ $value->vendors->name ?? '-' }}</td>
+                <tr style="font-size: 8px;">
+                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td height="20"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                </tr>
+                <tr style="font-size: 8px;">
+                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ getLatters($index) }}.{{ $subCount }}.</td>
+                    <td height="20">&nbsp;
+                        <strong>{{ $indexs }}</strong>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                </tr>
+
+                @foreach ($items as $keys => $value)
+                    <tr style="font-size: 8px; border:20px medium black;">
+                        <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                        <td height="20"> &nbsp;{{ $value->pekerjaan_concat ?? ' ' }}</td>
+                        <td height="20" align="center">{{ $value->id_lokasi }}</td>
+                        <td height="20" align="center">{{ $value->detail }}</td>
+                        <td height="20" align="center">{{ number_format($value->length,2, ',','') }}</td>
+                        <td height="20" align="center">{{ number_format($value->width,2, ',','') }}</td>
+                        <td height="20" align="center">{{ number_format($value->thick,2, ',','') }}</td>
+                        <td height="20" align="center">{{ number_format($value->qty,2, ',','') }}</td>
+                        <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{  number_format($value->amount,2, ',','') }}</td>
+                        <td height="20" align="right" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $value->unit }}</td>
+                        <td height="20" align="left">{{ $value->nama_vendor ?? '-' }}</td>
+                    </tr>
+                @endforeach
+
+                <tr>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td colspan="9" height="30" align="center" style="border: 20px medium black;border-left: 20px medium black;">
+                        <strong>Before</strong>
+                    </td>
                 </tr>
                 @php
-                    $prevIndex = $index;
-                    $prevSub = $subkategori;
-                    $prevKodeUnik = $kodeUnik;
+                    $beforePhoto = getBeforePhotoSM($value->id_Project, $value->subkategori_concat);
+                    $afterPhoto = getAfterPhotoSM($value->id_Project, $value->subkategori_concat);
                 @endphp
-            @endforeach
-            <tr>
-                <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                <td colspan="9" height="30" align="center" style="border: 20px medium black;border-left: 20px medium black;">
-                    <strong>Before</strong>
-                </td>
-            </tr>
-            <tr>
-                <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                @foreach ($value->beforePhoto as $photo => $b)
-                    @php
-                        $indexNow = $photo + 1;
-                        $photoNow = $b ? $b->photo : null
-                    @endphp
-                    @isset ($b->photo)
-                        @if ($photoNow !== $currentPhoto)
-                            <td height="100" style="transform: rotate(90deg)">
-                                <img src="{{ public_path($b->photo)  }}" width="100px" alt="photo">
-                            </td>
+                <tr>
+                    <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    @foreach ($beforePhoto as $photo => $b)
+                        @php
+                            $indexNow = $photo + 1;
+                            $photoNow = $b ? $b->photo : null
+
+                        @endphp
+                        @isset ($b->photo)
+                            @if ($photoNow !== $currentPhoto)
+                                <td height="100">
+                                    <img src="{{ public_path($b->photo)  }}" width="100px">
+                                </td>
+                            @endif
+                        @endisset
+                        @php
+                            $currentPhoto = $photoNow;
+                            $currentIndex = $indexNow;
+                            $totalIndex = max(7, 7 - $currentIndex);
+                        @endphp
+                    @endforeach
+                    @if ($currentIndex !== 7)
+                        @if (intval($totalIndex) === 0)
+                        {!! str_repeat('<td></td>', 7) !!}
+                        @else
+                        {!! str_repeat('<td></td>', intval($totalIndex)) !!}
                         @endif
-                    @endisset
-                    @php
-                        $currentPhoto = $photoNow;
-                        $currentIndex = $indexNow;
-                        $totalIndex = max(7, 7 - $currentIndex);
-                    @endphp
-                @endforeach
-                @if ($currentIndex !== 7)
-                    @if (intval($totalIndex) === 0)
-                    {!! str_repeat('<td></td>', 7) !!}
-                    @else
-                    {!! str_repeat('<td></td>', intval($totalIndex)) !!}
                     @endif
-                @endif
-                <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr>
-            <tr>
-                <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                <td colspan="9" height="30" align="center" style="border: 20px medium black;border-left: 20px medium black;">
-                    <strong>After</strong>
-                </td>
-            </tr>
-            <tr>
-                <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                @foreach ($value->afterPhoto as $photo => $a)
-                    @php
-                        $indexNow = $photo + 1;
-                        $photoNow = $a ? $a->photo : null
-                    @endphp
-                    @isset ($a->photo)
-                        @if ($photoNow !== $currentPhoto)
-                            <td height="100" style="transform: rotate(90deg)">
-                                <img src="{{ public_path($a->photo)  }}" width="100px" alt="photo">
-                            </td>
+                    <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                </tr>
+                <tr>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td colspan="9" height="30" align="center" style="border: 20px medium black;border-left: 20px medium black;">
+                        <strong>After</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    @foreach ($afterPhoto as $photo => $a)
+                        @php
+                            $indexNow = $photo + 1;
+                            $photoNow = $a ? $a->photo : null
+
+                        @endphp
+                        @isset ($b->photo)
+                            @if ($photoNow !== $currentPhoto)
+                                <td height="100">
+                                    <img src="{{ public_path($a->photo)  }}" width="100px" alt="photo">
+                                </td>
+                            @endif
+                        @endisset
+                        @php
+                            $currentPhoto = $photoNow;
+                            $currentIndex = $indexNow;
+                            $totalIndex = max(7, 7 - $currentIndex);
+                        @endphp
+                    @endforeach
+                    @if ($currentIndex !== 7)
+                        @if (intval($totalIndex) === 0)
+                        {!! str_repeat('<td></td>', 7) !!}
+                        @else
+                        {!! str_repeat('<td></td>', intval($totalIndex)) !!}
                         @endif
-                    @endisset
-                    @php
-                        $currentPhoto = $photoNow;
-                        $currentIndex = $indexNow;
-                        $totalIndex = max(7, 7 - $currentIndex);
-                    @endphp
-                @endforeach
-                @if ($currentIndex !== 7)
-                    @if (intval($totalIndex) === 0)
-                    {!! str_repeat('<td></td>', 7) !!}
-                    @else
-                    {!! str_repeat('<td></td>', intval($totalIndex)) !!}
                     @endif
-                @endif
-                <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-            </tr>
-                @if($item->count() > 0)
+                    <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td height="100" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                </tr>
+
+                @if($items->count() > 0)
                     <tr style="font-size: 8px;">
                         <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                         <td height="20"></td>
@@ -215,7 +219,8 @@
                     $prevIndex = $index;
                     $count++
                 @endphp
-            @endforeach
+       @endforeach
+
     @endforeach
     {!! str_repeat('<tr></tr>', 1) !!}
     <tr align="center" style="font-size: 8px;">
@@ -263,3 +268,6 @@
         <td colspan="11" align="center" style="font-size: 8px;font-weight: bold;">{{ $project->customer->name }}</td>
     </tr>
 </table>
+
+</body>
+</html>

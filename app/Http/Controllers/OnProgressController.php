@@ -443,7 +443,7 @@ class OnProgressController extends Controller
                                     ->where('id_kategori',$id)
                                     ->where('id_subkategori',$subKategori)
                                     ->whereNotNull(['id_pekerjaan'])
-                                    ->with('vendors','subKategori')
+                                    ->with('vendors','subKategori','pekerjaan')
                                     ->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {

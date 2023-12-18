@@ -910,6 +910,14 @@ class OnProgressController extends Controller
 
             $data = $data->get();
 
+            $customOrder = ["UMUM", "PERAWATAN BADAN KAPAL", "KONSTRUKSI KAPAL", "PERMESINAN", "PIPA-PIPA", "INTERIOR KAPAL", "LAIN-LAIN"];
+
+            // Fungsi kustom untuk mengurutkan berdasarkan urutan yang ditentukan dalam $customOrder
+            $data = $data->sortBy(function ($item) use ($customOrder) {
+                return array_search($item->kategori->name, $customOrder);
+            });
+
+
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {

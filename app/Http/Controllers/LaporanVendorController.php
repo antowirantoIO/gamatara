@@ -29,24 +29,24 @@ class LaporanVendorController extends Controller
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
             list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-        
+ 
             return $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request, $start_date, $end_date) {
                 $reportType = $request->report_by;
-        
-                switch ($reportType) {
-                    case 'tahun':
-                        $innerQuery->whereYear('created_at', $start_date);
-                        break;
-                    case 'tanggal':
-                        $innerQuery->whereDate('created_at', '>=', $start_date)
-                            ->whereDate('created_at', '<=', $end_date);
-                        break;
-                    case 'bulan':
-                    default:
-                        $innerQuery->whereMonth('created_at', $start_date)
-                            ->whereYear('created_at', $end_date);
-                        break;
-                }
+                $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
+                // switch ($reportType) {
+                //     case 'bulan':
+                //         $innerQuery->whereMonth('created_at', '>=', $start_date)
+                //             ->whereYear('created_at','<=', $end_date);
+                //         break;
+                //     case 'tahun':
+                //         $innerQuery->whereYear('created_at', $start_date);
+                //         break;
+                //     case 'tanggal':
+                //     default:
+                //         $innerQuery->whereDate('created_at', '>=', $start_date)
+                //             ->whereDate('created_at', '<=', $end_date);
+                //         break;
+                // }
             });
         })        
         ->get();

@@ -93,7 +93,7 @@ class OnProgressExportController extends Controller
         $data = ViewSN::where('id_project',$request->id_project)->get();
         $data = $data->groupBy(['nama_kategori','subkategori_concat']);
         $project = OnRequest::where('id',$request->id_project)->first();
-        return Excel::download(new ExportDataPekerjaan($data, $project),'SN-' . $project->nama_project . '.xlsx');
+        return Excel::download(new ExportDataPekerjaan($data, $project),'SN-' . str_replace('/','',$project->nama_project) . '.xlsx');
         // return view('export.ExportPekerjaanOnProgress', compact('data','project'));
 
     }

@@ -115,37 +115,37 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>      
+                                        </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Contact Person</label>
                                                 <input type="text" name="contact_person" value="{{$data->contact_person}}" class="form-control" id="contact_person" placeholder="Enter Contact Person">
                                             </div>
-                                        </div>         
+                                        </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Contact Person Phone</label>
                                                 <input type="text" name="nomor_contact_person" value="{{$data->nomor_contact_person}}"  class="form-control" id="nomor_contact_person" placeholder="Enter Nomor Contact Person" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                             </div>
-                                        </div>          
+                                        </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Customer Address</label>
                                                 <input type="text" class="form-control" value="{{$getCustomer->alamat}}" id="alamat" readonly>
                                             </div>
-                                        </div>   
+                                        </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>NPWP</label>
                                                 <input type="text" class="form-control" id="npwps" value="{{$getCustomer->npwp}}" readonly>
                                             </div>
-                                        </div>   
+                                        </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Displacement Ship (GT)</label>
                                                 <input type="number" name="displacement" value="{{$data->displacement}}" class="form-control" id="displacement" placeholder="Enter Displacement Ship">
                                             </div>
-                                        </div>   
+                                        </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Ship Type</label>
@@ -156,7 +156,7 @@
                                                         @endforeach
                                                     </select>
                                             </div>
-                                        </div> 
+                                        </div>
 
                                         @if($pmAuth == 'Project Admin' || $pmAuth == 'PA' || $pmAuth == 'BOD')
                                         <div class="col-xxl-6 col-md-6">
@@ -189,7 +189,7 @@
 
                                         <!--tabel-->
                                         <div id="tabelKeluhanWrapper">
-                                            
+
                                         </div>
                                     </div>
                                 </form>
@@ -199,7 +199,7 @@
                 </div>
             </div>
 
-        </div> 
+        </div>
     </div>
 </div>
 
@@ -242,7 +242,7 @@
                                     <label>Contact Person Phone</label>
                                     <input type="number" name="nomor_contact_person" class="form-control" placeholder="Enter Contact Person Phone" maxlength="13" placeholder="Enter Nomor Contact Person" oninput="this.value=this.value.slice(0,this.maxLength)">
                                 </div>
-                            </div>                    
+                            </div>
                             <div class="col-xxl-6 col-md-6">
                                 <div>
                                     <div>
@@ -256,7 +256,7 @@
                                     <label>NPWP</label>
                                     <input type="text" name="npwp" id="npwp" class="form-control" placeholder="Enter NPWP">
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -271,7 +271,7 @@
 <script>
     function approve(id, type) {
         Swal.fire({
-            title: 'Konfirmasi',
+            title: 'Confirmation',
             text: 'Are You Sure ?',
             icon: 'question',
             showCancelButton: true,
@@ -301,7 +301,7 @@
                                 'Success',
                                 'success'
                             )
-                            getTableData(idData);       
+                            getTableData(idData);
                             return response.json();
                         } else {
                             throw new Error('Failed approval');
@@ -415,7 +415,7 @@
                             title: 'Success',
                             text: data.message,
                         });
-                        getTableData(idData);  
+                        getTableData(idData);
 
                         document.getElementById("keluhan").value = "";
                         $("#vendor").val('').trigger('change');
@@ -429,7 +429,7 @@
                             title: 'Oops...',
                             text: data.message,
                         });
-                        getTableData(idData);     
+                        getTableData(idData);
                     }else{
                         Swal.fire({
                             icon: 'error',
@@ -455,7 +455,7 @@
                 cell3.innerHTML = vendorName;
                 cell4.innerHTML = '';
                 cell5.innerHTML = '';
-                cell6.innerHTML = 
+                cell6.innerHTML =
                     '<div>' +
                         '<button type="button" class="btn btn-warning btn-sm btnEdit" data-keluhan-id="' + data.id + '" data-vendor-id="' + data.id_vendor + '" onclick="setEditData(' + data.id + ', ' + data.id_vendor + ')"><img src="{{asset("assets/images/edit.svg")}}" style="width: 15px;"></button>&nbsp;' +
                         '<button type="button" class="btn btn-success btn-sm btnApprove" data-keluhan-id="' + data.id + '"><img src="{{asset("assets/images/like.svg")}}" style="width: 15px;"></button>&nbsp;' +
@@ -472,7 +472,7 @@
                 });
 
                 refreshNomorUrut();
-                getTableData(idData);  
+                getTableData(idData);
             })
             .catch(function (error) {
                 console.error(error);
@@ -513,7 +513,7 @@
                         var row = document.querySelector('[data-keluhan-id="' + keluhanId + '"]').closest('tr');
                         row.remove();
                         refreshNomorUrut();
-                        getTableData(idData);    
+                        getTableData(idData);
                         Swal.fire(
                             'Sukses!',
                             'Request successfully deleted.',
@@ -539,10 +539,10 @@
         try {
             var cleaned = ("" + NPWPString).replace(/\D/g, "");
             var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
-            return [      
-                    match[1], 
+            return [
+                    match[1],
                     match[2] ? ".": "",
-                    match[2], 
+                    match[2],
                     match[3] ? ".": "",
                     match[3],
                     match[4] ? ".": "",
@@ -551,7 +551,7 @@
                     match[5],
                     match[6] ? ".": "",
                     match[6]].join("")
-            
+
         } catch(err) {
             return "";
         }
@@ -659,7 +659,7 @@
         }
     });
 
-    //hapus data yg sudah ada sebelumnya 
+    //hapus data yg sudah ada sebelumnya
     var btnHapus = document.querySelectorAll(".btnHapus");
     btnHapus.forEach(function (button) {
         button.addEventListener("click", function () {
@@ -671,7 +671,7 @@
 
     //export detail
     $('#export-button').on('click', function(event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
         var url = '{{ route("on_request.exportDetail", $data->id) }}?';
 

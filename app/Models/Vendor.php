@@ -9,7 +9,7 @@ class Vendor extends Model
 {
     protected $table = 'vendor';
     protected $guarded = [];
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
 
     public function kategori()
     {
@@ -57,5 +57,5 @@ class Vendor extends Model
             });
         });
     }
-    
+
 }

@@ -96,8 +96,8 @@ class OnProgressExportController extends Controller
             return $group->sortByDesc('nama_vendor');
         });
         $project = OnRequest::where('id',$request->id_project)->first();
-        // return Excel::download(new ExportDataPekerjaan($data, $project),'SN-' . str_replace('/','',$project->nama_project) . '.xlsx');
-        return view('export.ExportPekerjaanOnProgress', compact('data','project'));
+        return Excel::download(new ExportDataPekerjaan($data, $project),'SN-' . str_replace('/','',$project->nama_project) . '.xlsx');
+        // return view('export.ExportPekerjaanOnProgress', compact('data','project'));
 
     }
 

@@ -313,7 +313,7 @@ function getLatters($name)
             return $latter;
             break;
 
-        case 'LAIN-LAIN':
+        case 'LAIN - LAIN':
             $latter = 'G';
             return $latter;
             break;

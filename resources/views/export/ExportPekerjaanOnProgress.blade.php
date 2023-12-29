@@ -71,14 +71,6 @@
             <td colspan="9" style="font-weight: bold; border:20px medium black;"  height="20">&nbsp;{{ $index }}</td>
         </tr>
        @foreach ($item as $indexs => $items)
-                @php
-                    // $subkategori = $items->subkategori_concat;
-                    if ($prevIndex !== $indexs) {
-                        $subCount = 1;
-                    } else {
-                        $subCount++;
-                    }
-                @endphp
                 <tr style="font-size: 8px;">
                     <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                     <td height="20"></td>
@@ -92,7 +84,7 @@
                     <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 </tr>
                 <tr style="font-size: 8px;">
-                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ getLatters($index) }}.{{ $subCount }}.</td>
+                    <td class="text-center" height="20" style="border-right: 20px medium black;border-left: 20px medium black;">{{ getLatters($index) }}.{{ $loop->iteration }}.</td>
                     <td height="20">&nbsp;
                         <strong>{{ $indexs }}</strong>
                     </td>
@@ -105,7 +97,6 @@
                     <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                     <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
                 </tr>
-
                 @foreach ($items as $keys => $value)
                     <tr style="font-size: 8px; border:20px medium black;">
                         <td height="20" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
@@ -216,7 +207,6 @@
                     </tr>
                 @endif
                 @php
-                    $prevIndex = $index;
                     $count++
                 @endphp
        @endforeach

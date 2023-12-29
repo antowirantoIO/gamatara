@@ -125,8 +125,13 @@ body{
     color: #fff;
 }
 
+
+
+.draggable-row .select2-container--bootstrap-5 {
+    max-width: 200px;
+}
 .draggable-row .select2-container--bootstrap-5 .select2-selection {
-    width: 200px;
+    max-width: 200px;
 }
 
 .draggable-row .sorting_disabled {

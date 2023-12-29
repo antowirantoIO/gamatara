@@ -9,11 +9,11 @@ class Vendor extends Model
 {
     protected $table = 'vendor';
     protected $guarded = [];
-    protected $primaryKey = 'id'; 
+    protected $primaryKey = 'id';
 
     public function kategori()
     {
-        return $this->belongsTo(kategoriVendor::class ,'kategori_vendor','id');
+        return $this->belongsTo(KategoriVendor::class ,'kategori_vendor','id');
     }
 
     public function projectPekerjaan()
@@ -57,5 +57,5 @@ class Vendor extends Model
             });
         });
     }
-    
+
 }

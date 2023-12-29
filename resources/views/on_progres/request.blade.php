@@ -150,8 +150,9 @@
 
                 @foreach ($pekerjaans as $sp)
                     var pe = {!! json_encode($sp->id) !!};
+                    var nama_pekerjaan = {!! json_encode($sp->name) !!};
                     var selected = `${id ? (id === pe ? 'selected' : '') : ''}`;
-                    select += `<option ${selected} value="${pe}">{{ $sp->name }}</option>`;
+                    select += `<option ${selected} value="${pe}">${nama_pekerjaan}</option>`;
                 @endforeach
 
                 select += `</select>`;

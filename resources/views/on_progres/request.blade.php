@@ -60,7 +60,7 @@
                                             <table class="table" id="tablePekerjaan">
                                                 <thead style="background-color:#194BFB; color: white;">
                                                     <tr>
-                                                        <th>Job</th>
+                                                        <th style="width: 200px">Job</th>
                                                         <th style="width: 200px">Description</th>
                                                         <th style="width: 200px">Location</th>
                                                         <th style="width: 200px">Detail / Other</th>
@@ -150,9 +150,9 @@
 
                 @foreach ($pekerjaans as $sp)
                     var pe = {!! json_encode($sp->id) !!};
-                    var nama_pekerjaan = {!! json_encode($sp->name) !!};
                     var selected = `${id ? (id === pe ? 'selected' : '') : ''}`;
-                    select += `<option ${selected} value="${pe}">${nama_pekerjaan}</option>`;
+                    var name_pekerjaan = {!! json_encode($sp->name) !!};
+                    select += `<option ${selected} value="${pe}">${name_pekerjaan}</option>`;
                 @endforeach
 
                 select += `</select>`;
@@ -236,8 +236,7 @@
                             let id_pekerjaan = data.id_pekerjaan || '';
                             var keys = data.DT_RowIndex;
                             return pekerjaan(id_pekerjaan, keys);
-                        },
-                        width: "200px"
+                        }
                     },
                     {
                         data : function (data) {

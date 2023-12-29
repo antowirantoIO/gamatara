@@ -141,7 +141,14 @@ class CompleteController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
                             ->addColumn('subkategori',function($data){
-                                return strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan' ? ($data->deskripsi_subkategori ? $data->subKategori->name . ' ' .  $data->deskripsi_subkategori : $data->subKategori->name) : $data->subKategori->name ;
+                                $subKategoriName = strtolower($data->subKategori->name);
+                                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                                    return $data->deskripsi_subkategori
+                                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                                        : $data->subKategori->name . ' ' . '';
+                                } else {
+                                    return $data->subKategori->name;
+                                }
                             })
                             ->addColumn('action', function($data) {
                                return ' <div class="d-flex justify-contetn-center gap-3">
@@ -585,8 +592,11 @@ class CompleteController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -698,8 +708,11 @@ class CompleteController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -738,8 +751,11 @@ class CompleteController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -776,8 +792,11 @@ class CompleteController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }

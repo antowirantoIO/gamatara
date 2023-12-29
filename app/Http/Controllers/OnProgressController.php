@@ -141,7 +141,15 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
                             ->addColumn('subkategori',function($data){
-                                return strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan' ? ($data->deskripsi_subkategori ? $data->subKategori->name . ' ' .  $data->deskripsi_subkategori : $data->subKategori->name) : $data->subKategori->name ;
+                                $subKategoriName = strtolower($data->subKategori->name);
+
+                                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                                    return $data->deskripsi_subkategori
+                                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                                        : $data->subKategori->name . ' ' . '';
+                                } else {
+                                    return $data->subKategori->name;
+                                }
                             })
                             ->addColumn('action', function($data) {
                                return ' <div class="d-flex justify-contetn-center gap-3">
@@ -214,7 +222,6 @@ class OnProgressController extends Controller
         }
 
         $pekerjaans = Pekerjaan::all();
-
         return view('on_progres.request',compact('id','works','vendor','pekerjaan','kategori_id','subkategori_id','subkategori','settingPekerjaan','desc','kategori','pekerjaans','subKategori','kode_unik'));
     }
 
@@ -764,8 +771,11 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -804,8 +814,11 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -871,8 +884,11 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -920,8 +936,11 @@ class OnProgressController extends Controller
 
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }
@@ -941,8 +960,11 @@ class OnProgressController extends Controller
             $data = $data->unique('id_vendor');
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
-                if ($data->subKategori->name === 'Telah dilaksanakan pekerjaan') {
-                    return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
+                $subKategoriName = strtolower($data->subKategori->name);
+                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                    return $data->deskripsi_subkategori
+                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
+                        : $data->subKategori->name . ' ' . '';
                 } else {
                     return $data->subKategori->name;
                 }

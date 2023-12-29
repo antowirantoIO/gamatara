@@ -13,7 +13,7 @@ class Vendor extends Model
 
     public function kategori()
     {
-        return $this->belongsTo(kategoriVendor::class ,'kategori_vendor','id');
+        return $this->belongsTo(KategoriVendor::class ,'kategori_vendor','id');
     }
 
     public function projectPekerjaan()

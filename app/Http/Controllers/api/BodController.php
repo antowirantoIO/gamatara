@@ -69,49 +69,49 @@ class BodController extends Controller
 
             $dataArray = $dataArray->sortByDesc('jumlah_tagihan')->values();
 
-            
+
             // $data = Customer::select('id', 'name')->has('projects')
             //     ->with('projects', 'projects.progress:harga_customer,qty,id_project')
             //     ->filter($request)
             //     ->get();
-            
+
             // $dataArray = $data->map(function ($value) {
             //     $result = [
             //         'id' => $value->id,
             //         'name' => $value->name,
             //     ];
-            
+
             //     if ($value->projects) {
             //         $result['jumlah_project'] = $value->projects->count();
             //     } else {
             //         $result['jumlah_project'] = 0;
             //     }
-            
+
             //     $jumlah_tagihan = 0;
-            
+
             //     if ($value->projects) {
             //         foreach ($value->projects as $values) {
             //             foreach ($values->progress as $project) {
             //                 $progress = $project ?? null;
-            
+
             //                 if ($progress) {
             //                     $jumlah_tagihan += $progress->harga_customer * $progress->qty;
             //                 }
             //             }
             //         }
             //     }
-            
+
             //     $result['jumlah_tagihan'] = 'Rp ' . number_format($jumlah_tagihan, 0, ',', '.');
-            
+
             //     return $result;
             // });
-            
+
             // $dataArray = collect($dataArray)->sortByDesc('jumlah_tagihan')->values();
-            
+
             $total = $dataArray->count();
             $start = ($page - 1) * $perPage;
             $currentPageItems = $dataArray->slice($start, $perPage)->values();
-            
+
             $paginator = new LengthAwarePaginator(
                 $currentPageItems,
                 $total,
@@ -129,7 +129,7 @@ class BodController extends Controller
             }else{
                 $tahun = now()->format('Y');
             }
-            
+
             $totalHargaPerBulan = array_fill(0, 12, 0);
 
             $datas = ProjectPekerjaan::selectRaw('MONTH(created_at) as month, SUM(harga_customer * qty) as total_harga')
@@ -140,17 +140,17 @@ class BodController extends Controller
 
                 $totalHarga = [];
 
-            
+
             foreach ($datas as $item) {
                 $totalHargaPerBulan[$item->month - 1] = $item->total_harga;
             }
-            
+
             for ($i = 0; $i < 12; $i++) {
                 if (!isset($totalHargaPerBulan[$i])) {
                     $totalHargaPerBulan[$i] = 0;
                 }
             }
-            
+
             $arrayChart = json_encode($totalHargaPerBulan, JSON_NUMERIC_CHECK);
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $paginator,'chart'=> $arrayChart]);
@@ -169,7 +169,7 @@ class BodController extends Controller
                     ->with('projectPekerjaan:id,harga_vendor,qty,id_project,id_vendor')
                     ->filter($request)
                     ->get();
-        
+
             foreach($data as $value){
                 if($value->projects)
                 {
@@ -179,22 +179,22 @@ class BodController extends Controller
                 }
 
                 $jumlah_tagihan = 0;
-            
+
                 foreach ($value->projectPekerjaan as $project) {
                     $progress = $project ?? null;
-        
+
                     if ($progress) {
                         $jumlah_tagihan += $progress->harga_vendor * $progress->qty;
                     }
                 }
-            
+
                 $value['jumlah_tagihan'] = 'Rp '. number_format($jumlah_tagihan, 0, ',', '.');
             }
 
             $total = $data->count();
             $start = ($page - 1) * $perPage;
             $currentPageItems = $data->slice($start, $perPage)->values();
-            
+
             $paginator = new LengthAwarePaginator(
                 $currentPageItems,
                 $total,
@@ -262,12 +262,12 @@ class BodController extends Controller
                     $item['onprogress'] = $item->projects->where('status', 1)->count();
                     $item['complete'] = $item->projects->where('status', 2)->count();
                 }
-            }            
-            
+            }
+
             $total = $data->count();
             $start = ($page - 1) * $perPage;
             $currentPageItems = $data->slice($start, $perPage)->values();
-            
+
             $paginator = new LengthAwarePaginator(
                 $currentPageItems,
                 $total,
@@ -278,7 +278,7 @@ class BodController extends Controller
                     'pageName' => 'page',
                 ]
             );
-      
+
             $chart = OnRequest::select('pm_id', 'status','created_at')
                     ->with(['pm','pm.karyawan'])
                     ->whereYear('created_at',$tahun)
@@ -287,11 +287,11 @@ class BodController extends Controller
             $chartData = $chart->groupBy('pm_id')->map(function ($groupedData) {
                 $onProgressCount = $groupedData->where('status', 1)->count();
                 $completeCount = $groupedData->where('status', 2)->count();
-            
+
                 $employeeName = optional(optional($groupedData->first())->pm)->karyawan
                                 ? $groupedData->first()->pm->karyawan->name
                                 : '-';
-            
+
                 return [
                     'name' => $employeeName,
                     'on_progress' => $onProgressCount,
@@ -310,9 +310,9 @@ class BodController extends Controller
         try{
             $data = OnRequest::with(['complaint','customer:id,name'])
                 ->select('A.nama_project', 'A.created_at', 'A.id','A.id_customer',
-                    DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'), 
+                    DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'),
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
-                ->from('Project as A')
+                ->from('project as A')
                 ->leftJoin('project_pekerjaan as b', 'A.id', '=', 'b.id_project')
                 ->where('A.status', 1)
                 ->groupBy('A.id', 'A.nama_project', 'A.created_at', 'A.id_customer', 'A.status')
@@ -330,7 +330,7 @@ class BodController extends Controller
                     $status = 2;
                 } elseif ($item->complaint->where('id_bod_approval', '!=', null)->count() == $item->complaint->count()) {
                     $status = 3;
-                }               
+                }
 
                 $item->status_project = $status;
             }
@@ -343,11 +343,11 @@ class BodController extends Controller
 
     public function detailBOD(Request $request)
     {
-        try{                  
+        try{
             $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon','pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
-         
+
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -366,7 +366,7 @@ class BodController extends Controller
                     ->select('id_vendor')
                     ->groupBy('id_vendor')
                     ->get();
-                
+
             $kategori = Kategori::get();
 
             $progress = ProjectPekerjaan::where('id_project', $request->id)
@@ -375,25 +375,25 @@ class BodController extends Controller
                         ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as total_status_2')
                         ->groupBy('id_kategori')
                         ->get();
-            
+
             $progressByKategori = [];
-            
+
             foreach ($progress as $item) {
                 $progressByKategori[$item->id_kategori] = [
                     'total_status_1' => $item->total_status_1,
                     'total_status_2' => $item->total_status_2,
                 ];
             }
-            
+
             foreach ($kategori as $item) {
                 $kategoriProgress = $progressByKategori[$item->id] ?? [
                     'total_status_1' => 0,
                     'total_status_2' => 0,
                 ];
-            
+
                 $item->progress = $kategoriProgress['total_status_2'] . ' / ' . $kategoriProgress['total_status_1'];
             }
-                    
+
             $data['name'] = $data->projects->nama_project ?? '';
             $data['vendor'] = count($vendor);
             $data['kategori'] = $kategori;
@@ -408,7 +408,7 @@ class BodController extends Controller
     {
         try{
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
-            $namakategori = $name->first()->kategori->name ?? '';            
+            $namakategori = $name->first()->kategori->name ?? '';
 
             $progress = ProjectPekerjaan::with(['vendors:id,name'])->select('project_pekerjaan.deskripsi_subkategori','project_pekerjaan.kode_unik', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','project_pekerjaan.deskripsi_subkategori','id_vendor')
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
@@ -417,11 +417,11 @@ class BodController extends Controller
                     ->groupBy('sub_kategori.name', 'project_pekerjaan.deskripsi_subkategori','project_pekerjaan.kode_unik','project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','id_vendor')
                     ->filter($request)
                     ->get();
-        
+
             foreach ($progress as $item) {
                 $item->nama_vendor = $item->vendors->name ?? '';
                 $item->name = ($item->subkategori->name ?? '') . " " . ($item->deskripsi_subkategori ?? '');
-        
+
                 if ($item->status == 1) {
                     $status = '';
                 } elseif ($item->status == 2) {
@@ -429,7 +429,7 @@ class BodController extends Controller
                 } elseif ($item->status == 3) {
                     $status = 'Done';
                 }
-        
+
                 $item->status = $status;
             }
 
@@ -446,8 +446,8 @@ class BodController extends Controller
                     'id'   => $v->vendors->id ?? '',
                     'name' => $v->vendors->name ?? '',
                 ];
-            }            
-         
+            }
+
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress , 'list_vendor' => $list_vendor]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -468,8 +468,8 @@ class BodController extends Controller
                         ->where('kode_unik', $request->kode_unik)
                         ->first();
 
-            $kategori = SubKategori::find($pekerjaan->id_subkategori);   
-            
+            $kategori = SubKategori::find($pekerjaan->id_subkategori);
+
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','deskripsi_subkategori','kode_unik','length','width','thick','amount','unit')
                     ->where('id_project', $request->id_project)
                     ->where('kode_unik', $request->kode_unik)
@@ -482,7 +482,7 @@ class BodController extends Controller
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
-         
+
             return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name." ".$pekerjaan->deskripsi_subkategori , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

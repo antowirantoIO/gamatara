@@ -23,9 +23,9 @@ class ProjectEngineerController extends Controller
         try{
             $data = OnRequest::with(['complaint','customer:id,name'])
                 ->select('A.nama_project', 'A.created_at', 'A.id','A.id_customer',
-                    DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'), 
+                    DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE status = 3 AND id_project = A.id) AS done'),
                     DB::raw('(SELECT COUNT(id_Pekerjaan) FROM project_pekerjaan WHERE id_project = A.id) AS total'), 'A.status')
-                ->from('Project as A')
+                ->from('project as A')
                 ->leftJoin('project_pekerjaan as b', 'A.id', '=', 'b.id_project')
                 ->where('A.pe_id_1', $request->pe_id)
                 ->groupBy('A.id', 'A.nama_project', 'A.created_at', 'A.id_customer', 'A.status')
@@ -56,11 +56,11 @@ class ProjectEngineerController extends Controller
 
     public function detailPE(Request $request)
     {
-        try{                  
+        try{
             $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon','pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
-         
+
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -91,25 +91,25 @@ class ProjectEngineerController extends Controller
                         ->selectRaw('SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as total_status_2')
                         ->groupBy('id_kategori')
                         ->get();
-            
+
             $progressByKategori = [];
-            
+
             foreach ($progress as $item) {
                 $progressByKategori[$item->id_kategori] = [
                     'total_status_1' => $item->total_status_1,
                     'total_status_2' => $item->total_status_2,
                 ];
             }
-            
+
             foreach ($kategori as $item) {
                 $kategoriProgress = $progressByKategori[$item->id] ?? [
                     'total_status_1' => 0,
                     'total_status_2' => 0,
                 ];
-            
+
                 $item->progress = $kategoriProgress['total_status_2'] . ' / ' . $kategoriProgress['total_status_1'];
             }
-                    
+
             $data['name'] = $data->projects->nama_project ?? '';
             $data['vendor'] = count($vendor);
             $data['kategori'] = $kategori;
@@ -124,7 +124,7 @@ class ProjectEngineerController extends Controller
     {
         try{
             $name = SubKategori::where('id_kategori', $request->id_kategori)->get();
-            $namakategori = $name->first()->kategori->name ?? '';            
+            $namakategori = $name->first()->kategori->name ?? '';
 
             $progress = ProjectPekerjaan::with(['vendors:id,name'])->select('project_pekerjaan.deskripsi_subkategori','project_pekerjaan.kode_unik', 'sub_kategori.name', DB::raw('count(project_pekerjaan.id_pekerjaan) as total'),'project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','project_pekerjaan.deskripsi_subkategori','id_vendor')
                     ->join('sub_kategori', 'project_pekerjaan.id_subkategori', '=', 'sub_kategori.id')
@@ -133,11 +133,11 @@ class ProjectEngineerController extends Controller
                     ->groupBy('sub_kategori.name', 'project_pekerjaan.deskripsi_subkategori','project_pekerjaan.kode_unik','project_pekerjaan.id_subkategori', 'project_pekerjaan.status','project_pekerjaan.id_project','id_vendor')
                     ->filter($request)
                     ->get();
-        
+
             foreach ($progress as $item) {
                 $item->nama_vendor = $item->vendors->name ?? '';
                 $item->name = ($item->subkategori->name ?? '') . " " . ($item->deskripsi_subkategori ?? '');
-        
+
                 if ($item->status == 1) {
                     $status = '';
                 } elseif ($item->status == 2) {
@@ -145,10 +145,10 @@ class ProjectEngineerController extends Controller
                 } elseif ($item->status == 3) {
                     $status = 'Done';
                 }
-        
+
                 $item->status = $status;
             }
-         
+
             $list_vendor = ProjectPekerjaan::has('vendors')
             ->with(['vendors:id,name'])
             ->select('id_vendor')
@@ -162,8 +162,8 @@ class ProjectEngineerController extends Controller
                     'id'   => $v->vendors->id ?? '',
                     'name' => $v->vendors->name ?? '',
                 ];
-            }            
-     
+            }
+
             return response()->json(['success' => true, 'message' => 'success', 'namakategori' => $namakategori , 'subkategori' => $progress , 'list_vendor' => $list_vendor]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -182,8 +182,8 @@ class ProjectEngineerController extends Controller
             $pekerjaan = ProjectPekerjaan::where('id_project', $request->id_project)
             ->where('kode_unik', $request->kode_unik)
             ->first();
-    
-            $kategori = SubKategori::find($pekerjaan->id_subkategori);   
+
+            $kategori = SubKategori::find($pekerjaan->id_subkategori);
 
             $data = ProjectPekerjaan::with('vendors:id,name')->select('id','id_pekerjaan','id_vendor','length','unit','status','deskripsi_pekerjaan','deskripsi_subkategori','kode_unik','length','width','thick','amount','unit')
                     ->where('id_project', $request->id_project)
@@ -197,7 +197,7 @@ class ProjectEngineerController extends Controller
                 $item['nama_vendor'] = $item->vendors->name ?? '';
                 $item['ukuran'] = $item->length ." ". $item->unit;
             }
-         
+
             return response()->json(['success' => true, 'message' => 'success', 'kategori' => $kategori->kategori->name ,'subkategori' => $kategori->name." ".$pekerjaan->deskripsi_subkategori , 'data' => $data, 'before' => $beforePhoto, 'after' => $afterPhoto]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -219,7 +219,7 @@ class ProjectEngineerController extends Controller
                 $pekerjaan->save();
             }
         } else {
- 
+
         }
 
         if($request->file('before')){
@@ -227,11 +227,11 @@ class ProjectEngineerController extends Controller
                 if ($before && $before->isValid()) {
                     $filename = 'before' . time() . rand(1, 9999) . '.' . $before->getClientOriginalExtension();
                     $destinationPath = 'uploads/images';
-            
+
                     if (!File::isDirectory($destinationPath)) {
                         File::makeDirectory($destinationPath, 0755, true, true);
                     }
-            
+
                     $before->move($destinationPath, $filename);
                     $destination =  $destinationPath . '/' . $filename;
                 }
@@ -243,17 +243,17 @@ class ProjectEngineerController extends Controller
                 $befores->save();
             }
         }
-    
+
         if($request->file('after')){
             foreach ($afterFiles as $after) {
                 if ($after && $after->isValid()) {
                     $filename = 'after' . time() . rand(1, 9999) . '.' . $after->getClientOriginalExtension();
                     $destinationPath = 'uploads/images';
-            
+
                     if (!File::isDirectory($destinationPath)) {
                         File::makeDirectory($destinationPath, 0755, true, true);
                     }
-            
+
                     $after->move($destinationPath, $filename);
                     $destination =  $destinationPath . '/' . $filename;
                 }

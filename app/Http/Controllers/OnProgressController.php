@@ -143,7 +143,7 @@ class OnProgressController extends Controller
                             ->addColumn('subkategori',function($data){
                                 $subKategoriName = strtolower($data->subKategori->name);
 
-                                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                                     return $data->deskripsi_subkategori
                                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                                         : $data->subKategori->name . ' ' . '';
@@ -454,7 +454,7 @@ class OnProgressController extends Controller
                                     ->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
-                if (strtolower($data->subKategori->name) === 'telah dilaksanakan pekerjaan') {
+                if (strtolower($data->subKategori->name) === 'telah dilaksanakan') {
                     return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
                 } else {
                     return $data->subKategori->name;
@@ -772,7 +772,7 @@ class OnProgressController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -815,7 +815,7 @@ class OnProgressController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -885,7 +885,7 @@ class OnProgressController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -937,7 +937,7 @@ class OnProgressController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -961,7 +961,7 @@ class OnProgressController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';

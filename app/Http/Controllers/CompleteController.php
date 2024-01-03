@@ -142,7 +142,7 @@ class CompleteController extends Controller
             return DataTables::of($data)->addIndexColumn()
                             ->addColumn('subkategori',function($data){
                                 $subKategoriName = strtolower($data->subKategori->name);
-                                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                                     return $data->deskripsi_subkategori
                                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                                         : $data->subKategori->name . ' ' . '';
@@ -593,7 +593,7 @@ class CompleteController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -709,7 +709,7 @@ class CompleteController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -752,7 +752,7 @@ class CompleteController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('subKategori', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';
@@ -793,7 +793,7 @@ class CompleteController extends Controller
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {
                 $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan pekerjaan')) {
+                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
                     return $data->deskripsi_subkategori
                         ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
                         : $data->subKategori->name . ' ' . '';

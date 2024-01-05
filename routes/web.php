@@ -257,7 +257,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('pekerjaan-vendor')->group(function(){
             Route::get('all-data/{id}/{idProject}',[OnProgressController::class,'allPekerjaanVendor'])->name('on_progress.pekerjaan-vendor.all');
-            Route::get('vendor-worker/{id}/{idProject}/{subKategori}/{idKategori}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
+            Route::get('vendor-worker/{id}/{idProject}/{subKategori}/{idKategori}/{kodeUnik}',[OnProgressController::class,'vendorWorker'])->name('on_progres.vendor-worker');
             Route::get('detail-vendor-worker/{id}',[OnProgressController::class,'detailVendorWorker'])->name('on_progres.detail-vendor-worker');
             Route::post('update',[OnProgressController::class,'updateVendorWork'])->name('on_progress.pekerjaan-vendor.update');
         });

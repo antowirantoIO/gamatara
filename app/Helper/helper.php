@@ -65,7 +65,7 @@ function getProgressAll($id, $idKategori, $idsubkategori, $status = null)
     return $pekerjaan;
 }
 
-function getProgress($id, $idKategori,$idvendor,$idsubkategori, $status=null)
+function getProgress($id, $idKategori,$idvendor,$idsubkategori, $status=null, $kode_unik)
 {
     if($status !== null){
         $pekerjaan = ProjectPekerjaan::where('id_project',$id)
@@ -73,6 +73,7 @@ function getProgress($id, $idKategori,$idvendor,$idsubkategori, $status=null)
                                     ->where('id_vendor',$idvendor)
                                     ->where('id_subkategori',$idsubkategori)
                                     ->where('status', $status)
+                                    ->where('kode_unik',$kode_unik)
                                     ->whereNotNull(['id_pekerjaan'])
                                     ->count();
     }else{
@@ -80,6 +81,7 @@ function getProgress($id, $idKategori,$idvendor,$idsubkategori, $status=null)
                                     ->where('id_kategori',$idKategori)
                                     ->where('id_subkategori',$idsubkategori)
                                     ->where('id_vendor',$idvendor)
+                                    ->where('kode_unik',$kode_unik)
                                     ->whereNotNull(['id_pekerjaan'])
                                     ->count();
     }

@@ -263,6 +263,7 @@
                         d.id_lokasi = $('#id_lokasi').val();
                         d.id_subkategori = '{{ $subkategori }}'
                         d.id_pekerjaan = $('#id_pekerjaan').val();
+                        d.kode_unik = '{{ $kodeUnik }}'
                     }
                 },
 
@@ -353,7 +354,8 @@
                         d.id =  '{{ $idProject }}',
                         d.id_kategori = '{{ $idkategori }}',
                         d.id_subkategori = '{{ $subkategori }}',
-                        d.id_vendor = '{{ $id }}'
+                        d.id_vendor = '{{ $id }}',
+                        d.kode_unik = '{{ $kodeUnik }}'
                     }
                 },
                 columns : [

@@ -90,7 +90,7 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Job Name</label>
+                            <label for="sub_kategori" class="form-label">Sub Kategori</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
                                 <option value="">Choose Jobs</option>
                                 @foreach($subKategori as $sub)
@@ -133,6 +133,7 @@
 
             $('.form-select').select2({
                 theme : "bootstrap-5",
+                dropdownParent: $("#modalFillter"),
                 search: true
             });
 

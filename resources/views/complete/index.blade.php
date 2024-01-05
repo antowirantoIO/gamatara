@@ -130,6 +130,7 @@
 
         $('.form-select').select2({
             theme : "bootstrap-5",
+            dropdownParent: $("#modalFillter"),
             search: true
         });
 

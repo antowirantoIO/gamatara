@@ -453,13 +453,9 @@ class OnProgressController extends Controller
                                     ->with(['vendors','subKategori','pekerjaan'])
                                     ->get();
             return DataTables::of($data)->addIndexColumn()
-            // ->addColumn('pekerjaan', function($data) {
-            //     if (strtolower($data->subKategori->name) === 'telah dilaksanakan') {
-            //         return $data->subKategori->name . ' ' . $data->deskripsi_subkategori;
-            //     } else {
-            //         return $data->subKategori->name;
-            //     }
-            // })
+            ->addColumn('pekerjaan', function($data) {
+                return $data->pekerjaan ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name .' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan_name;
+            })
             ->addColumn('length', function($data){
                 return $data->length ?  number_format($data->length,2, '.','') : 0 ;
             })

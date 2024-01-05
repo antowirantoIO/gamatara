@@ -28,7 +28,7 @@
                                     <div class="row gy-4">
                                     <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="customer" class="form-label">Nama Customer</label>
+                                                <label for="customer" class="form-label">Vendor Name</label>
                                                 <input type="text" name="name" value="{{$data->name}}" id="name" class="form-control" placeholder="Enter Nama Customer">
                                                 @if ($errors->has('name'))
                                                     <span class="text-danger">{{ $errors->first('name') }}</span>
@@ -46,7 +46,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="alamat" class="form-label">Alamat</label>
+                                                <label for="alamat" class="form-label">Address</label>
                                                 <input type="text" name="alamat"id="alamat" value="{{$data->alamat}}" class="form-control" placeholder="Enter Address">
                                                 @if ($errors->has('alamat'))
                                                     <span class="text-danger">{{ $errors->first('alamat') }}</span>
@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
-                                                <label for="nomor_contact_person" class="form-label">Nomor Contact Person</label>
+                                                <label for="nomor_contact_person" class="form-label">Contact Person Phone</label>
                                                 <input type="number" class="form-control" name="nomor_contact_person"  id="nomor_contact_person" value="{{$data->nomor_contact_person}}" maxlength="13" placeholder="Enter Contact Person Phone" oninput="this.value=this.value.slice(0,this.maxLength)">
                                                 @if ($errors->has('nomor_contact_person'))
                                                     <span class="text-danger">{{ $errors->first('nomor_contact_person') }}</span>
@@ -84,7 +84,7 @@
                                             <div>
                                                 <label for="kategori_vendor">Category Vendor</label>
                                                 <select name="kategori_vendor" id="kategori_vendor" class="form-control">
-                                                    <option value="">Pilih Vendor</option>
+                                                    <option value="">Choose Category Vendor</option>
                                                     @foreach($kategori_vendor as $k)
                                                         <option value="{{ $k->id }}" {{ $k->id == $data->kategori_vendor ? 'selected' : '' }}>{{$k->name}}</option>
                                                     @endforeach

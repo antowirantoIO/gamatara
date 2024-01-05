@@ -18,20 +18,32 @@ class KeluhanController extends Controller
     {        
         if($request->keluhanId == null)
         {
-            $code = 'SPK'.'/'.'GTS'.'/'.now()->format('Y')."/".now()->format('m').'/';
-            $projectCode = Keluhan::where('no_spk', 'LIKE', '%'.$code.'%')->count();
-            $randInt = '001';
-            if ($projectCode >= 1) {
-                $count = $projectCode+1;
-                $randInt = str_pad($count, 3, '0', STR_PAD_LEFT);
+            $code = 'SPK' . '/' . 'GTS' . '/' . now()->format('Y') . '/' . now()->format('m') . '/';
+            $existingNumbers = Keluhan::where('no_spk', 'LIKE', '%' . $code . '%')->pluck('no_spk')->toArray();
+
+            $maxNumber = 0;
+            foreach ($existingNumbers as $existingNumber) {
+                $number = intval(substr($existingNumber, -3));
+                $maxNumber = max($maxNumber, $number);
             }
-            $randInt = substr($randInt, -5);
+
+            $newNumber = str_pad($maxNumber + 1, 3, '0', STR_PAD_LEFT);
+
+            $newNoSpk = $code . $newNumber;
+         
+            // $randInt = '001';
+            // if ($projectCode >= 1) {
+            //     $count = $projectCode+1;
+            //     $randInt = str_pad($count, 3, '0', STR_PAD_LEFT);
+            // }
+            // $randInt = substr($randInt, -5);
 
             $keluhan                = new Keluhan();
             $keluhan->on_request_id = $request->id;
             $keluhan->id_vendor     = $request->vendor;
             $keluhan->keluhan       = str_replace('\n', '<br/>', $request->input('keluhan'));
-            $keluhan->no_spk        = $code.$randInt;
+            $keluhan->no_spk        = $newNoSpk;
+            // $keluhan->no_spk        = $code.$randInt;
             $keluhan->save();
 
             return response()->json([

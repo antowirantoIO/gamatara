@@ -85,7 +85,7 @@
                                             <div>
                                                 <label for="kategori_vendor">Category Vendor</label>
                                                 <select name="kategori_vendor" id="kategori_vendor" class="form-control">
-                                                    <option value="">Pilih Vendor</option>
+                                                    <option value="">Choose Category Vendor</option>
                                                     @foreach($kategori_vendor as $k)
                                                         <option value="{{ $k->id }}"  {{ $k->id == old('kategori_vendor') ? 'selected' : '' }}>{{ $k->name }}</option>
                                                     @endforeach

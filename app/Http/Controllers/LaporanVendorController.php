@@ -10,6 +10,7 @@ use App\Exports\ExportReportVendor;
 use App\Models\Vendor;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
+use App\Models\KategoriVendor;
 use DB;
 
 class LaporanVendorController extends Controller
@@ -26,6 +27,9 @@ class LaporanVendorController extends Controller
             $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
                 $innerQuery->where('id_project', $request->project_id);
             });
+        })
+        ->when($request->filled('kategori_vendor'), function ($query) use ($request) {
+            $query->where('kategori_vendor', $request->kategori_vendor);
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
             list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
@@ -55,9 +59,11 @@ class LaporanVendorController extends Controller
             if($value->projectPekerjaan)
             {
                 $value['total_project'] = $value->projectPekerjaan->count();
+                $value['nilai'] = $value->projectPekerjaan->sum('amount');
                 $value['detail_url'] = route('laporan_vendor.detail', $value->id);
             }else{
                 $value['total_project'] = 0;
+                $value['nilai'] = 0;
             }
 
             $value['eye_image_url'] = "/assets/images/eye.svg";
@@ -86,8 +92,9 @@ class LaporanVendorController extends Controller
         
         $vendors = Vendor::has('projectPekerjaan')->get();
         $project = OnRequest::get();
+        $kategori_vendor = KategoriVendor::get();
 
-        return view('laporan_vendor.index', compact('vendors','datas','project'));
+        return view('laporan_vendor.index', compact('vendors','datas','project','kategori_vendor'));
         
     }
 
@@ -109,6 +116,11 @@ class LaporanVendorController extends Controller
             list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
             return $query->whereBetween('created_at', [$start_date, $end_date]);
         })  
+        ->when($request->filled('kategori_vendor'), function ($query) use ($request) {
+            $query->whereHas('vendors', function ($innerQuery) use ($request) {
+                $innerQuery->where('kategori_vendor', $request->kategori_vendor);
+            });
+        })
         ->when($request->filled('project_id'), function ($query) use ($request) {
             $query->where('id_project', $request->project_id);
         })

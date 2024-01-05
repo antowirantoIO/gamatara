@@ -27,7 +27,7 @@
                         <div class="card-body">
                             <form id="form_filter">
                                 <div class="row">
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label>Report By</label>
                                         <select class="form-control" name="report_by" id="report_by">
                                             <!-- <option value="tanggal">Days</option>-->
@@ -35,7 +35,7 @@
                                             <option value="tahun">Year</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label>Vendor Name</label>
                                         <select class="form-control select2" name="vendor_id" id="vendor_id">
                                             <option value="">-- Select Vendor --</option>
@@ -50,6 +50,15 @@
                                             <option value="">-- Select Project --</option>
                                             @foreach($project as $v)
                                                 <option value="{{ $v->id }}">{{ $v->nama_project }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label>Category Vendor</label>
+                                        <select name="kategori_vendor" id="kategori_vendor" class="form-control select2">
+                                            <option value="">Select Category Vendor</option>
+                                            @foreach($kategori_vendor as $k)
+                                                <option value="{{ $k->id }}">{{ $k->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -79,7 +88,8 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="color:#929EAE">Vendor Name</th>
-                                                <th style="color:#929EAE">Project Total</th>
+                                                <!-- <th style="color:#929EAE">Project Total</th> -->
+                                                <th style="color:#929EAE">Amount</th>
                                                 <th style="color:#929EAE">Bill Value</th>
                                                 <th style="color:#929EAE">Action</th>
                                             </tr>
@@ -87,9 +97,10 @@
                                         <tbody>
                                             @foreach($datas as $d)
                                             <tr>
-                                                <td>{{$d->name}}</td>
-                                                <td>{{$d->total_project}}</td>
-                                                <td>{{$d->nilai_tagihan}}</td>
+                                                <td>{{ $d->name }}</td>
+                                                <!-- <td>{{$d->total_project}}</td> -->
+                                                <td>{{ $d->nilai }}</td>
+                                                <td>{{ $d->nilai_tagihan }}</td>
                                                 <td><a href="{{route('laporan_vendor.detail', $d->id)}}" class="btn btn-warning btn-sm">
                                                 <span>
                                                     <i><img src="{{asset('assets/images/eye.svg')}}" style="width: 15px;"></i>
@@ -171,18 +182,19 @@
             var report_by = $('#report_by').val();
             var vendor_id = $('#vendor_id').val();
             var project_id = $('#project_id').val();
+            var kategori_vendor = $('#kategori_vendor').val();
             var daterange = $('#daterange').val();
 
             $.ajax({
                 url: '{{route('laporan_vendor')}}',
                 type: 'GET',
-                data: { report_by: report_by, vendor_id: vendor_id, project_id: project_id, daterange: daterange},
+                data: { report_by: report_by, vendor_id: vendor_id, kategori_vendor: kategori_vendor, project_id: project_id, daterange: daterange},
                 success: function (response) {
                     table.clear().draw();
                     table.rows.add(response.datas.map(function (item) {
                         return [
                             item.name,
-                            item.total_project,
+                            item.nilai,
                             item.nilai_tagihan,
                             '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +
                             '<span><i><img src="' + item.eye_image_url + '" style="width: 15px;"></i></span>' +

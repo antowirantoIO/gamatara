@@ -449,8 +449,8 @@ class OnProgressController extends Controller
             $data = ProjectPekerjaan::where('id_project',$idProject)
                                     ->where('id_kategori',$id)
                                     ->where('id_subkategori',$subKategori)
-                                    ->whereNotNull(['id_pekerjaan'])
-                                    ->with('vendors','subKategori','pekerjaan')
+                                    ->whereNotNull('id_pekerjaan')
+                                    ->with(['vendors','subKategori','pekerjaan'])
                                     ->get();
             return DataTables::of($data)->addIndexColumn()
             ->addColumn('pekerjaan', function($data) {

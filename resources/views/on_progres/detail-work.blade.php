@@ -155,7 +155,7 @@
                     method : 'GET',
                 },
                 columns : [
-                    { data : 'pekerjaan.name', name : 'pekerjaan.name'},
+                    { data : 'pekerjaan', name : 'pekerjaan.name'},
                     { data : 'id_lokasi', name : 'id_lokasi'},
                     { data : 'detail', name : 'detail'},
                     { data : 'length', name : 'length'},

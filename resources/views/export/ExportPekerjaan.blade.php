@@ -16,8 +16,8 @@
                 <td style="border: 1px solid black;">{{ $item->name }}</td>
                 <td style="border: 1px solid black;">{{ $item->unit ?? '-' }}</td>
                 <td style="border: 1px solid black;">{{ $item->konversi }}</td>
-                <td style="border: 1px solid black;">{{ $item->harga_vendor }}</td>
-                <td style="border: 1px solid black;">{{ $item->harga_customer }}</td>
+                <td style="border: 1px solid black;">{{ number_format($item->harga_vendor, 0, ',', '.') . ',00' }}</td>
+                <td style="border: 1px solid black;">{{ number_format($item->harga_customer, 0, ',', '.') . ',00' }}</td>
             </tr>
        @endforeach
     </tbody>

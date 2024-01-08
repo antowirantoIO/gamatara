@@ -123,7 +123,7 @@ class PekerjaanController extends Controller
 
     public function export(Request $request)
     {
-        $data = Pekerjaan::orderBy('name','desc')
+        $data = Pekerjaan::orderBy('name','asc')
                 ->filter($request)
                 ->get();
 

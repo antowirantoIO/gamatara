@@ -98,7 +98,7 @@ class LokasiProjectController extends Controller
     
     public function export(Request $request)
     {
-        $data = LokasiProject::orderBy('name','desc')
+        $data = LokasiProject::orderBy('name','asc')
                 ->filter($request)
                 ->get();
 

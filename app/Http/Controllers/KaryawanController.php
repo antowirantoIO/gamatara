@@ -118,7 +118,7 @@ class KaryawanController extends Controller
 
     public function export(Request $request)
     {
-        $data = Karyawan::orderBy('name','desc')
+        $data = Karyawan::orderBy('name','asc')
                 ->filter($request)
                 ->get();
 

@@ -132,16 +132,29 @@ class OnRequestController extends Controller
             'jenis_kapal'           => 'required'
         ]);
 
+        // $code = 'PJ' . now()->format('Y') . "-";
+        // $projectCode = OnRequest::where('code', 'LIKE', $code . '%')->count();
+        
+        // $randInt = '0001';
+        // if ($projectCode >= 1) {
+        //     $count = $projectCode + 1;
+        //     $randInt = str_pad($count, 4, '0', STR_PAD_LEFT);
+        // }
+        
+        // $randInt = substr($randInt, -4);
+
         $code = 'PJ' . now()->format('Y') . "-";
-        $projectCode = OnRequest::where('code', 'LIKE', $code . '%')->count();
-        
-        $randInt = '0001';
-        if ($projectCode >= 1) {
-            $count = $projectCode + 1;
-            $randInt = str_pad($count, 4, '0', STR_PAD_LEFT);
+        $existingNumbers = OnRequest::where('code', 'LIKE', $code . '%')->pluck('code')->toArray();
+
+        $maxNumber = 0;
+        foreach ($existingNumbers as $existingNumber) {
+            $number = intval(substr($existingNumber, -3));
+            $maxNumber = max($maxNumber, $number);
         }
-        
-        $randInt = substr($randInt, -4);
+
+        $newNumber = str_pad($maxNumber + 1, 4, '0', STR_PAD_LEFT);
+
+        $newNoSpk = $code . $newNumber;
 
         $getPM = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
         
@@ -151,7 +164,7 @@ class OnRequestController extends Controller
         $pa = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
 
         $data                       = New OnRequest();
-        $data->code                 = $code.$randInt;
+        $data->code                 = $newNoSpk;
         $data->nama_project         = $request->input('nama_project');
         $data->id_customer          = $request->input('id_customer');
         $data->id_lokasi_project    = $request->input('lokasi_project');

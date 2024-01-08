@@ -218,15 +218,12 @@
             })
             $('#btn-search').on('click',function(e){
                 e.preventDefault();
+                // var active = $('.btn-filter-category .active');
+                id_kategori = filterData.category_id;
+                id_project = "{{ $id }}";
+                console.log(id_kategori,id_project);
                 modalInput.modal('hide');
-                var active = $('#myTabContent .tab-pane.active');
-                id_kategori = active.find('.id_kategori.active').val();
-                id_project = active.find('.id_project.active').val();
-
-                var activeTabId = $('#myTab .nav-link.active').attr('id');
-                if (activeTabId === '{{ $key }}-tab') {
-                    table{{ $key }}.draw();
-                }
+                table.draw();
             });
 
 

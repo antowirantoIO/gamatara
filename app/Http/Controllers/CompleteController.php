@@ -524,14 +524,14 @@ class CompleteController extends Controller
         return view('complete.pekerjaan_vendor.index',compact('project','kategori','vendor','subKategori','id','workers'));
     }
 
-    public function pekerjaanVendor(Request $request, $id, $project,$subkategori,$idkategori)
+    public function pekerjaanVendor(Request $request, $id, $project,$subkategori,$idkategori, $kodeUnik)
     {
         $idProject = $project;
         $nama_project = OnRequest::where('id',$project)->pluck('nama_project')->first();
         $nama_vendor = Vendor::where('id',$id)->pluck('name')->first();
         $pekerjaan = Pekerjaan::all();
         $lokasi = LokasiProject::all();
-        return view('complete.pekerjaan_vendor.detail',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi','subkategori','idkategori'));
+        return view('complete.pekerjaan_vendor.detail',compact('idProject','nama_project','nama_vendor','id','pekerjaan','lokasi','subkategori','idkategori','kodeUnik'));
     }
 
     public function setting($id)
@@ -602,7 +602,7 @@ class CompleteController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,3) . ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,null);
+                return getProgressAll($data->id_project,$data->id_kategori,$data->id_subkategori,3) . ' / ' . getProgressAll($data->id_project,$data->id_kategori,$data->id_subkategori,null);
             })
             ->make(true);
         }
@@ -613,7 +613,9 @@ class CompleteController extends Controller
         if($request->ajax()){
             $data = ProjectPekerjaan::with(['pekerjaan','projects','lokasi'])
                                     ->where('id_project',$request->id_project)
-                                    ->where('id_vendor',$request->id_vendor);
+                                    ->where('id_vendor',$request->id_vendor)
+                                    ->where('kode_unik', $request->kode_unik)
+                                    ->filter($request);
 
             if($request->has('id_pekerjaan') && !empty($request->id_pekerjaan)){
                 $data->where('id_pekerjaan',$request->id_pekerjaan);
@@ -772,8 +774,8 @@ class CompleteController extends Controller
                                     ->where('id_kategori', $request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->with(['subKategori', 'vendors'])
-                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
+                                    ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori','kode_unik')
+                                    ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'),'kode_unik')
                                     ->distinct();
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
@@ -802,7 +804,7 @@ class CompleteController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,3). ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,null);
+                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,3, $data->kode_unik). ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,$data->id_subkategori,null, $data->kode_unik);
             })
             ->make(true);
         }

@@ -243,7 +243,7 @@
                     "info": "Displaying _START_ - _END_ of _TOTAL_ result",
                 },
                 ajax : {
-                    url : '{{ route('ajax.vendor') }}',
+                    url : '{{ route('complete.ajax.pekerjaan-vendor') }}',
                     methdo : 'GET',
                     data : function(d){
                         filterSearch        = d.search?.value;
@@ -253,6 +253,7 @@
                         d.id_lokasi         = $('#id_lokasi').val();
                         d.id_subkategori    = '{{ $subkategori }}'
                         d.id_pekerjaan      = $('#id_pekerjaan').val();
+                        d.kode_unik         = '{{ $kodeUnik }}'
                     }
                 },
 
@@ -346,7 +347,8 @@
                         d.id =  '{{ $idProject }}',
                         d.id_kategori = '{{ $idkategori }}',
                         d.id_subkategori = '{{ $subkategori }}',
-                        d.id_vendor = '{{ $id }}'
+                        d.id_vendor = '{{ $id }}',
+                        d.kode_unik = '{{ $kodeUnik }}'
                     }
                 },
                 columns : [

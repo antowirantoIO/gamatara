@@ -370,7 +370,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('pekerjaan-vendor')->group(function(){
             Route::get('all-data/{id}/{idProject}',[CompleteController::class,'allPekerjaanVendor'])->name('complete.pekerjaan-vendor.all');
-            Route::get('detail/{id}/{idProject}/{subKategori}/{idKategori}',[CompleteController::class,'pekerjaanVendor'])->name('complete.pekerjaan-vendor');
+            Route::get('detail/{id}/{idProject}/{subKategori}/{idKategori}/{kodeUnik}',[CompleteController::class,'pekerjaanVendor'])->name('complete.pekerjaan-vendor');
         });
     });
 

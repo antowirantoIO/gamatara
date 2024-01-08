@@ -135,7 +135,7 @@ class RoleController extends Controller
 
     public function export(Request $request)
     {
-        $data = Roles::orderBy('name','desc')
+        $data = Roles::orderBy('name','asc')
                 ->filter($request)
                 ->get();
 

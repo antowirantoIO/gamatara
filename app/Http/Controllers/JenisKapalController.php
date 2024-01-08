@@ -98,7 +98,7 @@ class JenisKapalController extends Controller
     
     public function export(Request $request)
     {
-        $data = JenisKapal::orderBy('name','desc')
+        $data = JenisKapal::orderBy('name','asc')
                 ->filter($request)
                 ->get();
 

@@ -1,7 +1,7 @@
 <table border="1">
     <thead>
         <tr>
-            <th colspan="4" height="30" align="center"><strong>Report Project Location - {{ ucwords($data->first()->customer->name ?? '') }}</strong></th>
+            <th colspan="4" height="30" align="center"><strong>Report Customer Detail - {{ ucwords($data->first()->customer->name ?? '') }}</strong></th>
         </tr>
         <tr>
             <th width="200px" height="30" align="center" style="border: 20px medium black;">Code Project</th>

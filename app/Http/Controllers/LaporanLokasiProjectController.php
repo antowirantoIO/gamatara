@@ -199,7 +199,7 @@ class LaporanLokasiProjectController extends Controller
 
     public function export(Request $request)
     {
-        $data = LokasiProject::has('progress')
+        $data = LokasiProject::has('projects')
                 ->with('projects','projects.progress')
                 ->get();
         

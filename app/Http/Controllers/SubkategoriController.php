@@ -14,7 +14,8 @@ class SubkategoriController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = SubKategori::with(['kategori'])->orderBy('name','asc')
+            $data = SubKategori::with(['kategori'])
+                    ->orderBy('id_kategori','desc')
                     ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()

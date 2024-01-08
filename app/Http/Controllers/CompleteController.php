@@ -602,7 +602,7 @@ class CompleteController extends Controller
                 }
             })
             ->addColumn('progres', function($data){
-                return getProgress($data->id_project,$data->id_kategori,$data->id_vendor,3) . ' / ' . getProgress($data->id_project,$data->id_kategori,$data->id_vendor,null);
+                return getProgressAll($data->id_project,$data->id_kategori,$data->id_subkategori,3) . ' / ' . getProgressAll($data->id_project,$data->id_kategori,$data->id_subkategori,null);
             })
             ->make(true);
         }

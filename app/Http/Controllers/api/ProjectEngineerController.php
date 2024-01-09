@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Models\Kategori;
@@ -14,7 +16,6 @@ use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Keluhan;
 use DB;
-use Illuminate\Support\Facades\File;
 
 class ProjectEngineerController extends Controller
 {
@@ -266,6 +267,37 @@ class ProjectEngineerController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'success']);
+    }
+
+    public function deletePhoto(Request $request){
+        try {
+            $type = $request->type;
+            $id = $request->id;
+        
+            if ($type == 'before') {
+                $data = BeforePhoto::findOrFail($id);
+            } elseif ($type == 'after') {
+                $data = AfterPhoto::findOrFail($id);
+            } else {
+                return response()->json(['failed' => true, 'message' => 'No Photo']);
+            }
+        
+            $fileName = $data->photo;
+            $filePath = public_path($fileName);
+            if (File::exists($filePath)) {
+                File::delete($filePath);
+                \Log::info('File deleted successfully: ' . $filePath);
+            } else {
+                \Log::error('File not found: ' . $filePath);
+            }
+        
+            $data->delete();
+        
+            return response()->json(['success' => true, 'message' => 'success']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+        
     }
 
     public function detailpekerjaanPE(Request $request)

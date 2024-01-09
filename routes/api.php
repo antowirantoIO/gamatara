@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         Route::get('pekerjaan-pe', [ProjectEngineerController::class, 'pekerjaanPE']);
         Route::get('detailpekerjaan-pe', [ProjectEngineerController::class, 'detailpekerjaanPE']);
         Route::post('addPhoto', [ProjectEngineerController::class, 'addPhoto']);
+        Route::post('deletePhoto', [ProjectEngineerController::class, 'deletePhoto']);
     });
 
     //bod

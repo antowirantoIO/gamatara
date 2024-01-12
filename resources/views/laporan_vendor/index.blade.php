@@ -194,6 +194,7 @@
                     table.rows.add(response.datas.map(function (item) {
                         return [
                             item.name,
+                            item.total_project,
                             item.nilai,
                             item.nilai_tagihan,
                             '<a href="' + item.detail_url + '" class="btn btn-warning btn-sm">' +

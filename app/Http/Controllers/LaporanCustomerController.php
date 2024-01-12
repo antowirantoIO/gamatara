@@ -18,19 +18,18 @@ class LaporanCustomerController extends Controller
 {
     public function index(Request $request)
     {
-
         $datas = Customer::has('projects')
-            ->when($request->filled('customer_id'), function ($query) use ($request) {
-                $query->whereHas('projects', function ($innerQuery) use ($request) {
-                    $innerQuery->where('id_customer', $request->customer_id);
-                });
-            })
-            ->when($request->filled('daterange'), function ($query) use ($request) {
+        ->with(['projects.progress' => function ($query) use ($request) {
+            if ($request->filled('daterange')) {
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                $query->whereHas('projects.progress', function ($query) use ($request, $start_date, $end_date) {
-                    $query->whereBetween('created_at', [$start_date, $end_date]);
-                });
-            })
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            }
+        }])
+        ->when($request->filled('customer_id'), function ($query) use ($request) {
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_customer', $request->customer_id);
+            });
+        })
         ->get();
 
         foreach ($datas as $value) {
@@ -52,7 +51,7 @@ class LaporanCustomerController extends Controller
                 foreach ($value->projects as $values) {
                     foreach ($values->progress as $project) {
                         $progress = $project ?? null;
-
+                        
                         if ($progress) {
                             $totalHargaCustomer += $progress->harga_customer * $progress->qty;
                         }
@@ -135,6 +134,34 @@ class LaporanCustomerController extends Controller
             'date' => array_values($date),
             'data_customer' => $data_customer
         ]);
+
+        // $price_project = [];
+
+        // foreach ($result as $keyId => $value) {
+        //     $price_project[$keyId] = [];
+
+        //     foreach ($value as $keyDate => $item) {
+        //         if (!in_array($keyDate, $date)) {
+        //             $date[] = $keyDate;
+        //         }
+
+        //         foreach ($item as $singleItem) {
+        //             $total = 0;
+        //             $total += $singleItem->harga_customer * $singleItem->qty;
+        //             $price_project[$keyId][] = $total;
+        //         }
+        //     }
+
+        //     $data_customer[] = [
+        //         'name' => $item->first()->projects->customer->name ?? '',
+        //         'data' => $price_project[$keyId]
+        //     ];
+        // }
+
+        // return response()->json([
+        //     'date' => array_values($date),
+        //     'data_customer' => $data_customer
+        // ]);
     }
     
     public function detail(Request $request)

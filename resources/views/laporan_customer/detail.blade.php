@@ -110,8 +110,8 @@
                                 <label for="enddates" class="form-label">End Date</label>
                                 <input type="text" name="enddates" id="enddates" class="form-control" autocomplete="off">
                             </div>
-                        </div>
-                    </div> -->
+                        </div>-->
+                    </div> 
                 </div>
                 <div class="modal-footer">
                     <div class="btn btn-danger" id="btn-reset" style="margin-right: 10px;">Reset</div>

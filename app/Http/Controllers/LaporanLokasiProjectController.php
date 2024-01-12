@@ -20,58 +20,64 @@ class LaporanLokasiProjectController extends Controller
     public function index(Request $request)
     {
         $datas = LokasiProject::has('projects')
-                ->when($request->filled('lokasi_id'), function ($query) use ($request) {
-                    $query->whereHas('projects', function ($innerQuery) use ($request) {
-                        $innerQuery->where('id_lokasi_project', $request->lokasi_id);
-                    });
-                })
-                ->when($request->filled('daterange'), function ($query) use ($request) {
+            ->with(['projects.progress' => function ($query) use ($request) {
+                if ($request->filled('daterange')) {
                     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                    $query->whereHas('projects.progress', function ($query) use ($request, $start_date, $end_date) {
-                        $query->whereBetween('created_at', [$start_date, $end_date]);
-                    });
-                })
-                ->get();
+                    $query->whereBetween('created_at', [$start_date, $end_date]);
+                }
+            }])
+            ->when($request->filled('lokasi_id'), function ($query) use ($request) {
+                $query->whereHas('projects', function ($innerQuery) use ($request) {
+                    $innerQuery->where('id_lokasi_project', $request->lokasi_id);
+                });
+            })
+            // ->when($request->filled('daterange'), function ($query) use ($request) {
+            //     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            //     $query->whereHas('projects.progress', function ($query) use ($request, $start_date, $end_date) {
+            //         $query->whereBetween('created_at', [$start_date, $end_date]);
+            //     });
+            // })
+            ->get();
 
-                foreach ($datas as $value) {
-                    if ($value->projects) {
-                        $id = '';
-                        foreach ($value->projects as $project) {
-                            $id = $project->id_lokasi_project;
-                        }
-                        $value['total_project'] = $value->projects->count();
-                        $value['detail_url'] = route('laporan_lokasi_project.detail', $id);
-                    } else {
-                        $value['total_project'] = 0;
+            foreach ($datas as $value) {
+                if ($value->projects) {
+                    $id = '';
+                    foreach ($value->projects as $project) {
+                        $id = $project->id_lokasi_project;
                     }
-                    $value['eye_image_url'] = "/assets/images/eye.svg";
+                    $value['total_project'] = $value->projects->count();
+                    $value['detail_url'] = route('laporan_lokasi_project.detail', $id);
+                } else {
+                    $value['total_project'] = 0;
+                }
+                $value['eye_image_url'] = "/assets/images/eye.svg";
 
-                    $total = 0;
+                $total = 0;
 
-                    if ($value->projects) {
-                        foreach ($value->projects as $values) { 
-                            foreach ($values->progress as $project) {
-                                $progress = $project ?? null;
+                if ($value->projects) {
+                    foreach ($value->projects as $values) { 
+                        foreach ($values->progress as $project) {
+                            $progress = $project ?? null;
 
-                                if ($progress) {
-                                    $total += $progress->harga_customer * $progress->qty;
-                                }
+                            if ($progress) {
+                                $total += $progress->harga_customer * $progress->qty;
                             }
                         }
                     }
-
-                    $value['total'] = 'Rp ' . number_format($total, 0, ',', '.');
                 }
 
-                $datas = $datas->sortByDesc('total')->values();
+                $value['total'] = 'Rp ' . number_format($total, 0, ',', '.');
+            }
 
-                if($request->report_by){
-                    return response()->json([
-                        'datas' => $datas
-                    ]);
-                }
+            $datas = $datas->sortByDesc('total')->values();
 
-            $lokasi = LokasiProject::has('projects')->get();
+            if($request->report_by){
+                return response()->json([
+                    'datas' => $datas
+                ]);
+            }
+
+        $lokasi = LokasiProject::has('projects')->get();
 
         return view('laporan_lokasi_project.index', compact('lokasi','datas'));
     }

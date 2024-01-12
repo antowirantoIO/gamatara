@@ -226,8 +226,10 @@ class LaporanVendorController extends Controller
             if($value->projectPekerjaan)
             {
                 $value['total_project'] = $value->projectPekerjaan->count();
+                $value['nilai'] = $value->projectPekerjaan->sum('amount');
             }else{
                 $value['total_project'] = 0;
+                $value['nilai'] = 0;
             }
 
             $nilai_tagihan = 0;

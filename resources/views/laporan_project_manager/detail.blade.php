@@ -75,12 +75,12 @@
             </div>
             <div class="modal-body">
                 <div class="row gy-4">
-                    <div class="col-xxl-6 col-md-6">
+                    <!-- <div class="col-xxl-6 col-md-6">
                         <div>
                             <label for="code" class="form-label">Code Project</label>
                             <input type="text" name="code" class="form-control" id="code">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xxl-6 col-md-6">
                         <div>
                             <label for="nama_project" class="form-label">Project Name</label>
@@ -97,7 +97,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xxl-12 col-md-12">
+                    <!-- <div class="col-xxl-12 col-md-12">
                         <div>
                             <label for="dates" class="form-label">Start Date</label>
                             <input type="text" name="dates" id="dates" class="form-control" autocomplete="off">
@@ -108,7 +108,7 @@
                             <label for="enddates" class="form-label">End Date</label>
                             <input type="text" name="enddates" id="enddates" class="form-control" autocomplete="off">
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="modal-footer">

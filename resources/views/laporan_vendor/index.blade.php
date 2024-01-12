@@ -88,7 +88,7 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="color:#929EAE">Vendor Name</th>
-                                                <!-- <th style="color:#929EAE">Project Total</th> -->
+                                                <th style="color:#929EAE">Project Total</th>
                                                 <th style="color:#929EAE">Amount</th>
                                                 <th style="color:#929EAE">Bill Value</th>
                                                 <th style="color:#929EAE">Action</th>
@@ -98,7 +98,7 @@
                                             @foreach($datas as $d)
                                             <tr>
                                                 <td>{{ $d->name }}</td>
-                                                <!-- <td>{{$d->total_project}}</td> -->
+                                                <td>{{$d->total_project}}</td>
                                                 <td>{{ $d->nilai }}</td>
                                                 <td>{{ $d->nilai_tagihan }}</td>
                                                 <td><a href="{{route('laporan_vendor.detail', $d->id)}}" class="btn btn-warning btn-sm">

@@ -49,7 +49,7 @@
                                     Approved
                                 </button>
                             @endif
-                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA')
+                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'SPV Finance')
                             @if($complaint->id_pm_approval != null)
                                 Approved
                             @endif

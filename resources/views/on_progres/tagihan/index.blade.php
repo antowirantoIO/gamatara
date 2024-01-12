@@ -174,22 +174,23 @@
                 ajax : {
                     url : '{{ route('ajax.tagiham-all') }}',
                     data : function (d) {
-                        d.code = $('#code').val();
-                        d.id = '{{ $id }}';
-                        d.nama_project = $('#nama_project').val();
+                        filterSearch    = d.search?.value;
+                        d.code          = $('#code').val();
+                        d.id            = '{{ $id }}';
+                        d.nama_project  = $('#nama_project').val();
                         d.nama_customer = $('#nama_customer').val();
-                        d.nama_pm = $('#nama_pm').val();
-                        d.date =  $('#date').val();
+                        d.nama_pm       = $('#nama_pm').val();
+                        d.date          =  $('#date').val();
                     },
                     complete : function (data) {
                         console.log(data.responseJSON);
                     }
                 },
                 columns : [
-                    { data : 'projects.code', name : 'code'},
-                    { data : 'projects.nama_project', name : 'nama_project'},
-                    { data : 'projects.customer.name', name : 'customer'},
-                    { data : 'vendors.name', name : 'vendor'},
+                    { data : 'code', name : 'code'},
+                    { data : 'nama_project', name : 'nama_project'},
+                    { data : 'customer', name : 'customer'},
+                    { data : 'vendor', name : 'vendor'},
                     {
                         data : function(data) {
                             let id = data.id_project;

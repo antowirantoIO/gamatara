@@ -257,36 +257,32 @@
                     url : '{{ route('ajax.vendor') }}',
                     methdo : 'GET',
                     data : function(d){
-                        d._token = '{{ csrf_token() }}';
-                        d.id_project = '{{ $idProject }}';
-                        d.id_vendor = '{{ $id }}';
-                        d.id_lokasi = $('#id_lokasi').val();
-                        d.id_subkategori = '{{ $subkategori }}'
-                        d.id_pekerjaan = $('#id_pekerjaan').val();
-                        d.kode_unik = '{{ $kodeUnik }}'
+                        d._token            = '{{ csrf_token() }}';
+                        filterSearch        = d.search?.value;
+                        d.id_project        = '{{ $idProject }}';
+                        d.id_vendor         = '{{ $id }}';
+                        d.id_lokasi         = $('#id_lokasi').val();
+                        d.id_subkategori    = '{{ $subkategori }}'
+                        d.id_pekerjaan      = $('#id_pekerjaan').val();
+                        d.kode_unik         = '{{ $kodeUnik }}'
                     }
                 },
 
                 columns : [
-                    { data : function(data){
-                        let reff = data.pekerjaan || '-';
-                        let name = reff.name || '-';
-                        return name;
-                    } },
-                    { data : 'deskripsi_pekerjaan' },
-                    { data : 'id_lokasi' },
-                    { data : 'detail' },
-                    { data : 'length' },
-                    { data : 'width' },
-                    { data : 'thick' },
-                    { data : 'qty' },
-                    { data : 'amount' },
-                    { data : 'unit' },
-                    @can('edit-pekerjaan-vendor')
+                    {data : 'pekerjaan', name : 'pekerjaan'},
+                    { data : 'deskripsi_pekerjaan', name : 'deskripsi_pekerjaan' },
+                    { data : 'id_lokasi', name : 'id_lokasi' },
+                    { data : 'detail', name : 'detail'},
+                    { data : 'length', name : 'length'},
+                    { data : 'width', name : 'width' },
+                    { data : 'thick', name : 'thick' },
+                    { data : 'qty', name : 'qty'},
+                    { data : 'amount', name : 'amount' },
+                    { data : 'unit', name : 'unit' },
+                    @can('edit-pekerjaan-detail')
                     {
                         data : function (data) {
                             let id = data.id;
-                            console.log(data);
                             return   `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
                                 <span>
                                     <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>

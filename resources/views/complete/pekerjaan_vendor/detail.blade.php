@@ -258,14 +258,7 @@
                 },
 
                 columns : [
-                    {
-                        data : function(data){
-                            let reff = data.pekerjaan || '-';
-                            let name = reff.name || '-';
-                            return name;
-                        },
-                        name : 'pekerjaan'
-                    },
+                    {data : 'pekerjaan', name : 'pekerjaan'},
                     { data : 'deskripsi_pekerjaan' },
                     { data : 'id_lokasi' },
                     { data : 'detail' },

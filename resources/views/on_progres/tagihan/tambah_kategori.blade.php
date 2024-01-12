@@ -39,7 +39,9 @@
                                     <tr>
                                         <th style="color:#929EAE">Category</th>
                                         <th style="color:#929EAE">Subcategory</th>
+                                        @can('edit-vendor-job-category')
                                         <th style="color:#929EAE">Action</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -182,7 +184,9 @@
                     code: 'kategori'
                 },
                 {data: 'subkategori', name: 'subkategori'},
-                {data: 'action', name: 'action'}
+                @can('edit-vendor-job-category')
+                    {data: 'action', name: 'action'}
+                @endcan
             ]
         });
 

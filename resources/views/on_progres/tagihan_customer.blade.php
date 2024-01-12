@@ -106,9 +106,9 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Job Name</label>
+                            <label for="sub_kategori" class="form-label">Sub Kategori</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
-                                <option value="">Choose Job Name</option>
+                                <option value="">Choose Sub Category</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
                                 @endforeach
@@ -257,7 +257,7 @@
                 scrollX: true,
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 bLengthChange: false,
                 language: {
                     processing:
@@ -280,11 +280,12 @@
                     url : '{{ route('ajax.tagihan-customer') }}',
                     method : 'GET',
                     data : function(d){
-                        d._token = '{{ csrf_token() }}';
-                        d.id_project = '{{ $id }}';
-                        d.id_kategori = filterData.category_id;
-                        d.sub_kategori = $('#sub_kategori').val();
-                        d.id_lokasi = $('#id_lokasi').val();
+                        d._token            = '{{ csrf_token() }}';
+                        filterSearch        = d.search?.value;
+                        d.id_project        = '{{ $id }}';
+                        d.id_kategori       = filterData.category_id;
+                        d.sub_kategori      = $('#sub_kategori').val();
+                        d.id_lokasi         = $('#id_lokasi').val();
                     },
                     complete : function(d){
                         let data = d.responseJSON.data;
@@ -420,13 +421,13 @@
                                 let harga = data.harga_customer || 0;
                                 let amount = data.amount || 0;
                                 let total = harga * amount;
-                                return `<div class="p-3">${rupiah(total)}</div>`
+                                return `<div class="p-3">${rupiah(total.toFixed(2))}</div>`
                             }else{
                                 return `<div class="p-3">0</div>`;
                             }
                         }
                     },
-                    @can('edit-pekerjaan-vendor')
+                    @can('edit-customer-bill')
                         {
                             data : function(data){
                                 let id = data.id;

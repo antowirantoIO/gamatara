@@ -76,9 +76,17 @@ class ProjectPekerjaan extends Model
             return $query->WhereHas('projects', function($query) use($filter) {
                 $query->where('nama_project', 'like', "%$filter->nama_project%");
             });
+        })->when($filter->customer ?? false, function($query) use ($filter) {
+            return $query->WhereHas('customer', function($query) use($filter) {
+                $query->where('name', 'like', "%$filter->customer%");
+            });
         })->when($filter->status_project ?? false, function($query) use ($filter) {
             return $query->WhereHas('projects', function($query) use($filter) {
                 $query->where('status', $filter->status_project);
+            });
+        })->when($filter->vendor ?? false, function($query) use ($filter) {
+            return $query->WhereHas('vendors', function($query) use($filter) {
+                $query->where('name','like' ,"%$filter->vendor%");
             });
         })->when($filter->dates ?? false, function($query) use ($filter) {
             list($start_date, $end_date) = explode(' - ', $filter->input('dates'));

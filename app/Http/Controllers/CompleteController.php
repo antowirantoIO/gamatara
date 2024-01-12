@@ -630,7 +630,26 @@ class CompleteController extends Controller
             }
 
             $data = $data->get();
-            return DataTables::of($data)->addIndexColumn()->make(true);
+            return DataTables::of($data)->addIndexColumn()
+                                        ->addColumn('pekerjaan',function($data){
+                                            return $data->pekerjaan ? ($data->pekerjaan->name ? $data->pekerjaan->name : ' ') : ' ';
+                                        })
+                                        ->addColumn('length', function($data) {
+                                            return number_format($data->length,2, ',','');
+                                        })
+                                        ->addColumn('width', function($data) {
+                                            return number_format($data->width,2, ',','');
+                                        })
+                                        ->addColumn('thick', function($data) {
+                                            return number_format($data->thick,2, ',','');
+                                        })
+                                        ->addColumn('qty', function($data) {
+                                            return number_format($data->qty,2, ',','');
+                                        })
+                                        ->addColumn('amount', function($data) {
+                                            return number_format($data->amount,2, ',','');
+                                        })
+                                        ->make(true);
         }
     }
 

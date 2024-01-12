@@ -61,7 +61,7 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Unit Price</th>
                                                         <th style="color:#929EAE">Total Bills</th>
-                                                        @can('edit-pekerjaan-vendor')
+                                                        @can('edit-vendor-bill')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
                                                     </tr>
@@ -97,9 +97,9 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Job Name</label>
+                            <label for="sub_kategori" class="form-label">Sub Category</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
-                                <option value="">Choose Job Name</option>
+                                <option value="">Choose Sub Category</option>
                                 @foreach($subKategori as $sub)
                                 <option value="{{$sub->id}}">{{$sub->name}}</option>
                                 @endforeach
@@ -153,24 +153,42 @@
                                 <input type="text" name="thick" id="thick" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="unit" class="form-label">Unit</label>
-                                <input type="text" name="unit" id="unit" class="form-control" >
+                        @can('edit-unit')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="unit" class="form-label">Unit</label>
+                                    <input type="text" name="unit" id="unit" class="form-control" >
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="unit" class="form-label">Unit</label>
+                                    <input type="text" name="unit" id="unit" class="form-control" readonly>
+                                </div>
+                            </div>
+                        @endcan
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="qty" class="form-label">Qty</label>
-                                <input type="text" name="qty" id="qty" class="form-control">
+                                <input type="text" name="qty" id="qty" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="amount" class="form-label">Amount</label>
-                                <input type="text" name="amount" id="amount" class="form-control">
+                        @can('edit-amount')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <input type="text" name="amount" id="amount" class="form-control">
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <input type="text" name="amount" id="amount" class="form-control" readonly>
+                                </div>
+                            </div>
+                        @endcan
                         @can('edit-harga-vendor')
                             <div class="col-xxl-6 col-md-6">
                                 <div>
@@ -245,8 +263,8 @@
                 scrollX: true,
                 processing: true,
                 serverSide: true,
-                searching: false,
                 bLengthChange: false,
+                searching: true,
                 language: {
                     processing:
                         '<div class="spinner-border text-info" role="status">' +
@@ -269,18 +287,18 @@
                     method : 'GET',
                     data : function(d){
                         d._token = '{{ csrf_token() }}';
-                        d.id_project = '{{ $id }}';
-                        d.id_kategori = filterData.category_id;
-                        d.sub_kategori = $('#sub_kategori').val();
-                        d.id_lokasi = $('#id_lokasi').val();
-                        d.id_vendor = '{{ $vendor }}'
+                        filterSearch        = d.search?.value;
+                        d.id_project        = '{{ $id }}';
+                        d.id_kategori       = filterData.category_id;
+                        d.sub_kategori      = $('#sub_kategori').val();
+                        d.id_lokasi         = $('#id_lokasi').val();
+                        d.id_vendor         = '{{ $vendor }}'
                     },
                     complete : function(d){
                         let data = d.responseJSON.data;
                         let amount = data.reduce((accumulator, currentValue) => {
                             return accumulator + (currentValue.harga_vendor * currentValue.amount);
                         }, 0);
-                        console.log(amount,data);
                         $('.tagihan').text(rupiah(amount))
                     }
                 },
@@ -353,7 +371,7 @@
                     },
                     {
                         data : function (data) {
-                            let amount = data.amount || 0;
+                            let amount = data.amount.toFixed(2) || 0;
                             var status = false;
                             var recent = data.activitys.map(item =>{
                                 status = data.amount !== item.amount ? 'bg-danger text-white' : '';
@@ -389,13 +407,13 @@
                                 let harga = data.harga_vendor || 0;
                                 let amount = data.amount || 0;
                                 let total = harga * amount;
-                                return `<div class="p-3">${rupiah(total)}</div>`
+                                return `<div class="p-3">${rupiah(total.toFixed(2))}</div>`
                             }else{
                                 return `<div class="p-3">0</div>`;
                             }
                         }
                     },
-                    @can('edit-pekerjaan-vendor')
+                    @can('edit-vendor-bill')
                         {
                             data : function(data){
                                 let id = data.id;

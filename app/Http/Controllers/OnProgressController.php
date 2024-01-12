@@ -717,6 +717,9 @@ class OnProgressController extends Controller
 
             $data = $data->get();
             return DataTables::of($data)->addIndexColumn()
+            ->addColumn('pekerjaan',function($data){
+                return $data->pekerjaan ? ($data->pekerjaan->name ? $data->pekerjaan->name : ' ') : ' ';
+            })
             ->addColumn('length', function($data) {
                 return number_format($data->length,2, ',','');
             })
@@ -868,7 +871,8 @@ class OnProgressController extends Controller
                                     ->where('id_kategori',$request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->whereNotNull(['id_pekerjaan'])
-                                    ->with(['subKategori','projects.lokasi','pekerjaan','activitys']);
+                                    ->with(['subKategori','projects.lokasi','pekerjaan','activitys'])
+                                    ->filter($request);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
                 $data->where('id_subkategori',$request->sub_kategori);
@@ -906,7 +910,8 @@ class OnProgressController extends Controller
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                         ->where('id_kategori',$request->id_kategori)
                                         ->whereNotNull(['id_pekerjaan'])
-                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
+                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
+                                        ->filter($request);
             }else {
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
                         ->whereNotNull(['id_pekerjaan'])
@@ -950,22 +955,25 @@ class OnProgressController extends Controller
 
     public function ajaxAllTagihan (Request $request)
     {
-        $data = ProjectPekerjaan::where('id_project', $request->id)
-                            ->with(['subKategori', 'projects', 'pekerjaan', 'projects.pm', 'projects.customer', 'vendors'])
-                            ->get();
 
         if($request->ajax()){
+            $data = ProjectPekerjaan::where('id_project', $request->id)
+                                ->with(['subKategori', 'projects', 'pekerjaan', 'projects.pm', 'projects.customer', 'vendors'])
+                                ->filter($request)
+                                ->get();
             $data = $data->unique('id_vendor');
             return DataTables::of($data)->addIndexColumn()
-            ->addColumn('subKategori', function($data) {
-                $subKategoriName = strtolower($data->subKategori->name);
-                if (str_contains($subKategoriName, 'telah dilaksanakan')) {
-                    return $data->deskripsi_subkategori
-                        ? $data->subKategori->name . ' ' . strtoupper($data->deskripsi_subkategori)
-                        : $data->subKategori->name . ' ' . '';
-                } else {
-                    return $data->subKategori->name;
-                }
+            ->addColumn('code', function($data) {
+                return $data->projects->code;
+            })
+            ->addColumn('nama_project', function($data) {
+                return $data->projects->nama_project;
+            })
+            ->addColumn('customer', function($data) {
+                return $data->projects->customer->name;
+            })
+            ->addColumn('vendor', function($data) {
+                return $data->vendors->name;
             })
             ->make(true);
         }

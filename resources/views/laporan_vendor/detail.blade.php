@@ -100,10 +100,10 @@
                             </div>
                         </div>
                         <!-- <div class="col-xxl-12 col-md-12">
-                        <div>
-                            <label for="dates" class="form-label">Start Date</label>
-                            <input type="text" name="dates" id="dates" class="form-control" autocomplete="off">
-                        </div>
+                            <div>
+                                <label for="dates" class="form-label">Start Date</label>
+                                <input type="text" name="dates" id="dates" class="form-control" autocomplete="off">
+                            </div>
                         </div>
                         <div class="col-xxl-12 col-md-12">
                             <div>

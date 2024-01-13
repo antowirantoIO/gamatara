@@ -16,17 +16,23 @@ class LaporanProjectManagerController extends Controller
     public function index(Request $request)
     {
         $datas = ProjectManager::has('projects')
+        ->with(['projects' => function ($query) use ($request) {
+            if ($request->filled('daterange')) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            }
+        }])
         ->when($request->filled('project_manager_id'), function ($query) use ($request) {
             $query->whereHas('projects', function ($innerQuery) use ($request) {
                 $innerQuery->where('pm_id', $request->project_manager_id);
             });
         })
-        ->when($request->filled('daterange'), function ($query) use ($request) {
-            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-            $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
-                $query->whereBetween('created_at', [$start_date, $end_date]);
-            });
-        })
+        // ->when($request->filled('daterange'), function ($query) use ($request) {
+        //     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+        //     $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
+        //         $query->whereBetween('created_at', [$start_date, $end_date]);
+        //     });
+        // })
         ->get();
 
         foreach ($datas as $value) {

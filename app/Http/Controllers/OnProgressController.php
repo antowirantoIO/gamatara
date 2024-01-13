@@ -895,7 +895,7 @@ class OnProgressController extends Controller
                     return $data->subKategori->name;
                 }
             })
-            ->addColumn('pekerjaan', function($data) {
+            ->addColumn('pekerjaan_name', function($data) {
                 return $data->pekerjaan->name ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name . ' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan->name;
             })
             ->make(true);
@@ -947,6 +947,12 @@ class OnProgressController extends Controller
                 } else {
                     return $data->subKategori->name;
                 }
+            })
+            ->addColumn('pekerjaan_name', function($data) {
+                return $data->pekerjaan->name ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name . ' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan->name;
+            })
+            ->addColumn('description',function($data){
+                return $data->deskripsi_pekerjaan ?? ' ';
             })
             ->make(true);
         }

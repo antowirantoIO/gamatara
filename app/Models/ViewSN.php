@@ -19,4 +19,9 @@ class ViewSN extends Model
     {
         return $this->hasMany(ViewAfterPhoto::class,'subkategori_concat','subkategori_concat');
     }
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(ProjectPekerjaan::class,'id_Project','id_project');
+    }
 }

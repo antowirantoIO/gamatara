@@ -71,7 +71,36 @@
                 $prevKodeUnik = '';
             @endphp
             @foreach ($datas as $keys => $item)
-                @foreach ($item as $value)
+                <tr style="font-size: 8px;">
+                    <td class="text-center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border: 20px medium black;"></td>
+                    <td style="border: 20px medium black;"></td>
+                </tr>
+                <tr>
+                    <td height="30" align="center" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $loop->iteration }}</td>
+                    <td height="30" style="font-size: 8px;">&nbsp;
+                        <strong>{{ $keys }}</strong></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
+                    <td style="border: 20px medium black;"></td>
+                    <td style="border: 20px medium black;"></td>
+                </tr>
+                @foreach ($item as $indexs => $value)
                 @php
                     $totalNow = $value->amount * $value->harga_customer;
                     if ($value->amount && $value->harga_customer) {
@@ -79,57 +108,10 @@
                     } else {
                         $totalNow = 0;
                     }
-                    $subkategori = $value->subKategori->name;
-                    $kodeUnik = $keys;
-                    $nowKategori = $key;
                 @endphp
-                    @if ($prevKodeUnik != $kodeUnik)
-                        @php
-                        if ($prevKategori !== $key) {
-                            $subCount = 1;
-                        } else {
-                            $subCount++;
-                        }
-                        @endphp
-                        <tr style="font-size: 8px;">
-                            <td class="text-center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border: 20px medium black;"></td>
-                            <td style="border: 20px medium black;"></td>
-                        </tr>
-                        <tr>
-                            <td height="30" align="center" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $subCount }}</td>
-                            <td height="30" style="font-size: 8px;">
-                                @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
-                                    <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
-                                @else
-                                    <strong>{{ $value->subKategori->name }}</strong>
-                                @endif
-                            </td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border-right: 20px medium black;border-left: 20px medium black;"></td>
-                            <td style="border: 20px medium black;"></td>
-                            <td style="border: 20px medium black;"></td>
-                        </tr>
-
-                    @endif
                     <tr>
                         <td align="center" height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px; "></td>
-                        <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->pekerjaan ? ($value->pekerjaan->name ? ($value->deskripsi_pekerjaan ? $value->pekerjaan->name . ' ' . $value->deskripsi_pekerjaan : $value->pekerjaan->name) : '') : '' }}</td>
+                        <td height="30" align="left" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">&nbsp;{{ $value->pekerjaan_concat ?? ' ' }}</td>
                         <td style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->id_lokasi ?? ' ' }}</td>
                         <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="center">{{ $value->detail ?? ' ' }}</td>
                         <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->length ? number_format($value->length,2, ',','') : '' }}</td>
@@ -139,10 +121,10 @@
                         <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ? number_format($value->amount,2, ',','') : '' }}</td>
                         <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="right">{{ $value->unit ?? ' ' }}</td>
                         <td height="30" style="border: 20px medium black;" align="right">
-                        Rp. {{ number_format($value->harga_customer, 0, ',', '.') }}
+                        Rp. {{ number_format($value->pekerjaan->harga_customer, 0, ',', '.') }}
                         </td>
                         <td height="30" style="border: 20px medium black;" align="right">
-                            Rp. {{ number_format(($value->amount * $value->harga_customer), 0, ',', '.') }}
+                            Rp. {{ number_format(($value->amount * $value->pekerjaan->harga_customer), 0, ',', '.') }}
                         </td>
                         <td height="30">{{ $value->vendors->name ?? '-' }}</td>
                     </tr>
@@ -150,9 +132,6 @@
                         $prevTotal = $totalNow;
                         $prevIndex = $key;
                         $total += $prevTotal;
-                        $prevSub = $subKategori;
-                        $prevKodeUnik = $kodeUnik;
-                        $prevKategori =  $key;
                     @endphp
                 @endforeach
                 @php

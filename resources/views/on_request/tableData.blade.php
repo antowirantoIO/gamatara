@@ -49,7 +49,7 @@
                                     Approved
                                 </button>
                             @endif
-                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'SPV Finance')
+                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'SPV Finance' || $pmAuth == 'Staff Finance')
                             @if($complaint->id_pm_approval != null)
                                 Approved
                             @endif
@@ -70,7 +70,7 @@
                             @endif
                         @elseif($pmAuth == 'Project Manager' || $pmAuth == 'PM')
 
-                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA' || $pmAuth == 'SPV Finance')
+                        @elseif($pmAuth == 'Project Admin' || $pmAuth == 'PA' || $pmAuth == 'SPV Finance' || $pmAuth == 'Staff Finance')
                             @if($complaint->id_bod_approval != null)
                                 Approved
                             @endif

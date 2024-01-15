@@ -76,6 +76,10 @@ class ProjectPekerjaan extends Model
             return $query->WhereHas('projects', function($query) use($filter) {
                 $query->where('nama_project', 'like', "%$filter->nama_project%");
             });
+        })->when($filter->pekerjaan_name ?? false, function($query) use ($filter) {
+            return $query->WhereHas('pekerjaan', function($query) use($filter) {
+                $query->where('name', 'like', "%".$filter->pekerjaan_name."%");
+            });
         })->when($filter->customer ?? false, function($query) use ($filter) {
             return $query->WhereHas('customer', function($query) use($filter) {
                 $query->where('name', 'like', "%$filter->customer%");

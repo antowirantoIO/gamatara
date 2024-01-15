@@ -304,7 +304,7 @@
                 },
                 columns : [
                     { data : 'subKategori', name : 'subKategori'},
-                    { data : 'pekerjaan', name : 'pekerjaan'},
+                    { data : 'pekerjaan_name', name : 'pekerjaan_name'},
                     {
                         data : function(data) {
                             let location = data.id_lokasi || '';

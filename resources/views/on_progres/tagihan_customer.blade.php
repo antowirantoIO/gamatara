@@ -106,7 +106,7 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="sub_kategori" class="form-label">Sub Kategori</label>
+                            <label for="sub_kategori" class="form-label">Sub Category</label>
                             <select name="sub_kategori" id="sub_kategori" class="form-select">
                                 <option value="">Choose Sub Category</option>
                                 @foreach($subKategori as $sub)
@@ -298,26 +298,8 @@
                 },
                 columns : [
                     { data : 'subKategori', name : 'subKategori'},
-                    {
-                        data : function(data) {
-                            let pekerjaan = data.pekerjaan || '';
-                            let name = pekerjaan.name || '' ;
-                            return name;
-                        }
-                    },
-                    {
-                        data : function(data) {
-                            let vendor = data.vendors || '';
-                            let name = vendor.name || '';
-                            return name;
-                        }
-                    },
-                    {
-                        data : function(data) {
-                            let desc = data.deskripsi_pekerjaan || '';
-                            return desc;
-                        }
-                    },
+                    { data : 'pekerjaan_name', name : 'pekerjaan_name'},
+                    { data : 'description', name : 'description'},
                     {
                         data : function(data) {
                             let location = data.id_lokasi || '';
@@ -425,6 +407,13 @@
                             }else{
                                 return `<div class="p-3">0</div>`;
                             }
+                        }
+                    },
+                    {
+                        data : function(data) {
+                            let vendor = data.vendors || '';
+                            let name = vendor.name || '';
+                            return name;
                         }
                     },
                     @can('edit-customer-bill')

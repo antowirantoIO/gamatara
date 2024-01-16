@@ -15,6 +15,9 @@ use App\Models\SettingPekerjaan;
 use App\Models\BeforePhoto;
 use App\Models\AfterPhoto;
 use App\Models\Keluhan;
+use App\Models\ProjectManager;
+use App\Models\ProjectEngineer;
+use App\Models\Karyawan;
 use DB;
 
 class ProjectEngineerController extends Controller
@@ -58,9 +61,16 @@ class ProjectEngineerController extends Controller
     public function detailPE(Request $request)
     {
         try{
-            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name','pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon','pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon','lokasi:id,name'])
+            $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name',
+                                    'pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon',
+                                    'pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon',
+                                    'lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
+
+            $pes = ProjectEngineer::find($data->pe_id_1);
+            $pes = Karyawan::find($pes->id_karyawan);
+            $data['pes'] = $pes->name;
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {

@@ -70,7 +70,7 @@
                                                         <th style="color:#929EAE">Customer Price</th>
                                                         <th style="color:#929EAE">Total Price</th>
                                                         <th style="color:#929EAE;">Vendor</th>
-                                                        @can('edit-pekerjaan-vendor')
+                                                        @can('edit-customer-bill')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
                                                     </tr>

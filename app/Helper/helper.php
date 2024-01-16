@@ -320,6 +320,12 @@ function getLatters($name)
             return $latter;
             break;
 
+        case 'MEKANIKAL':
+            $latter = 'H';
+            return $latter;
+            break;
+
+
         default:
             $latter = '';
             return $latter;

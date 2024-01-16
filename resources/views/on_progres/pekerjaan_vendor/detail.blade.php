@@ -48,7 +48,7 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
-                                            @can('edit-pekerjaan-vendor')
+                                            @can('edit-pekerjaan-detail')
                                             <th style="color:#929EAE">Action</th>
                                             @endcan
                                         </tr>

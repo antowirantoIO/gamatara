@@ -358,6 +358,7 @@ class BodController extends Controller
             $pes = ProjectEngineer::find($data->pe_id_1);
             $pes = Karyawan::find($pes->id_karyawan);
             $data['pes'] = $pes->name;
+            $data['pes_kontak'] = $pes->nomor_telpon;
 
             return response()->json(['success' => true, 'message' => 'success', 'data' => $data]);
         } catch (\Exception $e) {

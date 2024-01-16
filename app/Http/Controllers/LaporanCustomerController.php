@@ -167,8 +167,7 @@ class LaporanCustomerController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $data = OnRequest::has('progress')
-                    ->where('id_customer', $request->id)
+            $data = OnRequest::where('id_customer', $request->id)
                     ->filter($request)
                     ->get();
             // $cekIds = $cek->pluck('id')->toArray();

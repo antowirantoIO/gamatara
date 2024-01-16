@@ -126,7 +126,7 @@
                         <td height="30" style="border: 20px medium black;" align="right">
                             Rp. {{ number_format(($value->amount * $value->pekerjaan->harga_customer), 0, ',', '.') }}
                         </td>
-                        <td height="30">{{ $value->vendors->name ?? '-' }}</td>
+                        <td height="30">{{ $value->nama_vendor ?? '-' }}</td>
                     </tr>
                     @php
                         $prevTotal = $totalNow;

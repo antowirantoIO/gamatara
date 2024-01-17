@@ -77,7 +77,7 @@ class OnProgressController extends Controller
                 $dates = explode(' - ', $request->date);
                 $start = $dates[0];
                 $end = $dates[1];
-                $data->whereDate('start_project', '>=', $start);
+                $data->whereDate('created_at', '>=', $start);
                 $data->whereDate('target_selesai', '<=', $end);
             }
 
@@ -665,10 +665,11 @@ class OnProgressController extends Controller
                 'unit' => $data->unit,
                 'qty' => $data->qty,
                 'amount' => $data->amount,
-                'harga_vendor' => $request->harga_vendor ? str_replace(",", "", $request->harga_vendor) : $project->harga_vendor,
-                'harga_customer' =>  $request->harga_customer ? str_replace(",", "", $request->harga_customer) : $project->harga_customer,
+                'harga_vendor' => $request->harga_vendor ? str_replace([",","."], "", $request->harga_vendor) : $project->harga_vendor,
+                'harga_customer' =>  $request->harga_customer ? str_replace([",","."], "", $request->harga_customer) : $project->harga_customer,
                 'description' => 'Updated Data',
-                'status' => 2
+                'status' => 2,
+                'kode_unik' => $data->kode_unik
             ]);
         }
 

@@ -47,7 +47,7 @@
                                             <table class="table w-100" id="tableData">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th style="color:#929EAE;">Kategori</th>
+                                                        <th style="color:#929EAE;">Sub Category</th>
                                                         <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE">Location</th>
                                                         <th style="color:#929EAE">Detail / Other</th>
@@ -59,7 +59,7 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Unit Price</th>
                                                         <th style="color:#929EAE">Total Bills</th>
-                                                        @can('complete-edit-pekerjaan-vendor')
+                                                        @can('edit-vendor-bill-complete')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
                                                     </tr>
@@ -183,24 +183,42 @@
                                 <input type="text" name="thick" id="thick" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="unit" class="form-label">Unit</label>
-                                <input type="text" name="unit" id="unit" class="form-control" >
+                        @can('edit-unit-complete')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="unit" class="form-label">Unit</label>
+                                    <input type="text" name="unit" id="unit" class="form-control" >
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="unit" class="form-label">Unit</label>
+                                    <input type="text" name="unit" id="unit" class="form-control" readonly>
+                                </div>
+                            </div>
+                        @endcan
                         <div class="col-xxl-6 col-md-6">
                             <div>
                                 <label for="qty" class="form-label">Qty</label>
                                 <input type="text" name="qty" id="qty" class="form-control">
                             </div>
                         </div>
-                        <div class="col-xxl-6 col-md-6">
-                            <div>
-                                <label for="amount" class="form-label">Amount</label>
-                                <input type="text" name="amount" id="amount" class="form-control">
+                        @can('edit-amount-complete')
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <input type="text" name="amount" id="amount" class="form-control">
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-xxl-6 col-md-6">
+                                <div>
+                                    <label for="amount" class="form-label">Amount</label>
+                                    <input type="text" name="amount" id="amount" class="form-control" readonly>
+                                </div>
+                            </div>
+                        @endcan
                         @can('complete-edit-harga-vendor')
                             <div class="col-xxl-6 col-md-6">
                                 <div>
@@ -243,8 +261,9 @@
                 scrollX: true,
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
                 bLengthChange: false,
+                regex : true,
                 language: {
                     processing:
                         '<div class="spinner-border text-info" role="status">' +
@@ -263,15 +282,16 @@
                     previousButton.css('display', 'none');
                 },
                 ajax : {
-                    url : '{{ route('ajax.tagihan-vendor') }}',
+                    url : '{{ route('complete.ajax.tagihan-vendor') }}',
                     method : 'GET',
                     data : function(d){
-                        d._token = '{{ csrf_token() }}';
-                        d.id_project = '{{ $id }}';
-                        d.id_kategori = filterData.category_id;
-                        d.sub_kategori = $('#sub_kategori').val();
-                        d.id_lokasi = $('#id_lokasi').val();
-                        d.id_vendor = '{{ $vendor }}'
+                        d._token            = '{{ csrf_token() }}';
+                        filterSearch        = d.search?.value;
+                        d.id_project        = '{{ $id }}';
+                        d.id_kategori       = filterData.category_id;
+                        d.sub_kategori      = $('#sub_kategori').val();
+                        d.id_lokasi         = $('#id_lokasi').val();
+                        d.id_vendor         = '{{ $vendor }}'
                     },
                     complete : function(d){
                         let data = d.responseJSON.data;
@@ -284,7 +304,7 @@
                 },
                 columns : [
                     { data : 'subKategori', name : 'subKategori'},
-                    { data : 'pekerjaan', name : 'pekerjaan'},
+                    { data : 'pekerjaan_name', name : 'pekerjaan_name'},
                     {
                         data : function(data) {
                             let location = data.id_lokasi || '';
@@ -387,13 +407,13 @@
                                 let harga = data.harga_vendor || 0;
                                 let amount = data.amount || 0;
                                 let total = harga * amount;
-                                return `<div class="p-3">${rupiah(total)}</div>`
+                                return `<div class="p-3">${rupiah(total.toFixed(2))}</div>`
                             }else{
                                 return `<div class="p-3">0</div>`;
                             }
                         }
                     },
-                    @can('complete-edit-pekerjaan-vendor')
+                    @can('edit-vendor-bill-complete')
                         {
                             data : function(data){
                                 let id = data.id;

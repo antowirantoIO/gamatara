@@ -56,6 +56,7 @@
                                             <table class="table w-100" id="tableData">
                                                 <thead class="table-light">
                                                     <tr>
+                                                        <th style="color:#929EAE;">Sub Category</th>
                                                         <th style="color:#929EAE;">Job</th>
                                                         <th style="color:#929EAE;">Vendor</th>
                                                         <th style="color:#929EAE;">Description</th>
@@ -69,7 +70,7 @@
                                                         <th style="color:#929EAE">Unit</th>
                                                         <th style="color:#929EAE">Customer Price</th>
                                                         <th style="color:#929EAE">Total Price</th>
-                                                        @can('complete-edit-pekerjaan-vendor')
+                                                        @can('edit-customer-bill-complete')
                                                             <th style="color:#929EAE">Action</th>
                                                         @endcan
                                                     </tr>
@@ -252,10 +253,12 @@
 
             var table = $('#tableData').DataTable({
                 fixedHeader:true,
+                ordering : false,
                 scrollX: true,
                 processing: true,
                 serverSide: true,
-                searching: false,
+                searching: true,
+                regex : true,
                 bLengthChange: false,
                 language: {
                     processing:
@@ -278,11 +281,12 @@
                     url : '{{ route('complete.ajax.tagihan-customer') }}',
                     method : 'GET',
                     data : function(d){
-                        d._token = '{{ csrf_token() }}';
-                        d.id_project = '{{ $id }}';
-                        d.id_kategori = filterData.category_id;
-                        d.sub_kategori = $('#sub_kategori').val();
-                        d.id_lokasi = $('#id_lokasi').val();
+                        d._token            = '{{ csrf_token() }}';
+                        filterSearch        = d.search?.value;
+                        d.id_project        = '{{ $id }}';
+                        d.id_kategori       = filterData.category_id;
+                        d.sub_kategori      = $('#sub_kategori').val();
+                        d.id_lokasi         = $('#id_lokasi').val();
                     },
                     complete : function(d){
                         let data = d.responseJSON.data;
@@ -294,13 +298,8 @@
                     }
                 },
                 columns : [
-                    {
-                        data : function(data) {
-                            let pekerjaan = data.pekerjaan || '';
-                            let name = pekerjaan.name || '' ;
-                            return name;
-                        }
-                    },
+                    { data : 'subKategori', name : 'subKategori'},
+                    { data : 'pekerjaan_name', name : 'pekerjaan_name'},
                     {
                         data : function(data) {
                             let vendor = data.vendors || '';
@@ -423,7 +422,7 @@
                             }
                         }
                     },
-                    @can('complete-edit-pekerjaan-vendor')
+                    @can('edit-customer-bill-complete')
                         {
                             data : function(data){
                                 let id = data.id;

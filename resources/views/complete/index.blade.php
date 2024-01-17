@@ -137,6 +137,8 @@
         $('#date').daterangepicker({
             opens: 'right',
             autoUpdateInput: false,
+            showDropdowns: true,
+            linkedCalendars: false,
             locale: {
                 format: 'YYYY-MM-DD',
                 cancelLabel: 'Clear'

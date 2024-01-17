@@ -73,7 +73,7 @@ class CompleteController extends Controller
                 $dates = explode(' - ', $request->date);
                 $start = $dates[0];
                 $end = $dates[1];
-                $data->whereDate('start_project', '>=', $start);
+                $data->whereDate('created_at', '>=', $start);
                 $data->whereDate('target_selesai', '<=', $end);
             }
 
@@ -715,7 +715,8 @@ class CompleteController extends Controller
                                     ->where('id_kategori',$request->id_kategori)
                                     ->where('id_vendor',$request->id_vendor)
                                     ->whereNotNull(['id_pekerjaan'])
-                                    ->with(['subKategori','projects.lokasi','pekerjaan','activitys']);
+                                    ->with(['subKategori','projects.lokasi','pekerjaan','activitys'])
+                                    ->filter($request);
 
             if($request->has('sub_kategori') && !empty($request->sub_kategori)){
                 $data->where('id_subkategori',$request->sub_kategori);
@@ -741,6 +742,9 @@ class CompleteController extends Controller
             ->addColumn('pekerjaan', function($data) {
                 return $data->pekerjaan->name ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name . ' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan->name;
             })
+            ->addColumn('pekerjaan_name', function($data) {
+                return $data->pekerjaan->name ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name . ' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan->name;
+            })
             ->make(true);
         }
 
@@ -753,7 +757,8 @@ class CompleteController extends Controller
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
                                         ->where('id_kategori',$request->id_kategori)
                                         ->whereNotNull(['id_pekerjaan'])
-                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys']);
+                                        ->with(['subKategori','projects.lokasi','pekerjaan','vendors','activitys'])
+                                        ->filter($request);
             }else {
                 $data = ProjectPekerjaan::where('id_project', $request->id_project)
                         ->whereNotNull(['id_pekerjaan'])
@@ -780,6 +785,9 @@ class CompleteController extends Controller
                 } else {
                     return $data->subKategori->name;
                 }
+            })
+            ->addColumn('pekerjaan_name', function($data) {
+                return $data->pekerjaan->name ? ($data->deskripsi_pekerjaan ? $data->pekerjaan->name . ' ' . $data->deskripsi_pekerjaan : $data->pekerjaan->name) : $data->pekerjaan->name;
             })
             ->make(true);
         }

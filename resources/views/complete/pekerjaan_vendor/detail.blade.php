@@ -43,9 +43,6 @@
                                             <th style="color:#929EAE">Qty</th>
                                             <th style="color:#929EAE">Amount</th>
                                             <th style="color:#929EAE">Unit</th>
-                                            @can('edit-pekerjaan-vendor')
-                                            <th style="color:#929EAE">Action</th>
-                                            @endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,19 +101,13 @@
                 <div class="row gy-4">
                     <div class="col-xxl-6 col-md-6">
                         <div>
-                            <label for="id_pekerjaan" class="form-label">Pekerjaan</label>
+                            <label for="id_pekerjaan" class="form-label">Job</label>
                             <select type="text" name="id_pekerjaan" class="form-select form-select-fillter" id="id_pekerjaan">
-                                <option value="">Pilih Pekerjaan</option>
+                                <option value="">Choose Job</option>
                                 @foreach ($pekerjaan as $p)
                                     <option value="{{ $p->id }}">{{ $p->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="col-xxl-6 col-md-6">
-                        <div>
-                            <label for="id_lokasi" class="form-label">Nama Project</label>
-                            <input type="text" name="id_lokasi" id="id_lokasi" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -268,19 +259,7 @@
                     { data : 'qty' },
                     { data : 'amount' },
                     { data : 'unit' },
-                    @can('edit-pekerjaan-vendor')
-                    {
-                        data : function (data) {
-                            let id = data.id;
-                            console.log(data);
-                            return   `<button data-id="${id}" class="btn btn-info btn-sm btn-edit">
-                                <span>
-                                    <i><img src="{{asset('assets/images/edit.svg')}}" style="width: 15px;"></i>
-                                </span>
-                            </button>`
-                        }
-                    }
-                    @endcan
+
                 ]
 
             });

@@ -142,8 +142,7 @@ class LaporanProjectManagerController extends Controller
     public function detail(Request $request, $id)
     {
         if($request->ajax()){
-            $data = OnRequest::has('progress')
-                    ->where('pm_id',$id)
+            $data = OnRequest::where('pm_id',$id)
                     ->with(['pm','pm.karyawan','customer','progress'])
                     ->filter($request);
 

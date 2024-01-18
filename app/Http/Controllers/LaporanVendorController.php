@@ -18,12 +18,6 @@ class LaporanVendorController extends Controller
     public function index(Request $request)
     {
         $datas = Vendor::has('projectPekerjaan')
-        // ->with(['projectPekerjaan' => function ($query) use ($request) {
-        //     if ($request->filled('daterange')) {
-        //         list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-        //         $query->whereBetween('created_at', [$start_date, $end_date]);
-        //     }
-        // }])
         ->when($request->filled('vendor_id'), function ($query) use ($request) {
             $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
                 $innerQuery->where('id_vendor', $request->vendor_id);
@@ -42,29 +36,7 @@ class LaporanVendorController extends Controller
         })
         ->when($request->filled('kategori_vendor'), function ($query) use ($request) {
             $query->where('kategori_vendor', $request->kategori_vendor);
-        })
-        // ->when($request->filled('daterange'), function ($query) use ($request) {
-        //     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
- 
-        //     return $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request, $start_date, $end_date) {
-        //         $reportType = $request->report_by;
-        //         $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
-        //         switch ($reportType) {
-        //             case 'bulan':
-        //                 $innerQuery->whereMonth('created_at', '>=', $start_date)
-        //                     ->whereYear('created_at','<=', $end_date);
-        //                 break;
-        //             case 'tahun':
-        //                 $innerQuery->whereYear('created_at', $start_date);
-        //                 break;
-        //             case 'tanggal':
-        //             default:
-        //                 $innerQuery->whereDate('created_at', '>=', $start_date)
-        //                     ->whereDate('created_at', '<=', $end_date);
-        //                 break;
-        //         }
-        //     });
-        // })        
+        })     
         ->get();
             
         foreach($datas as $value){
@@ -82,13 +54,9 @@ class LaporanVendorController extends Controller
 
             $nilai_tagihan = 0;
             
-            if ($value->projectPekerjaan) {
-                foreach($value->projectPekerjaan as $values){
-        
-                    if ($values) {
-                        $nilai_tagihan += $values->harga_vendor * $values->qty;
-                    }
-                    
+            foreach ($value->projectPekerjaan as $values) {
+                if ($values && $values->id_project == $request->project_id) {
+                    $nilai_tagihan += $values->harga_vendor * $values->qty;
                 }
             }
         

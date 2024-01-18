@@ -52,10 +52,13 @@ class LaporanVendorController extends Controller
                     $isMatchingKategoriVendor = !$request->filled('kategori_vendor') || $value->kategori_vendor == $request->kategori_vendor;
                     $isMatchingVendorId = !$request->filled('vendor_id') || $value->id == $request->vendor_id;
         
-                    list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                    
-                    $isWithinDateRange = !$request->filled('daterange') ||
-                        (strtotime($values->created_at) >= strtotime($start_date) && strtotime($values->created_at) <= strtotime($end_date));
+                    if ($request->filled('daterange') && strpos($request->input('daterange'), ' - ') !== false) {
+                        list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                
+                        $isWithinDateRange = strtotime($values->created_at) >= strtotime($start_date) && strtotime($values->created_at) <= strtotime($end_date);
+                    } else {
+                        $isWithinDateRange = true;
+                    }
         
                     if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
                         $nilai_tagihan += $values->harga_vendor * $values->qty;

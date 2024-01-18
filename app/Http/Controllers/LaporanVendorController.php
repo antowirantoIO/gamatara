@@ -39,30 +39,41 @@ class LaporanVendorController extends Controller
         })     
         ->get();
             
-        foreach($datas as $value){
-            if($value->projectPekerjaan)
-            {
+        foreach ($datas as $value) {
+            if ($value->projectPekerjaan->isNotEmpty()) {
                 $value['total_project'] = $value->projectPekerjaan->count();
                 $value['nilai'] = $value->projectPekerjaan->sum('amount');
                 $value['detail_url'] = route('laporan_vendor.detail', $value->id);
-            }else{
+        
+                $nilai_tagihan = 0;
+        
+                foreach ($value->projectPekerjaan as $values) {
+                    $isMatchingProjectId = !$request->filled('project_id') || $values->id_project == $request->project_id;
+                    $isMatchingKategoriVendor = !$request->filled('kategori_vendor') || $value->kategori_vendor == $request->kategori_vendor;
+                    $isMatchingVendorId = !$request->filled('vendor_id') || $value->id == $request->vendor_id;
+        
+                    list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                    
+                    $isWithinDateRange = !$request->filled('daterange') ||
+                        (strtotime($values->created_at) >= strtotime($start_date) && strtotime($values->created_at) <= strtotime($end_date));
+        
+                    if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
+                        $nilai_tagihan += $values->harga_vendor * $values->qty;
+                    }
+                }
+        
+                $value['nilai_tagihan'] = 'Rp ' . number_format($nilai_tagihan, 0, ',', '.');
+            } else {
                 $value['total_project'] = 0;
                 $value['nilai'] = 0;
-            }
-
-            $value['eye_image_url'] = "/assets/images/eye.svg";
-
-            $nilai_tagihan = 0;
-            
-            foreach ($value->projectPekerjaan as $values) {
-                if ($values && $values->id_project == $request->project_id) {
-                    $nilai_tagihan += $values->harga_vendor * $values->qty;
-                }
+                $value['nilai_tagihan'] = 'No data available';
             }
         
-            $value['nilai_tagihan'] = 'Rp '. number_format($nilai_tagihan, 0, ',', '.');
+            $value['eye_image_url'] = "/assets/images/eye.svg";
         }
+        
         $datas = $datas->sortByDesc('nilai_tagihan')->values();
+        
 
         if($request->report_by){
             return response()->json([

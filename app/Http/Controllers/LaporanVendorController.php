@@ -40,31 +40,36 @@ class LaporanVendorController extends Controller
         ->get();
             
         foreach ($datas as $value) {
-            if ($value->projectPekerjaan->isNotEmpty()) {
-                $value['total_project'] = $value->projectPekerjaan->count();
-                $value['nilai'] = $value->projectPekerjaan->sum('amount');
-                $value['detail_url'] = route('laporan_vendor.detail', $value->id);
+            $filteredProjects = $value->projectPekerjaan;
         
+            if ($filteredProjects->isNotEmpty()) {
+                $totalProject = 0;
+                $totalAmount = 0;
                 $nilai_tagihan = 0;
         
-                foreach ($value->projectPekerjaan as $values) {
+                foreach ($filteredProjects as $values) {
                     $isMatchingProjectId = !$request->filled('project_id') || $values->id_project == $request->project_id;
                     $isMatchingKategoriVendor = !$request->filled('kategori_vendor') || $value->kategori_vendor == $request->kategori_vendor;
                     $isMatchingVendorId = !$request->filled('vendor_id') || $value->id == $request->vendor_id;
         
                     if ($request->filled('daterange') && strpos($request->input('daterange'), ' - ') !== false) {
                         list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                
+        
                         $isWithinDateRange = strtotime($values->created_at) >= strtotime($start_date) && strtotime($values->created_at) <= strtotime($end_date);
                     } else {
                         $isWithinDateRange = true;
                     }
         
                     if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
+                        $totalProject++;
+                        $totalAmount += $values->amount;
                         $nilai_tagihan += $values->harga_vendor * $values->qty;
                     }
                 }
         
+                $value['total_project'] = $totalProject;
+                $value['nilai'] = $totalAmount;
+                $value['detail_url'] = route('laporan_vendor.detail', [$value->id, 'project_id' => $request->project_id]);
                 $value['nilai_tagihan'] = 'Rp ' . number_format($nilai_tagihan, 0, ',', '.');
             } else {
                 $value['total_project'] = 0;
@@ -75,8 +80,7 @@ class LaporanVendorController extends Controller
             $value['eye_image_url'] = "/assets/images/eye.svg";
         }
         
-        $datas = $datas->sortByDesc('nilai_tagihan')->values();
-        
+        $datas = $datas->sortByDesc('nilai_tagihan')->values();        
 
         if($request->report_by){
             return response()->json([
@@ -165,8 +169,11 @@ class LaporanVendorController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProjectPekerjaan::with('vendors')
+            $data = ProjectPekerjaan::with(['vendors','projects'])
             ->where('id_vendor',$request->id)
+            ->when($request->project_id, function ($query) use ($request) {
+                return $query->where('id_project', $request->project_id);
+            })
             ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
@@ -208,6 +215,7 @@ class LaporanVendorController extends Controller
         }
 
         $data = vendor::find($request->id);
+        $data['project_id'] = $request->project_id;
 
         return view('laporan_vendor.detail', compact('data'));
     }

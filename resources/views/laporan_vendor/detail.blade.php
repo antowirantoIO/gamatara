@@ -209,7 +209,7 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_vendor.detail', '') }}/" + {{ $data->id }},
+                url: "{{ route('laporan_vendor.detail', '') }}/" + {{ $data->id }} + "?project_id={{ $data->project_id }}",
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();

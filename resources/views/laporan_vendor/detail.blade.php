@@ -8,9 +8,9 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('laporan_vendor')}}">
-                                <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
-                            </a>
+                        <a href="javascript:void(0);" onclick="history.back();">
+                            <i><img src="{{ asset('assets/images/arrow-left.svg') }}" style="width: 20px;"></i>
+                        </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Report Vendor Detail</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">

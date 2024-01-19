@@ -89,12 +89,12 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xxl-6 col-md-6">
+                    {{-- <div class="col-xxl-6 col-md-6">
                         <div>
                             <label for="id_lokasi" class="form-label">Location Name</label>
                             <input name="id_lokasi" id="id_lokasi" class="form-control"/>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="modal-footer">

@@ -91,7 +91,7 @@
                         <tr>
                             <td height="30" align="center" style="border-right: 20px medium black;border-left: 20px medium black;">{{ $subCount }}</td>
                             <td height="30" style="font-size: 8px;">
-                                @if (strtolower($subkategori) === 'telah dilaksanakan pekerjaan')
+                                @if (str_contains($value->subKategori->name, 'telah dilaksanakan'))
                                     <strong>{{ $value->subKategori->name }} {{ $value->deskripsi_subkategori }}</strong>
                                 @else
                                     <strong>{{ $value->subKategori->name }}</strong>

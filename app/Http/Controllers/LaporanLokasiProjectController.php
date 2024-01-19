@@ -145,8 +145,7 @@ class LaporanLokasiProjectController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $data = OnRequest::has('progress')
-                    ->where('id_lokasi_project', $request->id)
+            $data = OnRequest::where('id_lokasi_project', $request->id)
                     ->filter($request)
                     ->orderBy('created_at','desc')
                     ->get();

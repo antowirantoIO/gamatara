@@ -18,12 +18,6 @@ class LaporanVendorController extends Controller
     public function index(Request $request)
     {
         $datas = Vendor::has('projectPekerjaan')
-        // ->with(['projectPekerjaan' => function ($query) use ($request) {
-        //     if ($request->filled('daterange')) {
-        //         list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-        //         $query->whereBetween('created_at', [$start_date, $end_date]);
-        //     }
-        // }])
         ->when($request->filled('vendor_id'), function ($query) use ($request) {
             $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
                 $innerQuery->where('id_vendor', $request->vendor_id);
@@ -42,59 +36,51 @@ class LaporanVendorController extends Controller
         })
         ->when($request->filled('kategori_vendor'), function ($query) use ($request) {
             $query->where('kategori_vendor', $request->kategori_vendor);
-        })
-        // ->when($request->filled('daterange'), function ($query) use ($request) {
-        //     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
- 
-        //     return $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request, $start_date, $end_date) {
-        //         $reportType = $request->report_by;
-        //         $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
-        //         switch ($reportType) {
-        //             case 'bulan':
-        //                 $innerQuery->whereMonth('created_at', '>=', $start_date)
-        //                     ->whereYear('created_at','<=', $end_date);
-        //                 break;
-        //             case 'tahun':
-        //                 $innerQuery->whereYear('created_at', $start_date);
-        //                 break;
-        //             case 'tanggal':
-        //             default:
-        //                 $innerQuery->whereDate('created_at', '>=', $start_date)
-        //                     ->whereDate('created_at', '<=', $end_date);
-        //                 break;
-        //         }
-        //     });
-        // })        
+        })     
         ->get();
             
-        foreach($datas as $value){
-            if($value->projectPekerjaan)
-            {
-                $value['total_project'] = $value->projectPekerjaan->count();
-                $value['nilai'] = $value->projectPekerjaan->sum('amount');
-                $value['detail_url'] = route('laporan_vendor.detail', $value->id);
-            }else{
-                $value['total_project'] = 0;
-                $value['nilai'] = 0;
-            }
-
-            $value['eye_image_url'] = "/assets/images/eye.svg";
-
-            $nilai_tagihan = 0;
-            
-            if ($value->projectPekerjaan) {
-                foreach($value->projectPekerjaan as $values){
+        foreach ($datas as $value) {
+            $filteredProjects = $value->projectPekerjaan;
         
-                    if ($values) {
+            if ($filteredProjects->isNotEmpty()) {
+                $totalProject = 0;
+                $totalAmount = 0;
+                $nilai_tagihan = 0;
+        
+                foreach ($filteredProjects as $values) {
+                    $isMatchingProjectId = !$request->filled('project_id') || $values->id_project == $request->project_id;
+                    $isMatchingKategoriVendor = !$request->filled('kategori_vendor') || $value->kategori_vendor == $request->kategori_vendor;
+                    $isMatchingVendorId = !$request->filled('vendor_id') || $value->id == $request->vendor_id;
+        
+                    if ($request->filled('daterange') && strpos($request->input('daterange'), ' - ') !== false) {
+                        list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+        
+                        $isWithinDateRange = strtotime($values->created_at) >= strtotime($start_date) && strtotime($values->created_at) <= strtotime($end_date);
+                    } else {
+                        $isWithinDateRange = true;
+                    }
+        
+                    if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
+                        $totalProject++;
+                        $totalAmount += $values->amount;
                         $nilai_tagihan += $values->harga_vendor * $values->qty;
                     }
-                    
                 }
+        
+                $value['total_project'] = $totalProject;
+                $value['nilai'] = number_format($totalAmount, 2, '.', '');
+                $value['detail_url'] = route('laporan_vendor.detail', [$value->id, 'project_id' => $request->project_id, 'daterange' => $request->daterange]);
+                $value['nilai_tagihan'] = 'Rp ' . number_format($nilai_tagihan, 0, ',', '.');
+            } else {
+                $value['total_project'] = 0;
+                $value['nilai'] = 0;
+                $value['nilai_tagihan'] = 'No data available';
             }
         
-            $value['nilai_tagihan'] = 'Rp '. number_format($nilai_tagihan, 0, ',', '.');
+            $value['eye_image_url'] = "/assets/images/eye.svg";
         }
-        $datas = $datas->sortByDesc('nilai_tagihan')->values();
+        
+        $datas = $datas->sortByDesc('nilai_tagihan')->values();        
 
         if($request->report_by){
             return response()->json([
@@ -183,8 +169,15 @@ class LaporanVendorController extends Controller
     public function detail(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProjectPekerjaan::with('vendors')
+            $data = ProjectPekerjaan::with(['vendors','projects'])
             ->where('id_vendor',$request->id)
+            ->when($request->project_id, function ($query) use ($request) {
+                return $query->where('id_project', $request->project_id);
+            })
+            ->when($request->daterange, function ($query) use ($request) {
+                list($start_date, $end_date) = explode(' - ', $request->daterange);
+                return $query->whereBetween('created_at', [$start_date, $end_date]);
+            }) 
             ->filter($request);
 
             return Datatables::of($data)->addIndexColumn()
@@ -226,6 +219,8 @@ class LaporanVendorController extends Controller
         }
 
         $data = vendor::find($request->id);
+        $data['project_id'] = $request->project_id;
+        $data['daterange'] = $request->daterange;
 
         return view('laporan_vendor.detail', compact('data'));
     }

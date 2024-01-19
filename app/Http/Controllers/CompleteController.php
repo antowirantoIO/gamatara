@@ -696,15 +696,24 @@ class CompleteController extends Controller
     public function ajaxAllTagihan (Request $request)
     {
         $data = ProjectPekerjaan::where('id_project', $request->id)
-                                ->with(['subKategori','projects','pekerjaan','projects.pm','projects.customer','vendors'])
-                                ->groupBy('id_kategori','id_subkategori','id_vendor','id_project','deskripsi_subkategori')
-                                ->select('id_subkategori','id_vendor','id_project','id_kategori','deskripsi_subkategori', DB::raw('MAX(id) as id'))
-                                ->distinct();
-        if($request->ajax()){
-            $data = $data->get()->groupBy('id_kategori','id_subkategori')->flatten();
-            return DataTables::of($data)->addIndexColumn()
-            ->make(true);
-        }
+                                ->with(['subKategori', 'projects', 'pekerjaan', 'projects.pm', 'projects.customer', 'vendors'])
+                                ->filter($request)
+                                ->get();
+        $data = $data->unique('id_vendor');
+        return DataTables::of($data)->addIndexColumn()
+                        ->addColumn('code', function($data) {
+                            return $data->projects->code;
+                        })
+                        ->addColumn('nama_project', function($data) {
+                            return $data->projects->nama_project;
+                        })
+                        ->addColumn('customer', function($data) {
+                            return $data->projects->customer->name;
+                        })
+                        ->addColumn('vendor', function($data) {
+                            return $data->vendors->name;
+                        })
+                        ->make(true);
 
     }
 

@@ -174,12 +174,13 @@
                 ajax : {
                     url : '{{ route('complete.ajax.tagiham-all') }}',
                     data : function (d) {
-                        d.code = $('#code').val();
-                        d.id = '{{ $id }}';
-                        d.nama_project = $('#nama_project').val();
+                        filterSearch    = d.search?.value;
+                        d.code          = $('#code').val();
+                        d.id            = '{{ $id }}';
+                        d.nama_project  = $('#nama_project').val();
                         d.nama_customer = $('#nama_customer').val();
-                        d.nama_pm = $('#nama_pm').val();
-                        d.date =  $('#date').val();
+                        d.nama_pm       = $('#nama_pm').val();
+                        d.date          = $('#date').val();
                     }
                 },
                 columns : [

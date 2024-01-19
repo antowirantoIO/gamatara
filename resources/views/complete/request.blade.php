@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-lg-row flex-column">
                         <div class="flex-grow-1 d-flex align-items-center">
-                            <a href="{{route('on_progres.request.tambah-kategori',[$id,$vendor])}}">
+                            <a href="{{route('complete.request.tambah-kategori',[$id,$vendor])}}">
                                 <i><img src="{{asset('assets/images/arrow-left.svg')}}" style="width: 20px;"></i>
                             </a>
                             <h4 class="mb-0 ml-2"> &nbsp; Input Job</h4>
@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{ route('on_progres.work',$id) }}" method="post">
+                                <form action="{{ route('complete.work',$id) }}" method="post">
                                     @csrf
                                     <input type="hidden" id="id_project" name="id_project" value="{{ $id }}">
                                     <div class="row">
@@ -60,7 +60,7 @@
                                             <table class="table" id="tablePekerjaan">
                                                 <thead style="background-color:#194BFB; color: white;">
                                                     <tr>
-                                                        <th>Job</th>
+                                                        <th style="width: 200px">Job</th>
                                                         <th style="width: 200px">Description</th>
                                                         <th style="width: 200px">Location</th>
                                                         <th style="width: 200px">Detail / Other</th>
@@ -151,7 +151,8 @@
                 @foreach ($pekerjaans as $sp)
                     var pe = {!! json_encode($sp->id) !!};
                     var selected = `${id ? (id === pe ? 'selected' : '') : ''}`;
-                    select += `<option ${selected} value="${pe}">{{ $sp->name }}</option>`;
+                    var name_pekerjaan = {!! json_encode($sp->name) !!};
+                    select += `<option ${selected} value="${pe}">${name_pekerjaan}</option>`;
                 @endforeach
 
                 select += `</select>`;
@@ -235,8 +236,7 @@
                             let id_pekerjaan = data.id_pekerjaan || '';
                             var keys = data.DT_RowIndex;
                             return pekerjaan(id_pekerjaan, keys);
-                        },
-                        width: "200px"
+                        }
                     },
                     {
                         data : function (data) {
@@ -305,7 +305,7 @@
                             })
                             return ` <input type="text" class="form-control ${status}" name="thick[]" value="${thick}">`;
                         },
-                        width : '70px'
+                        width : '50px'
                     },
                     {
                         data : function (data) {
@@ -327,7 +327,7 @@
                             })
                             return ` <input type="text" class="form-control ${status}" name="amount[]" value="${amount}">`;
                         },
-                        width : '70px'
+                        width : '100px'
                     },
                     {
                         data : function (data) {

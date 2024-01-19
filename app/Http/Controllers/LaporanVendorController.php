@@ -68,7 +68,7 @@ class LaporanVendorController extends Controller
                 }
         
                 $value['total_project'] = $totalProject;
-                $value['nilai'] = $totalAmount;
+                $value['nilai'] = number_format($totalAmount, 2, '.', '');
                 $value['detail_url'] = route('laporan_vendor.detail', [$value->id, 'project_id' => $request->project_id, 'daterange' => $request->daterange]);
                 $value['nilai_tagihan'] = 'Rp ' . number_format($nilai_tagihan, 0, ',', '.');
             } else {

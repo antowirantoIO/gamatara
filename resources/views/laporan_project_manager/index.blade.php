@@ -302,7 +302,11 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return val;
+                                if (val % 1 !== 0) {
+                                    return val.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+                                } else {
+                                    return val.toLocaleString('id-ID');
+                                }
                             },
                         },
                     },

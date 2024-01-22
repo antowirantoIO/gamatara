@@ -37,12 +37,14 @@ class LaporanVendorController extends Controller
         ->when($request->filled('kategori_vendor'), function ($query) use ($request) {
             $query->where('kategori_vendor', $request->kategori_vendor);
         })     
+        ->orderBy('name','asc')
         ->get();
-            
+ 
         foreach ($datas as $value) {
             $filteredProjects = $value->projectPekerjaan;
         
             if ($filteredProjects->isNotEmpty()) {
+                $uniqueProjectIds = []; 
                 $totalProject = 0;
                 $totalAmount = 0;
                 $nilai_tagihan = 0;
@@ -61,26 +63,26 @@ class LaporanVendorController extends Controller
                     }
         
                     if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
-                        $totalProject++;
                         $totalAmount += $values->amount;
                         $nilai_tagihan += $values->harga_vendor * $values->qty;
                     }
+
+                    if (!in_array($values->id_project, $uniqueProjectIds)) {
+                        $uniqueProjectIds[] = $values->id_project;
+                    }
+                    
                 }
-        
-                $value['total_project'] = $totalProject;
+                $value['total_project'] = count($uniqueProjectIds);
                 $value['nilai'] = number_format($totalAmount, 2, '.', '');
                 $value['detail_url'] = route('laporan_vendor.detail', [$value->id, 'project_id' => $request->project_id, 'daterange' => $request->daterange]);
                 $value['nilai_tagihan'] = 'Rp ' . number_format($nilai_tagihan, 0, ',', '.');
             } else {
-                $value['total_project'] = 0;
                 $value['nilai'] = 0;
                 $value['nilai_tagihan'] = 'No data available';
             }
         
             $value['eye_image_url'] = "/assets/images/eye.svg";
-        }
-        
-        $datas = $datas->sortByDesc('nilai_tagihan')->values();        
+        } 
 
         if($request->report_by){
             return response()->json([
@@ -93,7 +95,6 @@ class LaporanVendorController extends Controller
         $kategori_vendor = KategoriVendor::get();
 
         return view('laporan_vendor.index', compact('vendors','datas','project','kategori_vendor'));
-        
     }
 
     public function dataCharts(Request $request)
@@ -178,7 +179,10 @@ class LaporanVendorController extends Controller
                 list($start_date, $end_date) = explode(' - ', $request->daterange);
                 return $query->whereBetween('created_at', [$start_date, $end_date]);
             }) 
-            ->filter($request);
+            ->filter($request)
+            ->selectRaw('id_project, SUM(harga_vendor * qty) as total')
+            ->groupBy('id_project')
+            ->groupBy('id_project');
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('code', function($data){
@@ -191,7 +195,7 @@ class LaporanVendorController extends Controller
                 return $data->total ?? '0';
             })
             ->addColumn('nilai_tagihan', function($data){
-                $harga_vendor = $data->harga_vendor * $data->qty;
+                $harga_vendor = $data->total;
                 if (is_numeric($harga_vendor)) {
                     return 'Rp ' . number_format($harga_vendor, 0, ',', '.');
                 } else {

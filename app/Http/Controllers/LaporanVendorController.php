@@ -63,14 +63,12 @@ class LaporanVendorController extends Controller
                     }
         
                     if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
+                        if (!in_array($values->id_project, $uniqueProjectIds)) {
+                            $uniqueProjectIds[] = $values->id_project;
+                        }
                         $totalAmount += $values->amount;
                         $nilai_tagihan += $values->harga_vendor * $values->qty;
                     }
-
-                    if (!in_array($values->id_project, $uniqueProjectIds)) {
-                        $uniqueProjectIds[] = $values->id_project;
-                    }
-                    
                 }
                 $value['total_project'] = count($uniqueProjectIds);
                 $value['nilai'] = number_format($totalAmount, 2, '.', '');

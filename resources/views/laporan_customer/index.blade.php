@@ -11,11 +11,16 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Customer</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('laporan_customer.export') }}" class="btn btn-danger">
+                            <button class="btn btn-danger" id="export-button">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </a>
+                            </button>
+                            <!-- <a href="{{ route('laporan_customer.export') }}" class="btn btn-danger">
+                                <span>
+                                    <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                </span> &nbsp; Export
+                            </a> -->
                         </div>
                     </div>
                 </div>
@@ -184,6 +189,24 @@
                     }
                     });
                 })
+        });
+
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var customer_id = $('#customer_id').val();
+            var daterange   = $('#daterange').val();
+
+            var url = '{{ route("laporan_customer.export") }}?' + $.param({
+                customer_id     : customer_id,
+                daterange       : daterange,
+            });
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
         });
 
 

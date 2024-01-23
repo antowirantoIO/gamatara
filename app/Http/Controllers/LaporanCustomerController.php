@@ -19,7 +19,7 @@ class LaporanCustomerController extends Controller
     public function index(Request $request)
     {
         $datas = Customer::has('projects')
-        ->with(['projects.progress' => function ($query) use ($request) {
+        ->with(['projects' => function ($query) use ($request) {
             if ($request->filled('daterange')) {
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
                 $query->whereBetween('created_at', [$start_date, $end_date]);
@@ -30,39 +30,52 @@ class LaporanCustomerController extends Controller
                 $innerQuery->where('id_customer', $request->customer_id);
             });
         })
+        ->orderBy('name','asc')
         ->get();
 
         foreach ($datas as $value) {
-            if ($value->projects) {
+            $filteredProjects = $value->projects;
+        
+            if ($filteredProjects->isNotEmpty()) {
+                $totalHargaCustomer = 0;
                 $id = '';
-                foreach ($value->projects as $project) {
+                $filteredProjectCount = 0;
+        
+                foreach ($filteredProjects as $project) {
                     $id = $project->id_customer;
-                }
-                $value['total_project'] = $value->projects->count();
-                $value['detail_url'] = route('laporan_customer.detail', $id);
-            } else {
-                $value['total_project'] = 0;
-            }
-            $value['eye_image_url'] = "/assets/images/eye.svg";
-
-            $totalHargaCustomer = 0;
-
-            if ($value->projects) {
-                foreach ($value->projects as $values) {
-                    foreach ($values->progress as $project) {
-                        $progress = $project ?? null;
-                        
-                        if ($progress) {
-                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+        
+                    $isMatchingCustomerId = !$request->filled('customer_id') || $project->id_customer == $request->customer_id;
+        
+                    if ($request->filled('daterange') && strpos($request->input('daterange'), ' - ') !== false) {
+                        list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+        
+                        $isWithinDateRange = strtotime($project->created_at) >= strtotime($start_date) && strtotime($project->created_at) <= strtotime($end_date);
+                    } else {
+                        $isWithinDateRange = true;
+                    }
+        
+                    if ($isMatchingCustomerId && $isWithinDateRange) {
+                        $filteredProjectCount++;
+        
+                        foreach ($project->progress as $vals) {
+                            $progress = $vals ?? null;
+        
+                            if ($progress) {
+                                $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                            }
                         }
                     }
                 }
+        
+                $value['total_project'] = $filteredProjectCount;
+                $value['detail_url'] = route('laporan_customer.detail', [$id, 'daterange' => $request->daterange]);
+                $value['totalHargaCustomer'] = 'Rp ' . number_format($totalHargaCustomer, 0, ',', '.');
+            } else {
+                $value['total_project'] = 0;
+                $value['totalHargaCustomer'] = 0;
             }
-
-            $value['totalHargaCustomer'] = 'Rp ' . number_format($totalHargaCustomer, 0, ',', '.');
+            $value['eye_image_url'] = "/assets/images/eye.svg";
         }
-
-        $datas = $datas->sortByDesc('totalHargaCustomer')->values();
 
         if($request->report_by){
             return response()->json([
@@ -91,8 +104,11 @@ class LaporanCustomerController extends Controller
             });
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
-            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-            return $query->whereBetween('created_at', [$start_date, $end_date]);
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                return $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
+            });
+            
         })  
         ->get()
         ->groupBy('projects.id_customer');
@@ -168,15 +184,12 @@ class LaporanCustomerController extends Controller
     {
         if ($request->ajax()) {
             $data = OnRequest::where('id_customer', $request->id)
+                    ->when($request->daterange, function ($query) use ($request) {
+                        list($start_date, $end_date) = explode(' - ', $request->daterange);
+                        return $query->whereBetween('created_at', [$start_date, $end_date]);
+                    }) 
                     ->filter($request)
                     ->get();
-            // $cekIds = $cek->pluck('id')->toArray();
-            // $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
-            //         ->addSelect(['total' => OnRequest::selectRaw('count(*)')
-            //             ->whereColumn('project_pekerjaan.id_project', 'project.id')
-            //             ->groupBy('id_customer')
-            //         ])
-                    
 
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('code', function($data){
@@ -231,14 +244,28 @@ class LaporanCustomerController extends Controller
         }
 
         $data = OnRequest::where('id_customer',$request->id)->first();
+        $data['daterange'] = $request->daterange;
 
         return view('laporan_customer.detail', compact('data'));
     }
 
     public function export(Request $request)
     {
-        $data = Customer::has('projects')->with('projects','projects.progress')->get();
-        
+        $data = Customer::has('projects')
+        ->with(['projects' => function ($query) use ($request) {
+            if ($request->filled('daterange')) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            }
+        }])
+        ->when($request->filled('customer_id'), function ($query) use ($request) {
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_customer', $request->customer_id);
+            });
+        })
+        ->orderBy('name','asc')
+        ->get();
+
         foreach($data as $value){
             if($value->projects)
             {
@@ -273,14 +300,6 @@ class LaporanCustomerController extends Controller
                 ->where('id_customer', $request->id)
                 ->filter($request)
                 ->get();
-
-        // $cekIds = $cek->pluck('id')->toArray();
-        // $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
-        //         ->addSelect(['total' => OnRequest::selectRaw('count(*)')
-        //             ->whereColumn('project_pekerjaan.id_project', 'project.id')
-        //             ->groupBy('id_customer')
-        //         ])
-        //         ->filter($request)->get();
 
         foreach($data as $value){
             $totalHarga = 0;

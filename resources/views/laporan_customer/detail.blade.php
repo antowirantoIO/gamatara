@@ -212,7 +212,7 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_customer.detail', '') }}/" + {{ $data->id_customer }},
+                url: "{{ route('laporan_customer.detail', '') }}/" + {{ $data->id_customer }} + "?daterange={{ $data->daterange }}",
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();

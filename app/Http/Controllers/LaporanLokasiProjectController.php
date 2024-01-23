@@ -212,8 +212,19 @@ class LaporanLokasiProjectController extends Controller
     public function export(Request $request)
     {
         $data = LokasiProject::has('projects')
-                ->with('projects','projects.progress')
-                ->get();
+        ->with(['projects' => function ($query) use ($request) {
+            if ($request->filled('daterange')) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            }
+        }])
+        ->when($request->filled('lokasi_id'), function ($query) use ($request) {
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_lokasi_project', $request->lokasi_id);
+            });
+        })
+        ->orderBy('name','asc')
+        ->get();
         
         foreach($data as $value){
             if($value->projects)

@@ -11,11 +11,16 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Project Manager</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('laporan_project_manager.export') }}" class="btn btn-danger">
+                            <!-- <a href="{{ route('laporan_project_manager.export') }}" class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </a>
+                            </a> -->
+                            <button class="btn btn-danger" id="export-button">
+                                <span>
+                                    <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                </span> &nbsp; Export
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -181,8 +186,26 @@
                     error: function (error) {
                         console.error(error);
                     }
-                    });
-                })
+                });
+            })
+        });
+
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var project_manager_id  = $('#project_manager_id').val();
+            var daterange           = $('#daterange').val();
+
+            var url = '{{ route("laporan_project_manager.export") }}?' + $.param({
+                project_manager_id  : project_manager_id,
+                daterange           : daterange,
+            });
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
         });
 
 

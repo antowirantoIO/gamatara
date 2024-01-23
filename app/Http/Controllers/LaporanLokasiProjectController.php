@@ -62,7 +62,7 @@ class LaporanLokasiProjectController extends Controller
                                 $progress = $vals ?? null;
             
                                 if ($progress) {
-                                    $total += $progress->harga_customer * $progress->qty;
+                                    $total += $progress->harga_customer * $progress->amount;
                                 }
                             }
                         }
@@ -136,7 +136,7 @@ class LaporanLokasiProjectController extends Controller
                     $date[] = $keyDate;
 
                 $price_project[$keyId][] = $item->sum(function ($individualItem) {
-                    return ($individualItem->harga_customer ?? 0) * ($individualItem->qty ?? 0);
+                    return ($individualItem->harga_customer ?? 0) * ($individualItem->amount ?? 0);
                 });
             }
             $data_customer[] = [
@@ -174,7 +174,7 @@ class LaporanLokasiProjectController extends Controller
                 $totalHarga = 0;
         
                 foreach ($data->progress as $progress) {
-                    $totalHarga += $progress->harga_customer * $progress->qty;
+                    $totalHarga += $progress->harga_customer * $progress->amount;
                 }
 
                 if (is_numeric($totalHarga)) {
@@ -231,7 +231,7 @@ class LaporanLokasiProjectController extends Controller
                         $progress = $project ?? null;
             
                         if ($progress) {
-                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                            $totalHargaCustomer += $progress->harga_customer * $progress->amount;
                         }
                     }
                 }
@@ -263,7 +263,7 @@ class LaporanLokasiProjectController extends Controller
             $totalHarga = 0;
             
             foreach ($value->progress as $progress) {
-                $totalHarga += $progress->harga_customer * $progress->qty;
+                $totalHarga += $progress->harga_customer * $progress->amount;
             }
 
             if (is_numeric($totalHarga)) {

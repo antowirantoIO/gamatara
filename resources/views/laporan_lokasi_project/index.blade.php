@@ -188,8 +188,8 @@
                     error: function (error) {
                         console.error(error);
                     }
-                    });
-                })
+                });
+            })
         });
 
         $('#export-button').on('click', function(event) {
@@ -210,125 +210,125 @@
             setTimeout(hideOverlay, 2000);
         });
 
-
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-        },
-    });
-
-    const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
-        series: [],
-        chart: {
-            type: "bar",
-            height: 350,
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: "55%",
-                endingShape: "rounded",
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ["transparent"],
-        },
-        xaxis: {
-            categories: ["Month"],
-        },
-        fill: {
-            opacity: 1,
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val
-                },
-            },
-        },
-    });
-    chartTab.render();
-
-    const domString = {
-        form_filter: $('#form_filter'),
-    }
-
-    $(() => {
-        domString.form_filter.on('submit', (e) => {
-            e.preventDefault()
-            const data = domString.form_filter.serialize()
-            chartData(data)
-        })
-    })
-
-    function chartData(input) {
-        $.ajax({
-            url: `{{ route('laporan_lokasi_project.dataChart') }}`,
-            method: "POST",
-            data: input,
-            success: function (data) {
-
-                chartTab.updateOptions({
-                    series: data.data_customer,
-                    chart: {
-                        type: "bar",
-                        height: 350,
-                    },
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            columnWidth: "55%",
-                            endingShape: "rounded",
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false,
-                    },
-                    stroke: {
-                        show: true,
-                        width: 2,
-                        colors: ["transparent"],
-                    },
-                    xaxis: {
-                        categories: data.date,
-                    },
-                    yaxis: {
-                        labels: {
-                            formatter: function (val) {
-                                return val.toLocaleString();
-                            }
-                        }
-                    },
-                    fill: {
-                        opacity: 1,
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function (val) {
-                                if (val % 1 !== 0) {
-                                    return val.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-                                } else {
-                                    return val.toLocaleString('id-ID');
-                                }
-                            },
-                        },
-                    },
-                });
-            },
-            error: function (err) {
-                console.log(err.responseJSON.message);
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
             },
         });
-    }
 
-    $(function () {
-        $(".select2").select2();
-    });
+        const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
+            series: [],
+            chart: {
+                type: "bar",
+                height: 350,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: "55%",
+                    endingShape: "rounded",
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ["transparent"],
+            },
+            xaxis: {
+                categories: ["Month"],
+            },
+            fill: {
+                opacity: 1,
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val
+                    },
+                },
+            },
+        });
+
+        chartTab.render();
+
+        const domString = {
+            form_filter: $('#form_filter'),
+        }
+
+        $(() => {
+            domString.form_filter.on('submit', (e) => {
+                e.preventDefault()
+                const data = domString.form_filter.serialize()
+                chartData(data)
+            })
+        })
+
+        function chartData(input) {
+            $.ajax({
+                url: `{{ route('laporan_lokasi_project.dataChart') }}`,
+                method: "POST",
+                data: input,
+                success: function (data) {
+
+                    chartTab.updateOptions({
+                        series: data.data_customer,
+                        chart: {
+                            type: "bar",
+                            height: 350,
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: "55%",
+                                endingShape: "rounded",
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        stroke: {
+                            show: true,
+                            width: 2,
+                            colors: ["transparent"],
+                        },
+                        xaxis: {
+                            categories: data.date,
+                        },
+                        yaxis: {
+                            labels: {
+                                formatter: function (val) {
+                                    return val.toLocaleString();
+                                }
+                            }
+                        },
+                        fill: {
+                            opacity: 1,
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    if (val % 1 !== 0) {
+                                        return val.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+                                    } else {
+                                        return val.toLocaleString('id-ID');
+                                    }
+                                },
+                            },
+                        },
+                    });
+                },
+                error: function (err) {
+                    console.log(err.responseJSON.message);
+                },
+            });
+        }
+
+        $(function () {
+            $(".select2").select2();
+        });
     
 </script>
 @endsection

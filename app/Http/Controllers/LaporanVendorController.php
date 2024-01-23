@@ -67,7 +67,7 @@ class LaporanVendorController extends Controller
                             $uniqueProjectIds[] = $values->id_project;
                         }
                         $totalAmount += $values->amount;
-                        $nilai_tagihan += $values->harga_vendor * $values->qty;
+                        $nilai_tagihan += $values->harga_vendor * $values->amount;
                     }
                 }
                 $value['total_project'] = count($uniqueProjectIds);
@@ -149,7 +149,7 @@ class LaporanVendorController extends Controller
                 // $price_project[$keyId][] = $item->sum('harga_vendor') * $item->sum('qty');
                 $price_project[$keyId] = [];
                 $price_project[$keyId][] = $item->sum(function ($individualItem) {
-                    return ($individualItem->harga_vendor ?? 0) * ($individualItem->qty ?? 0);
+                    return ($individualItem->harga_vendor ?? 0) * ($individualItem->amount ?? 0);
                 });
 
             }
@@ -178,7 +178,7 @@ class LaporanVendorController extends Controller
                 return $query->whereBetween('created_at', [$start_date, $end_date]);
             }) 
             ->filter($request)
-            ->selectRaw('id_project, SUM(harga_vendor * qty) as total')
+            ->selectRaw('id_project, SUM(harga_vendor * amount) as total')
             ->groupBy('id_project')
             ->groupBy('id_project');
 
@@ -229,32 +229,67 @@ class LaporanVendorController extends Controller
 
     public function export(Request $request)
     {
-        $data = Vendor::filter($request)->get();
+        $data = Vendor::when($request->filled('vendor_id'), function ($query) use ($request) {
+            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_vendor', $request->vendor_id);
+            });
+        })
+        ->when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request,$start_date,$end_date) {
+                $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
+            });
+        }) 
+        ->when($request->filled('project_id'), function ($query) use ($request) {
+            $query->whereHas('projectPekerjaan', function ($innerQuery) use ($request) {
+                $innerQuery->where('id_project', $request->project_id);
+            });
+        })
+        ->when($request->filled('kategori_vendor'), function ($query) use ($request) {
+            $query->where('kategori_vendor', $request->kategori_vendor);
+        })     
+        ->orderBy('name','asc')
+        ->filter($request)
+        ->get();
         
-        foreach($data as $value){
-            if($value->projectPekerjaan)
-            {
-                $value['total_project'] = $value->projectPekerjaan->count();
-                $value['nilai'] = $value->projectPekerjaan->sum('amount');
-            }else{
-                $value['total_project'] = 0;
-                $value['nilai'] = 0;
-            }
-
-            $nilai_tagihan = 0;
-            
-            if ($value->projectPekerjaan) {
-                foreach($value->projectPekerjaan as $values){
+        foreach ($data as $value) {
+            $filteredProjects = $value->projectPekerjaan;
         
-                    if ($values) {
-                        $nilai_tagihan += $values->harga_vendor * $values->qty;
+            if ($filteredProjects->isNotEmpty()) {
+                $uniqueProjectIds = []; 
+                $totalProject = 0;
+                $totalAmount = 0;
+                $nilai_tagihan = 0;
+        
+                foreach ($filteredProjects as $values) {
+                    $isMatchingProjectId = !$request->filled('project_id') || $values->id_project == $request->project_id;
+                    $isMatchingKategoriVendor = !$request->filled('kategori_vendor') || $value->kategori_vendor == $request->kategori_vendor;
+                    $isMatchingVendorId = !$request->filled('vendor_id') || $value->id == $request->vendor_id;
+        
+                    if ($request->filled('daterange') && strpos($request->input('daterange'), ' - ') !== false) {
+                        list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+        
+                        $isWithinDateRange = strtotime($values->created_at) >= strtotime($start_date) && strtotime($values->created_at) <= strtotime($end_date);
+                    } else {
+                        $isWithinDateRange = true;
                     }
-                    
-                }
-            }
         
-            $value['nilai_tagihan'] = 'Rp '. number_format($nilai_tagihan, 0, ',', '.');
-        }
+                    if ($isMatchingProjectId && $isMatchingKategoriVendor && $isMatchingVendorId && $isWithinDateRange) {
+                        if (!in_array($values->id_project, $uniqueProjectIds)) {
+                            $uniqueProjectIds[] = $values->id_project;
+                        }
+                        $totalAmount += $values->amount;
+                        $nilai_tagihan += $values->harga_vendor * $values->amount;
+                    }
+                }
+                $value['total_project'] = count($uniqueProjectIds);
+                $value['nilai'] = number_format($totalAmount, 2, '.', '');
+                $value['nilai_tagihan'] = 'Rp ' . number_format($nilai_tagihan, 0, ',', '.');
+            } else {
+                $value['nilai'] = 0;
+                $value['nilai_tagihan'] = 'No data available';
+            }
+        } 
 
         return Excel::download(new ExportReportVendor($data), 'Report Vendor.xlsx');
     }

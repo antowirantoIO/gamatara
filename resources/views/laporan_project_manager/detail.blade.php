@@ -180,7 +180,8 @@
             })
 
             let id = '{{ $id }}';
-            let url = '{{ route('laporan_project_manager.detail',':id') }}';
+            let dates = '{{ $pm->daterange }}';
+            let url = '{{ route('laporan_project_manager.detail', ':id') }}?daterange={{ $pm->daterange }}';
             let urlReplace = url.replace(':id',id);
             let filterSearch = '';
 

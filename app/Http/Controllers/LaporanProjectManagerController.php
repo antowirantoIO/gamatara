@@ -16,12 +16,6 @@ class LaporanProjectManagerController extends Controller
     public function index(Request $request)
     {
         $datas = ProjectManager::has('projects')
-        ->with(['projects' => function ($query) use ($request) {
-            if ($request->filled('daterange')) {
-                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-                $query->whereBetween('created_at', [$start_date, $end_date]);
-            }
-        }])
         ->when($request->filled('project_manager_id'), function ($query) use ($request) {
             $query->whereHas('projects', function ($innerQuery) use ($request) {
                 $innerQuery->where('pm_id', $request->project_manager_id);
@@ -37,7 +31,7 @@ class LaporanProjectManagerController extends Controller
 
         foreach ($datas as $value) {
             if ($value->projects) {
-                $value['detail_url'] = route('laporan_project_manager.detail', $value->id);
+                $value['detail_url'] = route('laporan_project_manager.detail', [$value->id, 'daterange' => $request->daterange]);
                 $value['name'] = $value->karyawan->name ?? '';
                 $value['onprogress'] = $value->projects->where('status', 1)->count();
                 $value['complete'] = $value->projects->where('status', 2)->count();
@@ -151,13 +145,25 @@ class LaporanProjectManagerController extends Controller
         }
 
         $pm = ProjectManager::where('id',$id)->first();
+        $pm['daterange'] = $request->daterange;
 
         return view('laporan_project_manager.detail',compact('id','pm'));
     }
 
     public function export(Request $request)
     {
-        $data = ProjectManager::all();
+        $data = ProjectManager::when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            });
+        })
+        ->when($request->filled('project_manager_id'), function ($query) use ($request) {
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                $innerQuery->where('pm_id', $request->project_manager_id);
+            });
+        })
+        ->get();
 
         return Excel::download(new ExportLaporanProjectManager($data),'Report Project Manager.xlsx');
         return view('export.ExportLaporanManager',compact('data'));

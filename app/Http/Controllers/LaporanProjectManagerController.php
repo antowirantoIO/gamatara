@@ -27,12 +27,12 @@ class LaporanProjectManagerController extends Controller
                 $innerQuery->where('pm_id', $request->project_manager_id);
             });
         })
-        // ->when($request->filled('daterange'), function ($query) use ($request) {
-        //     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-        //     $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
-        //         $query->whereBetween('created_at', [$start_date, $end_date]);
-        //     });
-        // })
+        ->when($request->filled('daterange'), function ($query) use ($request) {
+            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            $query->whereHas('projects', function ($query) use ($request, $start_date, $end_date) {
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            });
+        })
         ->get();
 
         foreach ($datas as $value) {

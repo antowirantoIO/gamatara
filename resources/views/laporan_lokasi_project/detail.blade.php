@@ -210,7 +210,7 @@
                 previousButton.css('display', 'none');
             },
             ajax: {
-                url: "{{ route('laporan_lokasi_project.detail', '') }}/" + {{ $data->id_lokasi_project }},
+                url: "{{ route('laporan_lokasi_project.detail', '') }}/" + {{ $data->id_lokasi_project }} + "?daterange={{ $data->daterange }}",
                 data: function (d) {
                     filterSearch        = d.search?.value;
                     d.code              = $('#code').val();

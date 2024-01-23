@@ -61,7 +61,7 @@ class LaporanCustomerController extends Controller
                             $progress = $vals ?? null;
         
                             if ($progress) {
-                                $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                                $totalHargaCustomer += $progress->harga_customer * $progress->amount;
                             }
                         }
                     }
@@ -108,7 +108,6 @@ class LaporanCustomerController extends Controller
                 list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
                 return $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
             });
-            
         })  
         ->get()
         ->groupBy('projects.id_customer');
@@ -137,7 +136,7 @@ class LaporanCustomerController extends Controller
                 
                 // $price_project[$keyId][] = $item->sum('harga_customer') * $item->sum('qty');
                 $price_project[$keyId][] = $item->sum(function ($individualItem) {
-                    return ($individualItem->harga_customer ?? 0) * ($individualItem->qty ?? 0);
+                    return ($individualItem->harga_customer ?? 0) * ($individualItem->amount ?? 0);
                 });
             }
             $data_customer[] = [
@@ -201,7 +200,7 @@ class LaporanCustomerController extends Controller
                 $totalHarga = 0;
         
                 foreach ($data->progress as $progress) {
-                    $totalHarga += $progress->harga_customer * $progress->qty;
+                    $totalHarga += $progress->harga_customer * $progress->amount;
                 }
 
                 if (is_numeric($totalHarga)) {
@@ -282,7 +281,7 @@ class LaporanCustomerController extends Controller
                         $progress = $project ?? null;
             
                         if ($progress) {
-                            $totalHargaCustomer += $progress->harga_customer * $progress->qty;
+                            $totalHargaCustomer += $progress->harga_customer * $progress->amount;
                         }
                     }
                 }
@@ -304,7 +303,7 @@ class LaporanCustomerController extends Controller
         foreach($data as $value){
             $totalHarga = 0;
             foreach ($value->progress as $progress) {
-                $totalHarga += $progress->harga_customer * $progress->qty;
+                $totalHarga += $progress->harga_customer * $progress->amount;
             }
 
             if (is_numeric($totalHarga)) {

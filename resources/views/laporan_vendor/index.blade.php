@@ -11,11 +11,16 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Vendor</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('laporan_vendor.export') }}" class="btn btn-danger">
+                            <!-- <a href="{{ route('laporan_vendor.export') }}" class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </a>
+                            </a> -->
+                            <button class="btn btn-danger" id="export-button">
+                                <span>
+                                    <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                </span> &nbsp; Export
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -206,120 +211,143 @@
                 error: function (error) {
                     console.error(error);
                 }
+                });
             });
         });
-    });
 
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
-        },
-    });
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
 
-    const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
-        series: [],
-        chart: {
-            type: "bar",
-            height: 350,
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: "55%",
-                endingShape: "rounded",
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ["transparent"],
-        },
-        xaxis: {
-            categories: ["Month"],
-        },
-        fill: {
-            opacity: 1,
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val
-                },
-            },
-        },
-    });
-    chartTab.render();
+            var project_id      = $('#project_id').val();
+            var vendor_id       = $('#vendor_id').val();
+            var kategori_vendor = $('#kategori_vendor').val();
+            var daterange       = $('#daterange').val();
 
-    const domString = {
-        form_filter: $('#form_filter'),
-    }
+            var url = '{{ route("laporan_vendor.export") }}?' + $.param({
+                project_id      : project_id,
+                vendor_id       : vendor_id,
+                kategori_vendor :kategori_vendor,
+                daterange       : daterange,
+            });
 
-    $(() => {
+            $('.loading-overlay').show();
 
-        domString.form_filter.on('submit', (e) => {
-            e.preventDefault()
-            const data = domString.form_filter.serialize()
-            chartData(data)
-        })
-    })
+            window.location.href = url;
 
-    function chartData(input) {
-        $.ajax({
-            url: `{{ route('laporan_vendor.dataCharts') }}`,
-            method: "POST",
-            data: input,
-            success: function (data) {
-                chartTab.updateOptions({
-                    series: data.data_vendor,
-                    chart: {
-                        type: "bar",
-                        height: 350,
-                    },
-                    plotOptions: {
-                        bar: {
-                            horizontal: false,
-                            columnWidth: "55%",
-                            endingShape: "rounded",
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false,
-                    },
-                    stroke: {
-                        show: true,
-                        width: 2,
-                        colors: ["transparent"],
-                    },
-                    xaxis: {
-                        categories: data.date,
-                    },
-                    fill: {
-                        opacity: 1,
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function (val) {
-                                if (val % 1 !== 0) {
-                                    return val.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-                                } else {
-                                    return val.toLocaleString('id-ID');
-                                }
-                            },
-                        },
-                    },
-                });
-            },
-            error: function (err) {
-                console.log(err.responseJSON.message);
+            setTimeout(hideOverlay, 2000);
+        });
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content"),
             },
         });
-    }
 
-    $(function () {
-        $(".select2").select2();
-    });
+        const chartTab = new ApexCharts(document.querySelector("#chartContent"), {
+            series: [],
+            chart: {
+                type: "bar",
+                height: 350,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: "55%",
+                    endingShape: "rounded",
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ["transparent"],
+            },
+            xaxis: {
+                categories: ["Month"],
+            },
+            fill: {
+                opacity: 1,
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val
+                    },
+                },
+            },
+        });
+
+        chartTab.render();
+
+        const domString = {
+            form_filter: $('#form_filter'),
+        }
+
+        $(() => {
+
+            domString.form_filter.on('submit', (e) => {
+                e.preventDefault()
+                const data = domString.form_filter.serialize()
+                chartData(data)
+            })
+        })
+
+        function chartData(input) {
+            $.ajax({
+                url: `{{ route('laporan_vendor.dataCharts') }}`,
+                method: "POST",
+                data: input,
+                success: function (data) {
+                    chartTab.updateOptions({
+                        series: data.data_vendor,
+                        chart: {
+                            type: "bar",
+                            height: 350,
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: "55%",
+                                endingShape: "rounded",
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        stroke: {
+                            show: true,
+                            width: 2,
+                            colors: ["transparent"],
+                        },
+                        xaxis: {
+                            categories: data.date,
+                        },
+                        fill: {
+                            opacity: 1,
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    if (val % 1 !== 0) {
+                                        return val.toLocaleString('id-ID', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+                                    } else {
+                                        return val.toLocaleString('id-ID');
+                                    }
+                                },
+                            },
+                        },
+                    });
+                },
+                error: function (err) {
+                    console.log(err.responseJSON.message);
+                },
+            });
+        }
+
+        $(function () {
+            $(".select2").select2();
+        });
 </script>
 @endsection

@@ -214,7 +214,7 @@
             colors: ["transparent"],
         },
         xaxis: {
-            categories: ["hari"],
+            categories: ["Month"],
         },
         fill: {
             opacity: 1,

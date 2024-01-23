@@ -11,11 +11,16 @@
                             <h4 class="mb-0 ml-2"> &nbsp; Report Project Location</h4>
                         </div>
                         <div class="mt-3 mt-lg-0 ml-lg-auto">
-                            <a href="{{ route('laporan_lokasi_project.export') }}" class="btn btn-danger">
+                            <!-- <a href="{{ route('laporan_lokasi_project.export') }}" class="btn btn-danger">
                                 <span>
                                     <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
                                 </span> &nbsp; Export
-                            </a>
+                            </a> -->
+                            <button class="btn btn-danger" id="export-button">
+                                <span>
+                                    <i><img src="{{asset('assets/images/directbox-send.svg')}}" style="width: 15px;"></i>
+                                </span> &nbsp; Export
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -187,6 +192,24 @@
                 })
         });
 
+        $('#export-button').on('click', function(event) {
+            event.preventDefault(); 
+
+            var lokasi_id   = $('#lokasi_id').val();
+            var daterange   = $('#daterange').val();
+
+            var url = '{{ route("laporan_lokasi_project.export") }}?' + $.param({
+                lokasi_id   : lokasi_id,
+                daterange   : daterange,
+            });
+
+            $('.loading-overlay').show();
+
+            window.location.href = url;
+
+            setTimeout(hideOverlay, 2000);
+        });
+
 
     $.ajaxSetup({
         headers: {
@@ -216,7 +239,7 @@
             colors: ["transparent"],
         },
         xaxis: {
-            categories: ["hari"],
+            categories: ["Month"],
         },
         fill: {
             opacity: 1,

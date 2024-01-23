@@ -20,7 +20,7 @@ class LaporanLokasiProjectController extends Controller
     public function index(Request $request)
     {
         $datas = LokasiProject::has('projects')
-            ->with(['projects.progress' => function ($query) use ($request) {
+            ->with(['projects' => function ($query) use ($request) {
                 if ($request->filled('daterange')) {
                     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
                     $query->whereBetween('created_at', [$start_date, $end_date]);
@@ -31,45 +31,52 @@ class LaporanLokasiProjectController extends Controller
                     $innerQuery->where('id_lokasi_project', $request->lokasi_id);
                 });
             })
-            // ->when($request->filled('daterange'), function ($query) use ($request) {
-            //     list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-            //     $query->whereHas('projects.progress', function ($query) use ($request, $start_date, $end_date) {
-            //         $query->whereBetween('created_at', [$start_date, $end_date]);
-            //     });
-            // })
+            ->orderBy('name','asc')
             ->get();
 
             foreach ($datas as $value) {
-                if ($value->projects) {
+                $filteredProjects = $value->projects;
+            
+                if ($filteredProjects->isNotEmpty()) {
+                    $total = 0;
                     $id = '';
-                    foreach ($value->projects as $project) {
+                    $filteredProjectCount = 0;
+            
+                    foreach ($filteredProjects as $project) {
                         $id = $project->id_lokasi_project;
-                    }
-                    $value['total_project'] = $value->projects->count();
-                    $value['detail_url'] = route('laporan_lokasi_project.detail', $id);
-                } else {
-                    $value['total_project'] = 0;
-                }
-                $value['eye_image_url'] = "/assets/images/eye.svg";
-
-                $total = 0;
-
-                if ($value->projects) {
-                    foreach ($value->projects as $values) { 
-                        foreach ($values->progress as $project) {
-                            $progress = $project ?? null;
-
-                            if ($progress) {
-                                $total += $progress->harga_customer * $progress->qty;
+            
+                        $isMatchingCustomerId = !$request->filled('customer_id') || $project->id_customer == $request->customer_id;
+            
+                        if ($request->filled('daterange') && strpos($request->input('daterange'), ' - ') !== false) {
+                            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+            
+                            $isWithinDateRange = strtotime($project->created_at) >= strtotime($start_date) && strtotime($project->created_at) <= strtotime($end_date);
+                        } else {
+                            $isWithinDateRange = true;
+                        }
+            
+                        if ($isMatchingCustomerId && $isWithinDateRange) {
+                            $filteredProjectCount++;
+            
+                            foreach ($project->progress as $vals) {
+                                $progress = $vals ?? null;
+            
+                                if ($progress) {
+                                    $total += $progress->harga_customer * $progress->qty;
+                                }
                             }
                         }
                     }
+            
+                    $value['total_project'] = $filteredProjectCount;
+                    $value['detail_url'] = route('laporan_lokasi_project.detail', [$id, 'daterange' => $request->daterange]);
+                    $value['total'] = 'Rp ' . number_format($total, 0, ',', '.');
+                } else {
+                    $value['total_project'] = 0;
+                    $value['total'] = 0;
                 }
-
-                $value['total'] = 'Rp ' . number_format($total, 0, ',', '.');
+                $value['eye_image_url'] = "/assets/images/eye.svg";
             }
-
-            $datas = $datas->sortByDesc('total')->values();
 
             if($request->report_by){
                 return response()->json([
@@ -98,9 +105,11 @@ class LaporanLokasiProjectController extends Controller
             });
         })
         ->when($request->filled('daterange'), function ($query) use ($request) {
-            list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
-            return $query->whereBetween('created_at', [$start_date, $end_date]);
-        })  
+            $query->whereHas('projects', function ($innerQuery) use ($request) {
+                list($start_date, $end_date) = explode(' - ', $request->input('daterange'));
+                return $innerQuery->whereBetween('created_at', [$start_date, $end_date]);
+            });
+        }) 
         ->get()
         ->groupBy('projects.id_lokasi_project');
 
@@ -146,17 +155,14 @@ class LaporanLokasiProjectController extends Controller
     {
         if ($request->ajax()) {
             $data = OnRequest::where('id_lokasi_project', $request->id)
+                    ->when($request->daterange, function ($query) use ($request) {
+                        list($start_date, $end_date) = explode(' - ', $request->daterange);
+                        return $query->whereBetween('created_at', [$start_date, $end_date]);
+                    }) 
                     ->filter($request)
                     ->orderBy('created_at','desc')
                     ->get();
-            // $cekIds = $cek->pluck('id')->toArray();
-            // $data = ProjectPekerjaan::with('projects')->whereIn('id_project',$cekIds)
-            //         ->addSelect(['total' => OnRequest::selectRaw('count(*)')
-            //             ->whereColumn('project_pekerjaan.id_project', 'project.id')
-            //             ->groupBy('id_lokasi_project')
-            //         ])
-            //         ->filter($request);
-
+                    
             return Datatables::of($data)->addIndexColumn()
             ->addColumn('code', function($data){
                 return $data->code ?? '';
@@ -198,6 +204,7 @@ class LaporanLokasiProjectController extends Controller
         }
 
         $data = OnRequest::where('id_lokasi_project',$request->id)->first();
+        $data['daterange'] = $request->daterange;
 
         return view('laporan_lokasi_project.detail', compact('data'));
     }

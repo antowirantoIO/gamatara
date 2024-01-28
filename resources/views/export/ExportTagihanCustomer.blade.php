@@ -121,10 +121,10 @@
                         <td height="30" align="right" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;">{{ $value->amount ? number_format($value->amount,2, ',','') : '' }}</td>
                         <td height="30" style="border-right: 20px medium black;border-left: 20px medium black;font-size: 8px;" align="right">{{ $value->unit ?? ' ' }}</td>
                         <td height="30" style="border: 20px medium black;" align="right">
-                        Rp. {{ number_format($value->pekerjaan->harga_customer, 0, ',', '.') }}
+                        Rp. {{ number_format($value->harga_customer, 0, ',', '.') }}
                         </td>
                         <td height="30" style="border: 20px medium black;" align="right">
-                            Rp. {{ number_format(($value->amount * $value->pekerjaan->harga_customer), 0, ',', '.') }}
+                            Rp. {{ number_format(($value->amount * $value->harga_customer), 0, ',', '.') }}
                         </td>
                         <td height="30">{{ $value->nama_vendor ?? '-' }}</td>
                     </tr>

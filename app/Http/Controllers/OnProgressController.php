@@ -244,7 +244,6 @@ class OnProgressController extends Controller
             return back()->with('error',$validasi->errors()->first());
         }
         $number = $request->kode_unik;
-
         foreach($request->pekerjaan as $key => $item){
             // dd($request->amount[$key]);
             $ids = $request->id[$key];

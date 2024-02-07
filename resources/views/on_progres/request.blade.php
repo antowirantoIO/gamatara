@@ -166,13 +166,14 @@
                     let id = $(this).val();
                     let url = '{{ route('ajax.unit-pekerjaan',':id') }}'
                     let urlReplace = url.replace(':id',id);
+                    let input = $(this);
                     $.ajax({
                         url : urlReplace,
                     }).then(ress => {
                         $('#harga_vendor').val(formatRupiah(ress.data.harga_vendor));
                         $('#unit').val(ress.data.unit);
                         $(`#convertion-${keys}`).val(ress.data.konversi);
-                        getAmount();
+                        getAmount(input);
                     })
                 });
 
@@ -444,17 +445,17 @@
                 });
             })
 
-            const getAmount = () => {
-                var lengthValue = parseFloat($('.draggable-row').closest('tr').find('input[name="length[]"]').val());
-                var widthValue = parseFloat($('.draggable-row').closest('tr').find('input[name="width[]"]').val());
-                var thickValue = parseFloat($('.draggable-row').closest('tr').find('input[name="thick[]"]').val());
-                var qtyValue = parseFloat($('.draggable-row').closest('tr').find('input[name="qty[]"]').val());
-                var konversi = $('.draggable-row').closest('tr').find('input[name="convertion[]"]').val();
+            const getAmount = (input) => {
+                var lengthValue = parseFloat(input.closest('tr').find('input[name="length[]"]').val());
+                var widthValue = parseFloat(input.closest('tr').find('input[name="width[]"]').val());
+                var thickValue = parseFloat(input.closest('tr').find('input[name="thick[]"]').val());
+                var qtyValue = parseFloat(input.closest('tr').find('input[name="qty[]"]').val());
+                var konversi = input.closest('tr').find('input[name="convertion[]"]').val();
                 var parts = konversi.split('/');
                 var amountValue = (lengthValue * widthValue * thickValue * qtyValue * parseFloat(parts[0])) / parseInt(parts[1]);
 
                 amountValue = amountValue.toFixed(2);
-                $('.draggable-row').closest('tr').find('input[name="amount[]"]').val(amountValue);
+                input.closest('tr').find('input[name="amount[]"]').val(amountValue);
             }
 
 

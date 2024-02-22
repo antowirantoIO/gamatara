@@ -371,7 +371,12 @@
                     },
                     {
                         data : function (data) {
-                            let amount = data.amount.toFixed(2) || 0;
+                            let amount;
+                            if(data.amount == null){
+                                amount = 0
+                            }else{
+                                amount = data.amount.toFixed(2) || 0;
+                            }
                             var status = false;
                             var recent = data.activitys.map(item =>{
                                 status = data.amount !== item.amount ? 'bg-danger text-white' : '';

@@ -47,8 +47,29 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
+                                                <label>Project Admin</label>
+                                                 <select name="pa_id_1" id="pa_id_1" class="form-control select2">
+                                                    <option value="">Choose Project Admin</option>
+                                                    @foreach($pa as $p)
+                                                    <option 
+                                                        value="{{$p->karyawan->id}}"
+                                                        {{ $p->karyawan->id == old('pa_id_1') ? 'selected' : '' }}
+                                                    >{{ $p->karyawan->name ?? '' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
                                                 <label>Project Manager</label>
-                                                <input type="text" value="{{ $pm->karyawan->name ?? '' }}" class="form-control" readonly>
+                                                 <select name="pm_id_1" id="pm_id_1" class="form-control select2">
+                                                    <option value="">Choose Project Manager</option>
+                                                    @foreach($pm as $p)
+                                                    <option value="{{$p->karyawan->id}}"
+                                                        {{ $p->karyawan->id == old('pm_id_1') ? 'selected' : '' }}
+                                                    >{{ $p->karyawan->name ?? '' }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -57,7 +78,9 @@
                                                 <select name="pe_id_1" id="pe_id_1" class="form-control select2">
                                                     <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
-                                                    <option value="{{$p->id}}">{{ $p->karyawan->name ?? '' }}</option>
+                                                    <option value="{{$p->karyawan->id}}"
+                                                        {{ $p->karyawan->id == old('pe_id_1') ? 'selected' : '' }}
+                                                    >{{ $p->karyawan->name ?? '' }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

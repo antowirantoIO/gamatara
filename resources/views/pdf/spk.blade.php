@@ -86,7 +86,7 @@
         <table class="container">
             <tr>
                 <td class="logo-container">
-                    <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
+                    <img src="{{ $logoBase64 }}" alt="" class="logo">
                 </td>
                 <td class="text-container">
                     <div class="header">PT. Gamatara Trans Ocean Shipyard</div>
@@ -109,7 +109,7 @@
                     <td>{{ $item->vendors->name }}</td>
                     <td>{{ $item->no_spk }} </td>
                     <td>{{ $item->bod_approval }} </td>
-                    <td>  
+                    <td>
                         {!! nl2br(str_replace('<br>', "\n", $item->keluhan)) !!}
                     </td>
                 </tr>

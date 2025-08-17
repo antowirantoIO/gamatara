@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Keluhan;
 use App\Models\OnRequest;
@@ -9,13 +10,12 @@ use App\Models\ProjectAdmin;
 use App\Models\User;
 use App\Models\Vendor;
 use Carbon\Carbon;
-use Auth;
-use PDF;
+use Illuminate\Support\Facades\Auth;
 
 class KeluhanController extends Controller
 {
     public function store(Request $request)
-    {        
+    {
         if($request->keluhanId == null)
         {
             $code = 'SPK' . '/' . 'GTS' . '/' . now()->format('Y') . '/' . now()->format('m') . '/';
@@ -30,7 +30,7 @@ class KeluhanController extends Controller
             $newNumber = str_pad($maxNumber + 1, 3, '0', STR_PAD_LEFT);
 
             $newNoSpk = $code . $newNumber;
-         
+
             // $randInt = '001';
             // if ($projectCode >= 1) {
             //     $count = $projectCode+1;
@@ -48,8 +48,8 @@ class KeluhanController extends Controller
 
             return response()->json([
                     'message' => 'Request successfully added',
-                    'status' => 200, 
-                    'id' => $keluhan->id, 
+                    'status' => 200,
+                    'id' => $keluhan->id,
                     'id_vendor' => $keluhan->id_vendor
                 ]);
         }else{
@@ -64,19 +64,19 @@ class KeluhanController extends Controller
                 'message' => 'Request successfully modified',
                 'status' => 200
             ]);
-        }       
+        }
     }
 
     public function getData(Request $request)
-    {        
+    {
         $data   = Keluhan::find($request->id);
 
         return response()->json(['status' => 200,'data' => $data]);
     }
 
     public function approve(Request $request)
-    {        
-        $data   = Keluhan::find($request->id);     
+    {
+        $data   = Keluhan::find($request->id);
 
         if($request->type == 'PM')
         {
@@ -97,7 +97,7 @@ class KeluhanController extends Controller
         try {
             $keluhan = Keluhan::findOrFail($request->id);
             $keluhan->delete();
-     
+
             return response()->json(['message' => 'Request Deleted Successfully','status' => 200]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to delete request'], 500);
@@ -126,8 +126,10 @@ class KeluhanController extends Controller
            }
         }
 
+        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('assets/images/logo.png')));
+
         $cetak      = "Rekap SPK.pdf";
-        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan'))
+        $pdf = PDF::loadview('pdf.spk', compact('data','keluhan', 'logoBase64'))
                     ->setPaper('A4', 'potrait')
                     ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
@@ -136,7 +138,7 @@ class KeluhanController extends Controller
     public function SPKSatuan(Request $request)
     {
         $keluhan = Keluhan::find($request->id);
-        $data = OnRequest::find($keluhan->on_request_id); 
+        $data = OnRequest::find($keluhan->on_request_id);
         $data['created_ats'] =  Carbon::parse($data->created_at)->format('d M Y');
         $cetak = $data->nama_project."_".$keluhan->vendors->name."_".$keluhan->no_spk.".pdf";
         $pm = User::find($keluhan->id_pm_approval);
@@ -157,7 +159,7 @@ class KeluhanController extends Controller
 
         if($data->pm)
         {
-            $cek = $data->pm; 
+            $cek = $data->pm;
             foreach($cek->pes as $value)
             {
                 $value['pe_name'] =  $value->karyawan->name ?? '';
@@ -166,11 +168,13 @@ class KeluhanController extends Controller
             foreach($cek->pas as $value){
                 $value['pa_name'] =  $value->karyawan->name ?? '';
             }
-        } 
+        }
 
-        $pdf = PDF::loadview('pdf.spksatuan', compact('data','keluhan'))
-                    ->setPaper('A4', 'landscape')
-                    ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
+        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('assets/images/logo.png')));
+
+        $pdf = PDF::loadview('pdf.spksatuan', compact('data', 'keluhan', 'logoBase64'))
+            ->setPaper('A4', 'landscape')
+            ->setOptions(['isPhpEnabled' => true, 'enable_remote' => true]);
         return $pdf->stream($cetak);
     }
 

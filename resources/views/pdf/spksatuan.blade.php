@@ -26,7 +26,7 @@
                 padding: 5px;
                 font-size: 11px
             }
-            
+
             .font-size-11{
                 font-size: 11px;
             }
@@ -66,7 +66,7 @@
         <table class="container">
             <tr>
                 <td class="logo-container">
-                    <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
+                    <img src="{{ $logoBase64 }}" style="width: 100px;" alt="" class="logo">
                 </td>
                 <td class="text-container">
                     <div class="header">Surat Perintah Kerja</div>
@@ -77,7 +77,7 @@
         <!-- <table width="100%" style="margin-bottom: 10px;">
             <tr>
                 <td>
-                    <img src="{{asset('assets/images/logo.png')}}" style="width: 100px;" alt="" class="logo">
+                    <img src="{{ public_path('assets/images/logo.png') }}" style="width: 100px;" alt="" class="logo">
                 </td>
                     <td style="text-transform: uppercase;padding-left: 155px;font-size: 20px; font-weight: bold;" colspan="8">Surat Perintah Kerja <br> No: {{ $data->po_no }}
                 </td>
@@ -165,7 +165,7 @@
                 </td>
             </tr>
         </table>
-        
+
         <script type="text/php">
             if(isset($pdf)) {
                 $font = $fontMetrics->getFont("Segoe UI, Trebuchet MS, Tahoma, Verdana, sans-serif", "normal");

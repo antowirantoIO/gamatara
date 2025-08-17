@@ -17,7 +17,9 @@ use App\Models\Vendor;
 use App\Models\ProjectAdmin;
 use App\Models\ProjectEngineer;
 use App\Models\StatusSurvey;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\ProjectPlanner;
 
 class OnRequestController extends Controller
 {
@@ -28,6 +30,7 @@ class OnRequestController extends Controller
             $cekId = Auth::user()->id_karyawan;
             $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
             $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $cekPp  = ProjectPlanner::where('id_karyawan', $cekId)->first();
             $result = ProjectManager::get()->toArray();
 
             $data = OnRequest::with(['kapal', 'customer']);
@@ -46,6 +49,8 @@ class OnRequestController extends Controller
                 if($result){
                     $data->whereIn('pm_id', array_column($result, 'id'));
                 }
+            }else if ($cekRole == 'SPV Project Planner') {
+                $data->where('pp_id', $cekPp->id);
             }else{
                 $data->where('pm_id', '');
             }
@@ -92,14 +97,8 @@ class OnRequestController extends Controller
 
     public function create()
     {
-        $pms = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
-        
-        if($pms == null){
-            if(Auth::user()->role->name = 'BOD' || Auth::user()->role->name = 'Super Admin' || Auth::user()->role->name = 'Administator'){
-                return redirect()->back()->with('error', 'Hanya Project Admin yang bisa menambahkan Project Baru');
-            }else{
-                return redirect()->back()->with('error', 'Untuk Akun '.Auth::user()->role->name.', Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
-            }
+        if(Auth::user()->role->name !== 'SPV Project Planner'){
+            return redirect()->back()->with('error', 'Hanya Project Planner yang bisa menambahkan Project Baru');
         }
 
         $customer   = Customer::orderBy('name','asc')->get();
@@ -107,10 +106,11 @@ class OnRequestController extends Controller
         $jenis_kapal= JenisKapal::orderBy('name','asc')->get();
         $status     = StatusSurvey::orderBy('name','asc')->get();
         $pmAuth     = Auth::user()->role->name ?? '';
-        $pm         = ProjectManager::where('id',$pms->id_pm)->first();
-        $pe         = ProjectEngineer::where('id_pm',$pms->id_pm)->with(['karyawan'])->get();
+        $pm         = User::whereIn('id_role', [2,3])->with(['karyawan'])->get();
+        $pe         = User::whereIn('id_role', [4, 11])->with(['karyawan'])->get();
+        $pa         = User::whereIn('id_role', [1, 5])->with(['karyawan'])->get();
        
-        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe'));
+        return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe','pa'));
     }
 
     public function edits(Request $request)
@@ -129,7 +129,10 @@ class OnRequestController extends Controller
             'nomor_contact_person'  => 'required',
             'id_customer'           => 'required',
             'displacement'          => 'required',
-            'jenis_kapal'           => 'required'
+            'jenis_kapal'           => 'required',
+            'pa_id_1'               => 'required',
+            'pm_id_1'               => 'required',
+            'pe_id_1'               => 'required',
         ]);
 
         // $code = 'PJ' . now()->format('Y') . "-";
@@ -156,12 +159,21 @@ class OnRequestController extends Controller
 
         $newNoSpk = $code . $newNumber;
 
-        $getPM = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
-        
-        if($getPM == null){
-            return redirect()->back()->with('error', 'Untuk Akun ini, Project Manager belum ditentukan Silakan Tentukan Terlebih Dahulu di Menu Project Manager');
-        }
-        $pa = ProjectAdmin::where('id_karyawan',Auth::user()->id_karyawan)->first();
+        $pa = ProjectAdmin::firstOrCreate([
+            'id_karyawan' => $request->input('pa_id_1'),
+        ]);
+
+        $pm = ProjectManager::firstOrCreate([
+            'id_karyawan' => $request->input('pm_id_1'),
+        ]);
+
+        $pe = ProjectEngineer::firstOrCreate([
+            'id_karyawan' => $request->input('pe_id_1'),
+        ]);
+
+        $pp = ProjectPlanner::firstOrCreate([
+            'id_karyawan' => Auth::user()->id,
+        ]);
 
         $data                       = New OnRequest();
         $data->code                 = $newNoSpk;
@@ -173,10 +185,11 @@ class OnRequestController extends Controller
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
         $data->pa_id                = $pa->id ?? '';
-        $data->pm_id                = $getPM->id_pm ?? '';
-        $data->pe_id_1              = $request->input('pe_id_1');
+        $data->pm_id                = $pm->id ?? '';
+        $data->pe_id_1              = $pe->id ?? '';
         $data->status_survey        = $request->input('status_survey');
         $data->status               = 1;
+        $data->pp_id                = $pp->id ?? '';
         $data->save();
 
         return redirect()->route('on_request.detail', ['id' => $data->id])
@@ -200,7 +213,7 @@ class OnRequestController extends Controller
         $customer       = Customer::orderBy('name','asc')->get();
         $lokasi         = LokasiProject::orderBy('name','asc')->get();
         $jenis_kapal    = JenisKapal::orderBy('name','asc')->get();
-        $pe             = ProjectEngineer::where('id_pm',$data->pm_id)->with(['karyawan'])->get();
+        $pe             = ProjectEngineer::with(['karyawan'])->get();
         $vendor         = Vendor::orderBy('name','asc')->get();
         $pmAuth         = Auth::user()->role->name ?? '';
         $keluhan        = Keluhan::where('on_request_id', $request->id)->get();

@@ -49,6 +49,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-daterangepicker@3.1.0/daterangepicker.css">
 
+    <style> 
+        .navbar-menu .navbar-nav .nav-sm {
+            padding: 0 !important;
+            margin-top: 10px !important;
+            margin-bottom: 10px !important;
+        }
+
+        .navbar-menu .navbar-nav .nav-link.active {
+            margin-right: 0 !important;
+        }
+    </style>
+
     @yield("styles")
 </head>
 
@@ -202,6 +214,15 @@
 
     <!-- init js -->
     <!-- <script src="{{asset('assets/assets/js/pages/form-advanced.init.js')}}"></script> -->
+
+    <script>
+        // search every tag select has class="form-control" and not have select2 class, init with select2 fucntion
+        $(document).ready(function() {
+            $('select.form-control').not('.select2').select2();
+            // form-select
+            $('select.form-select').select2();
+        })
+        </script>
 
     @if (session('success'))
         <script>

@@ -27,6 +27,8 @@ use App\Http\Controllers\SatisfactionNoteController;
 use App\Http\Controllers\SettingPekerjaanController;
 use App\Http\Controllers\LaporanLokasiProjectController;
 use App\Http\Controllers\LaporanProjectManagerController;
+use App\Http\Controllers\Report\SandblastController;
+use App\Http\Controllers\Report\ReplatingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -189,6 +191,39 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/updated/{id}', [ProjectManagerController::class, 'updated'])->name('project_manager.updated');
         Route::get('/delete/{id}', [ProjectManagerController::class, 'delete'])->name('project_manager.delete');
         Route::get('/export', [ProjectManagerController::class, 'export'])->name('project_manager.export');
+    });
+
+    //Report By Role Routes
+    Route::prefix('report-by-role')->group(function () {
+        Route::get('/project_admin', [App\Http\Controllers\ProjectAdminController::class, 'index'])->name('report.project_admin');
+        Route::get('/project_admin/projects/{paId}', [App\Http\Controllers\ProjectAdminController::class, 'getProjectsByPA'])->name('report.project_admin.projects');
+        Route::get('/project_admin/export', [App\Http\Controllers\ProjectAdminController::class, 'export'])->name('report.project_admin.export');
+        
+        Route::get('/project_manager', [App\Http\Controllers\ProjectManagerReportController::class, 'index'])->name('report.project_manager');
+        Route::get('/project_manager/export', [App\Http\Controllers\ProjectManagerReportController::class, 'export'])->name('report.project_manager.export');
+        
+        Route::get('/project_engineer', [App\Http\Controllers\ProjectEngineerReportController::class, 'index'])->name('report.project_engineer');
+        Route::get('/project_engineer/export', [App\Http\Controllers\ProjectEngineerReportController::class, 'export'])->name('report.project_engineer.export');
+        
+    });
+
+    // Report by Work Type
+    Route::prefix('report-work-type')->name('report.work_type.')->group(function () {
+        Route::get('/sandblast', [SandblastController::class, 'index'])->name('sandblast');
+        Route::get('/sandblast/export', [SandblastController::class, 'export'])->name('sandblast.export');
+        
+        Route::get('/replating', [ReplatingController::class, 'index'])->name('replating');
+        Route::get('/replating/export', [ReplatingController::class, 'export'])->name('replating.export');
+    });
+
+    // Report by Summary
+    Route::prefix('report-summary')->name('report.summary.')->group(function () {
+        Route::get('/spk', [App\Http\Controllers\SPKSummaryController::class, 'index'])->name('spk');
+        Route::get('/spk/export', [App\Http\Controllers\SPKSummaryController::class, 'export'])->name('spk.export');
+        Route::get('/annual-tonnage', [App\Http\Controllers\AnnualTonnageController::class, 'index'])->name('annual.tonnage');
+        Route::get('/annual-tonnage/export', [App\Http\Controllers\AnnualTonnageController::class, 'export'])->name('annual.tonnage.export');
+        Route::get('/annual-area', [App\Http\Controllers\AnnualAreaController::class, 'index'])->name('annual.area');
+        Route::get('/annual-area/export', [App\Http\Controllers\AnnualAreaController::class, 'export'])->name('annual.area.export');
     });
 
     //laporan customer

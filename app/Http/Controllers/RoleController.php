@@ -14,7 +14,7 @@ use DB;
 
 class RoleController extends Controller
 {
-    public function index(Request $request) 
+    public function index(Request $request)
     {
         if ($request->ajax()) {
             $data = Roles::orderBy('name','asc')
@@ -45,9 +45,9 @@ class RoleController extends Controller
                 return $btnEdit.'&nbsp;'.$btnDelete;
             })
             ->rawColumns(['action'])
-            ->make(true);                    
+            ->make(true);
         }
-        
+
         return view('role.index');
     }
 
@@ -126,7 +126,7 @@ class RoleController extends Controller
             return redirect(route('role'))
                 ->with('error', 'Unable to delete data because the role is still in use in the user');
         }
-    
+
         $data->delete();
 
         return redirect(route('role'))

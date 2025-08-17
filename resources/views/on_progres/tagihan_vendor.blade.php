@@ -370,17 +370,21 @@
                         name : 'qty'
                     },
                     {
-                        data : function (data) {
+                        data: function (data) {
                             let amount;
-                            if(data.amount == null){
-                                amount = 0
-                            }else{
-                                amount = data.amount.toFixed(2) || 0;
+                            if(data.amount == null || data.amount === ''){
+                                amount = 0;
+                            } else {
+                                // Parse ke number terlebih dahulu
+                                const numAmount = parseFloat(data.amount);
+                                amount = isNaN(numAmount) ? 0 : numAmount.toFixed(2);
                             }
+
                             var status = false;
-                            var recent = data.activitys.map(item =>{
-                                status = data.amount !== item.amount ? 'bg-danger text-white' : '';
-                            })
+                            var recent = data.activitys.map(item => {
+                                status = parseFloat(data.amount) !== parseFloat(item.amount) ? 'bg-danger text-white' : '';
+                            });
+
                             return `<div class="${status} p-3 rounded-3">${amount}</div>`;
                         },
                         name : 'amount'

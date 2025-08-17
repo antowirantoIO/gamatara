@@ -1,4 +1,4 @@
-    <!-- LOGO -->
+<!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Light Logo-->
         <a href="{{ route('dashboard') }}" class="logo logo-light">
@@ -27,8 +27,8 @@
                     </a>
                 </li>
                 @endcan
-                @if (Gate::allows('karyawan-view') || Gate::allows('user-view') || Gate::allows('role-view') || 
-                Gate::allows('customer-view') || Gate::allows('setting_pekerjaan-view') || Gate::allows('lokasi_project-view') || 
+                @if (Gate::allows('karyawan-view') || Gate::allows('user-view') || Gate::allows('role-view') ||
+                Gate::allows('customer-view') || Gate::allows('setting_pekerjaan-view') || Gate::allows('lokasi_project-view') ||
                 Gate::allows('jenis_kapal-view') || Gate::allows('pekerjaan-view') || Gate::allows('kategori-view') || Gate::allows('sub_kategori-view') ||
                 Gate::allows('project_manager-view') || Gate::allows('vendor-view'))
                 <li class="nav-item">
@@ -57,6 +57,11 @@
                             @can('project_manager-view')
                             <li class="nav-item">
                                 <a href="{{ route('project_manager') }}" class="nav-link {{ request()->is('project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager</a>
+                            </li>
+                            @endcan
+                            @can('project_admin-view')
+                            <li class="nav-item">
+                                <a href="{{ route('project_admin') }}" class="nav-link {{ request()->is('project_admin*') ? 'active' : ''}}" data-key="t-analytics"> Project Admin</a>
                             </li>
                             @endcan
                             @can('customer-view')
@@ -129,7 +134,7 @@
                     </a>
                 </li>
                 @endcan
-                @if (Gate::allows('laporan_customer-view') || Gate::allows('laporan_vendor-view') || Gate::allows('laporan_project_manager-view') || 
+                @if (Gate::allows('laporan_customer-view') || Gate::allows('laporan_vendor-view') || Gate::allows('laporan_project_manager-view') ||
                 Gate::allows('satisfaction_note-view') || Gate::allows('laporan_lokasi_project-view'))
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->is('laporan_customer*') ? 'active' : '' || request()->is('laporan_vendor*') ? 'active' : '' || request()->is('laporan_project_manager*') ? 'active' : '' }}" href="#laporandashboard" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
@@ -162,6 +167,82 @@
                                 <a href="{{ route('satisfaction_note') }}" class="nav-link {{  request()->is('satisfaction_note') }}" data-key="t-crypto"> Satisfaction Note</a>
                             </li>
                             @endcan -->
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if(Gate::allows('view-report-project-admin') || Gate::allows('view-report-project-manager') || Gate::allows('view-report-project-engineer'))
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#laporandashboardrole" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
+                        <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Report By Role</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="laporandashboardrole">
+                        <ul class="nav nav-sm flex-column">
+                            @can('view-report-project-admin')
+                            <li class="nav-item">
+                                <a href="{{ route('report.project_admin') }}" class="nav-link {{ request()->is('report-by-role/project_admin*') ? 'active' : ''}}" data-key="t-analytics"> Project Admin (PA) </a>
+                            </li>
+                            @endcan
+                            @can('view-report-project-manager')
+                            <li class="nav-item">
+                                <a href="{{ route('report.project_manager') }}" class="nav-link {{ request()->is('report-by-role/project_manager*') ? 'active' : ''}}" data-key="t-analytics"> Project Manager (PM) </a>
+                            </li>
+                            @endcan
+                            @can('view-report-project-engineer')
+                            <li class="nav-item">
+                                <a href="{{ route('report.project_engineer') }}" class="nav-link {{ request()->is('report-by-role/project_engineer*') ? 'active' : ''}}" data-key="t-analytics"> Project Engineer (PE) </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if(Gate::allows('view-report-sandblast') || Gate::allows('view-report-replating'))
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->is('report-work-type*') ? 'active' : '' }}" href="#laporandashboardworktype" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
+                        <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Report by Work Type</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="laporandashboardworktype">
+                        <ul class="nav nav-sm flex-column">
+                            @can('view-report-sandblast')
+                            <li class="nav-item">
+                                <a href="{{ route('report.work_type.sandblast') }}" class="nav-link {{ request()->is('report-work-type/sandblast*') ? 'active' : '' }}" data-key="t-analytics"> Sandblast </a>
+                            </li>
+                            @endcan
+                            @can('view-report-replating')
+                            <li class="nav-item">
+                                <a href="{{ route('report.work_type.replating') }}" class="nav-link {{ request()->is('report-work-type/replating*') ? 'active' : '' }}" data-key="t-analytics"> Replating </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </div>
+                </li>
+                @endif
+
+                @if(Gate::allows('view-report-spk-summary') || Gate::allows('view-report-annual-tonnage') || Gate::allows('view-report-annual-area'))
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#laporandashboardsummary" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="laporandashboard">
+                        <i><img src="{{asset('assets/images/clipboard-text.svg')}}"></i> <span data-key="t-layouts">Report By Summary</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="laporandashboardsummary">
+                        <ul class="nav nav-sm flex-column">
+                            @can('view-report-spk-summary')
+                            <li class="nav-item">
+                                <a href="{{ route('report.summary.spk') }}" class="nav-link {{ request()->is('report-summary/spk*') ? 'active' : '' }}" data-key="t-analytics"> SPK Summary </a>
+                            </li>
+                            @endcan
+                            @can('view-report-annual-tonnage')
+                            <li class="nav-item">
+                                <a href="{{ route('report.summary.annual.tonnage') }}" class="nav-link {{ request()->is('report-summary/annual-tonnage*') ? 'active' : '' }}" data-key="t-analytics"> Annual Tonnage </a>
+                            </li>
+                            @endcan
+                            @can('view-report-annual-area')
+                            <li class="nav-item">
+                                <a href="{{ route('report.summary.annual.area') }}" class="nav-link {{ request()->is('report-summary/annual-area*') ? 'active' : '' }}" data-key="t-analytics"> Annual Area </a>
+                            </li>
+                            @endcan
                         </ul>
                     </div>
                 </li>

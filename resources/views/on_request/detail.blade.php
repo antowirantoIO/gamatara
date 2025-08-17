@@ -65,6 +65,12 @@
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
+                                                <label>Project Admin</label>
+                                                <input type="text" value="{{ $data->pa->karyawan->name ?? '' }}" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-6 col-md-6">
+                                            <div>
                                                 <label>Project Manager</label>
                                                 <input type="text" value="{{ $data->pm->karyawan->name ?? '' }}" class="form-control" readonly>
                                             </div>

@@ -25,7 +25,7 @@ return [
          */
 
         'role' => Spatie\Permission\Models\Role::class,
-        'user' => App\Models\Users::class,
+        'user' => App\Models\User::class,
         'guard_name' => 'web',
 
     ],

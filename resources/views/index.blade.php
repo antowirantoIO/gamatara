@@ -219,8 +219,6 @@
         // search every tag select has class="form-control" and not have select2 class, init with select2 fucntion
         $(document).ready(function() {
             $('select.form-control').not('.select2').select2();
-            // form-select
-            $('select.form-select').select2();
         })
         </script>
 

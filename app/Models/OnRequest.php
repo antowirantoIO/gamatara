@@ -11,6 +11,11 @@ class OnRequest extends Model
     protected $guarded = [];
     protected $primaryKey = 'id';
 
+    // cast id_jenis_kapal from int to string
+    protected $casts = [
+        'id_jenis_kapal' => 'string',
+    ];
+
     public function kapal()
     {
         return $this->hasOne(JenisKapal::class, 'id','id_jenis_kapal');

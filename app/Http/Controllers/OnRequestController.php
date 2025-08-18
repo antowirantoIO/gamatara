@@ -28,20 +28,20 @@ class OnRequestController extends Controller
         if ($request->ajax()) {
             $cekRole = Auth::user()->role->name;
             $cekId = Auth::user()->id_karyawan;
-            $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
-            $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $cekPa = ProjectAdmin::where('id_karyawan',$cekId)->first();
+            $cekPm  = ProjectManager::where('id_karyawan', $cekId)->first();
             $cekPp  = ProjectPlanner::where('id_karyawan', $cekId)->first();
             $result = ProjectManager::get()->toArray();
 
             $data = OnRequest::with(['kapal', 'customer']);
          
             if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
-                $data->where('pm_id', $cekPa->id);
+                $data->where('pm_id', $cekPm->id);
             }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
-                if($cekPm){
-                    $data->where('pa_id', $cekPm->id);
+                if($cekPa){
+                    $data->where('pa_id', $cekPa->id);
                 }
-            }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
+            } else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
                         || $cekRole == 'Super Admin' 
                         || $cekRole == 'Administator' 
                         || $cekRole == 'Staff Finance'

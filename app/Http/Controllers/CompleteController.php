@@ -30,19 +30,19 @@ class CompleteController extends Controller
         if($request->ajax()){
             $cekRole = auth()->user()->role->name;
             $cekId = auth()->user()->id_karyawan;
-            $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
-            $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
+            $cekPa = ProjectAdmin::where('id_karyawan',$cekId)->first();
+            $cekPm  = ProjectManager::where('id_karyawan', $cekId)->first();
             $result = ProjectManager::get()->toArray();
 
             $data = OnRequest::with(['pm','pm.karyawan','customer']);
 
-            if ($cekRole == 'Project Manager') {
-                $data->where('pm_id', $cekPa->id);
-            }else if ($cekRole == 'Project Admin') {
-                if($cekPm){
-                    $data->where('pm_id', $cekPm->id_pm);
+            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
+                $data->where('pm_id', $cekPm->id);
+            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
+                if($cekPa){
+                    $data->where('pa_id', $cekPa->id);
                 }
-            }else if ($cekRole == 'BOD'
+            } else if ($cekRole == 'BOD'
                         || $cekRole == 'Super Admin'
                         || $cekRole == 'Administator'
                         || $cekRole == 'Staff Finance'

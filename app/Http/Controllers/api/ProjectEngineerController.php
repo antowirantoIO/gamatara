@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use App\Models\OnRequest;
 use App\Models\ProjectPekerjaan;
 use App\Models\Kategori;
@@ -18,7 +19,8 @@ use App\Models\Keluhan;
 use App\Models\ProjectManager;
 use App\Models\ProjectEngineer;
 use App\Models\Karyawan;
-use DB;
+use App\Models\ProjectAdmin;
+use Illuminate\Support\Facades\DB;
 
 class ProjectEngineerController extends Controller
 {
@@ -62,14 +64,22 @@ class ProjectEngineerController extends Controller
     {
         try{
             $data = OnRequest::with(['complaint','complaint.vendors:id,name','customer:id,name',
-                                    'pm.karyawan:id,name,nomor_telpon','pm.pas.karyawan:id,name,nomor_telpon',
-                                    'pm.pes.karyawan:id,name,nomor_telpon','pe2.karyawan:id,name,nomor_telpon',
+                                    'pm.karyawan:id,name,nomor_telpon',
+                                    'pe2.karyawan:id,name,nomor_telpon',
                                     'lokasi:id,name'])
                         ->where('id',$request->id)
                         ->first();
 
             $pes = ProjectEngineer::find($data->pe_id_1);
             $pes = Karyawan::find($pes->id_karyawan);
+            $pas = ProjectAdmin::find($data->pa_id);
+            $pas = Karyawan::find($pas->id_karyawan);
+            $data['pm']['pas'] = [
+                [
+                    'id' => $pas->id,
+                    'karyawan' => $pas,
+                ]
+            ];
             $data['pes'] = $pes->name;
             $data['pes_kontak'] = $pes->nomor_telpon;
 
@@ -156,6 +166,8 @@ class ProjectEngineerController extends Controller
                     $status = 'Proses';
                 } elseif ($item->status == 3) {
                     $status = 'Done';
+                } else {
+                    $status = '';
                 }
 
                 $item->status = $status;

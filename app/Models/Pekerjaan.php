@@ -11,6 +11,11 @@ class Pekerjaan extends Model
     protected $guarded = [];
     protected $primaryKey = 'id'; 
 
+    protected $casts = [
+        'harga_vendor' => 'integer',
+        'harga_customer' => 'integer',
+    ];
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {

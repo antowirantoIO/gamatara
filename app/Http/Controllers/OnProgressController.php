@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\ProjectPlanner;
 
 class OnProgressController extends Controller
 {
@@ -33,6 +34,7 @@ class OnProgressController extends Controller
             $cekPa = ProjectAdmin::where('id_karyawan',$cekId)->first();
             $cekPm  = ProjectManager::where('id_karyawan', $cekId)->first();
             $result = ProjectManager::get()->toArray();
+            $cekPp = ProjectPlanner::where('id_karyawan', $cekId)->first();
 
             $data = OnRequest::with(['pm','pm.karyawan','customer']);
 
@@ -50,7 +52,11 @@ class OnProgressController extends Controller
                 if($result){
                     $data->whereIn('pm_id', array_column($result, 'id'));
                 }
-            }else{
+            }else if ($cekRole == 'SPV Project Planner') {
+                if($cekPp){
+                    $data->where('pp_id', $cekPp->id);
+                }
+            } else{
                 $data->where('pm_id', '');
             }
 

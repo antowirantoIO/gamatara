@@ -50,8 +50,10 @@ class OnRequestController extends Controller
                     $data->whereIn('pm_id', array_column($result, 'id'));
                 }
             }else if ($cekRole == 'SPV Project Planner') {
-                $data->where('pp_id', $cekPp->id);
-            }else{
+                if($cekPp){
+                    $data->where('pp_id', $cekPp->id);
+                }
+            } else{
                 $data->where('pm_id', '');
             }
             
@@ -108,7 +110,7 @@ class OnRequestController extends Controller
         $pmAuth     = Auth::user()->role->name ?? '';
         $pm         = User::whereIn('id_role', [2,3])->with(['karyawan'])->get();
         $pe         = User::whereIn('id_role', [4, 11])->with(['karyawan'])->get();
-        $pa         = User::whereIn('id_role', [1, 5])->with(['karyawan'])->get();
+        $pa         = User::whereIn('id_role', [5, 13])->with(['karyawan'])->get();
        
         return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe','pa'));
     }

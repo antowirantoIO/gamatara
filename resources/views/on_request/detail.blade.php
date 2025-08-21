@@ -37,7 +37,7 @@
                             <div class="live-preview">
                                 <form action="{{route('on_request.updated',$data->id)}}" method="POST" enctype="multipart/form-data" autocomplete="off">
                                 @csrf
-                                    @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
+                                    @if($pmAuth == 'SPV Project Planner' || $pmAuth == 'PA')
                                         <div class="flex-grow-1 d-flex align-items-center justify-content-end">
                                             <button type="submit" class="btn btn-primary" style="margin-right: 10px;" >Save</button>
                                             <a href="{{route('on_request')}}" class="btn btn-danger">Cancel</a>
@@ -106,7 +106,7 @@
                                                         <option value="{{$k->id}}" {{ $k->id == $data->id_customer ? 'selected' : '' }}>{{$k->name}}</option>
                                                     @endforeach
                                                 </select>
-                                                @if($pmAuth == 'Project Admin' || $pmAuth == 'PA')
+                                                @if($pmAuth == 'SPV Project Planner' || $pmAuth == 'PA')
                                                     <button style="width: 7%; height: 110%;" class="btn btn-primary btn-sm position-absolute top-0 end-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalgrid">+</button>
                                                 @endif
                                             </div>

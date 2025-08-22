@@ -26,75 +26,92 @@ class OnRequestController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $cekRole = Auth::user()->role->name;
-            $cekId = Auth::user()->id_karyawan;
-            $cekPa = ProjectAdmin::where('id_karyawan',$cekId)->first();
-            $cekPm  = ProjectManager::where('id_karyawan', $cekId)->first();
-            $cekPp  = ProjectPlanner::where('id_karyawan', $cekId)->first();
-            $result = ProjectManager::get()->toArray();
+            try {
+                $user = Auth::user();
+                $userRole = $user->role->name ?? '';
+                $karyawanId = $user->karyawan->id ?? null;
 
-            $data = OnRequest::with(['kapal', 'customer']);
-         
-            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
-                $data->where('pm_id', $cekPm->id);
-            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
-                if($cekPa){
-                    $data->where('pa_id', $cekPa->id);
-                }
-            } else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
-                        || $cekRole == 'Super Admin' 
-                        || $cekRole == 'Administator' 
-                        || $cekRole == 'Staff Finance'
-                        || $cekRole == 'SPV Finance') {
-                if($result){
-                    $data->whereIn('pm_id', array_column($result, 'id'));
-                }
-            }else if ($cekRole == 'SPV Project Planner') {
-                if($cekPp){
-                    $data->where('pp_id', $cekPp->id);
-                }
-            } else{
-                $data->where('pm_id', '');
-            }
-            
-            $data = $data->where('status',1)
-                        ->filter($request)
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+                // Base query dengan eager loading
+                $query = OnRequest::with(['kapal:id,name', 'customer:id,name', 'survey:id,name']);
 
-            return Datatables::of($data)->addIndexColumn()
-            ->addColumn('survey', function($data){
-                return $data->survey->name ?? '';
-            })
-            ->addColumn('nama_customer', function($data){
-                return $data->customer->name ?? '';
-            })
-            ->addColumn('jenis_kapal', function($data){
-                return $data->kapal->name ?? '';
-            })
-            ->addColumn('tanggal_request', function($data){
-                return $data->created_at ? $data->created_at->format('d M Y') : '';
-            })
-            ->addColumn('action', function($data){
-                $btnDetail = '';
-                if(Can('on_request-detail')) {
-                    $btnDetail = '<a href="'.route('on_request.detail', $data->id).'" class="btn btn-warning btn-sm">
-                                    <span>
+                // Filter berdasarkan role user
+                switch ($userRole) {
+                    case 'Project Manager':
+                    case 'PM':
+                        $pm = ProjectManager::where('id_karyawan', $karyawanId)->first();
+                        $query = $pm ? $query->where('pm_id', $pm->id) : $query->where('id', 0);
+                        break;
+
+                    case 'Project Admin':
+                    case 'PA':
+                        $pa = ProjectAdmin::where('id_karyawan', $karyawanId)->first();
+                        $query = $pa ? $query->where('pa_id', $pa->id) : $query->where('id', 0);
+                        break;
+
+                    case 'SPV Project Planner':
+                        $pp = ProjectPlanner::where('id_karyawan', $karyawanId)->first();
+                        $query = $pp ? $query->where('pp_id', $pp->id) : $query->where('id', 0);
+                        break;
+
+                    case 'BOD':
+                    case 'BOD1':
+                    case 'Super Admin':
+                    case 'Administrator':
+                    case 'Staff Finance':
+                    case 'SPV Finance':
+                        $pmIds = ProjectManager::pluck('id')->toArray();
+                        $query = !empty($pmIds) ? $query->whereIn('pm_id', $pmIds) : $query->where('id', 0);
+                        break;
+
+                    default:
+                        $query->where('id', 0); // No access
+                        break;
+                }
+
+                $data = $query->where('status', 1)
+                            ->filter($request)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+                return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('survey', function($row) {
+                        return $row->survey->name ?? '-';
+                    })
+                    ->addColumn('nama_customer', function($row) {
+                        return $row->customer->name ?? '-';
+                    })
+                    ->addColumn('jenis_kapal', function($row) {
+                        return $row->kapal->name ?? '-';
+                    })
+                    ->addColumn('tanggal_request', function($row) {
+                        return $row->created_at ? $row->created_at->format('d M Y') : '-';
+                    })
+                    ->addColumn('action', function($row) {
+                        $buttons = '';
+                        if (Can('on_request-detail')) {
+                            $buttons .= '<a href="' . route('on_request.detail', $row->id) . '" 
+                                        class="btn btn-warning btn-sm me-1" title="Detail">
+                                      <span>
                                         <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
                                     </span>
-                                </a>';
-                }
-                return $btnDetail;
-            })
-            ->rawColumns(['jenis_kapal','nama_customer','tanggal_request','action'])
-            ->make(true);     
+                                    </a>';
+                        }
+                        return $buttons;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Terjadi kesalahan saat memuat data'], 500);
+            }
         }
 
-        $customer   = Customer::get();
-        $jenis_kapal= JenisKapal::get();
-        $status     = StatusSurvey::get();
+        $customer = Customer::select('id', 'name')->orderBy('name')->get();
+        $jenis_kapal = JenisKapal::select('id', 'name')->orderBy('name')->get();
+        $status = StatusSurvey::select('id', 'name')->orderBy('name')->get();
 
-        return view('on_request.index',compact('customer','jenis_kapal','status'));
+        return view('on_request.index', compact('customer', 'jenis_kapal', 'status'));
     }
 
     public function create()
@@ -136,17 +153,6 @@ class OnRequestController extends Controller
             'pm_id_1'               => 'required',
             'pe_id_1'               => 'required',
         ]);
-
-        // $code = 'PJ' . now()->format('Y') . "-";
-        // $projectCode = OnRequest::where('code', 'LIKE', $code . '%')->count();
-        
-        // $randInt = '0001';
-        // if ($projectCode >= 1) {
-        //     $count = $projectCode + 1;
-        //     $randInt = str_pad($count, 4, '0', STR_PAD_LEFT);
-        // }
-        
-        // $randInt = substr($randInt, -4);
 
         $code = 'PJ' . now()->format('Y') . "-";
         $existingNumbers = OnRequest::where('code', 'LIKE', $code . '%')->pluck('code')->toArray();
@@ -215,7 +221,10 @@ class OnRequestController extends Controller
         $customer       = Customer::orderBy('name','asc')->get();
         $lokasi         = LokasiProject::orderBy('name','asc')->get();
         $jenis_kapal    = JenisKapal::orderBy('name','asc')->get();
-        $pe             = ProjectEngineer::with(['karyawan'])->get();
+        $pm         = User::whereIn('id_role', [2,3])->with(['karyawan', 'karyawan.pm'])->get();
+        $pe         = User::whereIn('id_role', [4, 11])->with(['karyawan', 'karyawan.pe'])->get();
+        $pa         = User::whereIn('id_role', [5, 13])->with(['karyawan', 'karyawan.pa'])->get();
+
         $vendor         = Vendor::orderBy('name','asc')->get();
         $pmAuth         = Auth::user()->role->name ?? '';
         $keluhan        = Keluhan::where('on_request_id', $request->id)->get();
@@ -223,7 +232,7 @@ class OnRequestController extends Controller
         $status         = StatusSurvey::orderBy('name','asc')->get();
         $keluhan        = count($keluhan);
 
-        return view('on_request.detail', Compact('status','keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pe','vendor','pmAuth'));
+        return view('on_request.detail', Compact('status','keluhan','count','data','customer','lokasi','jenis_kapal','getCustomer','pe','vendor','pmAuth', 'pa', 'pm'));
     }
 
     public function updated(Request $request)
@@ -234,6 +243,18 @@ class OnRequestController extends Controller
             'pe_id_1'       => 'required'
         ]);
 
+        $pa = ProjectAdmin::firstOrCreate([
+            'id_karyawan' => $request->input('pa_id'),
+        ]);
+
+        $pm = ProjectManager::firstOrCreate([
+            'id_karyawan' => $request->input('pm_id'),
+        ]);
+
+        $pe = ProjectEngineer::firstOrCreate([
+            'id_karyawan' => $request->input('pe_id_1'),
+        ]);
+
         $data                       = OnRequest::find($request->id);
         $data->nama_project         = $request->input('nama_project');
         $data->id_customer          = $request->input('id_customer');
@@ -242,7 +263,9 @@ class OnRequestController extends Controller
         $data->nomor_contact_person = $request->input('nomor_contact_person');
         $data->displacement         = $request->input('displacement');
         $data->id_jenis_kapal       = $request->input('jenis_kapal');
-        $data->pe_id_1              = $request->input('pe_id_1');
+        $data->pe_id_1              = $pe->id ?? '';
+        $data->pm_id                = $pm->id ?? '';
+        $data->pa_id                = $pa->id ?? '';
         $data->status_survey        = $request->input('status_survey');
         $data->save();
 

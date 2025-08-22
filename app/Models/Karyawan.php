@@ -21,6 +21,16 @@ class Karyawan extends Model
         return $this->belongsTo(User::class, 'id','id_karyawan');
     }
 
+    public function pe()
+    {
+        return $this->belongsTo(ProjectEngineer::class, 'id','id_karyawan');
+    }
+
+    public function pa()
+    {
+        return $this->belongsTo(ProjectAdmin::class, 'id','id_karyawan');
+    }
+
     public function scopeFilter($query, $filter)
     {
         return $query->when($filter->name ?? false, function($query) use ($filter) {

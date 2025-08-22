@@ -66,13 +66,23 @@
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Admin</label>
-                                                <input type="text" value="{{ $data->pa->karyawan->name ?? '' }}" class="form-control" readonly>
+                                                <select name="pa_id" id="pa_id" class="form-control select2">
+                                                    <option value="">Choose Project Admin</option>
+                                                    @foreach($pa as $p)
+                                                    <option value="{{$p->karyawan->id}}" {{ $p->karyawan->id == $data->pa->id_karyawan ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
                                             <div>
                                                 <label>Project Manager</label>
-                                                <input type="text" value="{{ $data->pm->karyawan->name ?? '' }}" class="form-control" readonly>
+                                                <select name="pm_id" id="pm_id" class="form-control select2">
+                                                    <option value="">Choose Project Manager</option>
+                                                    @foreach($pm as $p)
+                                                    <option value="{{$p->karyawan->id}}" {{ $p->karyawan->id == ($data->pm->id_karyawan ?? false) ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-xxl-6 col-md-6">
@@ -81,7 +91,7 @@
                                                 <select name="pe_id_1" id="pe_id_1" class="form-control select2">
                                                     <option value="">Choose Project Engineer</option>
                                                     @foreach($pe as $p)
-                                                    <option value="{{$p->id}}" {{ $p->id == $data->pe_id_1 ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
+                                                    <option value="{{$p->karyawan->id}}" {{ $p->karyawan->id == ($data->pe->id_karyawan ?? false) ? 'selected' : '' }}>{{$p->karyawan->name ?? ''}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -275,6 +285,10 @@
 
 @section('scripts')
 <script>
+
+    // init select2 to .select2
+    $('.select2').select2();
+
     function approve(id, type) {
         Swal.fire({
             title: 'Confirmation',

@@ -28,84 +28,117 @@ class OnProgressController extends Controller
 {
     public function index(Request $request)
     {
-        if($request->ajax()){
-            $cekRole = auth()->user()->role->name;
-            $cekId = auth()->user()->id_karyawan;
-            $cekPa = ProjectAdmin::where('id_karyawan',$cekId)->first();
-            $cekPm  = ProjectManager::where('id_karyawan', $cekId)->first();
-            $result = ProjectManager::get()->toArray();
-            $cekPp = ProjectPlanner::where('id_karyawan', $cekId)->first();
+        if ($request->ajax()) {
+            try {
+                $cekRole = auth()->user()->role->name;
+                $cekId = auth()->user()->id_karyawan;
+                $cekPa = ProjectAdmin::where('id_karyawan', $cekId)->first();
+                $cekPm = ProjectManager::where('id_karyawan', $cekId)->first();
+                $result = ProjectManager::get()->toArray();
+                $cekPp = ProjectPlanner::where('id_karyawan', $cekId)->first();
 
-            $data = OnRequest::with(['pm','pm.karyawan','customer']);
+                $data = OnRequest::with(['pm', 'pm.karyawan', 'customer']);
 
-            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
-                $data->where('pm_id', $cekPm->id);
-            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
-                if($cekPa){
-                    $data->where('pa_id', $cekPa->id);
+                // Filter berdasarkan role
+                switch ($cekRole) {
+                    case 'Project Manager':
+                    case 'PM':
+                        if ($cekPm) {
+                            $data->where('pm_id', $cekPm->id);
+                        } else {
+                            $data->where('pm_id', 0);
+                        }
+                        break;
+
+                    case 'Project Admin':
+                    case 'PA':
+                        if ($cekPa) {
+                            $data->where('pa_id', $cekPa->id);
+                        } else {
+                            $data->where('pa_id', 0);
+                        }
+                        break;
+
+                    case 'BOD':
+                    case 'Super Admin':
+                    case 'Administator':
+                    case 'Staff Finance':
+                    case 'SPV Finance':
+                        if ($result) {
+                            $data->whereIn('pm_id', array_column($result, 'id'));
+                        }
+                        break;
+
+                    case 'SPV Project Planner':
+                        if ($cekPp) {
+                            $data->where('pp_id', $cekPp->id);
+                        } else {
+                            $data->where('pp_id', 0);
+                        }
+                        break;
+
+                    default:
+                        $data->where('pm_id', '');
+                        break;
                 }
-            } else if ($cekRole == 'BOD'
-                        || $cekRole == 'Super Admin'
-                        || $cekRole == 'Administator'
-                        || $cekRole == 'Staff Finance'
-                        || $cekRole == 'SPV Finance') {
-                if($result){
-                    $data->whereIn('pm_id', array_column($result, 'id'));
+
+                // Apply filters
+                if ($request->has('code') && !empty($request->code)) {
+                    $data->where('code', 'like', '%' . $request->code . '%');
                 }
-            }else if ($cekRole == 'SPV Project Planner') {
-                if($cekPp){
-                    $data->where('pp_id', $cekPp->id);
+
+                if ($request->has('nama_project') && !empty($request->nama_project)) {
+                    $data->where('nama_project', 'like', '%' . $request->nama_project . '%');
                 }
-            } else{
-                $data->where('pm_id', '');
-            }
 
-            if($request->has('code') && !empty($request->code)){
-                $data->where('code','like','%'.$request->code.'%');
-            }
+                if ($request->has('nama_customer') && !empty($request->nama_customer)) {
+                    $data->where('id_customer', $request->nama_customer);
+                }
 
-            if($request->has('nama_project') && !empty($request->nama_project)){
-                $data->where('nama_project','like', '%'.$request->nama_project.'%');
-            }
-            if($request->has('nama_customer') && !empty($request->nama_customer)){
-                $data->where('id_customer',$request->nama_customer);
-            }
-            if($request->has('nama_pm') && !empty($request->nama_pm)){
-                $pm = $request->nama_pm;
-                $data->whereHas('pm.karyawan',function($query) use($pm){
-                    $query->where('id', $pm);
-                });
-            }
+                if ($request->has('nama_pm') && !empty($request->nama_pm)) {
+                    $pm = $request->nama_pm;
+                    $data->whereHas('pm.karyawan', function($query) use($pm) {
+                        $query->where('id', $pm);
+                    });
+                }
 
-            if ($request->has('date') && !empty($request->date)) {
-                $dates = explode(' - ', $request->date);
-                $start = $dates[0];
-                $end = $dates[1];
-                $data->whereDate('created_at', '>=', $start);
-                $data->whereDate('target_selesai', '<=', $end);
-            }
+                if ($request->has('date') && !empty($request->date)) {
+                    $dates = explode(' - ', $request->date);
+                    if (count($dates) === 2) {
+                        $start = trim($dates[0]);
+                        $end = trim($dates[1]);
+                        $data->whereDate('created_at', '>=', $start);
+                        $data->whereDate('target_selesai', '<=', $end);
+                    }
+                }
 
-            $data = $data->whereHas('keluhan',function($query){
-                            $query->whereNotNull(['id_pm_approval','id_bod_approval']);
+                $data = $data->whereHas('keluhan', function($query) {
+                            $query->whereNotNull(['id_pm_approval', 'id_bod_approval']);
                         })
-                        ->where('status',1)
-                        ->orderBy('created_at','desc')
+                        ->where('status', 1)
+                        ->orderBy('created_at', 'desc')
                         ->get();
-            return DataTables::of($data)->addIndexColumn()
-            ->addColumn('progres', function($data){
-                return getTotalProgressPekerjaan($data->id,3) . ' / ' . getTotalProgressPekerjaan($data->id);
-            })
-            ->addColumn('start', function($data){
-                return $data->created_at ? $data->created_at->format('d F Y') : '';
-            })
-            ->addColumn('end', function($data){
-                return $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->format('d F Y') : '';
-            })
-            ->make(true);
+
+                return DataTables::of($data)->addIndexColumn()
+                    ->addColumn('progres', function($data) {
+                        return getTotalProgressPekerjaan($data->id, 3) . ' / ' . getTotalProgressPekerjaan($data->id);
+                    })
+                    ->addColumn('start', function($data) {
+                        return $data->created_at ? $data->created_at->format('d F Y') : '';
+                    })
+                    ->addColumn('end', function($data) {
+                        return $data->target_selesai ? \Carbon\Carbon::parse($data->target_selesai)->format('d F Y') : '';
+                    })
+                    ->make(true);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Terjadi kesalahan saat memuat data'], 500);
+            }
         }
-        $customer   = Customer::get();
+
+        $customer = Customer::get();
         $pm = Karyawan::all();
-        return view('on_progres.index',compact('customer','pm'));
+        return view('on_progres.index', compact('customer', 'pm'));
     }
 
     public function edit($id)

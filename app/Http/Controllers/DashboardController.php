@@ -24,9 +24,7 @@ class DashboardController extends Controller
 
         $spkrequest = OnRequest::with(['kapal', 'customer']);
 
-            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
-                $spkrequest->where('pm_id', $cekPa->id);
-            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
+            if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
                 if($cekPm){
                     $spkrequest->where('pa_id', $cekPm->id);
                 }
@@ -95,9 +93,7 @@ class DashboardController extends Controller
 
         $data = OnRequest::with(['kapal', 'customer']);
 
-            if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
-                $data->where('pm_id', $cekPa->id);
-            }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
+            if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
                 if($cekPm){
                     $data->where('pa_id', $cekPm->id);
                 }
@@ -128,9 +124,7 @@ class DashboardController extends Controller
 
         $datap = OnRequest::with(['kapal', 'customer']);
 
-        if ($cekRole == 'Project Manager' || $cekRole == 'PM') {
-            $datap->where('pm_id', $cekPa->id);
-        }else if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
+        if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
             if($cekPm){
                 $datap->where('pa_id', $cekPm->id);
             }

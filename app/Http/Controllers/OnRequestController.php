@@ -90,7 +90,7 @@ class OnRequestController extends Controller
                     ->addColumn('action', function($row) {
                         $buttons = '';
                         if (Can('on_request-detail')) {
-                            $buttons .= '<a href="' . route('on_request.detail', $row->id) . '" 
+                            $buttons .= '<a href="' . route('on_request.detail', $row->id) . '"
                                         class="btn btn-warning btn-sm me-1" title="Detail">
                                       <span>
                                         <i><img src="'.asset('assets/images/eye.svg').'" style="width: 15px;"></i>
@@ -128,7 +128,7 @@ class OnRequestController extends Controller
         $pm         = User::whereIn('id_role', [2,3])->with(['karyawan'])->get();
         $pe         = User::whereIn('id_role', [4, 11])->with(['karyawan'])->get();
         $pa         = User::whereIn('id_role', [5, 13])->with(['karyawan'])->get();
-       
+
         return view('on_request.create',compact('customer','lokasi','jenis_kapal','status','pmAuth','pm','pe','pa'));
     }
 
@@ -180,7 +180,7 @@ class OnRequestController extends Controller
         ]);
 
         $pp = ProjectPlanner::firstOrCreate([
-            'id_karyawan' => Auth::user()->id,
+            'id_karyawan' => Auth::user()->karyawan->id ?? null,
         ]);
 
         $data                       = New OnRequest();
@@ -204,7 +204,7 @@ class OnRequestController extends Controller
                         ->with('success', 'Data saved successfully');
     }
 
-    public function tableData($id) 
+    public function tableData($id)
     {
         $pmAuth         = Auth::user()->role->name ?? '';
         $keluhans        = Keluhan::where('on_request_id',$id)->get();
@@ -282,16 +282,16 @@ class OnRequestController extends Controller
         $result = ProjectManager::get()->toArray();
 
         $data = OnRequest::with(['kapal', 'customer']);
-         
+
         if ($cekRole == 'Project Manager') {
             $data->where('pm_id', $cekPa->id);
         }else if ($cekRole == 'Project Admin') {
             if($cekPm){
                 $data->where('pm_id', $cekPm->id_pm);
             }
-        }else if ($cekRole == 'BOD' 
-                    || $cekRole == 'Super Admin' 
-                    || $cekRole == 'Administator' 
+        }else if ($cekRole == 'BOD'
+                    || $cekRole == 'Super Admin'
+                    || $cekRole == 'Administator'
                     || $cekRole == 'Staff Finance'
                     || $cekRole == 'SPV Finance') {
             if($result){
@@ -300,7 +300,7 @@ class OnRequestController extends Controller
         }else{
             $data->where('pm_id', '');
         }
-        
+
         $data = $data->where('status',1)
                     ->orWhere('status',null)
                     ->filter($request)

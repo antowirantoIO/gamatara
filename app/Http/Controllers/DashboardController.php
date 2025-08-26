@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProjectPlanner;
 use Illuminate\Http\Request;
 use App\Models\OnRequest;
 use App\Models\Customer;
@@ -18,28 +19,48 @@ class DashboardController extends Controller
     {
         $cekRole = Auth::user()->role->name;
         $cekId = Auth::user()->id_karyawan;
+        $user = Auth::user();
+        $userRole = $user->role->name ?? '';
         $cekPm = ProjectAdmin::where('id_karyawan',$cekId)->first();
         $cekPa  = ProjectManager::where('id_karyawan', $cekId)->first();
         $result = ProjectManager::get()->toArray();
 
+        $karyawanId = $user->karyawan->id ?? null;
+
         $spkrequest = OnRequest::with(['kapal', 'customer']);
 
-            if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
-                if($cekPm){
-                    $spkrequest->where('pa_id', $cekPm->id);
-                }
-            }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
-                        || $cekRole == 'Super Admin'
-                        || $cekRole == 'Administator'
-                        || $cekRole == 'Staff Finance'
-                        || $cekRole == 'SPV Finance') {
-                if($result){
-                    $spkrequest->whereIn('pm_id', array_column($result, 'id'));
-                }
-            }else{
-                $spkrequest->where('pm_id', '');
-            }
+        switch ($userRole) {
+            case 'Project Manager':
+            case 'PM':
+                $pm = ProjectManager::where('id_karyawan', $karyawanId)->first();
+                $spkrequest = $pm ? $spkrequest->where('pm_id', $pm->id) : $spkrequest->where('id', 0);
+                break;
 
+            case 'Project Admin':
+            case 'PA':
+                $pa = ProjectAdmin::where('id_karyawan', $karyawanId)->first();
+                $spkrequest = $pa ? $spkrequest->where('pa_id', $pa->id) : $spkrequest->where('id', 0);
+                break;
+
+            case 'SPV Project Planner':
+                $pp = ProjectPlanner::where('id_karyawan', $karyawanId)->first();
+                $spkrequest = $pp ? $spkrequest->where('pp_id', $pp->id) : $spkrequest->where('id', 0);
+                break;
+
+            case 'BOD':
+            case 'BOD1':
+            case 'Super Admin':
+            case 'Administrator':
+            case 'Staff Finance':
+            case 'SPV Finance':
+                $pmIds = ProjectManager::pluck('id')->toArray();
+                $spkrequest = !empty($pmIds) ? $spkrequest->whereIn('pm_id', $pmIds) : $spkrequest->where('id', 0);
+                break;
+
+            default:
+                $spkrequest->where('id', 0); // No access
+                break;
+        }
 
         $spkrequest = $spkrequest->whereHas('complaint', function ($query) use ($cekRole) {
             if ($cekRole == 'Project Manager') {
@@ -93,21 +114,38 @@ class DashboardController extends Controller
 
         $data = OnRequest::with(['kapal', 'customer']);
 
-            if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
-                if($cekPm){
-                    $data->where('pa_id', $cekPm->id);
-                }
-            }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
-                        || $cekRole == 'Super Admin'
-                        || $cekRole == 'Administator'
-                        || $cekRole == 'Staff Finance'
-                        || $cekRole == 'SPV Finance') {
-                if($result){
-                    $data->whereIn('pm_id', array_column($result, 'id'));
-                }
-            }else{
-                $data->where('pm_id', '');
-            }
+        switch ($userRole) {
+            case 'Project Manager':
+            case 'PM':
+                $pmModel = ProjectManager::where('id_karyawan', $karyawanId)->first();
+                $data = $pmModel ? $data->where('pm_id', $pmModel->id) : $data->where('id', 0);
+                break;
+
+            case 'Project Admin':
+            case 'PA':
+                $pa = ProjectAdmin::where('id_karyawan', $karyawanId)->first();
+                $data = $pa ? $data->where('pa_id', $pa->id) : $data->where('id', 0);
+                break;
+
+            case 'SPV Project Planner':
+                $pp = ProjectPlanner::where('id_karyawan', $karyawanId)->first();
+                $data = $pp ? $data->where('pp_id', $pp->id) : $data->where('id', 0);
+                break;
+
+            case 'BOD':
+            case 'BOD1':
+            case 'Super Admin':
+            case 'Administrator':
+            case 'Staff Finance':
+            case 'SPV Finance':
+                $pmIds = ProjectManager::pluck('id')->toArray();
+                $data = !empty($pmIds) ? $data->whereIn('pm_id', $pmIds) : $data->where('id', 0);
+                break;
+
+            default:
+                $data->where('id', 0); // No access
+                break;
+        }
 
         $datas = $data->where('status',1)
         ->orderBy('created_at', 'desc')
@@ -124,20 +162,37 @@ class DashboardController extends Controller
 
         $datap = OnRequest::with(['kapal', 'customer']);
 
-        if ($cekRole == 'Project Admin' || $cekRole == 'PA') {
-            if($cekPm){
-                $datap->where('pa_id', $cekPm->id);
-            }
-        }else if ($cekRole == 'BOD' || $cekRole == 'BOD1'
-                    || $cekRole == 'Super Admin'
-                    || $cekRole == 'Administator'
-                    || $cekRole == 'Staff Finance'
-                    || $cekRole == 'SPV Finance') {
-            if($result){
-                $datap->whereIn('pm_id', array_column($result, 'id'));
-            }
-        }else{
-            $datap->where('pm_id', '');
+        switch ($userRole) {
+            case 'Project Manager':
+            case 'PM':
+                $pmModel = ProjectManager::where('id_karyawan', $karyawanId)->first();
+                $datap = $pmModel ? $datap->where('pm_id', $pmModel->id) : $datap->where('id', 0);
+                break;
+
+            case 'Project Admin':
+            case 'PA':
+                $pa = ProjectAdmin::where('id_karyawan', $karyawanId)->first();
+                $datap = $pa ? $datap->where('pa_id', $pa->id) : $datap->where('id', 0);
+                break;
+
+            case 'SPV Project Planner':
+                $pp = ProjectPlanner::where('id_karyawan', $karyawanId)->first();
+                $datap = $pp ? $datap->where('pp_id', $pp->id) : $datap->where('id', 0);
+                break;
+
+            case 'BOD':
+            case 'BOD1':
+            case 'Super Admin':
+            case 'Administrator':
+            case 'Staff Finance':
+            case 'SPV Finance':
+                $pmIds = ProjectManager::pluck('id')->toArray();
+                $datap = !empty($pmIds) ? $datap->whereIn('pm_id', $pmIds) : $datap->where('id', 0);
+                break;
+
+            default:
+                $datap->where('id', 0); // No access
+                break;
         }
 
         $complete = $datap->where('status',2)->get();
